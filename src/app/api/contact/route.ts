@@ -29,7 +29,7 @@ export async function POST(req: Request) {
 
         // 2. Send email via FormSubmit.co (Free, no API key needed)
         try {
-            await fetch('https://formsubmit.co/ajax/dony.jaij.sk@gmail.com', {
+            const emailRes = await fetch('https://formsubmit.co/ajax/dony.jaij.sk@gmail.com', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -43,6 +43,8 @@ export async function POST(req: Request) {
                     _subject: `Nová správa z AIWai od ${name}`
                 })
             });
+            const emailResult = await emailRes.json();
+            console.log('FormSubmit Response:', emailResult);
         } catch (mailError) {
             console.error('Mail forwarding error:', mailError);
         }
