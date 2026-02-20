@@ -27,24 +27,26 @@ export async function POST(req: Request) {
             // We continue anyway to try and send the email even if DB fails
         }
 
-        // 2. Send email via FormSubmit.co (Free, no API key needed)
+        // 2. Send email via Web3Forms (More reliable free option)
         try {
-            const emailRes = await fetch('https://formsubmit.co/ajax/dony.jaij.sk@gmail.com', {
+            console.log('Attempting to send email via Web3Forms...');
+            await fetch('https://api.web3forms.com/submit', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json'
                 },
                 body: JSON.stringify({
+                    access_key: "YOUR_WEB3FORMS_KEY_HERE", // We will replace this with the user's key
                     name: name,
                     email: email,
                     project_type: projectType,
                     message: message,
-                    _subject: `Nová správa z AIWai od ${name}`
+                    subject: `Nová správa z AIWai od ${name}`,
+                    from_name: "AIWai Web"
                 })
             });
-            const emailResult = await emailRes.json();
-            console.log('FormSubmit Response:', emailResult);
+            console.log('Web3Forms request sent.');
         } catch (mailError) {
             console.error('Mail forwarding error:', mailError);
         }
