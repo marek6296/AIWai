@@ -20,6 +20,7 @@ export default function Footer() {
                             <h2 className="text-2xl font-bold text-brand-indigo mb-0 leading-none">AIWai</h2>
                             <p className="text-brand-indigo/60 text-sm mt-1">Intelligent Digital Architecture</p>
                             <a href="mailto:dony.jaij.sk@gmail.com" className="text-brand-indigo/40 hover:text-brand-indigo transition-colors text-xs block mt-2">dony.jaij.sk@gmail.com</a>
+                            <a href="tel:+421902076186" className="text-brand-indigo/40 hover:text-brand-indigo transition-colors text-xs block mt-1">+421 902 076 186</a>
                         </div>
                     </div>
 
