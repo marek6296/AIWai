@@ -155,7 +155,7 @@ export default function ContactSection() {
                     </div>
 
                     <div className="pt-4 flex justify-end">
-                        <MagneticButton disabled={status === 'sending'}>
+                        <MagneticButton type="submit" disabled={status === 'sending'} className="cursor-pointer">
                             {status === 'sending' ? 'Sending...' : 'Send Message'}
                         </MagneticButton>
                     </div>
