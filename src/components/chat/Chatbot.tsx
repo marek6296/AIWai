@@ -1,5 +1,6 @@
 "use client";
 
+// Triggering fresh Vercel deployment for Supabase integration
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence, useMotionValue, useAnimationFrame } from "framer-motion";
 import { Send, X, Bot, Sparkles } from "lucide-react";
