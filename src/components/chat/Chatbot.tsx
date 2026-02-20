@@ -98,6 +98,7 @@ export default function Chatbot() {
         if (!isOpen) {
             // Opening
             // Calculate space available on both sides
+            const currentX = x.get();
             const rightEdgePosition = windowWidth - 24 + currentX;
             const spaceOnLeft = rightEdgePosition;
             const spaceOnRight = windowWidth - (rightEdgePosition - 56); // 56 is the bot button width
