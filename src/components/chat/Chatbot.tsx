@@ -171,20 +171,16 @@ export default function Chatbot() {
     };
 
     return (
-        <motion.div
-            style={{ x }}
-            className="fixed bottom-6 right-6 z-50 flex flex-col items-end"
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
-        >
+        <>
             <AnimatePresence>
                 {isOpen && (
                     <motion.div
+                        style={{ x: windowWidth < 640 ? 0 : x }}
                         initial={{ opacity: 0, y: 20, scale: 0.95 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 20, scale: 0.95 }}
                         transition={{ duration: 0.2 }}
-                        className={`fixed sm:absolute bottom-[calc(1.5rem+80px)] sm:bottom-[calc(100%+16px)] left-1/2 -translate-x-1/2 sm:left-auto sm:translate-x-0 ${alignment === "left" ? "sm:left-0 origin-bottom-left" : "sm:right-0 origin-bottom-right"} w-[calc(100vw-32px)] sm:w-[400px] max-w-[400px] h-[500px] max-h-[70vh] sm:max-h-none bg-white/80 backdrop-blur-xl border border-brand-indigo/10 rounded-2xl shadow-2xl overflow-hidden flex flex-col z-50`}
+                        className={`fixed bottom-[calc(1.5rem+80px)] sm:bottom-[calc(1.5rem+80px)] left-1/2 -translate-x-1/2 sm:left-auto sm:right-6 sm:translate-x-0 ${alignment === "left" ? "sm:origin-bottom-left" : "sm:origin-bottom-right"} w-[calc(100vw-32px)] sm:w-[400px] max-w-[400px] h-[500px] max-h-[70vh] sm:max-h-none bg-white/80 backdrop-blur-xl border border-brand-indigo/10 rounded-2xl shadow-2xl overflow-hidden flex flex-col z-[60]`}
                     >
                         {/* Header */}
                         <div className="p-4 bg-brand-indigo/5 border-b border-brand-indigo/5 flex justify-between items-center">
@@ -278,91 +274,99 @@ export default function Chatbot() {
                 )}
             </AnimatePresence>
 
-            {/* Walking Legs Container - Moved relative to button */}
-            <div className="relative">
-                {/* Legs behind the button */}
-                <div className="absolute bottom-1 left-1/2 -translate-x-1/2 flex gap-4 z-40"
-                    style={{
-                        transform: `translateX(-50%) scaleX(${direction === -1 ? 1 : -1})` // Flip legs direction
-                    }}
-                >
-                    {/* Left Leg */}
-                    <motion.div
-                        className="w-2.5 h-5 bg-brand-indigo rounded-b-full origin-top"
-                        variants={leftLegVariants}
-                        animate={isWalking ? "walking" : "idle"}
-                    />
-                    {/* Right Leg */}
-                    <motion.div
-                        className="w-2.5 h-5 bg-brand-indigo rounded-b-full origin-top"
-                        variants={rightLegVariants}
-                        animate={isWalking ? "walking" : "idle"}
-                    />
-                </div>
+            <motion.div
+                style={{ x }}
+                className="fixed bottom-6 right-6 z-50 flex flex-col items-end"
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => setIsHovered(false)}
+            >
 
-                {/* Main Toggle Button */}
-                <motion.button
-                    onClick={handleToggle}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    animate={{
-                        y: isWalking ? [0, -3, 0] : 0, // Bobbing animation
-                    }}
-                    transition={{
-                        y: { repeat: Infinity, duration: 0.5, ease: "easeInOut" }
-                    }}
-                    className="w-14 h-14 relative group z-50 mb-3" // Added margin bottom for legs clearance
-                >
-                    {/* Help Bubble */}
-                    <AnimatePresence>
-                        {showBubble && !isOpen && (
-                            <motion.div
-                                initial={{ opacity: 0, y: 10, scale: 0.8 }}
-                                animate={{ opacity: 1, y: 0, scale: 1 }}
-                                exit={{ opacity: 0, y: 10, scale: 0.8 }}
-                                className="absolute bottom-full right-0 mb-3 w-48 bg-white text-brand-indigo p-3 rounded-xl rounded-br-none shadow-lg text-xs font-medium border border-brand-indigo/10 z-50 pointer-events-none"
-                            >
-                                Ak potrebuješ pomôcť, neváhaj na mňa kliknúť.
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
-
-                    {/* Visual Container with Overflow Hidden */}
-                    <div className="absolute inset-0 rounded-full bg-brand-indigo text-white shadow-xl shadow-brand-indigo/20 overflow-hidden flex items-center justify-center">
-                        <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
-
-                        {/* Wrapper for flipping the icon when walking left/right */}
-                        <div style={{ transform: `scaleX(${direction === 1 && !isOpen ? -1 : 1})` }}>
-                            <AnimatePresence mode="wait">
-                                {isOpen ? (
-                                    <motion.div
-                                        key="close"
-                                        initial={{ rotate: -90, opacity: 0 }}
-                                        animate={{ rotate: 0, opacity: 1 }}
-                                        exit={{ rotate: 90, opacity: 0 }}
-                                    >
-                                        <X size={24} />
-                                    </motion.div>
-                                ) : (
-                                    <motion.div
-                                        key="open"
-                                        initial={{ scale: 0.5, opacity: 0 }}
-                                        animate={{ scale: 1, opacity: 1 }}
-                                        exit={{ scale: 0.5, opacity: 0 }}
-                                    >
-                                        <Bot size={28} />
-                                    </motion.div>
-                                )}
-                            </AnimatePresence>
-                        </div>
+                {/* Walking Legs Container - Moved relative to button */}
+                <div className="relative">
+                    {/* Legs behind the button */}
+                    <div className="absolute bottom-1 left-1/2 -translate-x-1/2 flex gap-4 z-40"
+                        style={{
+                            transform: `translateX(-50%) scaleX(${direction === -1 ? 1 : -1})` // Flip legs direction
+                        }}
+                    >
+                        {/* Left Leg */}
+                        <motion.div
+                            className="w-2.5 h-5 bg-brand-indigo rounded-b-full origin-top"
+                            variants={leftLegVariants}
+                            animate={isWalking ? "walking" : "idle"}
+                        />
+                        {/* Right Leg */}
+                        <motion.div
+                            className="w-2.5 h-5 bg-brand-indigo rounded-b-full origin-top"
+                            variants={rightLegVariants}
+                            animate={isWalking ? "walking" : "idle"}
+                        />
                     </div>
 
-                    {/* Status Indicator - Unclipped */}
-                    {!isOpen && (
-                        <span className="absolute top-0 right-0 w-3.5 h-3.5 bg-brand-indigo border-2 border-white rounded-full shadow-[0_0_15px_4px_rgba(10,10,90,0.8)] z-10" />
-                    )}
-                </motion.button>
-            </div>
-        </motion.div>
+                    {/* Main Toggle Button */}
+                    <motion.button
+                        onClick={handleToggle}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        animate={{
+                            y: isWalking ? [0, -3, 0] : 0, // Bobbing animation
+                        }}
+                        transition={{
+                            y: { repeat: Infinity, duration: 0.5, ease: "easeInOut" }
+                        }}
+                        className="w-14 h-14 relative group z-50 mb-3" // Added margin bottom for legs clearance
+                    >
+                        {/* Help Bubble */}
+                        <AnimatePresence>
+                            {showBubble && !isOpen && (
+                                <motion.div
+                                    initial={{ opacity: 0, y: 10, scale: 0.8 }}
+                                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                                    exit={{ opacity: 0, y: 10, scale: 0.8 }}
+                                    className="absolute bottom-full right-0 mb-3 w-48 bg-white text-brand-indigo p-3 rounded-xl rounded-br-none shadow-lg text-xs font-medium border border-brand-indigo/10 z-50 pointer-events-none"
+                                >
+                                    Ak potrebuješ pomôcť, neváhaj na mňa kliknúť.
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+
+                        {/* Visual Container with Overflow Hidden */}
+                        <div className="absolute inset-0 rounded-full bg-brand-indigo text-white shadow-xl shadow-brand-indigo/20 overflow-hidden flex items-center justify-center">
+                            <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+
+                            {/* Wrapper for flipping the icon when walking left/right */}
+                            <div style={{ transform: `scaleX(${direction === 1 && !isOpen ? -1 : 1})` }}>
+                                <AnimatePresence mode="wait">
+                                    {isOpen ? (
+                                        <motion.div
+                                            key="close"
+                                            initial={{ rotate: -90, opacity: 0 }}
+                                            animate={{ rotate: 0, opacity: 1 }}
+                                            exit={{ rotate: 90, opacity: 0 }}
+                                        >
+                                            <X size={24} />
+                                        </motion.div>
+                                    ) : (
+                                        <motion.div
+                                            key="open"
+                                            initial={{ scale: 0.5, opacity: 0 }}
+                                            animate={{ scale: 1, opacity: 1 }}
+                                            exit={{ scale: 0.5, opacity: 0 }}
+                                        >
+                                            <Bot size={28} />
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
+                            </div>
+                        </div>
+
+                        {/* Status Indicator - Unclipped */}
+                        {!isOpen && (
+                            <span className="absolute top-0 right-0 w-3.5 h-3.5 bg-brand-indigo border-2 border-white rounded-full shadow-[0_0_15px_4px_rgba(10,10,90,0.8)] z-10" />
+                        )}
+                    </motion.button>
+                </div>
+            </motion.div>
+        </>
     );
 }
