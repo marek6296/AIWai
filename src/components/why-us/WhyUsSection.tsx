@@ -7,7 +7,7 @@ import TiltCard from "@/components/ui/TiltCard";
 const features = [
     {
         title: "Premium Design",
-        description: "We don't just build websites. We craft visual experiences that captivate your audience and elevate your brand identity to a world-class level.",
+        description: "We don&apos;t just build websites. We craft visual experiences that captivate your audience and elevate your brand identity to a world-class level.",
         icon: <Palette size={40} className="text-brand-indigo" />
     },
     {
