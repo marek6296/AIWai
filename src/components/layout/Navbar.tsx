@@ -21,21 +21,28 @@ export default function Navbar() {
         return () => window.removeEventListener("scroll", handleScrollState);
     }, []);
 
+    // Body lock for mobile menu
+    useEffect(() => {
+        if (isOpen) {
+            document.body.style.overflow = "hidden";
+            document.documentElement.style.overflow = "hidden";
+        } else {
+            document.body.style.overflow = "unset";
+            document.documentElement.style.overflow = "unset";
+        }
+        return () => {
+            document.body.style.overflow = "unset";
+            document.documentElement.style.overflow = "unset";
+        };
+    }, [isOpen]);
+
     const handleScroll = (e: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement>, id: string) => {
         e.preventDefault();
         setIsOpen(false);
-        // Debugging
-        console.log("Scrolling to:", id);
-
 
         const element = document.getElementById(id);
         if (element) {
-            // Offset 0 allows the navbar to cover the top padding of the section, 
-            // placing the Heading (which is inside padding) closer to the visible top.
-            // If the navbar is ~65px scrolled, and padding is 96px, 
-            // Offset 0 means we see 31px gap above heading. Ideally balanced.
             const offset = 10;
-
             gsap.to(window, {
                 duration: 2.5,
                 scrollTo: {
@@ -50,7 +57,7 @@ export default function Navbar() {
     return (
         <>
             <nav
-                className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? "py-4 bg-white/80 backdrop-blur-md border-b border-brand-indigo/5" : "py-4 bg-transparent"
+                className={`fixed top-0 left-0 right-0 transition-all duration-300 ${scrolled ? "py-4 bg-white/80 backdrop-blur-md border-b border-brand-indigo/5 z-[100]" : "py-4 bg-transparent z-[100]"
                     }`}
             >
                 <div className="container mx-auto px-6 flex justify-between items-center">
@@ -58,9 +65,10 @@ export default function Navbar() {
                         href="/"
                         onClick={(e) => {
                             e.preventDefault();
+                            setIsOpen(false);
                             gsap.to(window, { duration: 2.5, scrollTo: { y: 0 }, ease: "power4.inOut" });
                         }}
-                        className="text-5xl font-bold tracking-tighter text-brand-indigo z-50 relative"
+                        className="text-5xl font-bold tracking-tighter text-brand-indigo z-[110] relative"
                     >
                         AIWai
                     </Link>
@@ -102,9 +110,10 @@ export default function Navbar() {
                     {/* Mobile Menu Toggle */}
                     <button
                         onClick={() => setIsOpen(!isOpen)}
-                        className="md:hidden z-50 text-brand-indigo relative"
+                        className="md:hidden z-[110] text-brand-indigo relative p-2"
+                        aria-label="Toggle Menu"
                     >
-                        {isOpen ? <X /> : <Menu />}
+                        {isOpen ? <X size={32} /> : <Menu size={32} />}
                     </button>
                 </div>
             </nav>
@@ -113,24 +122,16 @@ export default function Navbar() {
             <AnimatePresence>
                 {isOpen && (
                     <motion.div
-                        initial={{ clipPath: "circle(0% at 100% 0%)" }}
-                        animate={{ clipPath: "circle(150% at 100% 0%)" }}
-                        exit={{ clipPath: "circle(0% at 100% 0%)" }}
+                        initial={{ clipPath: "circle(0% at 90% 5%)", opacity: 0 }}
+                        animate={{ clipPath: "circle(150% at 90% 5%)", opacity: 1 }}
+                        exit={{ clipPath: "circle(0% at 90% 5%)", opacity: 0 }}
                         transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
-                        onAnimationStart={() => {
-                            document.body.style.overflow = "hidden";
-                        }}
-                        onAnimationComplete={(definition) => {
-                            if (definition === "exit") {
-                                document.body.style.overflow = "unset";
-                            }
-                        }}
-                        className="fixed inset-0 z-40 bg-white flex flex-col items-center justify-center overflow-hidden"
+                        className="fixed inset-0 z-[90] bg-white flex flex-col items-center justify-center overflow-hidden"
                     >
-                        {/* Background Decoration for Mobile Menu */}
+                        {/* Background Decoration for Mobile Menu - Slightly subtle */}
                         <div className="absolute inset-0 opacity-[0.03] pointer-events-none">
-                            <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-brand-indigo rounded-full blur-[120px]" />
-                            <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-brand-indigo rounded-full blur-[120px]" />
+                            <div className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] bg-brand-indigo rounded-full blur-[120px]" />
+                            <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] bg-brand-indigo rounded-full blur-[120px]" />
                         </div>
 
                         <div className="flex flex-col items-center gap-10 relative z-10 w-full px-12">
@@ -140,7 +141,6 @@ export default function Navbar() {
                                         href={`#${item.toLowerCase()}`}
                                         initial={{ y: 80, opacity: 0 }}
                                         animate={{ y: 0, opacity: 1 }}
-                                        exit={{ y: 50, opacity: 0 }}
                                         transition={{
                                             delay: 0.3 + i * 0.1,
                                             duration: 0.7,
@@ -157,7 +157,6 @@ export default function Navbar() {
                             <motion.div
                                 initial={{ opacity: 0, y: 30 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, y: 20 }}
                                 transition={{ delay: 0.6, duration: 0.5 }}
                                 className="w-full max-w-[280px]"
                             >
@@ -175,9 +174,10 @@ export default function Navbar() {
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             transition={{ delay: 0.8 }}
-                            className="absolute bottom-12 flex gap-8 text-brand-indigo/30"
+                            className="absolute bottom-12 flex flex-col items-center gap-2 text-brand-indigo/30"
                         >
-                            <span className="text-[10px] uppercase tracking-[0.3em]">AIWai Architecture</span>
+                            <span className="text-[10px] uppercase tracking-[0.3em] font-bold">AIWai</span>
+                            <span className="text-[10px] uppercase tracking-[0.1em]">Intelligent Digital Architecture</span>
                         </motion.div>
                     </motion.div>
                 )}
