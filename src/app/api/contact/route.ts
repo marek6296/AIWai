@@ -27,26 +27,24 @@ export async function POST(req: Request) {
             // We continue anyway to try and send the email even if DB fails
         }
 
-        // 2. Send email via Web3Forms (More reliable free option)
+        // 2. Send email via Web3Forms (Using the recommended FormData approach)
         try {
             console.log('Attempting to send email via Web3Forms with key 0f1dc3b9...');
 
+            const formData = new FormData();
+            formData.append("access_key", "0f1dc3b9-37d0-4e0d-aa3e-0601ec0a675d");
+            formData.append("name", name);
+            formData.append("email", email);
+            formData.append("project_type", projectType);
+            formData.append("message", message);
+            formData.append("subject", `Nová správa z AIWai od ${name}`);
+            formData.append("from_name", "AIWai Web");
+
             const response = await fetch('https://api.web3forms.com/submit', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify({
-                    access_key: "0f1dc3b9-37d0-4e0d-aa3e-0601ec0a675d",
-                    name: name,
-                    email: email,
-                    project_type: projectType,
-                    message: message,
-                    subject: `Nová správa z AIWai od ${name}`,
-                    from_name: "AIWai Web",
-                    botcheck: false // Optional: help avoid some filters
-                })
+                // Note: We MUST NOT set Content-Type header when using FormData, 
+                // the browser/node will set it automatically with the correct boundary.
+                body: formData
             });
 
             const responseText = await response.text();
