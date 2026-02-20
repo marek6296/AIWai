@@ -175,12 +175,12 @@ export default function Chatbot() {
             <AnimatePresence>
                 {isOpen && (
                     <motion.div
-                        style={{ x: windowWidth < 640 ? 0 : x }}
+                        style={windowWidth < 640 ? {} : { x }}
                         initial={{ opacity: 0, y: 20, scale: 0.95 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 20, scale: 0.95 }}
                         transition={{ duration: 0.2 }}
-                        className={`fixed bottom-[calc(1.5rem+80px)] sm:bottom-[calc(1.5rem+80px)] left-1/2 -translate-x-1/2 sm:left-auto sm:right-6 sm:translate-x-0 ${alignment === "left" ? "sm:origin-bottom-left" : "sm:origin-bottom-right"} w-[calc(100vw-32px)] sm:w-[400px] max-w-[400px] h-[500px] max-h-[70vh] sm:max-h-none bg-white/80 backdrop-blur-xl border border-brand-indigo/10 rounded-2xl shadow-2xl overflow-hidden flex flex-col z-[60]`}
+                        className={`fixed bottom-[calc(1.5rem+80px)] left-4 right-4 mx-auto sm:left-auto sm:right-6 sm:mx-0 ${alignment === "left" ? "sm:origin-bottom-left" : "sm:origin-bottom-right"} w-auto sm:w-[400px] max-w-[400px] h-[500px] max-h-[70vh] sm:max-h-none bg-white/80 backdrop-blur-xl border border-brand-indigo/10 rounded-2xl shadow-2xl overflow-hidden flex flex-col z-[60]`}
                     >
                         {/* Header */}
                         <div className="p-4 bg-brand-indigo/5 border-b border-brand-indigo/5 flex justify-between items-center">
