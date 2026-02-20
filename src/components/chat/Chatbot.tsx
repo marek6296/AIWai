@@ -214,7 +214,7 @@ export default function Chatbot() {
                                 <div className="h-full flex flex-col items-center justify-center text-center opacity-40">
                                     <Bot size={48} className="text-brand-indigo mb-4" />
                                     <p className="text-sm text-brand-indigo max-w-[200px]">
-                                        Yo! I&apos;m AIWai. Ready to build something epic today? 🚀
+                                        Hi! I&apos;m AIWai. How can I help you build something great today?
                                     </p>
                                 </div>
                             )}
@@ -326,7 +326,7 @@ export default function Chatbot() {
                                     exit={{ opacity: 0, y: 10, scale: 0.8 }}
                                     className="absolute bottom-full right-0 mb-3 w-48 bg-white text-brand-indigo p-3 rounded-xl rounded-br-none shadow-lg text-xs font-medium border border-brand-indigo/10 z-50 pointer-events-none"
                                 >
-                                    If you need a hand, tap for some AI magic! ✨
+                                    Got questions? I&apos;ve got answers.
                                 </motion.div>
                             )}
                         </AnimatePresence>
