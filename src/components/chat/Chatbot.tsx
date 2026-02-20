@@ -326,7 +326,7 @@ export default function Chatbot() {
                                     exit={{ opacity: 0, y: 10, scale: 0.8 }}
                                     className="absolute bottom-full right-0 mb-3 w-48 bg-white text-brand-indigo p-3 rounded-xl rounded-br-none shadow-lg text-xs font-medium border border-brand-indigo/10 z-50 pointer-events-none"
                                 >
-                                    Ak potrebuješ pomôcť, neváhaj na mňa kliknúť.
+                                    If you need anything, don&apos;t hesitate to ask!
                                 </motion.div>
                             )}
                         </AnimatePresence>
