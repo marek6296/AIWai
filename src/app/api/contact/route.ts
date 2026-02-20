@@ -8,7 +8,8 @@ export async function POST(req: Request) {
 
         console.log('Form submission received:', { name, email, projectType, message });
 
-        const { data, error } = await supabase
+        // 1. Save to Supabase (Database)
+        const { data, error: supabaseError } = await supabase
             .from('contacts')
             .insert([
                 {
@@ -21,9 +22,29 @@ export async function POST(req: Request) {
             ])
             .select();
 
-        if (error) {
-            console.error('Supabase Error:', error);
-            return NextResponse.json({ success: false, error: 'Failed to save to database' }, { status: 500 });
+        if (supabaseError) {
+            console.error('Supabase Error:', supabaseError);
+            // We continue anyway to try and send the email even if DB fails
+        }
+
+        // 2. Send email via FormSubmit.co (Free, no API key needed)
+        try {
+            await fetch('https://formsubmit.co/ajax/dony.jaij.sk@gmail.com', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    name: name,
+                    email: email,
+                    project_type: projectType,
+                    message: message,
+                    _subject: `Nová správa z AIWai od ${name}`
+                })
+            });
+        } catch (mailError) {
+            console.error('Mail forwarding error:', mailError);
         }
 
         return NextResponse.json({ success: true, data });
