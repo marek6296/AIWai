@@ -15,6 +15,8 @@ export const metadata: Metadata = {
   description: "Premium AI Agency",
 };
 
+import BodyReveal from "@/components/BodyReveal";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -22,32 +24,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <head>
-        <style dangerouslySetInnerHTML={{ __html: `body { opacity: 0; transition: opacity 0.2s ease-in; }` }} />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              // 1. Block browser scroll restoration
-              if ('scrollRestoration' in window.history) {
-                window.history.scrollRestoration = 'manual';
-              }
-              // 2. Force scroll to top immediately
-              window.scrollTo(0, 0);
-
-              // 3. Reveal body after a tiny delay to ensure scroll has settled
-              document.addEventListener('DOMContentLoaded', () => {
-                window.scrollTo(0, 0);
-                setTimeout(() => {
-                  document.body.style.opacity = '1';
-                }, 50);
-              });
-            `,
-          }}
-        />
-      </head>
       <body
         className={`${inter.variable} ${outfit.variable} bg-white text-brand-indigo antialiased`}
       >
+        <BodyReveal />
         <SmoothScroll />
         <Navbar />
         {children}
