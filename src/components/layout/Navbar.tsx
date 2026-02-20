@@ -66,28 +66,37 @@ export default function Navbar() {
                     </Link>
 
                     {/* Desktop Menu */}
-                    <div className="hidden md:flex items-center gap-2" onMouseLeave={() => setHoveredItem(null)}>
-                        {["Services", "About", "Projects", "Contact"].map((item) => (
-                            <a
-                                key={item}
-                                href={`#${item.toLowerCase()}`}
-                                onClick={(e) => handleScroll(e, item.toLowerCase())}
-                                onMouseEnter={() => setHoveredItem(item)}
-                                className="relative px-6 py-2 text-lg uppercase tracking-widest text-brand-indigo/70 hover:text-brand-indigo transition-colors cursor-pointer"
-                            >
-                                {hoveredItem === item && (
-                                    <motion.div
-                                        layoutId="hoverBackground"
-                                        className="absolute inset-0 bg-brand-indigo/5 rounded-full -z-10"
-                                        initial={{ opacity: 0 }}
-                                        animate={{ opacity: 1 }}
-                                        exit={{ opacity: 0 }}
-                                        transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-                                    />
-                                )}
-                                {item}
-                            </a>
-                        ))}
+                    <div className="hidden md:flex items-center gap-6" onMouseLeave={() => setHoveredItem(null)}>
+                        <div className="flex items-center gap-2">
+                            {["Services", "About", "Projects"].map((item) => (
+                                <a
+                                    key={item}
+                                    href={`#${item.toLowerCase()}`}
+                                    onClick={(e) => handleScroll(e, item.toLowerCase())}
+                                    onMouseEnter={() => setHoveredItem(item)}
+                                    className="relative px-6 py-2 text-lg uppercase tracking-widest text-brand-indigo/70 hover:text-brand-indigo transition-colors cursor-pointer"
+                                >
+                                    {hoveredItem === item && (
+                                        <motion.div
+                                            layoutId="hoverBackground"
+                                            className="absolute inset-0 bg-brand-indigo/5 rounded-full -z-10"
+                                            initial={{ opacity: 0 }}
+                                            animate={{ opacity: 1 }}
+                                            exit={{ opacity: 0 }}
+                                            transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                                        />
+                                    )}
+                                    {item}
+                                </a>
+                            ))}
+                        </div>
+
+                        <button
+                            onClick={(e) => handleScroll(e as any, "contact")}
+                            className="px-8 py-3 bg-brand-indigo text-white rounded-full text-sm font-bold tracking-widest uppercase hover:bg-brand-indigo/90 transition-all shadow-lg hover:shadow-brand-indigo/20 flex items-center gap-2 group"
+                        >
+                            Contact
+                        </button>
                     </div>
 
                     {/* Mobile Menu Toggle */}
@@ -110,19 +119,31 @@ export default function Navbar() {
                         transition={{ duration: 0.5, ease: [0.76, 0, 0.24, 1] }}
                         className="fixed inset-0 z-40 bg-white flex flex-col items-center justify-center gap-8"
                     >
-                        {["Services", "About", "Projects", "Contact"].map((item, i) => (
-                            <motion.a
-                                key={item}
-                                href={`#${item.toLowerCase()}`}
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.2 + i * 0.1 }}
-                                onClick={(e) => handleScroll(e, item.toLowerCase())}
-                                className="text-4xl font-light text-brand-indigo hover:text-brand-indigo/70 transition-colors cursor-pointer"
+                        <div className="flex flex-col items-center gap-8">
+                            {["Services", "About", "Projects"].map((item, i) => (
+                                <motion.a
+                                    key={item}
+                                    href={`#${item.toLowerCase()}`}
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.2 + i * 0.1 }}
+                                    onClick={(e) => handleScroll(e, item.toLowerCase())}
+                                    className="text-4xl font-light text-brand-indigo hover:text-brand-indigo/70 transition-colors cursor-pointer"
+                                >
+                                    {item}
+                                </motion.a>
+                            ))}
+
+                            <motion.button
+                                initial={{ opacity: 0, scale: 0.8 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                transition={{ delay: 0.5 }}
+                                onClick={(e) => handleScroll(e as any, "contact")}
+                                className="mt-4 px-12 py-5 bg-brand-indigo text-white rounded-full text-lg font-bold tracking-widest uppercase shadow-xl"
                             >
-                                {item}
-                            </motion.a>
-                        ))}
+                                Contact
+                            </motion.button>
+                        </div>
                     </motion.div>
                 )}
             </AnimatePresence>
