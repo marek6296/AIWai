@@ -93,7 +93,7 @@ export default function Navbar() {
 
                         <button
                             onClick={(e) => handleScroll(e as any, "contact")}
-                            className="px-8 py-3 bg-brand-indigo text-white rounded-full text-sm font-bold tracking-widest uppercase hover:bg-brand-indigo/90 transition-all shadow-lg hover:shadow-brand-indigo/20 flex items-center gap-2 group"
+                            className="px-8 py-3 bg-brand-sand text-brand-indigo rounded-full text-sm font-bold tracking-widest uppercase hover:bg-brand-sand/80 transition-all shadow-lg hover:shadow-brand-sand/20 flex items-center gap-2 group"
                         >
                             Contact
                         </button>
@@ -139,7 +139,7 @@ export default function Navbar() {
                                 animate={{ opacity: 1, scale: 1 }}
                                 transition={{ delay: 0.5 }}
                                 onClick={(e) => handleScroll(e as any, "contact")}
-                                className="mt-4 px-12 py-5 bg-brand-indigo text-white rounded-full text-lg font-bold tracking-widest uppercase shadow-xl"
+                                className="mt-4 px-12 py-5 bg-brand-sand text-brand-indigo rounded-full text-lg font-bold tracking-widest uppercase shadow-xl"
                             >
                                 Contact
                             </motion.button>
