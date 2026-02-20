@@ -97,18 +97,15 @@ export default function Chatbot() {
     const handleToggle = () => {
         if (!isOpen) {
             // Opening
-            const currentX = x.get();
-            // Calculate distance from the left edge of the screen
-            // The element is positioned right: 24px (1.5rem).
-            // Visually, the Right Edge of the element is at windowWidth - 24 + currentX
-            // Note: currentX is negative (moving left).
+            // Calculate space available on both sides
             const rightEdgePosition = windowWidth - 24 + currentX;
+            const spaceOnLeft = rightEdgePosition;
+            const spaceOnRight = windowWidth - (rightEdgePosition - 56); // 56 is the bot button width
 
-            // If the Right Edge is too close to the Left side (e.g., < 450px), align LEFT (expand right).
-            if (rightEdgePosition < 450) {
-                setAlignment("left");
+            if (spaceOnRight > spaceOnLeft) {
+                setAlignment("left"); // Expand right
             } else {
-                setAlignment("right");
+                setAlignment("right"); // Expand left
             }
         } else {
             // Closing
@@ -186,7 +183,7 @@ export default function Chatbot() {
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 20, scale: 0.95 }}
                         transition={{ duration: 0.2 }}
-                        className={`absolute bottom-[calc(100%+16px)] ${alignment === "left" ? "left-0 origin-bottom-left" : "right-0 origin-bottom-right"} w-[350px] sm:w-[400px] h-[500px] bg-white/80 backdrop-blur-xl border border-brand-indigo/10 rounded-2xl shadow-2xl overflow-hidden flex flex-col z-50`}
+                        className={`fixed sm:absolute bottom-[calc(1.5rem+80px)] sm:bottom-[calc(100%+16px)] ${alignment === "left" ? "left-6 sm:left-0 origin-bottom-left" : "right-6 sm:right-0 origin-bottom-right"} w-[calc(100vw-48px)] sm:w-[400px] max-w-[400px] h-[500px] max-h-[70vh] sm:max-h-none bg-white/80 backdrop-blur-xl border border-brand-indigo/10 rounded-2xl shadow-2xl overflow-hidden flex flex-col z-50`}
                     >
                         {/* Header */}
                         <div className="p-4 bg-brand-indigo/5 border-b border-brand-indigo/5 flex justify-between items-center">
