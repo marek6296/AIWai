@@ -22,11 +22,14 @@ export default function ServiceModal({ isOpen, onClose, service }: ServiceModalP
     React.useEffect(() => {
         if (isOpen) {
             document.body.style.overflow = 'hidden';
+            document.documentElement.style.overflow = 'hidden';
         } else {
-            document.body.style.overflow = 'unset';
+            document.body.style.overflow = '';
+            document.documentElement.style.overflow = '';
         }
         return () => {
-            document.body.style.overflow = 'unset';
+            document.body.style.overflow = '';
+            document.documentElement.style.overflow = '';
         };
     }, [isOpen]);
 
@@ -75,7 +78,10 @@ export default function ServiceModal({ isOpen, onClose, service }: ServiceModalP
                         </div>
 
                         {/* Scrollable Content */}
-                        <div className="flex-1 overflow-y-auto p-8 md:p-12 space-y-12">
+                        <div
+                            data-lenis-prevent
+                            className="flex-1 overflow-y-auto p-8 md:p-12 space-y-12"
+                        >
                             {/* What is it */}
                             <section className="space-y-4">
                                 <h4 className="text-xl font-bold text-brand-indigo flex items-center gap-2">
