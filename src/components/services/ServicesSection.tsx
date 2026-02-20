@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import ServiceCard from "@/components/services/ServiceCard";
-import { Bot, BrainCircuit, Code2, Cpu, Palette, Sparkles } from "lucide-react";
+import { Bot, BrainCircuit, Cpu, Palette, Sparkles } from "lucide-react";
 
 const services = [
     { title: "AI Agents", description: "Autonomous digital workers that handle complex workflows 24/7.", icon: <Bot size={32} /> },

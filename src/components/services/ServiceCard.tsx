@@ -1,6 +1,5 @@
 "use client";
 import React from "react";
-import { motion } from "framer-motion";
 import Hexagon from "@/components/ui/Hexagon";
 import { ArrowRight } from "lucide-react";
 import TiltCard from "@/components/ui/TiltCard";

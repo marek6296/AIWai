@@ -33,6 +33,7 @@ export default function ContactSection() {
                 setStatus('error');
             }
         } catch (error) {
+            console.error('Submission error:', error);
             setStatus('error');
         }
     };
@@ -49,11 +50,11 @@ export default function ContactSection() {
                     transition={{ duration: 1, ease: "easeOut" }}
                 >
                     <h2 className="text-5xl md:text-7xl font-bold text-brand-indigo mb-8 tracking-tight">
-                        Let's build <br />
+                        Let&apos;s build <br />
                         <span className="text-brand-sand">something smart.</span>
                     </h2>
                     <p className="text-xl text-brand-indigo/60 max-w-lg mb-12">
-                        Ready to elevate your digital presence? Tell us about your project and we'll help you architect the perfect solution.
+                        Ready to elevate your digital presence? Tell us about your project and we&apos;ll help you architect the perfect solution.
                     </p>
 
                     <div className="flex flex-col gap-4 text-brand-indigo/80">

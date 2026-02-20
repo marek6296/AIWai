@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback } from "react";
-import { motion, AnimatePresence, useAnimation, useMotionValue, useAnimationFrame } from "framer-motion";
+import { useState, useRef, useEffect } from "react";
+import { motion, AnimatePresence, useMotionValue, useAnimationFrame } from "framer-motion";
 import { Send, X, Bot, Sparkles } from "lucide-react";
 
 interface Message {
@@ -65,7 +65,7 @@ export default function Chatbot() {
     useAnimationFrame(() => {
         if (isOpen || isHovered || windowWidth === 0 || showBubble || isInitialLoad) return;
 
-        let currentX = x.get();
+        const currentX = x.get();
         // Constraints: Start at 0 (Right side), End at approx -windowWidth + 100 (Left side)
         const leftLimit = -(windowWidth - 100);
         const rightLimit = 0;
@@ -213,7 +213,7 @@ export default function Chatbot() {
                                 <div className="h-full flex flex-col items-center justify-center text-center opacity-40">
                                     <Bot size={48} className="text-brand-indigo mb-4" />
                                     <p className="text-sm text-brand-indigo max-w-[200px]">
-                                        Hello! I'm AIWai. How can I assist you with your digital architecture today?
+                                        Hello! I&apos;m AIWai. How can I assist you with your digital architecture today?
                                     </p>
                                 </div>
                             )}
