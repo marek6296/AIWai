@@ -23,6 +23,7 @@ export default function Chatbot() {
     const [direction, setDirection] = useState<-1 | 1>(-1); // -1 = going left, 1 = going right
     const [alignment, setAlignment] = useState<"left" | "right">("right"); // Alignment of the chat window
     const [showBubble, setShowBubble] = useState(false); // Help bubble state
+    const [bubbleMessage, setBubbleMessage] = useState("Got questions? I've got answers.");
     const [isInitialLoad, setIsInitialLoad] = useState(true); // Initial load delay
     const lastBubbleTime = useRef(0); // Cooldown for bubble
     const x = useMotionValue(0);
@@ -55,6 +56,7 @@ export default function Chatbot() {
     // Initial load sequence
     useEffect(() => {
         const timer = setTimeout(() => {
+            setBubbleMessage("Got questions? I've got answers.");
             setShowBubble(true);
             setIsInitialLoad(false);
             lastBubbleTime.current = Date.now();
@@ -88,6 +90,7 @@ export default function Chatbot() {
                 // Trigger bubble if cooldown passed
                 const now = Date.now();
                 if (now - lastBubbleTime.current > 10000) {
+                    setBubbleMessage("Still here if you need me!");
                     setShowBubble(true);
                     lastBubbleTime.current = now;
                 }
@@ -326,7 +329,7 @@ export default function Chatbot() {
                                     exit={{ opacity: 0, y: 10, scale: 0.8 }}
                                     className="absolute bottom-full right-0 mb-3 w-48 bg-white text-brand-indigo p-3 rounded-xl rounded-br-none shadow-lg text-xs font-medium border border-brand-indigo/10 z-50 pointer-events-none"
                                 >
-                                    Got questions? I&apos;ve got answers.
+                                    {bubbleMessage}
                                 </motion.div>
                             )}
                         </AnimatePresence>
