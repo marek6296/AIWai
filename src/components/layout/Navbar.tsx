@@ -119,29 +119,30 @@ export default function Navbar() {
             </nav>
 
             {/* Mobile Menu Overlay */}
-            <AnimatePresence mode="wait">
+            <AnimatePresence>
                 {isOpen && (
                     <motion.div
+                        key="mobile-menu"
                         variants={{
                             initial: {
-                                clipPath: "circle(0% at 90% 5%)",
+                                clipPath: "circle(0% at 92% 4%)",
                                 opacity: 0
                             },
                             animate: {
-                                clipPath: "circle(150% at 90% 5%)",
+                                clipPath: "circle(150% at 92% 4%)",
                                 opacity: 1,
                                 transition: {
-                                    duration: 0.8,
+                                    duration: 0.7,
                                     ease: [0.76, 0, 0.24, 1]
                                 }
                             },
                             exit: {
-                                clipPath: "circle(0% at 90% 5%)",
+                                clipPath: "circle(0% at 92% 4%)",
                                 opacity: 0,
                                 transition: {
-                                    duration: 0.6,
+                                    duration: 0.5,
                                     ease: [0.76, 0, 0.24, 1],
-                                    delay: 0.2 // Give items time to exit
+                                    delay: 0.1
                                 }
                             }
                         }}
@@ -149,12 +150,12 @@ export default function Navbar() {
                         animate="animate"
                         exit="exit"
                         className="fixed inset-0 z-[90] bg-white flex flex-col items-center justify-center overflow-hidden"
-                        style={{ willChange: "clip-path" }}
+                        style={{ willChange: "clip-path, opacity" }}
                     >
-                        {/* Background Decoration for Mobile Menu - Slightly subtle */}
+                        {/* Background Decoration - Pre-rendered for smoothness */}
                         <div className="absolute inset-0 opacity-[0.03] pointer-events-none">
-                            <div className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] bg-brand-indigo rounded-full blur-[120px]" />
-                            <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] bg-brand-indigo rounded-full blur-[120px]" />
+                            <div className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] bg-brand-indigo rounded-full blur-[100px]" />
+                            <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] bg-brand-indigo rounded-full blur-[100px]" />
                         </div>
 
                         <div className="flex flex-col items-center gap-10 relative z-10 w-full px-12">
@@ -163,22 +164,22 @@ export default function Navbar() {
                                     <motion.a
                                         href={`#${item.toLowerCase()}`}
                                         variants={{
-                                            initial: { y: 80, opacity: 0 },
+                                            initial: { y: 60, opacity: 0 },
                                             animate: {
                                                 y: 0,
                                                 opacity: 1,
                                                 transition: {
-                                                    delay: 0.4 + i * 0.1,
-                                                    duration: 0.7,
+                                                    delay: 0.3 + i * 0.08,
+                                                    duration: 0.6,
                                                     ease: [0.215, 0.61, 0.355, 1]
                                                 }
                                             },
                                             exit: {
-                                                y: 40,
+                                                y: 30,
                                                 opacity: 0,
                                                 transition: {
-                                                    duration: 0.4,
-                                                    ease: [0.215, 0.61, 0.355, 1]
+                                                    duration: 0.3,
+                                                    ease: "easeIn"
                                                 }
                                             }
                                         }}
@@ -196,12 +197,12 @@ export default function Navbar() {
                                     animate: {
                                         opacity: 1,
                                         y: 0,
-                                        transition: { delay: 0.7, duration: 0.5 }
+                                        transition: { delay: 0.5, duration: 0.5 }
                                     },
                                     exit: {
                                         opacity: 0,
-                                        y: 20,
-                                        transition: { duration: 0.3 }
+                                        y: 10,
+                                        transition: { duration: 0.2 }
                                     }
                                 }}
                                 className="w-full max-w-[280px]"
@@ -219,7 +220,7 @@ export default function Navbar() {
                         <motion.div
                             variants={{
                                 initial: { opacity: 0 },
-                                animate: { opacity: 1, transition: { delay: 0.9 } },
+                                animate: { opacity: 1, transition: { delay: 0.7 } },
                                 exit: { opacity: 0, transition: { duration: 0.2 } }
                             }}
                             className="absolute bottom-12 flex flex-col items-center gap-2 text-brand-indigo/30"
