@@ -113,37 +113,72 @@ export default function Navbar() {
             <AnimatePresence>
                 {isOpen && (
                     <motion.div
-                        initial={{ opacity: 0, y: "-100%" }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: "-100%" }}
-                        transition={{ duration: 0.5, ease: [0.76, 0, 0.24, 1] }}
-                        className="fixed inset-0 z-40 bg-white flex flex-col items-center justify-center gap-8"
+                        initial={{ clipPath: "circle(0% at 100% 0%)" }}
+                        animate={{ clipPath: "circle(150% at 100% 0%)" }}
+                        exit={{ clipPath: "circle(0% at 100% 0%)" }}
+                        transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
+                        onAnimationStart={() => {
+                            document.body.style.overflow = "hidden";
+                        }}
+                        onAnimationComplete={(definition) => {
+                            if (definition === "exit") {
+                                document.body.style.overflow = "unset";
+                            }
+                        }}
+                        className="fixed inset-0 z-40 bg-white flex flex-col items-center justify-center overflow-hidden"
                     >
-                        <div className="flex flex-col items-center gap-8">
+                        {/* Background Decoration for Mobile Menu */}
+                        <div className="absolute inset-0 opacity-[0.03] pointer-events-none">
+                            <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-brand-indigo rounded-full blur-[120px]" />
+                            <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-brand-indigo rounded-full blur-[120px]" />
+                        </div>
+
+                        <div className="flex flex-col items-center gap-10 relative z-10 w-full px-12">
                             {["Services", "About", "Projects"].map((item, i) => (
-                                <motion.a
-                                    key={item}
-                                    href={`#${item.toLowerCase()}`}
-                                    initial={{ opacity: 0, y: 20 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: 0.2 + i * 0.1 }}
-                                    onClick={(e) => handleScroll(e, item.toLowerCase())}
-                                    className="text-4xl font-light text-brand-indigo hover:text-brand-indigo/70 transition-colors cursor-pointer"
-                                >
-                                    {item}
-                                </motion.a>
+                                <div key={item} className="overflow-hidden w-full flex justify-center">
+                                    <motion.a
+                                        href={`#${item.toLowerCase()}`}
+                                        initial={{ y: 80, opacity: 0 }}
+                                        animate={{ y: 0, opacity: 1 }}
+                                        exit={{ y: 50, opacity: 0 }}
+                                        transition={{
+                                            delay: 0.3 + i * 0.1,
+                                            duration: 0.7,
+                                            ease: [0.215, 0.61, 0.355, 1]
+                                        }}
+                                        onClick={(e) => handleScroll(e, item.toLowerCase())}
+                                        className="text-5xl font-bold tracking-tighter text-brand-indigo hover:text-brand-indigo/60 transition-colors cursor-pointer"
+                                    >
+                                        {item}
+                                    </motion.a>
+                                </div>
                             ))}
 
-                            <motion.button
-                                initial={{ opacity: 0, scale: 0.8 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                transition={{ delay: 0.5 }}
-                                onClick={(e) => handleScroll(e as any, "contact")}
-                                className="mt-4 px-12 py-5 bg-brand-sand text-brand-indigo rounded-full text-lg font-bold tracking-widest uppercase shadow-xl"
+                            <motion.div
+                                initial={{ opacity: 0, y: 30 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: 20 }}
+                                transition={{ delay: 0.6, duration: 0.5 }}
+                                className="w-full max-w-[280px]"
                             >
-                                Contact
-                            </motion.button>
+                                <button
+                                    onClick={(e) => handleScroll(e as any, "contact")}
+                                    className="w-full mt-6 px-12 py-5 bg-brand-sand text-brand-indigo rounded-full text-xl font-bold tracking-widest uppercase shadow-2xl active:scale-95 transition-transform"
+                                >
+                                    Contact
+                                </button>
+                            </motion.div>
                         </div>
+
+                        {/* Social Links Footer in Menu */}
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: 0.8 }}
+                            className="absolute bottom-12 flex gap-8 text-brand-indigo/30"
+                        >
+                            <span className="text-[10px] uppercase tracking-[0.3em]">AIWai Architecture</span>
+                        </motion.div>
                     </motion.div>
                 )}
             </AnimatePresence>
