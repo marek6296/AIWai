@@ -37,7 +37,7 @@ export async function POST(req: Request) {
                     'Accept': 'application/json'
                 },
                 body: JSON.stringify({
-                    access_key: "YOUR_WEB3FORMS_KEY_HERE", // We will replace this with the user's key
+                    access_key: "0f1dc3b9-37d0-4e0d-aa3e-0601ec0a675d",
                     name: name,
                     email: email,
                     project_type: projectType,
