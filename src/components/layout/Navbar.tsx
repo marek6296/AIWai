@@ -92,7 +92,7 @@ export default function Navbar() {
                         </div>
 
                         <button
-                            onClick={(e) => handleScroll(e as any, "contact")}
+                            onClick={(e) => handleScroll(e, "contact")}
                             className="px-8 py-3 bg-brand-sand text-brand-indigo rounded-full text-sm font-bold tracking-widest uppercase hover:bg-brand-sand/80 transition-all shadow-lg hover:shadow-brand-sand/20 flex items-center gap-2 group"
                         >
                             Contact
@@ -162,7 +162,7 @@ export default function Navbar() {
                                 className="w-full max-w-[280px]"
                             >
                                 <button
-                                    onClick={(e) => handleScroll(e as any, "contact")}
+                                    onClick={(e) => handleScroll(e, "contact")}
                                     className="w-full mt-6 px-12 py-5 bg-brand-sand text-brand-indigo rounded-full text-xl font-bold tracking-widest uppercase shadow-2xl active:scale-95 transition-transform"
                                 >
                                     Contact
