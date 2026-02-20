@@ -119,14 +119,37 @@ export default function Navbar() {
             </nav>
 
             {/* Mobile Menu Overlay */}
-            <AnimatePresence>
+            <AnimatePresence mode="wait">
                 {isOpen && (
                     <motion.div
-                        initial={{ clipPath: "circle(0% at 90% 5%)", opacity: 0 }}
-                        animate={{ clipPath: "circle(150% at 90% 5%)", opacity: 1 }}
-                        exit={{ clipPath: "circle(0% at 90% 5%)", opacity: 0 }}
-                        transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
+                        variants={{
+                            initial: {
+                                clipPath: "circle(0% at 90% 5%)",
+                                opacity: 0
+                            },
+                            animate: {
+                                clipPath: "circle(150% at 90% 5%)",
+                                opacity: 1,
+                                transition: {
+                                    duration: 0.8,
+                                    ease: [0.76, 0, 0.24, 1]
+                                }
+                            },
+                            exit: {
+                                clipPath: "circle(0% at 90% 5%)",
+                                opacity: 0,
+                                transition: {
+                                    duration: 0.6,
+                                    ease: [0.76, 0, 0.24, 1],
+                                    delay: 0.2 // Give items time to exit
+                                }
+                            }
+                        }}
+                        initial="initial"
+                        animate="animate"
+                        exit="exit"
                         className="fixed inset-0 z-[90] bg-white flex flex-col items-center justify-center overflow-hidden"
+                        style={{ willChange: "clip-path" }}
                     >
                         {/* Background Decoration for Mobile Menu - Slightly subtle */}
                         <div className="absolute inset-0 opacity-[0.03] pointer-events-none">
@@ -139,12 +162,25 @@ export default function Navbar() {
                                 <div key={item} className="overflow-hidden w-full flex justify-center">
                                     <motion.a
                                         href={`#${item.toLowerCase()}`}
-                                        initial={{ y: 80, opacity: 0 }}
-                                        animate={{ y: 0, opacity: 1 }}
-                                        transition={{
-                                            delay: 0.3 + i * 0.1,
-                                            duration: 0.7,
-                                            ease: [0.215, 0.61, 0.355, 1]
+                                        variants={{
+                                            initial: { y: 80, opacity: 0 },
+                                            animate: {
+                                                y: 0,
+                                                opacity: 1,
+                                                transition: {
+                                                    delay: 0.4 + i * 0.1,
+                                                    duration: 0.7,
+                                                    ease: [0.215, 0.61, 0.355, 1]
+                                                }
+                                            },
+                                            exit: {
+                                                y: 40,
+                                                opacity: 0,
+                                                transition: {
+                                                    duration: 0.4,
+                                                    ease: [0.215, 0.61, 0.355, 1]
+                                                }
+                                            }
                                         }}
                                         onClick={(e) => handleScroll(e, item.toLowerCase())}
                                         className="text-5xl font-bold tracking-tighter text-brand-indigo hover:text-brand-indigo/60 transition-colors cursor-pointer"
@@ -155,9 +191,19 @@ export default function Navbar() {
                             ))}
 
                             <motion.div
-                                initial={{ opacity: 0, y: 30 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.6, duration: 0.5 }}
+                                variants={{
+                                    initial: { opacity: 0, y: 30 },
+                                    animate: {
+                                        opacity: 1,
+                                        y: 0,
+                                        transition: { delay: 0.7, duration: 0.5 }
+                                    },
+                                    exit: {
+                                        opacity: 0,
+                                        y: 20,
+                                        transition: { duration: 0.3 }
+                                    }
+                                }}
                                 className="w-full max-w-[280px]"
                             >
                                 <button
@@ -171,13 +217,15 @@ export default function Navbar() {
 
                         {/* Social Links Footer in Menu */}
                         <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ delay: 0.8 }}
+                            variants={{
+                                initial: { opacity: 0 },
+                                animate: { opacity: 1, transition: { delay: 0.9 } },
+                                exit: { opacity: 0, transition: { duration: 0.2 } }
+                            }}
                             className="absolute bottom-12 flex flex-col items-center gap-2 text-brand-indigo/30"
                         >
-                            <span className="text-[10px] uppercase tracking-[0.3em] font-bold">AIWai</span>
-                            <span className="text-[10px] uppercase tracking-[0.1em]">Intelligent Digital Architecture</span>
+                            <span className="text-[10px] uppercase tracking-[0.3em] font-bold" style={{ userSelect: 'none' }}>AIWai</span>
+                            <span className="text-[10px] uppercase tracking-[0.1em]" style={{ userSelect: 'none' }}>Intelligent Digital Architecture</span>
                         </motion.div>
                     </motion.div>
                 )}
