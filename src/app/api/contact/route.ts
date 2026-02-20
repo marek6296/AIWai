@@ -29,8 +29,9 @@ export async function POST(req: Request) {
 
         // 2. Send email via Web3Forms (More reliable free option)
         try {
-            console.log('Attempting to send email via Web3Forms...');
-            await fetch('https://api.web3forms.com/submit', {
+            console.log('Attempting to send email via Web3Forms with key 0f1dc3b9...');
+
+            const response = await fetch('https://api.web3forms.com/submit', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -43,10 +44,20 @@ export async function POST(req: Request) {
                     project_type: projectType,
                     message: message,
                     subject: `Nová správa z AIWai od ${name}`,
-                    from_name: "AIWai Web"
+                    from_name: "AIWai Web",
+                    botcheck: false // Optional: help avoid some filters
                 })
             });
-            console.log('Web3Forms request sent.');
+
+            const responseText = await response.text();
+            console.log('Web3Forms Raw Response:', responseText);
+
+            try {
+                const emailResult = JSON.parse(responseText);
+                console.log('Web3Forms Parsed Response:', emailResult);
+            } catch (pError) {
+                console.error('Web3Forms response was not valid JSON. Content starts with:', responseText.substring(0, 100));
+            }
         } catch (mailError) {
             console.error('Mail forwarding error:', mailError);
         }
