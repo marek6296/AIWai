@@ -19,14 +19,31 @@ export default function ContactSection() {
         setStatus('sending');
 
         try {
-            // Simulated API call - would point to /api/contact in a real app
-            const response = await fetch('/api/contact', {
+            // 1. Save to Supabase via our local API (Server-side)
+            const dbPromise = fetch('/api/contact', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData)
             });
 
-            if (response.ok) {
+            // 2. Send Email via Web3Forms directly from Client (Bypasses Cloudflare bot block)
+            const mailFormData = new FormData();
+            mailFormData.append("access_key", "0f1dc3b9-37d0-4e0d-aa3e-0601ec0a675d");
+            mailFormData.append("name", formData.name);
+            mailFormData.append("email", formData.email);
+            mailFormData.append("project_type", formData.projectType);
+            mailFormData.append("message", formData.message);
+            mailFormData.append("subject", `Nová správa z AIWai od ${formData.name}`);
+            mailFormData.append("from_name", "AIWai Web");
+
+            const mailPromise = fetch("https://api.web3forms.com/submit", {
+                method: "POST",
+                body: mailFormData
+            });
+
+            const [dbRes, mailRes] = await Promise.all([dbPromise, mailPromise]);
+
+            if (dbRes.ok || mailRes.ok) {
                 setStatus('success');
                 setFormData({ name: "", email: "", projectType: "Web Development", message: "" });
             } else {
