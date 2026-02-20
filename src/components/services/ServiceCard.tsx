@@ -22,6 +22,9 @@ export default function ServiceCard({ title, description, icon, onClick }: Servi
                     {icon && <div className="text-brand-indigo scale-110 mb-2">{icon}</div>}
                     <h3 className="text-xl font-medium tracking-wide text-brand-indigo group-hover:text-brand-indigo/70 transition-colors">{title}</h3>
                     <p className="text-xs text-brand-indigo/60 line-clamp-3 group-hover:text-brand-indigo/90 transition-colors leading-relaxed">{description}</p>
+                    <div className="opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
+                        <ArrowRight className="w-5 h-5 text-brand-indigo" />
+                    </div>
                 </div>
             </Hexagon>
         </TiltCard>
