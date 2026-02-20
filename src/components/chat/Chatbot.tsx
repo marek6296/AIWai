@@ -110,6 +110,9 @@ export default function Chatbot() {
             } else {
                 setAlignment("right");
             }
+        } else {
+            // Closing
+            setIsHovered(false);
         }
         setIsOpen(!isOpen);
     };
@@ -200,7 +203,10 @@ export default function Chatbot() {
                                 </div>
                             </div>
                             <button
-                                onClick={() => setIsOpen(false)}
+                                onClick={() => {
+                                    setIsOpen(false);
+                                    setIsHovered(false);
+                                }}
                                 className="text-brand-indigo/40 hover:text-brand-indigo transition-colors"
                             >
                                 <X size={20} />
