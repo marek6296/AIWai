@@ -34,10 +34,10 @@ export default function PortfolioSection() {
     const [selectedId, setSelectedId] = useState<number | null>(null);
 
     return (
-        <section id="work" className="py-24 bg-white relative">
+        <section id="projects" className="py-24 bg-white relative">
             <div className="container mx-auto px-6">
                 <div className="mb-16">
-                    <h2 className="text-3xl md:text-5xl font-bold text-brand-indigo mb-6">Selected <span className="text-brand-indigo/60 lowercase italic font-light">Work</span></h2>
+                    <h2 className="text-3xl md:text-5xl font-bold text-brand-indigo mb-6">Selected <span className="text-brand-indigo/60 lowercase italic font-light">Projects</span></h2>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">

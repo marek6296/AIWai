@@ -67,7 +67,7 @@ export default function Navbar() {
 
                     {/* Desktop Menu */}
                     <div className="hidden md:flex items-center gap-2" onMouseLeave={() => setHoveredItem(null)}>
-                        {["Services", "About", "Work", "Contact"].map((item) => (
+                        {["Services", "About", "Projects", "Contact"].map((item) => (
                             <a
                                 key={item}
                                 href={`#${item.toLowerCase()}`}
@@ -110,7 +110,7 @@ export default function Navbar() {
                         transition={{ duration: 0.5, ease: [0.76, 0, 0.24, 1] }}
                         className="fixed inset-0 z-40 bg-white flex flex-col items-center justify-center gap-8"
                     >
-                        {["Services", "About", "Work", "Contact"].map((item, i) => (
+                        {["Services", "About", "Projects", "Contact"].map((item, i) => (
                             <motion.a
                                 key={item}
                                 href={`#${item.toLowerCase()}`}
