@@ -26,24 +26,20 @@ export default function ContactSection() {
                 body: JSON.stringify(formData)
             });
 
-            // 2. Send Email via Web3Forms directly from Client (Bypasses Cloudflare bot block)
-            const mailFormData = new FormData();
-            mailFormData.append("access_key", "0f1dc3b9-37d0-4e0d-aa3e-0601ec0a675d");
-            mailFormData.append("name", formData.name);
-            mailFormData.append("email", formData.email);
-            mailFormData.append("project_type", formData.projectType);
-            mailFormData.append("message", formData.message);
-            mailFormData.append("subject", `Nová správa z AIWai od ${formData.name}`);
-            mailFormData.append("from_name", "AIWai Web");
-
-            const mailPromise = fetch("https://api.web3forms.com/submit", {
+            // 2. Send to Make.com Webhook (Trigger AI automation)
+            const webhookPromise = fetch("https://hook.eu1.make.com/pmxc2wt7srxq6bv6qc6jezd11tb7a3qk", {
                 method: "POST",
-                body: mailFormData
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    ...formData,
+                    source: "Web Form",
+                    timestamp: new Date().toISOString()
+                })
             });
 
-            const [dbRes, mailRes] = await Promise.all([dbPromise, mailPromise]);
+            const [dbRes, webhookRes] = await Promise.all([dbPromise, webhookPromise]);
 
-            if (dbRes.ok || mailRes.ok) {
+            if (dbRes.ok || webhookRes.ok) {
                 setStatus('success');
                 setFormData({ name: "", email: "", projectType: "Web Development", message: "" });
             } else {
