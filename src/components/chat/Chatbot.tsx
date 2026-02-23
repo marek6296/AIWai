@@ -179,7 +179,7 @@ export default function Chatbot() {
             <AnimatePresence>
                 {isOpen && (
                     <motion.div
-                        style={windowWidth < 640 ? {} : { x }}
+                        style={windowWidth < 640 ? {} : { x: alignment === "left" ? x.get() + 344 : x }}
                         initial={{ opacity: 0, y: 20, scale: 0.95 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 20, scale: 0.95 }}
