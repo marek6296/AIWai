@@ -25,7 +25,7 @@ export default async function ClientDetailPage({ params }: { params: { email: st
     }
 
     // Fetch email history
-    const { data: history, error: historyError } = await supabase
+    const { data: history } = await supabase
         .from('email_history')
         .select('*')
         .eq('sender_email', email)
@@ -77,10 +77,10 @@ export default async function ClientDetailPage({ params }: { params: { email: st
                         return (
                             <div key={msg.id} className={`flex ${msg.role === 'user' ? 'justify-start' : 'justify-end'}`}>
                                 <div className={`max-w-[80%] rounded-2xl p-5 ${isDraft
-                                        ? 'bg-brand-indigo text-white border-2 border-brand-orange ring-4 ring-brand-orange/10'
-                                        : msg.role === 'user'
-                                            ? 'bg-brand-offwhite border border-brand-indigo/10 text-brand-indigo rounded-tl-sm'
-                                            : 'bg-brand-indigo text-white rounded-tr-sm'
+                                    ? 'bg-brand-indigo text-white border-2 border-brand-orange ring-4 ring-brand-orange/10'
+                                    : msg.role === 'user'
+                                        ? 'bg-brand-offwhite border border-brand-indigo/10 text-brand-indigo rounded-tl-sm'
+                                        : 'bg-brand-indigo text-white rounded-tr-sm'
                                     }`}>
                                     <div className="flex items-center justify-between mb-2 gap-8">
                                         <span className={`flex items-center gap-2 text-xs font-bold uppercase tracking-wider ${msg.role === 'user' ? 'text-brand-indigo/60' : 'text-brand-indigo-light/80'}`}>

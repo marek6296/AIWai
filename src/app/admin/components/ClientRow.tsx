@@ -6,6 +6,7 @@ import { Mail, MessageCircle, Instagram, Clock, ArrowRight } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import BotQuickToggle from './BotQuickToggle'
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function ClientRow({ client }: { client: any }) {
     const router = useRouter()
 

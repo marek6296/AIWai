@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { toggleBotActive } from '../client/[email]/actions'
-import { Bot, PowerOff, Loader2 } from 'lucide-react'
+import { Bot, Loader2 } from 'lucide-react'
 
 export default function BotQuickToggle({ email, initialStatus }: { email: string, initialStatus: boolean }) {
     const [isActive, setIsActive] = useState(initialStatus)

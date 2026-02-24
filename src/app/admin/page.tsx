@@ -1,8 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
-import { formatDistanceToNow } from 'date-fns'
-import { sk } from 'date-fns/locale'
-import { Bot, Mail, Clock, ArrowRight, MessageCircle, Instagram } from 'lucide-react'
+import { Mail, MessageCircle, Instagram } from 'lucide-react'
 import ClientRow from './components/ClientRow'
 
 export const dynamic = 'force-dynamic'

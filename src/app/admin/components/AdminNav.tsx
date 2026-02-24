@@ -2,7 +2,7 @@
 
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
-import { LogOut, LayoutDashboard, Users, Bot } from 'lucide-react'
+import { LogOut, LayoutDashboard, Bot } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
@@ -30,8 +30,8 @@ export default function AdminNav() {
                 <Link
                     href="/admin"
                     className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors font-medium text-sm ${pathname === '/admin'
-                            ? 'bg-brand-indigo text-white'
-                            : 'text-brand-indigo/60 hover:bg-brand-indigo/5 hover:text-brand-indigo'
+                        ? 'bg-brand-indigo text-white'
+                        : 'text-brand-indigo/60 hover:bg-brand-indigo/5 hover:text-brand-indigo'
                         }`}
                 >
                     <LayoutDashboard size={18} />
