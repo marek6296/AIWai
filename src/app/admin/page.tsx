@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
-import { Mail, MessageCircle, Instagram } from 'lucide-react'
+import { Mail, Facebook, Instagram } from 'lucide-react'
 import ClientRow from './components/ClientRow'
 
 export const dynamic = 'force-dynamic'
@@ -71,8 +71,8 @@ export default async function AdminDashboard({
                 </Link>
                 <div className="relative group flex items-center">
                     <button disabled className="px-5 py-2.5 rounded-full bg-white/50 border border-brand-indigo/5 text-brand-indigo/40 text-sm font-medium whitespace-nowrap cursor-not-allowed flex items-center gap-2">
-                        <MessageCircle size={16} />
-                        WhatsApp
+                        <Facebook size={16} />
+                        Facebook Page
                     </button>
                     <span className="absolute -top-2 -right-2 bg-brand-orange text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm pointer-events-none">
                         SOON

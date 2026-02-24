@@ -2,7 +2,7 @@
 
 import { formatDistanceToNow } from 'date-fns'
 import { sk } from 'date-fns/locale'
-import { Mail, MessageCircle, Instagram, Clock, ArrowRight } from 'lucide-react'
+import { Mail, Facebook, Instagram, Clock, ArrowRight } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import BotQuickToggle from './BotQuickToggle'
 
@@ -19,8 +19,8 @@ export default function ClientRow({ client }: { client: any }) {
                 <div className="flex items-center gap-3">
                     {client.source === 'gmail' ? (
                         <Mail size={16} className="text-brand-indigo/40" />
-                    ) : client.source === 'whatsapp' ? (
-                        <MessageCircle size={16} className="text-brand-indigo/40" />
+                    ) : client.source === 'facebook' ? (
+                        <Facebook size={16} className="text-brand-indigo/40" />
                     ) : client.source === 'instagram' ? (
                         <Instagram size={16} className="text-brand-indigo/40" />
                     ) : (
