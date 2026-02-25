@@ -71,9 +71,10 @@ export default function RetellVoice() {
                 await retellWebClient.startCall({
                     accessToken: data.access_token,
                 });
-            } catch (err: any) {
+            } catch (err) {
                 console.error('Call initialization failed', err);
-                alert(`Nepodarilo sa spustiť hovor: ${err.message || 'Neznáma chyba'}`);
+                const errorMessage = err instanceof Error ? err.message : 'Neznáma chyba';
+                alert(`Nepodarilo sa spustiť hovor: ${errorMessage}`);
                 setIsLoading(false);
             }
         }
