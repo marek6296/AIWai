@@ -48,6 +48,10 @@ export default function RetellVoice() {
             setIsLoading(true);
             try {
                 // Fetch access token from our Next.js backend
+                if (!agentId) {
+                    throw new Error('Chýba NEXT_PUBLIC_RETELL_AGENT_ID v prostredí Vercel!');
+                }
+
                 const response = await fetch('/api/retell/create-web-call', {
                     method: 'POST',
                     headers: {
@@ -57,7 +61,8 @@ export default function RetellVoice() {
                 });
 
                 if (!response.ok) {
-                    throw new Error('Failed to get web call token');
+                    const errData = await response.json().catch(() => ({}));
+                    throw new Error(`Chyba servera: ${response.status} ${errData.error || ''}`);
                 }
 
                 const data = await response.json();
@@ -66,8 +71,9 @@ export default function RetellVoice() {
                 await retellWebClient.startCall({
                     accessToken: data.access_token,
                 });
-            } catch (err) {
+            } catch (err: any) {
                 console.error('Call initialization failed', err);
+                alert(`Nepodarilo sa spustiť hovor: ${err.message || 'Neznáma chyba'}`);
                 setIsLoading(false);
             }
         }
