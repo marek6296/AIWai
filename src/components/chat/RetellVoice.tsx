@@ -85,10 +85,10 @@ export default function RetellVoice() {
             onClick={toggleCall}
             disabled={isLoading && !isCalling}
             className={`flex items-center justify-center gap-2 px-5 py-3 rounded-full text-sm font-bold tracking-wide uppercase transition-all shadow-xl shadow-brand-indigo/10 ${isCalling
-                    ? 'bg-red-500 text-white hover:bg-red-600 scale-[0.98]'
-                    : isLoading
-                        ? 'bg-brand-indigo/70 text-white cursor-wait'
-                        : 'bg-gradient-to-r from-brand-indigo to-indigo-600 text-white hover:shadow-2xl hover:-translate-y-0.5'
+                ? 'bg-red-500 text-white hover:bg-red-600 scale-[0.98]'
+                : isLoading
+                    ? 'bg-brand-sand/70 text-white cursor-wait'
+                    : 'bg-gradient-to-r from-brand-sand to-neutral-900 text-white hover:shadow-2xl hover:shadow-brand-sand/20 hover:-translate-y-0.5'
                 }`}
         >
             {isLoading ? (
