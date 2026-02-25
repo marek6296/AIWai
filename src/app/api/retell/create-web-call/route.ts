@@ -1,12 +1,19 @@
 import { NextResponse } from 'next/server';
 import Retell from 'retell-sdk';
 
-const retell = new Retell({
-    apiKey: process.env.RETELL_API_KEY as string,
-});
-
 export async function POST(req: Request) {
     try {
+        if (!process.env.RETELL_API_KEY) {
+            return NextResponse.json(
+                { error: 'Missing RETELL_API_KEY environment variable' },
+                { status: 500 }
+            );
+        }
+
+        const retell = new Retell({
+            apiKey: process.env.RETELL_API_KEY,
+        });
+
         const { agent_id } = await req.json();
 
         if (!agent_id) {
