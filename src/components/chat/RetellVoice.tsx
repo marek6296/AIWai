@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { RetellWebClient } from 'retell-client-js-sdk';
-import { Mic, MicOff, PhoneCall, Loader2 } from 'lucide-react';
+import { Mic, PhoneCall, Loader2 } from 'lucide-react';
 
 const retellWebClient = new RetellWebClient();
 const agentId = process.env.NEXT_PUBLIC_RETELL_AGENT_ID as string;
@@ -10,20 +10,17 @@ const agentId = process.env.NEXT_PUBLIC_RETELL_AGENT_ID as string;
 export default function RetellVoice() {
     const [isCalling, setIsCalling] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const [callStatus, setCallStatus] = useState<'idle' | 'calling' | 'active'>('idle');
 
     useEffect(() => {
         // Setup Retell Events
         retellWebClient.on('call_started', () => {
             console.log('Voice call started');
-            setCallStatus('active');
             setIsCalling(true);
             setIsLoading(false);
         });
 
         retellWebClient.on('call_ended', () => {
             console.log('Voice call ended');
-            setCallStatus('idle');
             setIsCalling(false);
             setIsLoading(false);
         });
@@ -31,7 +28,6 @@ export default function RetellVoice() {
         retellWebClient.on('error', (error) => {
             console.error('Retell error:', error);
             retellWebClient.stopCall();
-            setCallStatus('idle');
             setIsCalling(false);
             setIsLoading(false);
         });
@@ -47,11 +43,9 @@ export default function RetellVoice() {
     const toggleCall = async () => {
         if (isCalling) {
             retellWebClient.stopCall();
-            setCallStatus('idle');
             setIsCalling(false);
         } else {
             setIsLoading(true);
-            setCallStatus('calling');
             try {
                 // Fetch access token from our Next.js backend
                 const response = await fetch('/api/retell/create-web-call', {
@@ -75,7 +69,6 @@ export default function RetellVoice() {
             } catch (err) {
                 console.error('Call initialization failed', err);
                 setIsLoading(false);
-                setCallStatus('idle');
             }
         }
     };
