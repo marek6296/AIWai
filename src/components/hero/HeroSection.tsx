@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import WaveBackground from "@/components/backgrounds/WaveBackground";
 import MagneticButton from "@/components/ui/MagneticButton";
+import RetellVoice from "@/components/chat/RetellVoice";
 
 export default function HeroSection() {
     const videoRef = useRef<HTMLVideoElement>(null);
@@ -145,7 +146,7 @@ export default function HeroSection() {
                     </p>
 
                     {/* Button container */}
-                    <div className="mt-8">
+                    <div className="mt-8 flex items-center justify-center gap-4 flex-col sm:flex-row">
                         <MagneticButton onClick={() => {
                             const element = document.getElementById('contact');
                             if (element) {
@@ -158,6 +159,7 @@ export default function HeroSection() {
                         }}>
                             Contact Us
                         </MagneticButton>
+                        <RetellVoice />
                     </div>
                 </div>
             </div>
