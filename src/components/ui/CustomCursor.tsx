@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { motion, useMotionValue, useSpring } from "framer-motion";
 
 export default function CustomCursor() {
@@ -10,11 +10,33 @@ export default function CustomCursor() {
     const dotY = useMotionValue(-100);
 
     // Smooth spring for the outer ring
-    const springX = useSpring(cursorX, { damping: 25, stiffness: 200, mass: 0.5 });
-    const springY = useSpring(cursorY, { damping: 25, stiffness: 200, mass: 0.5 });
+    const springX = useSpring(cursorX, { damping: 28, stiffness: 220, mass: 0.5 });
+    const springY = useSpring(cursorY, { damping: 28, stiffness: 220, mass: 0.5 });
 
     const [cursorState, setCursorState] = useState<"default" | "hover" | "text" | "hidden">("default");
     const [isMobile, setIsMobile] = useState(true); // start hidden
+
+    // Throttled mouseover — only fire at ~60fps to avoid layout thrash
+    const lastHoverTime = useRef(0);
+
+    const handleMouseOver = useCallback((e: MouseEvent) => {
+        const now = performance.now();
+        // Skip if we already updated within 16ms
+        if (now - lastHoverTime.current < 16) return;
+        lastHoverTime.current = now;
+
+        const target = e.target as HTMLElement;
+        const interactive = target.closest("a, button, [role='button'], input, textarea, select, [data-cursor='pointer']");
+        const textBlock = !interactive && target.closest("p, h1, h2, h3, h4, h5, h6, span, li, label");
+
+        if (interactive) {
+            setCursorState("hover");
+        } else if (textBlock) {
+            setCursorState("text");
+        } else {
+            setCursorState("default");
+        }
+    }, []);
 
     useEffect(() => {
         // Only show custom cursor on desktop
@@ -29,20 +51,6 @@ export default function CustomCursor() {
             cursorY.set(e.clientY);
             dotX.set(e.clientX);
             dotY.set(e.clientY);
-        };
-
-        const handleMouseOver = (e: MouseEvent) => {
-            const target = e.target as HTMLElement;
-            const interactive = target.closest("a, button, [role='button'], input, textarea, select, [data-cursor='pointer']");
-            const textBlock = target.closest("p, h1, h2, h3, h4, h5, h6, span, li, label");
-
-            if (interactive) {
-                setCursorState("hover");
-            } else if (textBlock && !interactive) {
-                setCursorState("text");
-            } else {
-                setCursorState("default");
-            }
         };
 
         const handleMouseLeave = () => setCursorState("hidden");
@@ -60,13 +68,13 @@ export default function CustomCursor() {
             document.documentElement.removeEventListener("mouseenter", handleMouseEnter);
             mq.removeEventListener("change", handleChange);
         };
-    }, [cursorX, cursorY, dotX, dotY]);
+    }, [cursorX, cursorY, dotX, dotY, handleMouseOver]);
 
     if (isMobile) return null;
 
     const sizeMap = {
         default: 36,
-        hover: 60,
+        hover: 56,
         text: 4,
         hidden: 0,
     };
@@ -83,7 +91,7 @@ export default function CustomCursor() {
 
     return (
         <>
-            {/* Global style to hide the default cursor  */}
+            {/* Global style to hide the default cursor */}
             <style jsx global>{`
                 *, *::before, *::after {
                     cursor: none !important;
@@ -98,6 +106,7 @@ export default function CustomCursor() {
                     y: springY,
                     translateX: "-50%",
                     translateY: "-50%",
+                    willChange: "transform",
                 }}
             >
                 <motion.div
@@ -108,8 +117,8 @@ export default function CustomCursor() {
                     }}
                     transition={{
                         type: "spring",
-                        damping: 20,
-                        stiffness: 300,
+                        damping: 22,
+                        stiffness: 320,
                         mass: 0.3,
                     }}
                     className="rounded-full border border-white"
@@ -117,6 +126,7 @@ export default function CustomCursor() {
                         background: cursorState === "hover"
                             ? "rgba(255, 255, 255, 0.06)"
                             : "transparent",
+                        willChange: "width, height, opacity",
                     }}
                 />
             </motion.div>
@@ -129,6 +139,7 @@ export default function CustomCursor() {
                     y: dotY,
                     translateX: "-50%",
                     translateY: "-50%",
+                    willChange: "transform",
                 }}
             >
                 <motion.div
@@ -137,8 +148,9 @@ export default function CustomCursor() {
                         height: dotSize,
                         opacity: cursorState === "hidden" ? 0 : 1,
                     }}
-                    transition={{ duration: 0.15 }}
+                    transition={{ duration: 0.12 }}
                     className="rounded-full bg-white"
+                    style={{ willChange: "width, height, opacity" }}
                 />
             </motion.div>
         </>

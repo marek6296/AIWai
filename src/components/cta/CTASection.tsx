@@ -2,23 +2,21 @@
 
 import ScrollReveal from "@/components/animations/ScrollReveal";
 import TextReveal from "@/components/animations/TextReveal";
-import gsap from "gsap";
-import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 import { ArrowRight } from "lucide-react";
-
-if (typeof window !== "undefined") {
-    gsap.registerPlugin(ScrollToPlugin);
-}
+import { useTranslation } from "@/i18n/useTranslation";
 
 export default function CTASection() {
+    const { t } = useTranslation();
+
     const scrollToContact = () => {
         const el = document.getElementById("contact");
         if (el) {
-            gsap.to(window, {
-                duration: 2.5,
-                scrollTo: { y: el, offsetY: 0 },
-                ease: "power4.inOut",
-            });
+            const lenis = (window as unknown as { __lenis?: { scrollTo: (target: Element, opts: object) => void } }).__lenis;
+            if (lenis) {
+                lenis.scrollTo(el, { offset: 0, duration: 1.2 });
+            } else {
+                el.scrollIntoView({ behavior: "smooth" });
+            }
         }
     };
 
@@ -33,7 +31,7 @@ export default function CTASection() {
             <div className="container mx-auto relative z-10 text-center">
                 <ScrollReveal>
                     <p className="text-brand-sand/80 uppercase tracking-[0.2em] text-xs font-bold mb-6">
-                        Ready to start?
+                        {t("cta.label")}
                     </p>
                 </ScrollReveal>
 
@@ -41,12 +39,12 @@ export default function CTASection() {
                     as="h2"
                     className="text-4xl md:text-6xl lg:text-7xl font-display font-bold text-white tracking-tight mb-8"
                 >
-                    Let&apos;s build something intelligent together
+                    {t("cta.heading")}
                 </TextReveal>
 
                 <ScrollReveal delay={0.3}>
                     <p className="text-white/40 text-lg max-w-xl mx-auto mb-12 font-light">
-                        Transform your digital presence with AI-powered solutions designed for measurable impact.
+                        {t("cta.subheading")}
                     </p>
                 </ScrollReveal>
 
@@ -55,7 +53,7 @@ export default function CTASection() {
                         onClick={scrollToContact}
                         className="inline-flex items-center gap-3 px-10 py-4 bg-white text-brand-indigo rounded-full text-sm font-bold uppercase tracking-[0.15em] hover:bg-white/90 transition-all shadow-2xl shadow-black/10 hover:shadow-black/20 group"
                     >
-                        Start a Project
+                        {t("cta.button")}
                         <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
                     </button>
                 </ScrollReveal>

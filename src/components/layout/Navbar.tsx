@@ -1,22 +1,31 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
-import gsap from "gsap";
-import { ScrollToPlugin } from "gsap/ScrollToPlugin";
+import { useTranslation } from "@/i18n/useTranslation";
+import type { Lang } from "@/i18n/translations";
 
-if (typeof window !== "undefined") {
-    gsap.registerPlugin(ScrollToPlugin);
-}
+const NAV_IDS = ["services", "about"] as const;
+const NAV_KEYS: Record<string, string> = {
+    services: "nav.services",
+    about: "nav.about",
+};
 
-const navItems = ["Services", "About"];
+const LANGS: { code: Lang; flag: string; label: string }[] = [
+    { code: "en", flag: "🇬🇧", label: "EN" },
+    { code: "sk", flag: "🇸🇰", label: "SK" },
+    { code: "cs", flag: "🇨🇿", label: "CZ" },
+];
 
 export default function Navbar() {
+    const { t, lang, setLang } = useTranslation();
     const [isOpen, setIsOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
     const [hoveredItem, setHoveredItem] = useState<string | null>(null);
+    const [langOpen, setLangOpen] = useState(false);
+    const langRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         const handleScrollState = () => setScrolled(window.scrollY > 50);
@@ -39,19 +48,43 @@ export default function Navbar() {
         };
     }, [isOpen]);
 
-    const handleScroll = (e: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement>, id: string) => {
+    // Close language dropdown on outside click
+    useEffect(() => {
+        const handleClickOutside = (e: MouseEvent) => {
+            if (langRef.current && !langRef.current.contains(e.target as Node)) {
+                setLangOpen(false);
+            }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
+
+    // Smooth scroll via Lenis — centers the section vertically in the viewport
+    const scrollToSection = useCallback((id: string) => {
+        const element = document.getElementById(id);
+        if (!element) return;
+
+        const vh = window.innerHeight;
+        const elH = element.offsetHeight;
+        const navbarH = 72;
+
+        const offset = elH < vh - navbarH
+            ? -Math.round((vh - elH) / 2)
+            : -navbarH;
+
+        const lenis = (window as unknown as { __lenis?: { scrollTo: (target: Element, opts: object) => void } }).__lenis;
+        if (lenis) {
+            lenis.scrollTo(element, { offset, duration: 1.2 });
+        } else {
+            element.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+    }, []);
+
+    const handleScroll = useCallback((e: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement>, id: string) => {
         e.preventDefault();
         setIsOpen(false);
-
-        const element = document.getElementById(id);
-        if (element) {
-            gsap.to(window, {
-                duration: 2.5,
-                scrollTo: { y: element, offsetY: 10 },
-                ease: "power4.inOut"
-            });
-        }
-    };
+        setTimeout(() => scrollToSection(id), 50);
+    }, [scrollToSection]);
 
     return (
         <>
@@ -60,44 +93,81 @@ export default function Navbar() {
                 initial={{ y: -20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ duration: 0.8, delay: 0.5, ease: [0.215, 0.61, 0.355, 1] }}
-                className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-500 ${
-                    scrolled
+                className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-500 ${scrolled
                         ? "py-3 bg-white/70 backdrop-blur-md border-b border-brand-indigo/[0.06] shadow-[0_1px_30px_rgba(28,31,58,0.04)]"
                         : "py-5 bg-transparent"
-                }`}
+                    }`}
             >
                 <div className="container mx-auto flex justify-between items-center">
-                    <Link
-                        href="/"
-                        onClick={(e) => {
-                            e.preventDefault();
-                            setIsOpen(false);
-                            gsap.to(window, { duration: 2.5, scrollTo: { y: 0 }, ease: "power4.inOut" });
-                        }}
-                        className="z-[110] relative flex items-center"
-                    >
-                        <Image
-                            src="/logo.png"
-                            alt="AIWai"
-                            width={52}
-                            height={52}
-                            className="w-12 h-12 object-contain mix-blend-multiply"
-                            priority
-                        />
-                    </Link>
+                    <div className="flex items-center gap-3 z-[110]">
+                        <Link
+                            href="/"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                setIsOpen(false);
+                                scrollToSection("__top");
+                                const lenis = (window as unknown as { __lenis?: { scrollTo: (target: number, opts: object) => void } }).__lenis;
+                                if (lenis) lenis.scrollTo(0, { duration: 1.2 });
+                                else window.scrollTo({ top: 0, behavior: "smooth" });
+                            }}
+                            className="relative flex items-center"
+                        >
+                            <Image
+                                src="/logo.png"
+                                alt="AIWai"
+                                width={52}
+                                height={52}
+                                className="w-12 h-12 object-contain mix-blend-multiply"
+                                priority
+                            />
+                        </Link>
+
+                        {/* Language Switcher Dropdown */}
+                        <div className="relative" ref={langRef}>
+                            <button
+                                onClick={() => setLangOpen(!langOpen)}
+                                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl hover:bg-brand-indigo/5 transition-all"
+                            >
+                                <span className="text-base">{LANGS.find((l) => l.code === lang)?.flag}</span>
+                                <svg className={`w-3 h-3 text-brand-indigo/40 transition-transform duration-200 ${langOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" /></svg>
+                            </button>
+                            <AnimatePresence>
+                                {langOpen && (
+                                    <motion.div
+                                        initial={{ opacity: 0, y: -5, scale: 0.95 }}
+                                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                                        exit={{ opacity: 0, y: -5, scale: 0.95 }}
+                                        transition={{ duration: 0.15 }}
+                                        className="absolute top-full left-0 mt-1 bg-white/90 backdrop-blur-xl border border-brand-indigo/10 rounded-xl shadow-lg shadow-brand-indigo/5 overflow-hidden"
+                                    >
+                                        {LANGS.filter((l) => l.code !== lang).map((l) => (
+                                            <button
+                                                key={l.code}
+                                                onClick={() => { setLang(l.code); setLangOpen(false); }}
+                                                className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-brand-indigo/5 transition-colors"
+                                            >
+                                                <span className="text-base">{l.flag}</span>
+                                                <span className="text-brand-indigo/60 text-xs font-medium uppercase">{l.label}</span>
+                                            </button>
+                                        ))}
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+                        </div>
+                    </div>
 
                     {/* Desktop Menu */}
                     <div className="hidden md:flex items-center gap-1" onMouseLeave={() => setHoveredItem(null)}>
                         <div className="flex items-center">
-                            {navItems.map((item) => (
+                            {NAV_IDS.map((id) => (
                                 <a
-                                    key={item}
-                                    href={`#${item.toLowerCase()}`}
-                                    onClick={(e) => handleScroll(e, item.toLowerCase())}
-                                    onMouseEnter={() => setHoveredItem(item)}
+                                    key={id}
+                                    href={`#${id}`}
+                                    onClick={(e) => handleScroll(e, id)}
+                                    onMouseEnter={() => setHoveredItem(id)}
                                     className="relative px-5 py-2.5 text-sm uppercase tracking-[0.15em] text-brand-indigo/60 hover:text-brand-indigo transition-colors cursor-pointer font-medium"
                                 >
-                                    {hoveredItem === item && (
+                                    {hoveredItem === id && (
                                         <motion.div
                                             layoutId="navHover"
                                             className="absolute inset-0 bg-brand-indigo/[0.04] rounded-full -z-10"
@@ -107,7 +177,7 @@ export default function Navbar() {
                                             transition={{ type: "spring", bounce: 0.2, duration: 0.5 }}
                                         />
                                     )}
-                                    {item}
+                                    {t(NAV_KEYS[id])}
                                 </a>
                             ))}
                         </div>
@@ -118,7 +188,7 @@ export default function Navbar() {
                             onClick={(e) => handleScroll(e, "contact")}
                             className="px-6 py-2.5 bg-brand-indigo text-white rounded-full text-xs font-bold tracking-[0.15em] uppercase hover:bg-brand-indigo/90 transition-all shadow-lg shadow-brand-indigo/10 hover:shadow-brand-indigo/20"
                         >
-                            Contact
+                            {t("nav.contact")}
                         </button>
                     </div>
 
@@ -167,10 +237,10 @@ export default function Navbar() {
                         </div>
 
                         <div className="flex flex-col items-center gap-10 relative z-10 w-full px-12">
-                            {navItems.map((item, i) => (
-                                <div key={item} className="overflow-hidden w-full flex justify-center">
+                            {NAV_IDS.map((id, i) => (
+                                <div key={id} className="overflow-hidden w-full flex justify-center">
                                     <motion.a
-                                        href={`#${item.toLowerCase()}`}
+                                        href={`#${id}`}
                                         variants={{
                                             initial: { y: 60, opacity: 0 },
                                             animate: {
@@ -188,13 +258,36 @@ export default function Navbar() {
                                                 transition: { duration: 0.3, ease: "easeIn" }
                                             }
                                         }}
-                                        onClick={(e) => handleScroll(e, item.toLowerCase())}
+                                        onClick={(e) => handleScroll(e, id)}
                                         className="text-5xl font-display font-bold tracking-tighter text-brand-indigo hover:text-brand-indigo/60 transition-colors cursor-pointer"
                                     >
-                                        {item}
+                                        {t(NAV_KEYS[id])}
                                     </motion.a>
                                 </div>
                             ))}
+
+                            {/* Mobile Language Switcher */}
+                            <motion.div
+                                variants={{
+                                    initial: { opacity: 0, y: 30 },
+                                    animate: { opacity: 1, y: 0, transition: { delay: 0.45, duration: 0.5 } },
+                                    exit: { opacity: 0, y: 10, transition: { duration: 0.2 } }
+                                }}
+                                className="flex items-center gap-3"
+                            >
+                                {LANGS.map((l) => (
+                                    <button
+                                        key={l.code}
+                                        onClick={() => { setLang(l.code); setIsOpen(false); }}
+                                        className={`px-4 py-2.5 text-2xl rounded-xl transition-all ${lang === l.code
+                                            ? "bg-brand-indigo/10 ring-2 ring-brand-indigo/20 scale-110"
+                                            : "opacity-40 hover:opacity-80"
+                                        }`}
+                                    >
+                                        {l.flag}
+                                    </button>
+                                ))}
+                            </motion.div>
 
                             <motion.div
                                 variants={{
@@ -208,7 +301,7 @@ export default function Navbar() {
                                     onClick={(e) => handleScroll(e, "contact")}
                                     className="w-full mt-6 px-12 py-5 bg-brand-indigo text-white rounded-full text-xl font-bold tracking-widest uppercase shadow-2xl active:scale-95 transition-transform"
                                 >
-                                    Contact
+                                    {t("nav.contact")}
                                 </button>
                             </motion.div>
                         </div>

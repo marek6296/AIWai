@@ -199,7 +199,7 @@ export default function ChatbotAdminPage() {
 
     const handleLogout = async () => {
         await fetch('/api/auth/simple-logout', { method: 'POST' })
-        router.push('/login')
+        router.push('/admin/chatbot/login')
         router.refresh()
     }
 

@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { Bot, Lock, User, ArrowRight, Sparkles } from 'lucide-react'
 
-export default function LoginPage() {
+export default function ChatbotAdminLogin() {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [error, setError] = useState<string | null>(null)
@@ -27,12 +27,12 @@ export default function LoginPage() {
             const data = await res.json()
 
             if (!res.ok) {
-                setError(data.error || 'Nesprávne prihlasovacie údaje')
+                setError(data.error || 'Prihlásenie zlyhalo')
                 setLoading(false)
                 return
             }
 
-            router.push('/admin')
+            router.push('/admin/chatbot')
             router.refresh()
         } catch {
             setError('Chyba siete. Skúste znovu.')
@@ -46,8 +46,8 @@ export default function LoginPage() {
             <div className="absolute inset-0 bg-[linear-gradient(rgba(216,185,138,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(216,185,138,0.03)_1px,transparent_1px)] bg-[size:60px_60px]" />
 
             {/* Glow orbs */}
-            <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] rounded-full bg-[#D8B98A]/5 blur-[150px] pointer-events-none" />
-            <div className="absolute bottom-1/4 right-1/4 w-[300px] h-[300px] rounded-full bg-[#1C1F3A]/20 blur-[100px] pointer-events-none" />
+            <div className="absolute top-1/4 left-1/4 w-[400px] h-[400px] rounded-full bg-[#D8B98A]/5 blur-[120px] pointer-events-none" />
+            <div className="absolute bottom-1/4 right-1/4 w-[300px] h-[300px] rounded-full bg-[#1C1F3A]/30 blur-[100px] pointer-events-none" />
 
             <motion.div
                 initial={{ opacity: 0, y: 24, scale: 0.97 }}
@@ -55,6 +55,7 @@ export default function LoginPage() {
                 transition={{ duration: 0.5, ease: [0.215, 0.61, 0.355, 1] }}
                 className="w-full max-w-md relative z-10"
             >
+                {/* Card */}
                 <div className="bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-2xl shadow-black/40">
 
                     {/* Logo */}
@@ -62,8 +63,8 @@ export default function LoginPage() {
                         <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#D8B98A] to-[#C4A070] flex items-center justify-center mb-5 shadow-lg shadow-[#D8B98A]/20">
                             <Bot size={30} className="text-[#1C1F3A]" />
                         </div>
-                        <h1 className="text-2xl font-bold text-white mb-1">AIWai Admin</h1>
-                        <p className="text-white/40 text-sm">Chatbot Management Console</p>
+                        <h1 className="text-2xl font-bold text-white mb-1">Chatbot Admin</h1>
+                        <p className="text-white/40 text-sm">AIWai · Intelligent Architecture</p>
                     </div>
 
                     {/* Form */}
@@ -81,8 +82,7 @@ export default function LoginPage() {
                                     required
                                     placeholder="username"
                                     autoComplete="username"
-                                    autoFocus
-                                    className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-white placeholder:text-white/25 focus:outline-none focus:border-[#D8B98A]/50 focus:bg-white/[0.07] transition-all text-sm"
+                                    className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-white placeholder:text-white/25 focus:outline-none focus:border-[#D8B98A]/50 focus:bg-white/8 transition-all text-sm"
                                 />
                             </div>
                         </div>
@@ -100,7 +100,7 @@ export default function LoginPage() {
                                     required
                                     placeholder="••••••••"
                                     autoComplete="current-password"
-                                    className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-white placeholder:text-white/25 focus:outline-none focus:border-[#D8B98A]/50 focus:bg-white/[0.07] transition-all text-sm"
+                                    className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-white placeholder:text-white/25 focus:outline-none focus:border-[#D8B98A]/50 focus:bg-white/8 transition-all text-sm"
                                 />
                             </div>
                         </div>
@@ -133,7 +133,7 @@ export default function LoginPage() {
                 </div>
 
                 <p className="text-center text-white/20 text-xs mt-6">
-                    AIWai · Intelligent Digital Architecture
+                    AIWai · Chatbot Management Console
                 </p>
             </motion.div>
         </div>

@@ -4,33 +4,30 @@ import { motion } from "framer-motion";
 import { Palette, Bot, Rocket } from "lucide-react";
 import TextReveal from "@/components/animations/TextReveal";
 import ScrollReveal from "@/components/animations/ScrollReveal";
+import { useTranslation } from "@/i18n/useTranslation";
 
-const features = [
-    {
-        title: "Premium Design",
-        description: "We don't just build websites. We craft visual experiences that captivate your audience and elevate your brand identity to a world-class level.",
-        icon: <Palette size={36} className="text-brand-indigo" />,
-    },
-    {
-        title: "Intelligent Core",
-        description: "Future-proof your business with AI-driven architecture. From smart automation to neural agents, we build systems that think and adapt.",
-        icon: <Bot size={36} className="text-brand-indigo" />,
-    },
-    {
-        title: "Simplicity & Growth",
-        description: "Complex technology, simplified for you. We focus on clean, scalable solutions that drive real engagement and measurable business results.",
-        icon: <Rocket size={36} className="text-brand-indigo" />,
-    }
+const ICONS = [
+    <Palette size={36} className="text-brand-indigo" key="p" />,
+    <Bot size={36} className="text-brand-indigo" key="b" />,
+    <Rocket size={36} className="text-brand-indigo" key="r" />,
 ];
 
-const stats = [
-    { value: "50+", label: "Projects Delivered" },
-    { value: "98%", label: "Client Satisfaction" },
-    { value: "24/7", label: "AI Uptime" },
-    { value: "3x", label: "Average ROI Boost" },
-];
+const STAT_VALUES = ["30+", "98%", "24/7", "3x"];
 
 export default function WhyUsSection() {
+    const { t } = useTranslation();
+
+    const features = [0, 1, 2].map((i) => ({
+        title: t(`whyUs.feature.${i}.title`),
+        description: t(`whyUs.feature.${i}.description`),
+        icon: ICONS[i],
+    }));
+
+    const stats = STAT_VALUES.map((value, i) => ({
+        value,
+        label: t(`whyUs.stat.${i}`),
+    }));
+
     return (
         <section id="about" className="py-16 md:py-24 bg-white relative overflow-hidden">
             {/* Background Elements */}
@@ -45,11 +42,11 @@ export default function WhyUsSection() {
                         as="h2"
                         className="text-4xl md:text-6xl lg:text-7xl font-display font-bold text-brand-indigo mb-6 tracking-tight"
                     >
-                        Simpler. Smarter. Better.
+                        {t("whyUs.heading")}
                     </TextReveal>
                     <ScrollReveal delay={0.2}>
                         <p className="text-brand-indigo/40 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed font-light">
-                            We strip away the unnecessary noise. What remains is pure digital impact—combining aesthetic perfection with the raw power of artificial intelligence.
+                            {t("whyUs.subheading")}
                         </p>
                     </ScrollReveal>
                 </div>

@@ -21,7 +21,7 @@ export default function TextReveal({
     className = "",
     as: Tag = "h2",
     delay = 0,
-    staggerAmount = 0.04,
+    staggerAmount = 0.035,
     splitBy = "word",
 }: TextRevealProps) {
     const containerRef = useRef<HTMLElement>(null);
@@ -30,53 +30,58 @@ export default function TextReveal({
         const el = containerRef.current;
         if (!el) return;
 
-        const elements = el.querySelectorAll(".reveal-unit");
+        const elements = el.querySelectorAll<HTMLElement>(".reveal-unit");
 
-        gsap.fromTo(
+        // Hint GPU promotion before animation
+        elements.forEach((e) => { e.style.willChange = "transform, opacity"; });
+
+        // Simple translateY only — no rotateX (avoids expensive 3D layer per word)
+        const tween = gsap.fromTo(
             elements,
             {
                 opacity: 0,
-                y: 40,
-                rotateX: -20,
+                y: 30,
             },
             {
                 opacity: 1,
                 y: 0,
-                rotateX: 0,
-                duration: 0.8,
+                duration: 0.75,
                 delay,
                 stagger: staggerAmount,
                 ease: "power3.out",
+                onComplete: () => {
+                    elements.forEach((e) => { e.style.willChange = "auto"; });
+                },
                 scrollTrigger: {
                     trigger: el,
-                    start: "top 85%",
+                    start: "top 88%",
                     toggleActions: "play none none none",
                 },
             }
         );
 
         return () => {
-            ScrollTrigger.getAll().forEach((t) => {
-                if (t.trigger === el) t.kill();
-            });
+            tween.scrollTrigger?.kill();
+            tween.kill();
+            elements.forEach((e) => { e.style.willChange = "auto"; });
         };
-    }, [delay, staggerAmount]);
+    }, [children, delay, staggerAmount]);
 
     const units =
         splitBy === "word"
-            ? children.split(" ").map((word, i) => (
+            ? children.split(" ").map((word, i, arr) => (
                   <span
-                      key={i}
+                      key={`${word}-${i}`}
                       className="reveal-unit inline-block"
                       style={{ opacity: 0 }}
                   >
                       {word}
-                      {i < children.split(" ").length - 1 ? "\u00A0" : ""}
+                      {i < arr.length - 1 ? "\u00A0" : ""}
                   </span>
               ))
             : children.split("").map((char, i) => (
                   <span
-                      key={i}
+                      key={`${char}-${i}`}
                       className="reveal-unit inline-block"
                       style={{ opacity: 0 }}
                   >
@@ -85,10 +90,11 @@ export default function TextReveal({
               ));
 
     return (
+        // perspective removed from here — was creating expensive 3D stacking context per element
         <Tag
             ref={containerRef as React.RefObject<HTMLHeadingElement>}
             className={className}
-            style={{ perspective: "500px" }}
+            key={children}
         >
             {units}
         </Tag>

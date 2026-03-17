@@ -62,6 +62,51 @@ html.lenis body {
 }
 
 /* ──────────────────────────────────────
+   Performance & GPU Acceleration
+   ────────────────────────────────────── */
+
+/* Sections get paint containment — browser skips repainting
+   siblings when one section changes */
+main > section {
+  contain: layout style paint;
+}
+
+/* Hero floating orbs — promote to own compositor layer */
+.hero-orb {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Canvas (ParticleField) gets its own layer */
+canvas[style*="position: fixed"] {
+  transform: translateZ(0);
+  image-rendering: pixelated;
+}
+
+/* Glassmorphism elements — stable composite layer */
+.glass,
+.glass-strong {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Respect user preference for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .hero-orb {
+    animation: none !important;
+  }
+}
+
+/* ──────────────────────────────────────
    Glassmorphism Utilities
    ────────────────────────────────────── */
 @layer utilities {
@@ -114,13 +159,13 @@ html.lenis body {
    Keyframe Animations
    ────────────────────────────────────── */
 @keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-20px); }
+  0%, 100% { transform: translateZ(0) translateY(0px); }
+  50% { transform: translateZ(0) translateY(-18px); }
 }
 
 @keyframes pulse-glow {
-  0%, 100% { opacity: 0.4; transform: scale(1); }
-  50% { opacity: 0.7; transform: scale(1.05); }
+  0%, 100% { opacity: 0.4; transform: translateZ(0) scale(1); }
+  50% { opacity: 0.7; transform: translateZ(0) scale(1.05); }
 }
 
 @keyframes gradient-shift {
@@ -130,8 +175,8 @@ html.lenis body {
 }
 
 @keyframes shimmer {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
+  0% { transform: translateZ(0) translateX(-100%); }
+  100% { transform: translateZ(0) translateX(100%); }
 }
 
 /* ──────────────────────────────────────

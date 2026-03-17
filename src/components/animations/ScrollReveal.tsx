@@ -23,8 +23,8 @@ export default function ScrollReveal({
     className = "",
     direction = "up",
     delay = 0,
-    duration = 1,
-    distance = 60,
+    duration = 0.9,
+    distance = 50,
     once = true,
 }: ScrollRevealProps) {
     const ref = useRef<HTMLDivElement>(null);
@@ -42,7 +42,10 @@ export default function ScrollReveal({
 
         const from = dirMap[direction];
 
-        gsap.fromTo(
+        // Hint the browser this element will be transformed
+        el.style.willChange = "transform, opacity";
+
+        const tween = gsap.fromTo(
             el,
             {
                 opacity: 0,
@@ -56,9 +59,13 @@ export default function ScrollReveal({
                 duration,
                 delay,
                 ease: "power3.out",
+                onComplete: () => {
+                    // Release will-change after animation — avoid keeping GPU layer forever
+                    el.style.willChange = "auto";
+                },
                 scrollTrigger: {
                     trigger: el,
-                    start: "top 85%",
+                    start: "top 88%",
                     end: "bottom 20%",
                     toggleActions: once
                         ? "play none none none"
@@ -68,9 +75,9 @@ export default function ScrollReveal({
         );
 
         return () => {
-            ScrollTrigger.getAll().forEach((t) => {
-                if (t.trigger === el) t.kill();
-            });
+            tween.scrollTrigger?.kill();
+            tween.kill();
+            el.style.willChange = "auto";
         };
     }, [direction, delay, duration, distance, once]);
 

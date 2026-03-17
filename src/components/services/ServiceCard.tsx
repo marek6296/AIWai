@@ -2,6 +2,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
+import { useTranslation } from "@/i18n/useTranslation";
 
 interface ServiceCardProps {
     title: string;
@@ -12,6 +13,8 @@ interface ServiceCardProps {
 }
 
 export default function ServiceCard({ title, description, icon, onClick, index = 0 }: ServiceCardProps) {
+    const { t } = useTranslation();
+
     return (
         <motion.div
             initial={{ opacity: 0, y: 40 }}
@@ -49,7 +52,7 @@ export default function ServiceCard({ title, description, icon, onClick, index =
 
                     {/* Arrow */}
                     <div className="mt-6 flex items-center gap-2 text-brand-indigo/30 group-hover:text-brand-indigo transition-all duration-300">
-                        <span className="text-xs font-bold uppercase tracking-[0.15em]">Learn more</span>
+                        <span className="text-xs font-bold uppercase tracking-[0.15em]">{t("services.learnMore")}</span>
                         <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                     </div>
                 </div>

@@ -5,8 +5,10 @@ import { useState } from "react";
 import MagneticButton from "@/components/ui/MagneticButton";
 import TextReveal from "@/components/animations/TextReveal";
 import ScrollReveal from "@/components/animations/ScrollReveal";
+import { useTranslation } from "@/i18n/useTranslation";
 
 export default function ContactSection() {
+    const { t } = useTranslation();
     const [focused, setFocused] = useState<string | null>(null);
     const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
     const [formData, setFormData] = useState({
@@ -53,6 +55,13 @@ export default function ContactSection() {
         }
     };
 
+    const projectTypes = [
+        { value: "Web Development", label: t("contact.projectType.web") },
+        { value: "AI Integration", label: t("contact.projectType.ai") },
+        { value: "Design System", label: t("contact.projectType.design") },
+        { value: "Other", label: t("contact.projectType.other") },
+    ];
+
     return (
         <section id="contact" className="py-28 md:py-36 bg-white relative overflow-hidden">
             {/* Top border */}
@@ -71,10 +80,10 @@ export default function ContactSection() {
                             as="h2"
                             className="text-5xl md:text-7xl font-display font-bold text-brand-indigo mb-8 tracking-tight"
                         >
-                            Let&apos;s build something smart.
+                            {t("contact.heading")}
                         </TextReveal>
                         <p className="text-lg text-brand-indigo/40 max-w-lg mb-12 font-light leading-relaxed">
-                            Ready to elevate your digital presence? Tell us about your project and we&apos;ll help you architect the perfect solution.
+                            {t("contact.subheading")}
                         </p>
 
                         <div className="flex flex-col gap-3 text-brand-indigo/50">
@@ -95,13 +104,13 @@ export default function ContactSection() {
                                 <div className="w-14 h-14 bg-brand-indigo text-white rounded-full flex items-center justify-center mb-4">
                                     <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
                                 </div>
-                                <h3 className="text-2xl font-display font-bold text-brand-indigo mb-2">Message Sent!</h3>
-                                <p className="text-brand-indigo/50 text-sm">Thank you for reaching out. We will get back to you shortly.</p>
+                                <h3 className="text-2xl font-display font-bold text-brand-indigo mb-2">{t("contact.success.title")}</h3>
+                                <p className="text-brand-indigo/50 text-sm">{t("contact.success.text")}</p>
                                 <button
                                     onClick={() => setStatus('idle')}
                                     className="mt-6 text-brand-indigo font-medium underline text-sm"
                                 >
-                                    Send another message
+                                    {t("contact.success.again")}
                                 </button>
                             </div>
                         )}
@@ -109,7 +118,7 @@ export default function ContactSection() {
                         {/* Name */}
                         <div className="relative group">
                             <label className={`absolute left-0 transition-all duration-300 pointer-events-none text-sm ${focused === 'name' || formData.name ? '-top-6 text-brand-indigo' : 'top-2.5 text-brand-indigo/30'}`}>
-                                Your Name
+                                {t("contact.label.name")}
                             </label>
                             <input
                                 type="text"
@@ -125,7 +134,7 @@ export default function ContactSection() {
                         {/* Email */}
                         <div className="relative group">
                             <label className={`absolute left-0 transition-all duration-300 pointer-events-none text-sm ${focused === 'email' || formData.email ? '-top-6 text-brand-indigo' : 'top-2.5 text-brand-indigo/30'}`}>
-                                Email Address
+                                {t("contact.label.email")}
                             </label>
                             <input
                                 type="email"
@@ -140,23 +149,22 @@ export default function ContactSection() {
 
                         {/* Project Type */}
                         <div className="relative">
-                            <label className="text-sm text-brand-indigo/40 block mb-2">Project Type</label>
+                            <label className="text-sm text-brand-indigo/40 block mb-2">{t("contact.label.projectType")}</label>
                             <select
                                 value={formData.projectType}
                                 onChange={(e) => setFormData({ ...formData, projectType: e.target.value })}
                                 className="w-full bg-transparent border-b border-brand-indigo/10 py-2.5 text-brand-indigo outline-none focus:border-brand-indigo/40 transition-all appearance-none cursor-pointer"
                             >
-                                <option value="Web Development">Web Development</option>
-                                <option value="AI Integration">AI Integration</option>
-                                <option value="Design System">Design System</option>
-                                <option value="Other">Other</option>
+                                {projectTypes.map((pt) => (
+                                    <option key={pt.value} value={pt.value}>{pt.label}</option>
+                                ))}
                             </select>
                         </div>
 
                         {/* Message */}
                         <div className="relative group">
                             <label className={`absolute left-0 transition-all duration-300 pointer-events-none text-sm ${focused === 'message' || formData.message ? '-top-6 text-brand-indigo' : 'top-2.5 text-brand-indigo/30'}`}>
-                                Tell us about your project
+                                {t("contact.label.message")}
                             </label>
                             <textarea
                                 rows={4}
@@ -171,7 +179,7 @@ export default function ContactSection() {
 
                         <div className="pt-4 flex justify-end">
                             <MagneticButton type="submit" disabled={status === 'sending'} className="cursor-pointer">
-                                {status === 'sending' ? 'Sending...' : 'Send Message'}
+                                {status === 'sending' ? t("contact.sending") : t("contact.button")}
                             </MagneticButton>
                         </div>
                     </motion.form>

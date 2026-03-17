@@ -1,76 +1,31 @@
-import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
+const AUTH_TOKEN = 'cb_dony_aiwai_2026_secret'
+const COOKIE_NAME = 'cb_admin_session'
+
 export async function middleware(request: NextRequest) {
-    let supabaseResponse = NextResponse.next({
-        request: {
-            headers: request.headers,
-        },
-    })
+    const pathname = request.nextUrl.pathname
+    const token = request.cookies.get(COOKIE_NAME)?.value
+    const isAuthed = token === AUTH_TOKEN
 
-    const supabase = createServerClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-        {
-            cookies: {
-                get(name: string) {
-                    return request.cookies.get(name)?.value
-                },
-                set(name: string, value: string, options: CookieOptions) {
-                    request.cookies.set({
-                        name,
-                        value,
-                        ...options,
-                    })
-                    supabaseResponse = NextResponse.next({
-                        request: {
-                            headers: request.headers,
-                        },
-                    })
-                    supabaseResponse.cookies.set({
-                        name,
-                        value,
-                        ...options,
-                    })
-                },
-                remove(name: string, options: CookieOptions) {
-                    request.cookies.set({
-                        name,
-                        value: '',
-                        ...options,
-                    })
-                    supabaseResponse = NextResponse.next({
-                        request: {
-                            headers: request.headers,
-                        },
-                    })
-                    supabaseResponse.cookies.set({
-                        name,
-                        value: '',
-                        ...options,
-                    })
-                },
-            },
+    // Protect /admin/* — simple cookie only
+    if (pathname.startsWith('/admin')) {
+        if (!isAuthed) {
+            return NextResponse.redirect(new URL('/login', request.url))
         }
-    )
-
-    const {
-        data: { user },
-    } = await supabase.auth.getUser()
-
-    if (request.nextUrl.pathname.startsWith('/admin') && !user) {
-        return NextResponse.redirect(new URL('/login', request.url))
+        return NextResponse.next()
     }
 
-    if (request.nextUrl.pathname === '/login' && user) {
+    // If already authed and visiting /login → go to /admin
+    if (pathname === '/login' && isAuthed) {
         return NextResponse.redirect(new URL('/admin', request.url))
     }
 
-    return supabaseResponse
+    return NextResponse.next()
 }
 
 export const config = {
     matcher: [
-        '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+        '/((?!_next/static|_next/image|favicon.ico|api|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
     ],
 }

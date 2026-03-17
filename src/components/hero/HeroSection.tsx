@@ -2,27 +2,37 @@
 
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
-import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 import MagneticButton from "@/components/ui/MagneticButton";
+import { useTranslation } from "@/i18n/useTranslation";
 
-if (typeof window !== "undefined") {
-    gsap.registerPlugin(ScrollToPlugin);
-}
+type LenisInstance = { scrollTo: (target: Element | number, opts: object) => void };
+
+const lenisScroll = (idOrEl: string | Element | number, offset = 0) => {
+    const lenis = (window as unknown as { __lenis?: LenisInstance }).__lenis;
+    if (typeof idOrEl === "string") {
+        const el = document.getElementById(idOrEl);
+        if (!el) return;
+        if (lenis) lenis.scrollTo(el, { offset, duration: 1.2 });
+        else el.scrollIntoView({ behavior: "smooth" });
+    } else {
+        if (lenis) lenis.scrollTo(idOrEl as Element | number, { offset, duration: 1.2 });
+        else window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+};
 
 export default function HeroSection() {
     const sectionRef = useRef<HTMLElement>(null);
+    const { t } = useTranslation();
 
     useEffect(() => {
         const ctx = gsap.context(() => {
             const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
 
-            // Set initial states
             gsap.set(".hero-line", { y: 80, opacity: 0 });
             gsap.set(".hero-sub", { y: 30, opacity: 0 });
             gsap.set(".hero-cta", { y: 30, opacity: 0 });
             gsap.set(".hero-orb", { scale: 0.5, opacity: 0 });
 
-            // Staggered entrance
             tl.to(".hero-orb", {
                 scale: 1,
                 opacity: 1,
@@ -63,16 +73,7 @@ export default function HeroSection() {
         return () => ctx.revert();
     }, []);
 
-    const scrollToContact = () => {
-        const el = document.getElementById("contact");
-        if (el) {
-            gsap.to(window, {
-                duration: 2.5,
-                scrollTo: { y: el, offsetY: 0 },
-                ease: "power4.inOut",
-            });
-        }
-    };
+    const scrollToContact = () => lenisScroll("contact");
 
     return (
         <section
@@ -93,7 +94,7 @@ export default function HeroSection() {
             {/* ── Content ── */}
             <div className="relative z-10 container mx-auto text-center px-6 py-32">
                 <div className="max-w-5xl mx-auto space-y-8">
-                    {/* Headline */}
+                    {/* Headline — NOT translated per user request */}
                     <div className="space-y-0">
                         <div>
                             <h1 className="hero-line text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-display font-bold tracking-tight text-brand-indigo leading-[1.2]">
@@ -108,31 +109,21 @@ export default function HeroSection() {
                         </div>
                     </div>
 
-                    {/* Subtitle */}
+                    {/* Subtitle — translated */}
                     <p className="hero-sub text-lg md:text-xl text-brand-indigo/50 max-w-2xl mx-auto leading-relaxed font-light">
-                        We design and build AI-powered digital experiences that transform businesses.
-                        Premium design meets intelligent automation.
+                        {t("hero.subtitle")}
                     </p>
 
-                    {/* CTA */}
+                    {/* CTA — translated */}
                     <div className="hero-cta flex items-center justify-center gap-4 pt-4">
                         <MagneticButton onClick={scrollToContact}>
-                            Start a Project
+                            {t("hero.cta.start")}
                         </MagneticButton>
                         <button
-                            onClick={() => {
-                                const el = document.getElementById("services");
-                                if (el) {
-                                    gsap.to(window, {
-                                        duration: 2,
-                                        scrollTo: { y: el, offsetY: 0 },
-                                        ease: "power4.inOut",
-                                    });
-                                }
-                            }}
+                            onClick={() => lenisScroll("services")}
                             className="px-8 py-4 text-xs font-bold uppercase tracking-[0.2em] text-brand-indigo/60 hover:text-brand-indigo transition-colors"
                         >
-                            Explore Services ↓
+                            {t("hero.cta.explore")}
                         </button>
                     </div>
                 </div>

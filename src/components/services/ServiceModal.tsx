@@ -2,6 +2,7 @@
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, CheckCircle2, ArrowRight } from "lucide-react";
+import { useTranslation } from "@/i18n/useTranslation";
 
 interface ServiceModalProps {
     isOpen: boolean;
@@ -19,6 +20,8 @@ interface ServiceModalProps {
 }
 
 export default function ServiceModal({ isOpen, onClose, service }: ServiceModalProps) {
+    const { t } = useTranslation();
+
     React.useEffect(() => {
         if (isOpen) {
             document.body.style.overflow = 'hidden';
@@ -67,7 +70,7 @@ export default function ServiceModal({ isOpen, onClose, service }: ServiceModalP
                                     <h3 className="text-2xl md:text-3xl font-display font-bold text-brand-indigo tracking-tight">
                                         {service.title}
                                     </h3>
-                                    <p className="text-brand-indigo/40 mt-1 uppercase tracking-[0.15em] text-[11px] font-bold">Service Overview</p>
+                                    <p className="text-brand-indigo/40 mt-1 uppercase tracking-[0.15em] text-[11px] font-bold">{t("modal.serviceOverview")}</p>
                                 </div>
                             </div>
                             <button
@@ -86,7 +89,7 @@ export default function ServiceModal({ isOpen, onClose, service }: ServiceModalP
                             {/* What is it */}
                             <section className="space-y-4">
                                 <h4 className="text-lg font-display font-bold text-brand-indigo flex items-center gap-3">
-                                    <div className="w-8 h-px bg-brand-sand" /> What is it?
+                                    <div className="w-8 h-px bg-brand-sand" /> {t("modal.whatIsIt")}
                                 </h4>
                                 <p className="text-brand-indigo/60 text-base leading-relaxed">
                                     {service.details?.whatIsIt || service.description}
@@ -96,7 +99,7 @@ export default function ServiceModal({ isOpen, onClose, service }: ServiceModalP
                             {/* How it works */}
                             <section className="space-y-4">
                                 <h4 className="text-lg font-display font-bold text-brand-indigo flex items-center gap-3">
-                                    <div className="w-8 h-px bg-brand-sand" /> How it works
+                                    <div className="w-8 h-px bg-brand-sand" /> {t("modal.howItWorks")}
                                 </h4>
                                 <p className="text-brand-indigo/60 text-base leading-relaxed">
                                     {service.details?.howItWorks}
@@ -106,7 +109,7 @@ export default function ServiceModal({ isOpen, onClose, service }: ServiceModalP
                             {/* Features */}
                             <section className="space-y-5">
                                 <h4 className="text-lg font-display font-bold text-brand-indigo flex items-center gap-3">
-                                    <div className="w-8 h-px bg-brand-sand" /> Key Features
+                                    <div className="w-8 h-px bg-brand-sand" /> {t("modal.keyFeatures")}
                                 </h4>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                     {service.details?.includes.map((item, i) => (
@@ -121,7 +124,7 @@ export default function ServiceModal({ isOpen, onClose, service }: ServiceModalP
 
                         {/* Footer CTA */}
                         <div className="p-8 border-t border-brand-indigo/[0.06] flex flex-col md:flex-row items-center justify-between gap-5">
-                            <p className="text-sm text-brand-indigo/40 font-medium">Ready to transform your business?</p>
+                            <p className="text-sm text-brand-indigo/40 font-medium">{t("modal.readyToTransform")}</p>
                             <button
                                 onClick={() => {
                                     onClose();
@@ -130,7 +133,7 @@ export default function ServiceModal({ isOpen, onClose, service }: ServiceModalP
                                 }}
                                 className="w-full md:w-auto px-8 py-3.5 bg-brand-indigo text-white rounded-full font-bold text-xs tracking-[0.15em] uppercase hover:bg-brand-indigo/90 transition-all shadow-lg shadow-brand-indigo/10 hover:shadow-brand-indigo/20 flex items-center justify-center gap-2 group"
                             >
-                                Get Started <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                                {t("modal.getStarted")} <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
                             </button>
                         </div>
                     </motion.div>

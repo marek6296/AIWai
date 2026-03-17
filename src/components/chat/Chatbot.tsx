@@ -4,6 +4,7 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence, useMotionValue, useAnimationFrame } from "framer-motion";
 import { Send, X, Bot, Sparkles } from "lucide-react";
+import { useTranslation } from "@/i18n/useTranslation";
 
 interface Message {
     role: "user" | "assistant" | "system";
@@ -11,6 +12,7 @@ interface Message {
 }
 
 export default function Chatbot() {
+    const { t } = useTranslation();
     const [isOpen, setIsOpen] = useState(false);
     const [messages, setMessages] = useState<Message[]>([]);
     const [input, setInput] = useState("");
@@ -23,7 +25,7 @@ export default function Chatbot() {
     const [direction, setDirection] = useState<-1 | 1>(-1); // -1 = going left, 1 = going right
     const [alignment, setAlignment] = useState<"left" | "right">("right"); // Alignment of the chat window
     const [showBubble, setShowBubble] = useState(false); // Help bubble state
-    const [bubbleMessage, setBubbleMessage] = useState("Got questions? I've got answers.");
+    const [bubbleMessage, setBubbleMessage] = useState("");
     const [isInitialLoad, setIsInitialLoad] = useState(true); // Initial load delay
     const lastBubbleTime = useRef(0); // Cooldown for bubble
     const x = useMotionValue(0);
@@ -56,12 +58,13 @@ export default function Chatbot() {
     // Initial load sequence
     useEffect(() => {
         const timer = setTimeout(() => {
-            setBubbleMessage("Got questions? I've got answers.");
+            setBubbleMessage(t("chatbot.bubble.initial"));
             setShowBubble(true);
             setIsInitialLoad(false);
             lastBubbleTime.current = Date.now();
         }, 3000);
         return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     // Animation Frame for Movement
@@ -90,7 +93,7 @@ export default function Chatbot() {
                 // Trigger bubble if cooldown passed
                 const now = Date.now();
                 if (now - lastBubbleTime.current > 10000) {
-                    setBubbleMessage("Still here if you need me!");
+                    setBubbleMessage(t("chatbot.bubble.repeat"));
                     setShowBubble(true);
                     lastBubbleTime.current = now;
                 }
@@ -193,7 +196,7 @@ export default function Chatbot() {
                                     <Bot size={18} className="text-white" />
                                 </div>
                                 <div>
-                                    <h3 className="text-brand-indigo font-bold text-sm">AIWai Assistant</h3>
+                                    <h3 className="text-brand-indigo font-bold text-sm">{t("chatbot.header")}</h3>
                                     <div className="flex items-center gap-1.5">
                                         <span className="w-2 h-2 rounded-full bg-brand-indigo shadow-[0_0_10px_rgba(10,10,80,0.8)] animate-pulse" />
                                         <span className="text-[10px] text-brand-indigo/60 uppercase tracking-widest">Online</span>
@@ -217,7 +220,7 @@ export default function Chatbot() {
                                 <div className="h-full flex flex-col items-center justify-center text-center opacity-40">
                                     <Bot size={48} className="text-brand-indigo mb-4" />
                                     <p className="text-sm text-brand-indigo max-w-[200px]">
-                                        Hi! I&apos;m AIWai. How can I help you build something great today?
+                                        {t("chatbot.bubble.initial")}
                                     </p>
                                 </div>
                             )}
@@ -258,7 +261,7 @@ export default function Chatbot() {
                                     type="text"
                                     value={input}
                                     onChange={(e) => setInput(e.target.value)}
-                                    placeholder="Ask about AI solutions..."
+                                    placeholder={t("chatbot.placeholder")}
                                     className="w-full bg-brand-offwhite border border-brand-indigo/10 rounded-full py-3 pl-4 pr-12 text-sm text-brand-indigo placeholder:text-brand-indigo/40 focus:outline-none focus:border-brand-indigo/30 transition-colors"
                                 />
                                 <button
