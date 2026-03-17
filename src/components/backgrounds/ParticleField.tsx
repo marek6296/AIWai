@@ -3,28 +3,33 @@
 import { useEffect, useRef } from "react";
 
 interface Particle {
-    // Absolute positions on the full document
     pageX: number;
     pageY: number;
-    // Velocity
     vx: number;
     vy: number;
-    // Autonomous drift
-    driftAngle: number;      // current drift direction in radians
-    driftSpeed: number;      // px per frame of natural movement
-    driftTurnSpeed: number;  // how fast the angle rotates (radians/frame)
+    driftAngle: number;
+    driftSpeed: number;
+    driftTurnSpeed: number;
     radius: number;
     opacity: number;
     baseOpacity: number;
     fadeSpeed: number;
 }
 
+// Detect Safari once at module level
+const isSafari = typeof window !== "undefined"
+    ? /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
+    : false;
+
 export default function ParticleField() {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const animationRef = useRef<number>(0);
     const particlesRef = useRef<Particle[]>([]);
     const scrollYRef = useRef(0);
-    const mouseRef = useRef({ x: -9999, y: -9999 }); // viewport coords
+    const mouseRef = useRef({ x: -9999, y: -9999 });
+
+    // Cache layout measurements — update only on resize, NOT every frame
+    const layoutRef = useRef({ vw: 0, vh: 0, docH: 0 });
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -33,45 +38,48 @@ export default function ParticleField() {
         if (!ctx) return;
 
         const isMobile = window.innerWidth < 768;
-        const CONNECTION_DISTANCE = isMobile ? 120 : 180;
-        const MOUSE_RADIUS = 250;
+
+        // Safari gets fewer particles and shorter connection distance
+        const CONNECTION_DISTANCE = isMobile ? 100 : (isSafari ? 140 : 180);
+        const MOUSE_RADIUS = isSafari ? 180 : 250;
+        // DPR cap: 1 on Safari (avoids huge canvas on Retina), 2 on Chrome
+        const DPR = isSafari ? 1 : Math.min(window.devicePixelRatio, 2);
 
         const getDocHeight = () =>
             Math.max(
                 document.body.scrollHeight,
                 document.documentElement.scrollHeight,
-                document.body.offsetHeight,
-                document.documentElement.offsetHeight
             );
 
-        // --- Canvas: fixed, covers viewport ---
-        const resizeCanvas = () => {
-            const dpr = Math.min(window.devicePixelRatio, 2);
-            const w = window.innerWidth;
-            const h = window.innerHeight;
-            canvas.width = w * dpr;
-            canvas.height = h * dpr;
-            canvas.style.width = `${w}px`;
-            canvas.style.height = `${h}px`;
-            ctx.scale(dpr, dpr);
+        const updateLayout = () => {
+            layoutRef.current = {
+                vw: window.innerWidth,
+                vh: window.innerHeight,
+                docH: getDocHeight(),
+            };
         };
 
-        // --- Seed particles: dense at top, tapering lower ---
+        const resizeCanvas = () => {
+            updateLayout();
+            const { vw, vh } = layoutRef.current;
+            canvas.width = vw * DPR;
+            canvas.height = vh * DPR;
+            canvas.style.width = `${vw}px`;
+            canvas.style.height = `${vh}px`;
+            if (DPR !== 1) ctx.scale(DPR, DPR);
+        };
+
         const initParticles = () => {
-            const docH = getDocHeight();
-            const vw = window.innerWidth;
-            const vh = window.innerHeight;
+            const { vw, vh, docH } = layoutRef.current;
 
-            // 70% of particles in the first viewport-height, 30% spread across the rest
-            const topCount = isMobile ? 120 : 240;
-            const restCount = isMobile ? 60 : 120;
-            const totalCount = topCount + restCount;
+            // Particle counts — Safari gets ~half
+            const topCount = isMobile ? 60 : (isSafari ? 120 : 240);
+            const restCount = isMobile ? 30 : (isSafari ? 60 : 120);
+            const total = topCount + restCount;
 
-            particlesRef.current = Array.from({ length: totalCount }, (_, i) => {
+            particlesRef.current = Array.from({ length: total }, (_, i) => {
                 const baseOpacity = Math.random() * 0.25 + 0.1;
                 const isTop = i < topCount;
-                // Top section: uniform random in [0, vh*1.5]
-                // Rest: uniform random in [vh*1.5, docH]
                 const pageY = isTop
                     ? Math.random() * Math.min(vh * 1.5, docH)
                     : Math.min(vh * 1.5, docH) + Math.random() * Math.max(docH - vh * 1.5, 1);
@@ -91,84 +99,65 @@ export default function ParticleField() {
             });
         };
 
-        // Track mouse in viewport space
         const onMouseMove = (e: MouseEvent) => {
             mouseRef.current = { x: e.clientX, y: e.clientY };
         };
         const onMouseLeave = () => {
             mouseRef.current = { x: -9999, y: -9999 };
         };
-
-        // Track scroll
         const onScroll = () => {
             scrollYRef.current = window.scrollY;
         };
 
+        let frameCount = 0;
         const animate = () => {
-            const vw = window.innerWidth;
-            const vh = window.innerHeight;
-            const docH = getDocHeight();
+            frameCount++;
+            // Read layout from cache — NO layout reflow inside animation loop
+            const { vw, vh, docH } = layoutRef.current;
             const scrollY = scrollYRef.current;
             const mouse = mouseRef.current;
+            const buffer = CONNECTION_DISTANCE;
 
             ctx.clearRect(0, 0, vw, vh);
 
             const particles = particlesRef.current;
 
-            // Buffer: render particles slightly outside viewport so connections don't pop
-            const buffer = CONNECTION_DISTANCE;
+            // On Safari: skip connection rendering every other frame
+            const drawConnections = isSafari ? frameCount % 2 === 0 : true;
 
-            // Compute screen Y for each particle; only process visible ones
-            // but we need all nearby ones for connection rendering
             for (let i = 0; i < particles.length; i++) {
                 const p = particles[i];
-
-                // Screen position = page position - scroll
                 const sx = p.pageX;
                 const sy = p.pageY - scrollY;
 
-                // ── Autonomous drift ──
-                // Slowly rotate drift direction for organic feel
+                // Drift
                 p.driftAngle += p.driftTurnSpeed;
-                // Apply gentle drift toward current angle
-                const driftX = Math.cos(p.driftAngle) * p.driftSpeed;
-                const driftY = Math.sin(p.driftAngle) * p.driftSpeed;
-                p.vx += driftX * 0.05;
-                p.vy += driftY * 0.05;
+                p.vx += Math.cos(p.driftAngle) * p.driftSpeed * 0.05;
+                p.vy += Math.sin(p.driftAngle) * p.driftSpeed * 0.05;
 
-                // ── Mouse repulsion (strong) ──
+                // Mouse repulsion
                 const dx = sx - mouse.x;
                 const dy = sy - mouse.y;
                 const dist = Math.sqrt(dx * dx + dy * dy);
                 if (dist < MOUSE_RADIUS && dist > 0) {
-                    // Quadratic falloff so close particles fly away hard
                     const t = 1 - dist / MOUSE_RADIUS;
                     const force = t * t * 0.18;
                     p.vx += (dx / dist) * force;
                     p.vy += (dy / dist) * force;
                 }
 
-                // Soft speed cap so particles don't fly off screen
+                // Speed cap + damping
                 const speed = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
-                const MAX_SPEED = 4;
-                if (speed > MAX_SPEED) {
-                    p.vx = (p.vx / speed) * MAX_SPEED;
-                    p.vy = (p.vy / speed) * MAX_SPEED;
-                }
-
-                // Damping — gentle enough to let drift sustain movement
+                if (speed > 4) { p.vx = (p.vx / speed) * 4; p.vy = (p.vy / speed) * 4; }
                 p.vx *= 0.97;
                 p.vy *= 0.97;
 
-                // Move in page space
                 p.pageX += p.vx;
                 p.pageY += p.vy;
 
-                // Wrap horizontally
+                // Wrap
                 if (p.pageX < -10) p.pageX = vw + 10;
                 if (p.pageX > vw + 10) p.pageX = -10;
-
-                // Wrap vertically within document
                 if (p.pageY < -10) p.pageY = docH + 10;
                 if (p.pageY > docH + 10) p.pageY = -10;
 
@@ -178,38 +167,39 @@ export default function ParticleField() {
                     p.fadeSpeed = -p.fadeSpeed;
                 }
 
-                // Only draw if on screen (+ buffer)
+                // Draw particle
                 if (sy > -buffer && sy < vh + buffer) {
                     ctx.beginPath();
                     ctx.arc(sx, sy, p.radius, 0, Math.PI * 2);
-                    ctx.fillStyle = `rgba(28, 31, 58, ${p.opacity})`;
+                    ctx.fillStyle = `rgba(28,31,58,${p.opacity})`;
                     ctx.fill();
                 }
             }
 
-            // Connections — only between visible particles
-            for (let i = 0; i < particles.length; i++) {
-                const a = particles[i];
-                const asy = a.pageY - scrollY;
-                if (asy < -buffer || asy > vh + buffer) continue;
+            // Connections
+            if (drawConnections) {
+                for (let i = 0; i < particles.length; i++) {
+                    const a = particles[i];
+                    const asy = a.pageY - scrollY;
+                    if (asy < -buffer || asy > vh + buffer) continue;
 
-                for (let j = i + 1; j < particles.length; j++) {
-                    const b = particles[j];
-                    const bsy = b.pageY - scrollY;
-                    if (bsy < -buffer || bsy > vh + buffer) continue;
+                    for (let j = i + 1; j < particles.length; j++) {
+                        const b = particles[j];
+                        const bsy = b.pageY - scrollY;
+                        if (bsy < -buffer || bsy > vh + buffer) continue;
 
-                    const ddx = a.pageX - b.pageX;
-                    const ddy = asy - bsy;
-                    const distance = Math.sqrt(ddx * ddx + ddy * ddy);
-
-                    if (distance < CONNECTION_DISTANCE) {
-                        const opacity = (1 - distance / CONNECTION_DISTANCE) * 0.12;
-                        ctx.beginPath();
-                        ctx.moveTo(a.pageX, asy);
-                        ctx.lineTo(b.pageX, bsy);
-                        ctx.strokeStyle = `rgba(28, 31, 58, ${opacity})`;
-                        ctx.lineWidth = 0.6;
-                        ctx.stroke();
+                        const ddx = a.pageX - b.pageX;
+                        const ddy = asy - bsy;
+                        const dist = Math.sqrt(ddx * ddx + ddy * ddy);
+                        if (dist < CONNECTION_DISTANCE) {
+                            const opacity = (1 - dist / CONNECTION_DISTANCE) * 0.12;
+                            ctx.beginPath();
+                            ctx.moveTo(a.pageX, asy);
+                            ctx.lineTo(b.pageX, bsy);
+                            ctx.strokeStyle = `rgba(28,31,58,${opacity})`;
+                            ctx.lineWidth = 0.6;
+                            ctx.stroke();
+                        }
                     }
                 }
             }
@@ -221,14 +211,15 @@ export default function ParticleField() {
         initParticles();
         animate();
 
-        window.addEventListener("resize", () => { resizeCanvas(); initParticles(); }, { passive: true });
+        const onResize = () => { resizeCanvas(); initParticles(); };
+        window.addEventListener("resize", onResize, { passive: true });
         window.addEventListener("mousemove", onMouseMove, { passive: true });
         window.addEventListener("scroll", onScroll, { passive: true });
         document.addEventListener("mouseleave", onMouseLeave);
 
         return () => {
             cancelAnimationFrame(animationRef.current);
-            window.removeEventListener("resize", resizeCanvas);
+            window.removeEventListener("resize", onResize);
             window.removeEventListener("mousemove", onMouseMove);
             window.removeEventListener("scroll", onScroll);
             document.removeEventListener("mouseleave", onMouseLeave);
