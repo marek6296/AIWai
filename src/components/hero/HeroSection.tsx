@@ -2,170 +2,144 @@
 
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
-import WaveBackground from "@/components/backgrounds/WaveBackground";
+import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 import MagneticButton from "@/components/ui/MagneticButton";
-import RetellVoice from "@/components/chat/RetellVoice";
+
+if (typeof window !== "undefined") {
+    gsap.registerPlugin(ScrollToPlugin);
+}
 
 export default function HeroSection() {
-    const videoRef = useRef<HTMLVideoElement>(null);
-    const overlayRef = useRef<HTMLDivElement>(null);
+    const sectionRef = useRef<HTMLElement>(null);
 
     useEffect(() => {
         const ctx = gsap.context(() => {
-            // Intro timeline
             const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
 
-            // Initial state
-            gsap.set("#hero-text", { autoAlpha: 0, y: 30 });
-            gsap.set("#hero-wave", { opacity: 0 });
-            gsap.set("#hero-video", { opacity: 0, scale: 0.9, filter: "blur(10px)" });
+            // Set initial states
+            gsap.set(".hero-line", { y: 80, opacity: 0 });
+            gsap.set(".hero-sub", { y: 30, opacity: 0 });
+            gsap.set(".hero-cta", { y: 30, opacity: 0 });
+            gsap.set(".hero-orb", { scale: 0.5, opacity: 0 });
 
-            // 1. Hexagon outline draws
-            tl.to("#hero-hexagon path", {
-                strokeDashoffset: 0,
+            // Staggered entrance
+            tl.to(".hero-orb", {
+                scale: 1,
+                opacity: 1,
                 duration: 2,
-                ease: "power2.inOut",
+                stagger: 0.3,
+                ease: "power2.out",
             })
-                // 3. Text reveals smoothly
-                .to("#hero-text", {
-                    autoAlpha: 1,
+            .to(
+                ".hero-line",
+                {
                     y: 0,
-                    duration: 1.5,
-                    stagger: 0.2,
-                }, "-=1.5")
-                // 4. Video reveals as the final step
-                .to("#hero-video", {
                     opacity: 1,
-                    scale: 1,
-                    filter: "blur(0px)",
-                    duration: 2,
-                    ease: "power2.out"
-                }, ">-0.5"); // Starts slightly after text reveal begins
-        });
+                    duration: 1.2,
+                    stagger: 0.15,
+                },
+                "-=1.5"
+            )
+            .to(
+                ".hero-sub",
+                {
+                    y: 0,
+                    opacity: 1,
+                    duration: 1,
+                },
+                "-=0.6"
+            )
+            .to(
+                ".hero-cta",
+                {
+                    y: 0,
+                    opacity: 1,
+                    duration: 0.8,
+                },
+                "-=0.4"
+            );
+        }, sectionRef);
 
-        // Loop Transition Logic - White Flash
-        const checkTime = () => {
-            if (videoRef.current && overlayRef.current) {
-                const vid = videoRef.current;
-                const t = vid.currentTime;
-                const d = vid.duration;
-                if (!d) return;
-
-                const fadeTime = 0.5; // Duration of fade in seconds
-
-                // Opacity calculation: 1 at ends, 0 in middle
-                let opacity = 0;
-
-                if (t < fadeTime) {
-                    // Fading out at start
-                    opacity = 1 - (t / fadeTime);
-                } else if (t > d - fadeTime) {
-                    // Fading in at end
-                    opacity = (t - (d - fadeTime)) / fadeTime;
-                }
-
-                overlayRef.current.style.opacity = opacity.toString();
-            }
-        };
-
-        gsap.ticker.add(checkTime);
-
-        return () => {
-            ctx.revert(); // Clean up GSAP context on unmount
-            gsap.ticker.remove(checkTime);
-        };
+        return () => ctx.revert();
     }, []);
 
+    const scrollToContact = () => {
+        const el = document.getElementById("contact");
+        if (el) {
+            gsap.to(window, {
+                duration: 2.5,
+                scrollTo: { y: el, offsetY: 0 },
+                ease: "power4.inOut",
+            });
+        }
+    };
+
     return (
-        <section className="relative h-screen w-full overflow-hidden flex items-center justify-center bg-white">
-            {/* Background Wave - Controlled by GSAP */}
-            <div id="hero-wave" className="absolute inset-0 opacity-20">
-                <WaveBackground />
-            </div>
+        <section
+            ref={sectionRef}
+            className="relative min-h-screen w-full overflow-hidden flex items-center justify-center"
+        >
+            {/* ── Gradient Mesh Background ── */}
+            <div className="absolute inset-0 gradient-mesh" />
 
-            {/* Center Hexagon & Logo */}
-            <div className="relative z-10 flex flex-col items-center justify-center">
-                <div className="relative w-[300px] h-[300px] flex items-center justify-center">
-                    {/* SVG Hexagon */}
-                    <svg
-                        viewBox="0 0 100 100"
-                        className="absolute inset-0 w-full h-full drop-shadow-[0_0_15px_rgba(216,185,138,0.3)]"
-                    >
-                        <path
-                            id="hero-hexagon"
-                            d="M50 5 L89 27.5 L89 72.5 L50 95 L11 72.5 L11 27.5 Z"
-                            fill="none"
-                            stroke="#D8B98A" // Brand Sand
-                            strokeWidth="0.5"
-                            strokeDasharray="300"
-                            strokeDashoffset="300"
-                        />
-                    </svg>
+            {/* ── Floating Orbs ── */}
+            <div className="hero-orb absolute top-[10%] left-[15%] w-[300px] h-[300px] md:w-[500px] md:h-[500px] rounded-full bg-brand-sand/10 blur-[80px] md:blur-[120px] animate-float-slow pointer-events-none" />
+            <div className="hero-orb absolute bottom-[15%] right-[10%] w-[250px] h-[250px] md:w-[400px] md:h-[400px] rounded-full bg-brand-indigo/5 blur-[80px] md:blur-[100px] animate-float-slower pointer-events-none" />
+            <div className="hero-orb absolute top-[50%] right-[30%] w-[150px] h-[150px] md:w-[250px] md:h-[250px] rounded-full bg-brand-sand/8 blur-[60px] md:blur-[80px] animate-float pointer-events-none" />
 
-                    {/* Logo / Wave Content */}
-                    <div className="w-1/2 h-1/2 bg-brand-sand/10 rounded-full blur-2xl absolute animate-pulse" />
+            {/* ── Subtle Grid Overlay ── */}
+            <div className="absolute inset-0 bg-[linear-gradient(rgba(28,31,58,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(28,31,58,0.02)_1px,transparent_1px)] bg-[size:60px_60px] pointer-events-none" />
 
-                    {/* Intro Video - Reverting to stable clipping version with expanded bounds */}
-                    <video
-                        id="hero-video"
-                        ref={videoRef}
-                        src="/intro.mp4"
-                        autoPlay
-                        loop
-                        muted
-                        playsInline
-                        className="w-full h-full object-cover"
-                        style={{
-                            clipPath: "polygon(50% 2%, 98% 26%, 98% 74%, 50% 98%, 2% 74%, 2% 26%)",
-                            mixBlendMode: "multiply",
-                            transform: "scale(1.02) translateZ(0)",
-                            backfaceVisibility: "hidden",
-                            filter: "contrast(1.05)",
-                            willChange: "transform, opacity"
-                        }}
-                    />
+            {/* ── Content ── */}
+            <div className="relative z-10 container mx-auto text-center px-6 py-32">
+                <div className="max-w-5xl mx-auto space-y-8">
+                    {/* Headline */}
+                    <div className="space-y-0">
+                        <div>
+                            <h1 className="hero-line text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-display font-bold tracking-tight text-brand-indigo leading-[1.2]">
+                                Intelligent
+                            </h1>
+                        </div>
+                        <div>
+                            <h1 className="hero-line text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-display font-bold tracking-tight leading-[1.2]">
+                                <span className="text-brand-indigo/40 italic font-light">Digital</span>{" "}
+                                <span className="text-gradient">Architecture</span>
+                            </h1>
+                        </div>
+                    </div>
 
-                    {/* Loop Transition Overlay */}
-                    <div
-                        ref={overlayRef}
-                        className="absolute inset-0 bg-white pointer-events-none opacity-0 z-20"
-                        style={{
-                            clipPath: "polygon(50% 2%, 98% 26%, 98% 74%, 50% 98%, 2% 74%, 2% 26%)",
-                            mixBlendMode: "overlay"
-                        }}
-                    />
-                </div>
-
-                {/* Text Overlay - Controlled by GSAP */}
-                <div id="hero-text" className="mt-12 text-center opacity-0 translate-y-8">
-                    <h1 className="text-4xl md:text-6xl font-sans font-bold tracking-tight text-brand-indigo mb-4">
-                        AIWai
-                    </h1>
-                    <p className="text-brand-indigo/60 uppercase tracking-[0.2em] text-sm md:text-base">
-                        Intelligent Digital Architecture
+                    {/* Subtitle */}
+                    <p className="hero-sub text-lg md:text-xl text-brand-indigo/50 max-w-2xl mx-auto leading-relaxed font-light">
+                        We design and build AI-powered digital experiences that transform businesses.
+                        Premium design meets intelligent automation.
                     </p>
 
-                    {/* Button container */}
-                    <div className="mt-8 flex items-center justify-center gap-4 flex-col sm:flex-row">
-                        <MagneticButton onClick={() => {
-                            const element = document.getElementById('contact');
-                            if (element) {
-                                gsap.to(window, {
-                                    duration: 2.5,
-                                    scrollTo: { y: element, offsetY: 0 },
-                                    ease: "power4.inOut"
-                                });
-                            }
-                        }}>
-                            Contact Us
+                    {/* CTA */}
+                    <div className="hero-cta flex items-center justify-center gap-4 pt-4">
+                        <MagneticButton onClick={scrollToContact}>
+                            Start a Project
                         </MagneticButton>
-                        <RetellVoice />
+                        <button
+                            onClick={() => {
+                                const el = document.getElementById("services");
+                                if (el) {
+                                    gsap.to(window, {
+                                        duration: 2,
+                                        scrollTo: { y: el, offsetY: 0 },
+                                        ease: "power4.inOut",
+                                    });
+                                }
+                            }}
+                            className="px-8 py-4 text-xs font-bold uppercase tracking-[0.2em] text-brand-indigo/60 hover:text-brand-indigo transition-colors"
+                        >
+                            Explore Services ↓
+                        </button>
                     </div>
                 </div>
             </div>
 
-            {/* Overlay Gradient - Light version */}
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/50 to-white pointer-events-none" />
+            {/* ── Bottom Gradient Fade ── */}
+            <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white to-transparent pointer-events-none" />
         </section>
     );
 }

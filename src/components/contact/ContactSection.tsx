@@ -3,6 +3,8 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
 import MagneticButton from "@/components/ui/MagneticButton";
+import TextReveal from "@/components/animations/TextReveal";
+import ScrollReveal from "@/components/animations/ScrollReveal";
 
 export default function ContactSection() {
     const [focused, setFocused] = useState<string | null>(null);
@@ -52,131 +54,129 @@ export default function ContactSection() {
     };
 
     return (
-        <section id="contact" className="py-32 bg-white relative overflow-hidden">
-            <div className="container mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+        <section id="contact" className="py-28 md:py-36 bg-white relative overflow-hidden">
+            {/* Top border */}
+            <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-brand-indigo/10 to-transparent" />
+
+            {/* Background Orbs */}
+            <div className="absolute top-[20%] right-[-5%] w-[400px] h-[400px] bg-brand-sand/5 rounded-full blur-[120px] pointer-events-none" />
+            <div className="absolute bottom-[10%] left-[-5%] w-[300px] h-[300px] bg-brand-indigo/[0.03] rounded-full blur-[100px] pointer-events-none" />
+
+            <div className="container mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-20 items-center relative z-10">
 
                 {/* Text Content */}
-                <motion.div
-                    initial={{ opacity: 0, x: -50 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 1, ease: "easeOut" }}
-                >
-                    <h2 className="text-5xl md:text-7xl font-bold text-brand-indigo mb-8 tracking-tight">
-                        Let&apos;s build <br />
-                        <span className="text-brand-sand">something smart.</span>
-                    </h2>
-                    <p className="text-xl text-brand-indigo/60 max-w-lg mb-12">
-                        Ready to elevate your digital presence? Tell us about your project and we&apos;ll help you architect the perfect solution.
-                    </p>
+                <ScrollReveal direction="left">
+                    <div>
+                        <TextReveal
+                            as="h2"
+                            className="text-5xl md:text-7xl font-display font-bold text-brand-indigo mb-8 tracking-tight"
+                        >
+                            Let&apos;s build something smart.
+                        </TextReveal>
+                        <p className="text-lg text-brand-indigo/40 max-w-lg mb-12 font-light leading-relaxed">
+                            Ready to elevate your digital presence? Tell us about your project and we&apos;ll help you architect the perfect solution.
+                        </p>
 
-                    <div className="flex flex-col gap-4 text-brand-indigo/80">
-                        <a href="mailto:dony.jaij.sk@gmail.com" className="hover:text-brand-indigo transition-colors text-lg">dony.jaij.sk@gmail.com</a>
-                        <a href="tel:+421000000000" className="hover:text-brand-indigo transition-colors text-lg">+421 XXX XXX XXX</a>
+                        <div className="flex flex-col gap-3 text-brand-indigo/50">
+                            <a href="mailto:dony.jaij.sk@gmail.com" className="hover:text-brand-indigo transition-colors text-base">dony.jaij.sk@gmail.com</a>
+                            <a href="tel:+421902876198" className="hover:text-brand-indigo transition-colors text-base">+421 902 876 198</a>
+                        </div>
                     </div>
-                </motion.div>
+                </ScrollReveal>
 
                 {/* Form */}
-                <motion.form
-                    initial={{ opacity: 0, x: 50 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 1, ease: "easeOut", delay: 0.2 }}
-                    onSubmit={handleSubmit}
-                    className="space-y-8 bg-brand-indigo/5 p-10 rounded-2xl backdrop-blur-sm border border-brand-indigo/10 relative"
-                >
-                    {status === 'success' && (
-                        <div className="absolute inset-0 bg-white/90 backdrop-blur-md z-20 flex flex-col items-center justify-center text-center p-6 rounded-2xl">
-                            <div className="w-16 h-16 bg-brand-indigo text-white rounded-full flex items-center justify-center mb-4">
-                                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
+                <ScrollReveal direction="right" delay={0.15}>
+                    <motion.form
+                        onSubmit={handleSubmit}
+                        className="space-y-8 p-8 md:p-10 rounded-2xl border border-brand-indigo/[0.06] bg-white/60 backdrop-blur-sm relative shadow-[0_10px_40px_-10px_rgba(28,31,58,0.04)]"
+                    >
+                        {status === 'success' && (
+                            <div className="absolute inset-0 bg-white/95 backdrop-blur-md z-20 flex flex-col items-center justify-center text-center p-6 rounded-2xl">
+                                <div className="w-14 h-14 bg-brand-indigo text-white rounded-full flex items-center justify-center mb-4">
+                                    <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
+                                </div>
+                                <h3 className="text-2xl font-display font-bold text-brand-indigo mb-2">Message Sent!</h3>
+                                <p className="text-brand-indigo/50 text-sm">Thank you for reaching out. We will get back to you shortly.</p>
+                                <button
+                                    onClick={() => setStatus('idle')}
+                                    className="mt-6 text-brand-indigo font-medium underline text-sm"
+                                >
+                                    Send another message
+                                </button>
                             </div>
-                            <h3 className="text-2xl font-bold text-brand-indigo mb-2">Message Sent!</h3>
-                            <p className="text-brand-indigo/60">Thank you for reaching out. We will get back to you shortly at {formData.email}.</p>
-                            <button
-                                onClick={() => setStatus('idle')}
-                                className="mt-6 text-brand-indigo font-medium underline"
-                            >
-                                Send another message
-                            </button>
+                        )}
+
+                        {/* Name */}
+                        <div className="relative group">
+                            <label className={`absolute left-0 transition-all duration-300 pointer-events-none text-sm ${focused === 'name' || formData.name ? '-top-6 text-brand-indigo' : 'top-2.5 text-brand-indigo/30'}`}>
+                                Your Name
+                            </label>
+                            <input
+                                type="text"
+                                required
+                                value={formData.name}
+                                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                onFocus={() => setFocused('name')}
+                                onBlur={(e) => !e.target.value && setFocused(null)}
+                                className="w-full bg-transparent border-b border-brand-indigo/10 py-2.5 text-brand-indigo outline-none focus:border-brand-indigo/40 transition-all"
+                            />
                         </div>
-                    )}
 
-                    {/* Name */}
-                    <div className="relative group">
-                        <label className={`absolute left-0 transition-all duration-300 pointer-events-none ${focused === 'name' || formData.name ? '-top-6 text-sm text-brand-indigo' : 'top-2 text-brand-indigo/40'
-                            }`}>
-                            Your Name
-                        </label>
-                        <input
-                            type="text"
-                            required
-                            value={formData.name}
-                            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                            onFocus={() => setFocused('name')}
-                            onBlur={(e) => !e.target.value && setFocused(null)}
-                            className="w-full bg-transparent border-b border-brand-indigo/20 py-2 text-brand-indigo outline-none focus:border-brand-indigo transition-all"
-                        />
-                    </div>
+                        {/* Email */}
+                        <div className="relative group">
+                            <label className={`absolute left-0 transition-all duration-300 pointer-events-none text-sm ${focused === 'email' || formData.email ? '-top-6 text-brand-indigo' : 'top-2.5 text-brand-indigo/30'}`}>
+                                Email Address
+                            </label>
+                            <input
+                                type="email"
+                                required
+                                value={formData.email}
+                                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                onFocus={() => setFocused('email')}
+                                onBlur={(e) => !e.target.value && setFocused(null)}
+                                className="w-full bg-transparent border-b border-brand-indigo/10 py-2.5 text-brand-indigo outline-none focus:border-brand-indigo/40 transition-all"
+                            />
+                        </div>
 
-                    {/* Email */}
-                    <div className="relative group">
-                        <label className={`absolute left-0 transition-all duration-300 pointer-events-none ${focused === 'email' || formData.email ? '-top-6 text-sm text-brand-indigo' : 'top-2 text-brand-indigo/40'
-                            }`}>
-                            Email Address
-                        </label>
-                        <input
-                            type="email"
-                            required
-                            value={formData.email}
-                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                            onFocus={() => setFocused('email')}
-                            onBlur={(e) => !e.target.value && setFocused(null)}
-                            className="w-full bg-transparent border-b border-brand-indigo/20 py-2 text-brand-indigo outline-none focus:border-brand-indigo transition-all"
-                        />
-                    </div>
+                        {/* Project Type */}
+                        <div className="relative">
+                            <label className="text-sm text-brand-indigo/40 block mb-2">Project Type</label>
+                            <select
+                                value={formData.projectType}
+                                onChange={(e) => setFormData({ ...formData, projectType: e.target.value })}
+                                className="w-full bg-transparent border-b border-brand-indigo/10 py-2.5 text-brand-indigo outline-none focus:border-brand-indigo/40 transition-all appearance-none cursor-pointer"
+                            >
+                                <option value="Web Development">Web Development</option>
+                                <option value="AI Integration">AI Integration</option>
+                                <option value="Design System">Design System</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
 
-                    {/* Project Type Dropdown */}
-                    <div className="relative">
-                        <label className="text-sm text-brand-indigo/60 block mb-2">Project Type</label>
-                        <select
-                            value={formData.projectType}
-                            onChange={(e) => setFormData({ ...formData, projectType: e.target.value })}
-                            className="w-full bg-transparent border-b border-brand-indigo/20 py-2 text-brand-indigo outline-none focus:border-brand-indigo transition-all appearance-none cursor-pointer"
-                        >
-                            <option value="Web Development">Web Development</option>
-                            <option value="AI Integration">AI Integration</option>
-                            <option value="Design System">Design System</option>
-                            <option value="Other">Other</option>
-                        </select>
-                    </div>
+                        {/* Message */}
+                        <div className="relative group">
+                            <label className={`absolute left-0 transition-all duration-300 pointer-events-none text-sm ${focused === 'message' || formData.message ? '-top-6 text-brand-indigo' : 'top-2.5 text-brand-indigo/30'}`}>
+                                Tell us about your project
+                            </label>
+                            <textarea
+                                rows={4}
+                                required
+                                value={formData.message}
+                                onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                                onFocus={() => setFocused('message')}
+                                onBlur={(e) => !e.target.value && setFocused(null)}
+                                className="w-full bg-transparent border-b border-brand-indigo/10 py-2.5 text-brand-indigo outline-none focus:border-brand-indigo/40 transition-all resize-none"
+                            ></textarea>
+                        </div>
 
-                    {/* Message */}
-                    <div className="relative group">
-                        <label className={`absolute left-0 transition-all duration-300 pointer-events-none ${focused === 'message' || formData.message ? '-top-6 text-sm text-brand-indigo' : 'top-2 text-brand-indigo/40'
-                            }`}>
-                            Tell us about your project
-                        </label>
-                        <textarea
-                            rows={4}
-                            required
-                            value={formData.message}
-                            onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                            onFocus={() => setFocused('message')}
-                            onBlur={(e) => !e.target.value && setFocused(null)}
-                            className="w-full bg-transparent border-b border-brand-indigo/20 py-2 text-brand-indigo outline-none focus:border-brand-indigo transition-all resize-none"
-                        ></textarea>
-                    </div>
-
-                    <div className="pt-4 flex justify-end">
-                        <MagneticButton type="submit" disabled={status === 'sending'} className="cursor-pointer">
-                            {status === 'sending' ? 'Sending...' : 'Send Message'}
-                        </MagneticButton>
-                    </div>
-                </motion.form>
+                        <div className="pt-4 flex justify-end">
+                            <MagneticButton type="submit" disabled={status === 'sending'} className="cursor-pointer">
+                                {status === 'sending' ? 'Sending...' : 'Send Message'}
+                            </MagneticButton>
+                        </div>
+                    </motion.form>
+                </ScrollReveal>
             </div>
-
-            {/* Background Decoration */}
-            <div className="absolute top-1/2 right-0 -translate-y-1/2 w-1/2 h-1/2 bg-brand-sand/5 blur-[120px] rounded-full pointer-events-none" />
         </section>
     );
 }

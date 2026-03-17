@@ -5,6 +5,20 @@
 :root {
   --background: #FFFFFF;
   --foreground: #1C1F3A;
+
+  /* Glass Design Tokens */
+  --glass-bg: rgba(255, 255, 255, 0.6);
+  --glass-border: rgba(255, 255, 255, 0.3);
+  --glass-shadow: rgba(28, 31, 58, 0.04);
+
+  /* Glow tokens */
+  --glow-brand: rgba(216, 185, 138, 0.4);
+  --glow-indigo: rgba(28, 31, 58, 0.15);
+
+  /* Gradient mesh stops */
+  --mesh-1: rgba(216, 185, 138, 0.15);
+  --mesh-2: rgba(28, 31, 58, 0.05);
+  --mesh-3: rgba(244, 242, 237, 0.8);
 }
 
 html {
@@ -14,7 +28,6 @@ html {
 body {
   color: var(--foreground);
   background: #FFFFFF;
-  /* Hardcoded to prevent FOUC */
   font-family: Arial, Helvetica, sans-serif;
   overflow-x: hidden;
   will-change: scroll-position;
@@ -22,7 +35,9 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Lenis configuration */
+/* ──────────────────────────────────────
+   Lenis Smooth Scroll
+   ────────────────────────────────────── */
 html.lenis,
 html.lenis body {
   height: auto;
@@ -42,4 +57,138 @@ html.lenis body {
 
 .lenis.lenis-scrolling iframe {
   pointer-events: none;
+}
+
+/* ──────────────────────────────────────
+   Glassmorphism Utilities
+   ────────────────────────────────────── */
+@layer utilities {
+  .glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+  }
+
+  .glass-strong {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(40px);
+    -webkit-backdrop-filter: blur(40px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+  }
+
+  .glow-sm {
+    box-shadow: 0 0 20px var(--glow-brand),
+                0 4px 16px var(--glass-shadow);
+  }
+
+  .glow-lg {
+    box-shadow: 0 0 40px var(--glow-brand),
+                0 8px 32px var(--glass-shadow);
+  }
+
+  .glow-indigo {
+    box-shadow: 0 0 30px var(--glow-indigo),
+                0 4px 20px var(--glass-shadow);
+  }
+
+  .gradient-mesh {
+    background:
+      radial-gradient(ellipse 80% 50% at 20% 40%, var(--mesh-1), transparent),
+      radial-gradient(ellipse 60% 80% at 80% 20%, var(--mesh-2), transparent),
+      radial-gradient(ellipse 50% 50% at 50% 80%, var(--mesh-1), transparent),
+      linear-gradient(180deg, var(--mesh-3), #FFFFFF);
+  }
+
+  .text-gradient {
+    background: linear-gradient(135deg, #1C1F3A 0%, #D8B98A 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+}
+
+/* ──────────────────────────────────────
+   Keyframe Animations
+   ────────────────────────────────────── */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.05); }
+}
+
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* ──────────────────────────────────────
+   Custom Scrollbar (subtle)
+   ────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(28, 31, 58, 0.15);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(28, 31, 58, 0.3);
+}
+
+/* ──────────────────────────────────────
+   Microinteraction Keyframes
+   ────────────────────────────────────── */
+@keyframes scale-subtle {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+  100% { transform: scale(1); }
+}
+
+@keyframes slide-up {
+  0% { transform: translateY(8px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* ──────────────────────────────────────
+   Text Selection
+   ────────────────────────────────────── */
+::selection {
+  background: rgba(216, 185, 138, 0.25);
+  color: #1C1F3A;
+}
+
+::-moz-selection {
+  background: rgba(216, 185, 138, 0.25);
+  color: #1C1F3A;
+}
+
+/* ──────────────────────────────────────
+   Focus States (a11y)
+   ────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid rgba(216, 185, 138, 0.6);
+  outline-offset: 2px;
+  border-radius: 4px;
 }
