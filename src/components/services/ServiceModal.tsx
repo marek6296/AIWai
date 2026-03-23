@@ -1,5 +1,6 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, CheckCircle2, ArrowRight } from "lucide-react";
 import { useTranslation } from "@/i18n/useTranslation";
@@ -21,8 +22,14 @@ interface ServiceModalProps {
 
 export default function ServiceModal({ isOpen, onClose, service }: ServiceModalProps) {
     const { t } = useTranslation();
+    const [mounted, setMounted] = useState(false);
 
-    React.useEffect(() => {
+    useEffect(() => {
+        setMounted(true);
+        return () => setMounted(false);
+    }, []);
+
+    useEffect(() => {
         if (isOpen) {
             document.body.style.overflow = 'hidden';
             document.documentElement.style.overflow = 'hidden';
@@ -36,12 +43,12 @@ export default function ServiceModal({ isOpen, onClose, service }: ServiceModalP
         };
     }, [isOpen]);
 
-    if (!service) return null;
+    if (!service || !mounted) return null;
 
-    return (
+    const modalContent = (
         <AnimatePresence>
             {isOpen && (
-                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-6">
+                <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 md:p-6">
                     {/* Backdrop */}
                     <motion.div
                         initial={{ opacity: 0 }}
@@ -141,4 +148,6 @@ export default function ServiceModal({ isOpen, onClose, service }: ServiceModalP
             )}
         </AnimatePresence>
     );
+
+    return createPortal(modalContent, document.body);
 }
