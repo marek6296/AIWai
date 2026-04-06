@@ -27,10 +27,16 @@ export default function Footer() {
                         </div>
                     </div>
 
-                    <div className="flex gap-5">
-                        <Link href="#" className="text-brand-indigo/20 hover:text-brand-indigo/60 transition-colors"><Twitter size={18} /></Link>
-                        <Link href="#" className="text-brand-indigo/20 hover:text-brand-indigo/60 transition-colors"><Github size={18} /></Link>
-                        <Link href="#" className="text-brand-indigo/20 hover:text-brand-indigo/60 transition-colors"><Linkedin size={18} /></Link>
+                    <div className="flex gap-6">
+                        <Link href="#" className="text-brand-indigo/30 hover:text-brand-indigo/60 transition-all hover:scale-110 duration-300">
+                            <Twitter size={20} strokeWidth={1.5} />
+                        </Link>
+                        <Link href="#" className="text-brand-indigo/30 hover:text-brand-indigo/60 transition-all hover:scale-110 duration-300">
+                            <Github size={20} strokeWidth={1.5} />
+                        </Link>
+                        <Link href="#" className="text-brand-indigo/30 hover:text-brand-indigo/60 transition-all hover:scale-110 duration-300">
+                            <Linkedin size={20} strokeWidth={1.5} />
+                        </Link>
                     </div>
                 </div>
 

@@ -85,50 +85,52 @@ export default function NewsSection() {
             
             {/* ── Content ── */}
             <div className="relative z-10 container mx-auto px-6">
-                <div className="flex flex-col lg:flex-row items-center justify-between gap-12 mb-16">
-                    {/* Left: Text Content */}
-                    <div className="max-w-xl space-y-4 text-center lg:text-left">
-                        <div className="news-fade flex items-center justify-center lg:justify-start gap-2">
-                            <span className="relative flex h-1.5 w-1.5">
+                <div className="flex flex-col lg:flex-row items-center justify-between gap-16 lg:gap-24 mb-20 min-h-[400px]">
+                    {/* Left: Text Content - Centered vertically with image */}
+                    <div className="max-w-xl space-y-6 text-center lg:text-left flex flex-col justify-center">
+                        <div className="news-fade flex items-center justify-center lg:justify-start gap-3">
+                            <span className="relative flex h-2 w-2">
                                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-sand opacity-75"></span>
-                                <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-brand-sand"></span>
+                                <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-sand"></span>
                             </span>
-                            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-brand-sand">
+                            <span className="text-[11px] font-bold uppercase tracking-[0.3em] text-brand-sand/80">
                                 {t("news.badge")}
                             </span>
                         </div>
                         
-                        <h2 className="news-fade text-3xl md:text-4xl font-display font-bold text-white leading-tight">
+                        <h2 className="news-fade text-4xl md:text-5xl font-display font-bold text-white leading-[1.1] tracking-tight">
                             {t("news.heading")}
                         </h2>
                         
-                        <p className="news-fade text-base text-white/50 font-light leading-relaxed">
+                        <p className="news-fade text-lg text-white/40 font-light leading-relaxed max-w-lg">
                             {t("news.subheading")}
                         </p>
                     </div>
 
-                    {/* Right: Clickable Preview Image */}
+                    {/* Right: Clickable Preview Image - Large and Premium */}
                     <motion.div 
-                        className="news-fade relative w-full max-w-[500px]"
-                        whileHover={{ scale: 1.02 }}
-                        transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                        className="news-fade relative w-full lg:w-1/2 flex justify-center lg:justify-end"
+                        whileHover={{ y: -5 }}
+                        transition={{ duration: 0.4, ease: "easeOut" }}
                     >
                         <a
                             href="https://aiwai.news"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="block relative group rounded-2xl overflow-hidden border border-white/10 shadow-2xl shadow-black/50"
+                            className="block relative group rounded-3xl overflow-hidden border border-white/10 shadow-[0_40px_100px_-20px_rgba(0,0,0,0.8)] max-w-full"
                         >
                             <Image
                                 src="/partner-preview.png"
                                 alt="AIWai News Portal Preview"
-                                width={600}
-                                height={400}
-                                className="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-105"
+                                width={650}
+                                height={450}
+                                className="w-full h-auto object-cover transition-transform duration-1000 group-hover:scale-105"
+                                priority
                             />
-                            {/* Overlay on hover */}
-                            <div className="absolute inset-0 bg-brand-indigo/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center backdrop-blur-[2px]">
-                                <div className="px-6 py-2 bg-white text-brand-indigo rounded-full text-[10px] font-bold uppercase tracking-widest shadow-xl">
+                            {/* Sophisticated Glow on hover */}
+                            <div className="absolute inset-0 bg-gradient-to-tr from-brand-indigo/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-4 group-hover:translate-y-0">
+                                <div className="px-8 py-3 bg-white text-brand-indigo rounded-full text-[11px] font-bold uppercase tracking-widest shadow-2xl">
                                     {t("news.viewAll")}
                                 </div>
                             </div>

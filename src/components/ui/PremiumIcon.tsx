@@ -2,247 +2,143 @@
 
 import { motion } from "framer-motion";
 
-type IconType = "ai-agents" | "chatbots" | "automation" | "design" | "premium-design" | "growth";
+export type IconType = 
+  | "ai-agents" 
+  | "chatbots" 
+  | "automation" 
+  | "design" 
+  | "premium-design" 
+  | "growth";
 
 interface PremiumIconProps {
-  type: IconType;
-  size?: number;
-  className?: string;
-  glow?: boolean;
+    type: IconType;
+    className?: string;
+    size?: number;
 }
 
-export default function PremiumIcon({ type, size = 48, className = "", glow = true }: PremiumIconProps) {
-  const renderIconContent = () => {
-    switch (type) {
-      case "ai-agents":
-        return (
-          <g>
-            {/* Neural Nodes */}
-            <motion.circle
-              cx="24" cy="24" r="6"
-              fill="currentColor"
-              className="text-brand-sand opacity-80"
-              animate={{ scale: [1, 1.2, 1], opacity: [0.6, 1, 0.6] }}
-              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-            />
-            <motion.path
-              d="M12 24L18 24M30 24L36 24M24 12L24 18M24 30L24 36M15.5 15.5L19.7 19.7M28.3 28.3L32.5 32.5M15.5 32.5L19.7 28.3"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              className="text-brand-indigo/30"
-              animate={{ rotate: 360 }}
-              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-            />
-            {/* Orbiting particles */}
-            {[0, 90, 180, 270].map((angle, i) => (
-              <motion.circle
-                key={i}
-                cx="24" cy="24" r="2"
-                fill="currentColor"
-                className="text-brand-sand"
-                animate={{
-                  x: [0, 14 * Math.cos(angle * Math.PI / 180)],
-                  y: [0, 14 * Math.sin(angle * Math.PI / 180)],
-                  opacity: [0, 1, 0],
-                }}
-                transition={{ duration: 2 + i * 0.5, repeat: Infinity, ease: "easeOut" }}
-              />
-            ))}
-          </g>
-        );
-      case "chatbots":
-        return (
-          <g>
-            {/* Concentric rings of intelligence */}
-            {[1, 2, 3].map((i) => (
-              <motion.circle
-                key={i}
-                cx="24" cy="24" r={i * 6}
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1"
-                className="text-brand-indigo/10"
-                animate={{
-                  scale: [1, 1.1, 1],
-                  opacity: [0.1, 0.3, 0.1],
-                }}
-                transition={{ duration: 3, delay: i * 0.5, repeat: Infinity }}
-              />
-            ))}
-            {/* Focal voice/brain indicator */}
-            <motion.path
-              d="M18 24C18 20.6863 20.6863 18 24 18C27.3137 18 30 20.6863 30 24C30 27.3137 27.3137 30 24 30C20.6863 30 18 27.3137 18 24Z"
-              fill="currentColor"
-              className="text-brand-indigo"
-              animate={{ opacity: [0.7, 1, 0.7] }}
-              transition={{ duration: 2, repeat: Infinity }}
-            />
-            <motion.path
-              d="M20 24H28M22 21H26M22 27H26"
-              stroke="white"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              animate={{ opacity: [0.4, 0.8, 0.4] }}
-              transition={{ duration: 1.5, repeat: Infinity }}
-            />
-          </g>
-        );
-      case "automation":
-        return (
-          <g>
-            {/* Geometric structure */}
-            <rect x="14" y="14" width="20" height="20" rx="3" fill="none" stroke="currentColor" strokeWidth="1" className="text-brand-indigo/20" />
-            <motion.path
-              d="M10 24H38M24 10V38"
-              stroke="currentColor"
-              strokeWidth="0.5"
-              className="text-brand-indigo/10"
-            />
-            {/* Moving light nodes */}
-            <motion.rect
-              width="6" height="6" rx="1.5"
-              fill="currentColor"
-              className="text-brand-sand"
-              animate={{
-                x: [14, 28, 28, 14, 14],
-                y: [14, 14, 28, 28, 14],
-              }}
-              transition={{ duration: 5, repeat: Infinity, ease: "linear" }}
-            />
-            <motion.circle
-              cx="24" cy="24" r="1.5"
-              fill="currentColor"
-              className="text-brand-indigo"
-              animate={{ scale: [1, 1.5, 1], opacity: [0.8, 1, 0.8] }}
-              transition={{ duration: 1, repeat: Infinity }}
-            />
-          </g>
-        );
-      case "design":
-        return (
-          <g>
-            {/* Prismatic layers */}
-            <motion.path
-              d="M24 6L6 34H42L24 6Z"
-              fill="currentColor"
-              className="text-brand-sand/10"
-              animate={{ opacity: [0.3, 0.6, 0.3] }}
-              transition={{ duration: 4, repeat: Infinity }}
-            />
-            <motion.path
-              d="M24 14L12 34H36L24 14Z"
-              fill="currentColor"
-              className="text-brand-sand/30"
-              animate={{ scale: [0.95, 1.05, 0.95] }}
-              transition={{ duration: 3, repeat: Infinity }}
-            />
-            <motion.circle
-              cx="24" cy="28" r="4"
-              fill="currentColor"
-              className="text-brand-indigo"
-            />
-            {/* Reflection lines */}
-            <motion.path
-              d="M18 20L22 14M26 14L30 20"
-              stroke="currentColor"
-              className="text-brand-sand/50"
-              strokeWidth="1"
-              animate={{ pathLength: [0, 1, 0] }}
-              transition={{ duration: 2, repeat: Infinity }}
-            />
-          </g>
-        );
-      case "premium-design":
-        return (
-          <g>
-            {/* Sculptural abstract form */}
-            <motion.path
-                d="M12 12Q24 4 36 12Q44 24 36 36Q24 44 12 36Q4 24 12 12Z"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                className="text-brand-indigo/10"
-                animate={{ rotate: 360 }}
-                transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
-            />
-            <motion.path
-                d="M16 16Q24 10 32 16Q38 24 32 32Q24 38 16 32Q10 24 16 16Z"
-                fill="currentColor"
-                className="text-brand-indigo"
-                animate={{ 
-                    scale: [1, 1.05, 1],
-                    borderRadius: ["30%", "50%", "30%"]
-                }}
-                transition={{ duration: 4, repeat: Infinity }}
-            />
-            <motion.circle
-                cx="32" cy="16" r="3"
-                fill="currentColor"
-                className="text-brand-sand"
-                animate={{ opacity: [0.4, 1, 0.4] }}
-                transition={{ duration: 2, repeat: Infinity }}
-            />
-          </g>
-        );
-      case "growth":
-        return (
-          <g>
-            {/* Geometric progression */}
-            {[0, 1, 2].map((i) => (
-                <motion.rect
-                    key={i}
-                    x={14 + i * 8}
-                    y={32 - i * 8}
-                    width="6"
-                    height={i * 8 + 6}
-                    rx="1"
-                    fill="currentColor"
-                    className={i === 2 ? "text-brand-sand" : "text-brand-indigo/30"}
-                    initial={{ height: 0 }}
-                    whileInView={{ height: i * 8 + 6 }}
-                    transition={{ delay: i * 0.2, duration: 1 }}
-                />
-            ))}
-            <motion.path
-                d="M10 36H38"
-                stroke="currentColor"
-                strokeWidth="1"
-                className="text-brand-indigo/20"
-            />
-          </g>
-        );
-      default:
-        return null;
+const pathVariants: any = {
+    initial: { pathLength: 0, opacity: 0 },
+    animate: { 
+        pathLength: 1, 
+        opacity: 1,
+        transition: { duration: 1.5, ease: "easeInOut" }
     }
-  };
+};
 
-  return (
-    <div className={`relative inline-flex items-center justify-center ${className}`}>
-      {/* Decorative Glow */}
-      {glow && (
-        <motion.div
-          animate={{ scale: [1, 1.2, 1], opacity: [0.1, 0.2, 0.1] }}
-          transition={{ duration: 4, repeat: Infinity }}
-          className={`absolute inset-0 rounded-full blur-xl pointer-events-none ${
-            type === "ai-agents" || type === "design" || type === "growth"
-              ? "bg-brand-sand"
-              : "bg-brand-indigo"
-          }`}
-        />
-      )}
-      
-      {/* SVG Icon Container */}
-      <svg
-        width={size}
-        height={size}
-        viewBox="0 0 48 48"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        className="relative z-10 overflow-visible"
-      >
-        {renderIconContent()}
-      </svg>
-    </div>
-  );
+export default function PremiumIcon({ type, className = "", size = 120 }: PremiumIconProps) {
+    const renderIcon = () => {
+        switch (type) {
+            case "ai-agents":
+                return (
+                    <motion.svg width={size} height={size} viewBox="0 0 100 100" fill="none">
+                        {/* More recognizable Robot Head */}
+                        <motion.path 
+                            d="M30 45C30 36.7157 36.7157 30 45 30H55C63.2843 30 70 36.7157 70 45V60C70 65.5228 65.5228 70 60 70H40C34.4772 70 30 65.5228 30 60V45Z" 
+                            stroke="currentColor" strokeWidth="1.5" variants={pathVariants} 
+                        />
+                        <motion.path d="M30 50H70" stroke="currentColor" strokeWidth="1" strokeOpacity="0.3" variants={pathVariants} />
+                        <motion.rect x="38" y="42" width="24" height="6" rx="3" stroke="currentColor" strokeWidth="1.5" variants={pathVariants} />
+                        <motion.circle cx="44" cy="45" r="1" fill="currentColor" variants={pathVariants} />
+                        <motion.circle cx="56" cy="45" r="1" fill="currentColor" variants={pathVariants} />
+                        
+                        {/* Antenna/Neural Nodes */}
+                        <motion.path d="M50 30V22" stroke="currentColor" strokeWidth="1.5" variants={pathVariants} />
+                        <motion.circle cx="50" cy="20" r="2" stroke="currentColor" strokeWidth="1" variants={pathVariants} />
+                        
+                        {/* Side Details */}
+                        <motion.path d="M70 45H76M70 55H76M30 45H24M30 55H24" stroke="currentColor" strokeWidth="1" strokeOpacity="0.4" variants={pathVariants} />
+                    </motion.svg>
+                );
+            case "chatbots":
+                return (
+                    <motion.svg width={size} height={size} viewBox="0 0 100 100" fill="none">
+                        {/* Central Core & Waves */}
+                        <motion.circle cx="50" cy="50" r="8" stroke="currentColor" strokeWidth="2" variants={pathVariants} />
+                        <motion.path d="M35 35C40 30 45 28 50 28C55 28 60 30 65 35" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" variants={pathVariants} />
+                        <motion.path d="M28 28C35 21 42 18 50 18C58 18 65 21 72 28" stroke="currentColor" strokeWidth="1" strokeOpacity="0.4" strokeLinecap="round" variants={pathVariants} />
+                        <motion.path d="M35 65C40 70 45 72 50 72C55 72 60 70 65 65" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" variants={pathVariants} />
+                        <motion.path d="M28 72C35 79 42 82 50 82C58 82 65 79 72 72" stroke="currentColor" strokeWidth="1" strokeOpacity="0.4" strokeLinecap="round" variants={pathVariants} />
+                        
+                        {/* Pulse Dots */}
+                        <motion.circle cx="50" cy="38" r="1.5" fill="currentColor" variants={pathVariants} />
+                        <motion.circle cx="50" cy="62" r="1.5" fill="currentColor" variants={pathVariants} />
+                    </motion.svg>
+                );
+            case "automation":
+                return (
+                    <motion.svg width={size} height={size} viewBox="0 0 100 100" fill="none">
+                        {/* High-fidelity Gears */}
+                        <motion.path 
+                            d="M60 40C60 34.4772 55.5228 30 50 30C44.4772 30 40 34.4772 40 40M40 60C40 65.5228 44.4772 70 50 70C55.5228 70 60 65.5228 60 60" 
+                            stroke="currentColor" strokeWidth="1.5" variants={pathVariants} 
+                        />
+                        <motion.path d="M45 45L55 55M55 45L45 55" stroke="currentColor" strokeWidth="2" strokeLinecap="round" variants={pathVariants} />
+                        
+                        {/* Circuit Connections */}
+                        <motion.path d="M25 50H35M65 50H75M50 25V35M50 65V75" stroke="currentColor" strokeWidth="1" strokeOpacity="0.4" variants={pathVariants} />
+                        <motion.circle cx="20" cy="50" r="2.5" stroke="currentColor" strokeWidth="1" variants={pathVariants} />
+                        <motion.circle cx="80" cy="50" r="2.5" stroke="currentColor" strokeWidth="1" variants={pathVariants} />
+                    </motion.svg>
+                );
+            case "design":
+                return (
+                    <motion.svg width={size} height={size} viewBox="0 0 100 100" fill="none">
+                        {/* Recognizable Palette & Pen */}
+                        <motion.path 
+                            d="M30 40C30 30 40 25 50 25C70 25 80 35 80 55C80 70 65 80 45 80C30 80 20 70 20 55C20 50 25 45 30 45V40Z" 
+                            stroke="currentColor" strokeWidth="1.5" variants={pathVariants} 
+                        />
+                        <motion.circle cx="40" cy="45" r="3" fill="currentColor" fillOpacity="0.2" stroke="currentColor" />
+                        <motion.circle cx="55" cy="40" r="3" fill="currentColor" fillOpacity="0.2" stroke="currentColor" />
+                        <motion.circle cx="65" cy="55" r="3" fill="currentColor" fillOpacity="0.2" stroke="currentColor" />
+                        
+                        <motion.path d="M45 60L65 40" stroke="currentColor" strokeWidth="2" strokeLinecap="round" variants={pathVariants} />
+                    </motion.svg>
+                );
+            case "premium-design":
+                return (
+                    <motion.svg width={size} height={size} viewBox="0 0 100 100" fill="none">
+                        {/* High-end Diamond Prism */}
+                        <motion.path 
+                            d="M50 20L80 40L80 65L50 85L20 65L20 40L50 20Z" 
+                            stroke="currentColor" strokeWidth="1.5" variants={pathVariants} 
+                        />
+                        <motion.path d="M20 40L50 50L80 40M50 50V85" stroke="currentColor" strokeWidth="1" strokeOpacity="0.3" variants={pathVariants} />
+                        <motion.path d="M20 65L50 50L80 65" stroke="currentColor" strokeWidth="1" strokeOpacity="0.3" variants={pathVariants} />
+                    </motion.svg>
+                );
+            case "growth":
+                return (
+                    <motion.svg width={size} height={size} viewBox="0 0 100 100" fill="none">
+                        {/* Architectural Growth Spire */}
+                        <motion.path d="M30 75H70" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" variants={pathVariants} />
+                        <motion.rect x="35" y="55" width="6" height="20" rx="1" stroke="currentColor" strokeWidth="1.5" variants={pathVariants} />
+                        <motion.rect x="47" y="40" width="6" height="35" rx="1" stroke="currentColor" strokeWidth="1.5" variants={pathVariants} />
+                        <motion.rect x="59" y="25" width="6" height="50" rx="1" stroke="currentColor" strokeWidth="1.5" variants={pathVariants} />
+                        
+                        {/* Exponential Arrow */}
+                        <motion.path 
+                            d="M30 65C40 65 50 45 75 20" 
+                            stroke="currentColor" strokeWidth="1.2" strokeDasharray="3 3" strokeOpacity="0.5" variants={pathVariants} 
+                        />
+                        <motion.path d="M70 20H75V25" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" variants={pathVariants} />
+                    </motion.svg>
+                );
+            default:
+                return null;
+        }
+    };
+
+    return (
+        <motion.div 
+            initial="initial"
+            whileInView="animate"
+            viewport={{ once: true }}
+            className={`flex items-center justify-center relative ${className}`}
+        >
+            {/* Background Atmosphere */}
+            <div className="absolute inset-0 bg-brand-sand/[0.03] blur-[40px] rounded-full scale-150 pointer-events-none" />
+            {renderIcon()}
+        </motion.div>
+    );
 }

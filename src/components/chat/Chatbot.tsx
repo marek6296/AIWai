@@ -3,8 +3,9 @@
 // Triggering fresh Vercel deployment for Supabase integration
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence, useMotionValue, useAnimationFrame } from "framer-motion";
-import { Send, X, Bot, Sparkles } from "lucide-react";
+import { Send, X, Sparkles } from "lucide-react";
 import { useTranslation } from "@/i18n/useTranslation";
+import PremiumIcon from "@/components/ui/PremiumIcon";
 
 interface Message {
     role: "user" | "assistant" | "system";
@@ -192,8 +193,8 @@ export default function Chatbot() {
                         {/* Header */}
                         <div className="p-4 bg-brand-indigo/5 border-b border-brand-indigo/5 flex justify-between items-center">
                             <div className="flex items-center gap-3">
-                                <div className="w-8 h-8 rounded-full bg-brand-indigo flex items-center justify-center">
-                                    <Bot size={18} className="text-white" />
+                                <div className="w-8 h-8 rounded-full bg-brand-indigo flex items-center justify-center p-1">
+                                    <PremiumIcon type="ai-agents" size={24} className="text-white" />
                                 </div>
                                 <div>
                                     <h3 className="text-brand-indigo font-bold text-sm">{t("chatbot.header")}</h3>
@@ -218,7 +219,7 @@ export default function Chatbot() {
                         <div className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-thin scrollbar-thumb-brand-indigo/10 scrollbar-track-transparent">
                             {messages.length === 0 && (
                                 <div className="h-full flex flex-col items-center justify-center text-center opacity-40">
-                                    <Bot size={48} className="text-brand-indigo mb-4" />
+                                    <PremiumIcon type="ai-agents" size={64} className="text-brand-indigo mb-4" />
                                     <p className="text-sm text-brand-indigo max-w-[200px]">
                                         {t("chatbot.bubble.initial")}
                                     </p>
@@ -360,7 +361,7 @@ export default function Chatbot() {
                                             animate={{ scale: 1, opacity: 1 }}
                                             exit={{ scale: 0.5, opacity: 0 }}
                                         >
-                                            <Bot size={28} />
+                                            <PremiumIcon type="ai-agents" size={36} className="text-white" />
                                         </motion.div>
                                     )}
                                 </AnimatePresence>
