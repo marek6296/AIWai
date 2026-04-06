@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, Variants } from "framer-motion";
 
 export type IconType = 
   | "ai-agents" 
@@ -16,7 +16,7 @@ interface PremiumIconProps {
     size?: number;
 }
 
-const pathVariants: any = {
+const pathVariants: Variants = {
     initial: { pathLength: 0, opacity: 0 },
     animate: { 
         pathLength: 1, 
