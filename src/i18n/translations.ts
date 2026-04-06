@@ -63,9 +63,9 @@ export const translations: Record<Lang, Record<string, string>> = {
         'whyUs.feature.1.description': 'Future-proof your business with AI-driven architecture. From smart automation to neural agents, we build systems that think and adapt.',
         'whyUs.feature.2.title': 'Simplicity & Growth',
         'whyUs.feature.2.description': 'Complex technology, simplified for you. We focus on clean, scalable solutions that drive real engagement and measurable business results.',
-        'whyUs.philosophy.title': 'Architecture of Human Intent',
-        'whyUs.philosophy.text1': 'At AIWai, we believe that artificial intelligence is not meant to replace human creativity, but to amplify it. Our studio was founded on the principle that digital systems should be as elegant as they are intelligent.',
-        'whyUs.philosophy.text2': 'We don\'t just write code; we design neural architectures that feel natural, intuitive, and most importantly, human. Every automation we build is driven by a singular purpose: to create space for your business to focus on what truly matters.',
+        'whyUs.philosophy.title': 'The Era of Intelligence',
+        'whyUs.philosophy.text1': 'AI is the digital extension of human capability. The past year proved that generative intelligence is no longer just a theory, but a primary tool reshaping how we design, communicate, and automate.',
+        'whyUs.philosophy.text2': 'The future will bring autonomous agents that don\'t just respond, but act—transforming your business from a passive operation into a fully automated, thinking ecosystem.',
         'whyUs.philosophy.signature': 'Marek, Founder of AIWai',
 
         // ── CTA ──
@@ -163,9 +163,9 @@ export const translations: Record<Lang, Record<string, string>> = {
         'whyUs.feature.1.description': 'Pripravte vaše podnikanie na budúcnosť s architektúrou riadenou AI. Od inteligentnej automatizácie po neurálnych agentov — budujeme systémy, ktoré myslia a prispôsobujú sa.',
         'whyUs.feature.2.title': 'Jednoduchosť & Rast',
         'whyUs.feature.2.description': 'Komplexná technológia zjednodušená pre vás. Zameriavame sa na čisté, škálovateľné riešenia, ktoré prinášajú reálne výsledky.',
-        'whyUs.philosophy.title': 'Architektúra Ľudského Zámeru',
-        'whyUs.philosophy.text1': 'V AIWai veríme, že umelá inteligencia nemá nahradiť ľudskú kreativitu, ale má ju znásobiť. Naše štúdio bolo založené na princípe, že digitálne systémy by mali byť rovnako elegantné ako inteligentné.',
-        'whyUs.philosophy.text2': 'Nepíšeme len kód; navrhujeme neurálne architektúry, ktoré pôsobia prirodzene a intuitívne. Každá automatizácia, ktorú vytvoríme, smeruje k jedinému cieľu: vytvoriť pre vaše podnikanie priestor sústrediť sa na to, čo je skutočne dôležité.',
+        'whyUs.philosophy.title': 'Éra Inteligencie',
+        'whyUs.philosophy.text1': 'AI je digitálnym rozšírením ľudských schopností. Posledný rok nám ukázal, že generatívna inteligencia nie je len teóriou, ale nástrojom, ktorý mení pravidlá hry v tvorbe, komunikácii a automatizácii.',
+        'whyUs.philosophy.text2': 'Budúcnosť prinesie autonómnych agentov, ktorí nebudú len odpovedať, ale samostatne konať — premenia vaše podnikanie z pasívnej prevádzky na plne automatizovaný ekosystém.',
         'whyUs.philosophy.signature': 'Marek, Zakladateľ AIWai',
 
         // ── CTA ──
@@ -263,9 +263,9 @@ export const translations: Record<Lang, Record<string, string>> = {
         'whyUs.feature.1.description': 'Připravte vaše podnikání na budoucnost s architekturou řízenou AI. Od chytré automatizace po neurální agenty — budujeme systémy, které myslí a přizpůsobují se.',
         'whyUs.feature.2.title': 'Jednoduchost & Růst',
         'whyUs.feature.2.description': 'Komplexní technologie zjednodušená pro vás. Zaměřujeme se na čistá, škálovatelná řešení, která přinášejí reálné výsledky.',
-        'whyUs.philosophy.title': 'Architektura Lidského Záměru',
-        'whyUs.philosophy.text1': 'V AIWai věříme, že umělá inteligence nemá nahradit lidskou kreativitu, ale má ji znásobit. Naše studio bylo založeno na principu, že digitální systémy by měly být stejně elegantní jako inteligentní.',
-        'whyUs.philosophy.text2': 'Nepíšeme jen kód; navrhujeme neurální architektury, které působí přirozeně a intuitivně. Každá automatizace, kterou vytvoříme, směřuje k jedinému cíli: vytvořit pro vaše podnikání prostor soustředit se na to, co je skutečně důležité.',
+        'whyUs.philosophy.title': 'Éra Inteligence',
+        'whyUs.philosophy.text1': 'AI je digitálním rozšířením lidských schopností. Poslední rok nám ukázal, že generativní inteligence není jen teorií, ale nástrojem, který mění pravidla hry v tvorbě, komunikaci a automatizaci.',
+        'whyUs.philosophy.text2': 'Budoucnost přinese autonomní agenty, kteří nebudou jen odpovídat, ale samostatně jednat — promění vaše podnikání z pasivního provozu na plně automatizovaný ekosystém.',
         'whyUs.philosophy.signature': 'Marek, Zakladatel AIWai',
 
         // ── CTA ──

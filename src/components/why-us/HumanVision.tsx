@@ -63,7 +63,7 @@ export default function HumanVision() {
                                     {t("whyUs.philosophy.signature")}
                                 </div>
                                 <div className="text-[9px] uppercase tracking-[0.3em] font-bold text-brand-sand/60">
-                                    Founder & Visionary
+                                    Founder
                                 </div>
                             </div>
                         </motion.div>
