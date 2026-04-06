@@ -13,8 +13,6 @@ const ICONS: ("premium-design" | "ai-agents" | "growth")[] = [
     "growth",
 ];
 
-const STAT_VALUES = ["30+", "98%", "24/7", "3x"];
-
 export default function WhyUsSection() {
     const { t } = useTranslation();
 
@@ -22,11 +20,6 @@ export default function WhyUsSection() {
         title: t(`whyUs.feature.${i}.title`),
         description: t(`whyUs.feature.${i}.description`),
         icon: <PremiumIcon type={ICONS[i]} size={42} />,
-    }));
-
-    const stats = STAT_VALUES.map((value, i) => ({
-        value,
-        label: t(`whyUs.stat.${i}`),
     }));
 
     return (
