@@ -77,6 +77,7 @@ export default function NewsSection() {
     return (
         <section 
             ref={sectionRef}
+            id="aiwai-news"
             className="relative py-12 md:py-16 bg-brand-indigo overflow-hidden"
         >
             {/* ── Visual Background Elements ── */}

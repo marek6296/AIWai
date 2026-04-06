@@ -3,6 +3,7 @@ export type Lang = 'en' | 'sk' | 'cs'
 export const translations: Record<Lang, Record<string, string>> = {
     en: {
         // ── Nav ──
+        'nav.news': 'AIWai News',
         'nav.services': 'Services',
         'nav.about': 'About',
         'nav.contact': 'Contact',
@@ -106,6 +107,7 @@ export const translations: Record<Lang, Record<string, string>> = {
 
     sk: {
         // ── Nav ──
+        'nav.news': 'AIWai News',
         'nav.services': 'Služby',
         'nav.about': 'O nás',
         'nav.contact': 'Kontakt',
@@ -205,6 +207,7 @@ export const translations: Record<Lang, Record<string, string>> = {
 
     cs: {
         // ── Nav ──
+        'nav.news': 'AIWai News',
         'nav.services': 'Služby',
         'nav.about': 'O nás',
         'nav.contact': 'Kontakt',

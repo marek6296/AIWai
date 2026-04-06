@@ -6,8 +6,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "@/i18n/useTranslation";
 import type { Lang } from "@/i18n/translations";
 
-const NAV_IDS = ["services", "about"] as const;
+const NAV_IDS = ["aiwai-news", "services", "about"] as const;
 const NAV_KEYS: Record<string, string> = {
+    "aiwai-news": "nav.news",
     services: "nav.services",
     about: "nav.about",
 };
