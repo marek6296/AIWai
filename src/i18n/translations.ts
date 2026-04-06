@@ -95,6 +95,13 @@ export const translations: Record<Lang, Record<string, string>> = {
         'chatbot.bubble.repeat': 'Still here if you need me!',
         'chatbot.header': 'AIWai Assistant',
         'chatbot.placeholder': 'Type your message...',
+
+        // ── News Section ──
+        'news.badge': 'Automation Showcase',
+        'news.heading': 'Live AI Newsroom',
+        'news.subheading': 'Explore our partner project aiwai.news — a fully automated portal where AI monitors, processes, and publishes the latest tech news in real-time.',
+        'news.readMore': 'Read more',
+        'news.viewAll': 'Visit aiwai.news',
     },
 
     sk: {
@@ -187,6 +194,13 @@ export const translations: Record<Lang, Record<string, string>> = {
         'chatbot.bubble.repeat': 'Stále som tu, ak ma potrebujete!',
         'chatbot.header': 'AIWai Asistent',
         'chatbot.placeholder': 'Napíšte správu...',
+
+        // ── News Section ──
+        'news.badge': 'Showcase Automatizácie',
+        'news.heading': 'Živé AI spravodajstvo',
+        'news.subheading': 'Pozrite si náš partnerský projekt aiwai.news — plne automatizovaný portál, kde AI v reálnom čase monitoruje, spracováva a publikuje najnovšie správy zo sveta technológií.',
+        'news.readMore': 'Čítať viac',
+        'news.viewAll': 'Navštíviť aiwai.news',
     },
 
     cs: {
@@ -279,5 +293,12 @@ export const translations: Record<Lang, Record<string, string>> = {
         'chatbot.bubble.repeat': 'Stále jsem tu, pokud mě potřebujete!',
         'chatbot.header': 'AIWai Asistent',
         'chatbot.placeholder': 'Napište zprávu...',
+
+        // ── News Section ──
+        'news.badge': 'Showcase Automatizace',
+        'news.heading': 'Živé AI zpravodajství',
+        'news.subheading': 'Prozkoumejte náš partnerský projekt aiwai.news — plně automatizovaný portál, kde AI v reálném čase monitoruje, zpracovává a publikuje nejnovější zprávy ze světa technologií.',
+        'news.readMore': 'Číst více',
+        'news.viewAll': 'Navštívit aiwai.news',
     },
 }
