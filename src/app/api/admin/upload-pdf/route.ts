@@ -35,7 +35,7 @@ export async function POST(req: Request) {
 
         // Dynamic import to avoid Next.js test file issue with pdf-parse
         // eslint-disable-next-line @typescript-eslint/no-require-imports
-        const pdfParse = require('pdf-parse/lib/pdf-parse.js')
+        const pdfParse = require('pdf-parse')
         const parsed = await pdfParse(buffer)
         let extractedText = parsed.text?.trim() || ''
 
