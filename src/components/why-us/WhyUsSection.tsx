@@ -1,15 +1,15 @@
 "use client";
 import React from "react";
 import { motion } from "framer-motion";
-import { Palette, Bot, Rocket } from "lucide-react";
 import TextReveal from "@/components/animations/TextReveal";
 import ScrollReveal from "@/components/animations/ScrollReveal";
 import { useTranslation } from "@/i18n/useTranslation";
+import PremiumIcon from "@/components/ui/PremiumIcon";
 
-const ICONS = [
-    <Palette size={36} className="text-brand-indigo" key="p" />,
-    <Bot size={36} className="text-brand-indigo" key="b" />,
-    <Rocket size={36} className="text-brand-indigo" key="r" />,
+const ICONS: ("premium-design" | "ai-agents" | "growth")[] = [
+    "premium-design",
+    "ai-agents",
+    "growth",
 ];
 
 const STAT_VALUES = ["30+", "98%", "24/7", "3x"];
@@ -20,7 +20,7 @@ export default function WhyUsSection() {
     const features = [0, 1, 2].map((i) => ({
         title: t(`whyUs.feature.${i}.title`),
         description: t(`whyUs.feature.${i}.description`),
-        icon: ICONS[i],
+        icon: <PremiumIcon type={ICONS[i]} size={42} />,
     }));
 
     const stats = STAT_VALUES.map((value, i) => ({

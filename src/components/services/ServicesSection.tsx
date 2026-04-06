@@ -3,14 +3,14 @@ import React, { useState } from "react";
 import ServiceCard from "@/components/services/ServiceCard";
 import ServiceModal from "@/components/services/ServiceModal";
 import TextReveal from "@/components/animations/TextReveal";
-import { Bot, Cpu, Palette, Sparkles } from "lucide-react";
 import { useTranslation } from "@/i18n/useTranslation";
+import PremiumIcon from "@/components/ui/PremiumIcon";
 
-const ICONS = [
-    <Bot size={28} key="bot" />,
-    <Sparkles size={28} key="sparkles" />,
-    <Cpu size={28} key="cpu" />,
-    <Palette size={28} key="palette" />,
+const ICONS: ("ai-agents" | "chatbots" | "automation" | "design")[] = [
+    "ai-agents",
+    "chatbots",
+    "automation",
+    "design",
 ];
 
 export default function ServicesSection() {
@@ -20,7 +20,7 @@ export default function ServicesSection() {
     const services = [0, 1, 2, 3].map((i) => ({
         title: t(`services.${i}.title`),
         description: t(`services.${i}.description`),
-        icon: ICONS[i],
+        icon: <PremiumIcon type={ICONS[i]} size={42} />,
         details: {
             whatIsIt: t(`services.${i}.whatIsIt`),
             howItWorks: t(`services.${i}.howItWorks`),

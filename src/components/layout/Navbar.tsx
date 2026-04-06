@@ -198,7 +198,15 @@ export default function Navbar() {
                         className="md:hidden z-[110] text-brand-indigo relative p-2"
                         aria-label="Toggle Menu"
                     >
-                        {isOpen ? <X size={28} /> : <Menu size={28} />}
+                        {isOpen ? (
+                            <svg className="w-7 h-7" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <motion.path initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 0.3 }} d="M6 18L18 6M6 6L18 18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                        ) : (
+                            <svg className="w-7 h-7" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <motion.path initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 0.4 }} d="M4 8H20M12 16H20" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                        )}
                     </button>
                 </div>
             </motion.nav>
