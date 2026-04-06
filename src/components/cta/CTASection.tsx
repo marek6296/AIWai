@@ -2,7 +2,6 @@
 
 import ScrollReveal from "@/components/animations/ScrollReveal";
 import TextReveal from "@/components/animations/TextReveal";
-import { ArrowRight } from "lucide-react";
 import { useTranslation } from "@/i18n/useTranslation";
 
 export default function CTASection() {

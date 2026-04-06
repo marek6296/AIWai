@@ -3,7 +3,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { ExternalLink } from "lucide-react";
 import { supabasePartner } from "@/lib/supabasePartner";
 import NewsCard from "./NewsCard";
 import gsap from "gsap";
