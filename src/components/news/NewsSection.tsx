@@ -79,32 +79,31 @@ export default function NewsSection() {
     return (
         <section 
             ref={sectionRef}
-            className="relative py-24 md:py-32 bg-brand-indigo overflow-hidden"
+            className="relative py-12 md:py-16 bg-brand-indigo overflow-hidden"
         >
             {/* ── Visual Background Elements ── */}
             <div className="absolute inset-0 bg-[#000000]" />
-            <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-brand-sand/5 rounded-full blur-[120px] pointer-events-none" />
-            <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-brand-sand/5 rounded-full blur-[100px] pointer-events-none" />
-
+            <div className="absolute top-0 left-1/4 w-[300px] h-[300px] bg-brand-sand/5 rounded-full blur-[80px] pointer-events-none" />
+            
             {/* ── Content ── */}
             <div className="relative z-10 container mx-auto px-6">
-                <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
-                    <div className="max-w-2xl space-y-4">
-                        <div className="news-fade flex items-center gap-3">
-                            <span className="relative flex h-2 w-2">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
+                    <div className="max-w-2xl space-y-2">
+                        <div className="news-fade flex items-center gap-2">
+                            <span className="relative flex h-1.5 w-1.5">
                                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-sand opacity-75"></span>
-                                <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-sand"></span>
+                                <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-brand-sand"></span>
                             </span>
-                            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-brand-sand">
+                            <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-brand-sand">
                                 {t("news.badge")}
                             </span>
                         </div>
                         
-                        <h2 className="news-fade text-4xl md:text-5xl lg:text-6xl font-display font-bold text-white leading-tight">
+                        <h2 className="news-fade text-2xl md:text-3xl font-display font-bold text-white leading-tight">
                             {t("news.heading")}
                         </h2>
                         
-                        <p className="news-fade text-lg text-white/50 font-light leading-relaxed">
+                        <p className="news-fade text-sm text-white/40 font-light max-w-xl">
                             {t("news.subheading")}
                         </p>
                     </div>
@@ -114,10 +113,10 @@ export default function NewsSection() {
                             href="https://aiwai.news"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="group inline-flex items-center gap-3 px-6 py-3 rounded-full border border-white/10 text-xs font-bold uppercase tracking-widest text-white hover:bg-white/5 hover:border-brand-sand/30 transition-all duration-300"
+                            className="group inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 text-[10px] font-bold uppercase tracking-widest text-white hover:bg-white/5 hover:border-brand-sand/30 transition-all duration-300"
                         >
                             {t("news.viewAll")}
-                            <ExternalLink className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                            <ExternalLink className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                         </a>
                     </div>
                 </div>

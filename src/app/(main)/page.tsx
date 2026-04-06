@@ -11,9 +11,9 @@ export default function Home() {
       <HeroSection />
       <ServicesSection />
       <WhyUsSection />
-      <NewsSection />
       <CTASection />
       <ContactSection />
+      <NewsSection />
     </main>
   );
 }
