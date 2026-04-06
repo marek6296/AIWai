@@ -10,7 +10,6 @@ export default function Home() {
     <main className="min-h-screen bg-white">
       <HeroSection />
       <ServicesSection />
-      <WhyUsSection />
       <CTASection />
       <ContactSection />
       <NewsSection />
