@@ -77,7 +77,7 @@ export default function NewsSection() {
     return (
         <section 
             ref={sectionRef}
-            className="relative py-16 md:py-24 bg-brand-indigo overflow-hidden"
+            className="relative py-12 md:py-16 bg-brand-indigo overflow-hidden"
         >
             {/* ── Visual Background Elements ── */}
             <div className="absolute inset-0 bg-[#000000]" />
@@ -85,7 +85,7 @@ export default function NewsSection() {
             
             {/* ── Content ── */}
             <div className="relative z-10 container mx-auto px-6">
-                <div className="flex flex-col lg:flex-row items-center justify-between gap-16 lg:gap-24 mb-20 min-h-[400px]">
+                <div className="flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-16 mb-12 min-h-[300px]">
                     {/* Left: Text Content - Centered vertically with image */}
                     <div className="max-w-xl space-y-6 text-center lg:text-left flex flex-col justify-center">
                         <div className="news-fade flex items-center justify-center lg:justify-start gap-3">
@@ -155,7 +155,7 @@ export default function NewsSection() {
             </div>
 
             {/* ── Bottom Section Fade ── */}
-            <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white/0 to-transparent pointer-events-none" />
+            <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-white/0 to-transparent pointer-events-none" />
         </section>
     );
 }
