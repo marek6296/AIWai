@@ -5,6 +5,7 @@ import TextReveal from "@/components/animations/TextReveal";
 import ScrollReveal from "@/components/animations/ScrollReveal";
 import { useTranslation } from "@/i18n/useTranslation";
 import PremiumIcon from "@/components/ui/PremiumIcon";
+import PremiumStats from "./PremiumStats";
 
 const ICONS: ("premium-design" | "ai-agents" | "growth")[] = [
     "premium-design",
@@ -74,17 +75,8 @@ export default function WhyUsSection() {
                     ))}
                 </div>
 
-                {/* Stats Row */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
-                    {stats.map((stat, i) => (
-                        <ScrollReveal key={i} delay={i * 0.1} className="text-center">
-                            <div className="py-8 px-6 rounded-2xl border border-brand-indigo/[0.04] bg-brand-indigo/[0.01]">
-                                <div className="text-3xl md:text-4xl font-display font-bold text-brand-indigo mb-2">{stat.value}</div>
-                                <div className="text-sm text-brand-indigo/40 uppercase tracking-[0.1em] font-medium">{stat.label}</div>
-                            </div>
-                        </ScrollReveal>
-                    ))}
-                </div>
+                {/* Premium Neural Stats Section - UNIQUE & BEAUTIFUL */}
+                <PremiumStats />
             </div>
         </section>
     );
