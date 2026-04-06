@@ -112,16 +112,20 @@ canvas[style*="position: fixed"] {
 @layer utilities {
   .glass {
     background: var(--glass-bg);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     border: 1px solid var(--glass-border);
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
   }
 
   .glass-strong {
     background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(40px);
-    -webkit-backdrop-filter: blur(40px);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.5);
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
   }
 
   .glow-sm {
@@ -152,6 +156,11 @@ canvas[style*="position: fixed"] {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+  }
+
+  .translate-z-0 {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
   }
 }
 

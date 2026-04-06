@@ -118,7 +118,7 @@ export default function NewsSection() {
                             href="https://aiwai.news"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="block relative group rounded-3xl overflow-hidden border border-white/10 shadow-[0_40px_100px_-20px_rgba(0,0,0,0.8)] max-w-full"
+                            className="block relative group rounded-3xl overflow-hidden border border-white/10 shadow-[0_40px_100px_-20px_rgba(0,0,0,0.8)] max-w-full translate-z-0"
                         >
                             <Image
                                 src="/partner-preview.png"
@@ -127,6 +127,7 @@ export default function NewsSection() {
                                 height={450}
                                 className="w-full h-auto object-cover transition-transform duration-1000 group-hover:scale-105"
                                 priority
+                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                             />
                             {/* Sophisticated Glow on hover */}
                             <div className="absolute inset-0 bg-gradient-to-tr from-brand-indigo/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />

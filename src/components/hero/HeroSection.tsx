@@ -97,12 +97,12 @@ export default function HeroSection() {
                     {/* Headline — NOT translated per user request */}
                     <div className="space-y-0">
                         <div>
-                            <h1 className="hero-line text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-display font-bold tracking-tight text-brand-indigo leading-[1.2]">
+                            <h1 className="hero-line text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-display font-bold tracking-tight text-brand-indigo leading-[1.2] translate-z-0">
                                 Intelligent
                             </h1>
                         </div>
                         <div>
-                            <h1 className="hero-line text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-display font-bold tracking-tight leading-[1.2]">
+                            <h1 className="hero-line text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-display font-bold tracking-tight leading-[1.2] translate-z-0">
                                 <span className="text-brand-indigo/40 italic font-light">Digital</span>{" "}
                                 <span className="text-gradient">Architecture</span>
                             </h1>

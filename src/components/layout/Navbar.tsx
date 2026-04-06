@@ -93,8 +93,8 @@ export default function Navbar() {
                 initial={{ y: -20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ duration: 0.8, delay: 0.5, ease: [0.215, 0.61, 0.355, 1] }}
-                className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-500 ${scrolled
-                        ? "py-3 bg-white/70 backdrop-blur-md border-b border-brand-indigo/[0.06] shadow-[0_1px_30px_rgba(28,31,58,0.04)]"
+                className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-500 translate-z-0 ${scrolled
+                        ? "py-3 bg-white/80 backdrop-blur-sm border-b border-brand-indigo/[0.06] shadow-[0_1px_30px_rgba(28,31,58,0.04)]"
                         : "py-5 bg-transparent"
                     }`}
             >
@@ -138,7 +138,7 @@ export default function Navbar() {
                                         animate={{ opacity: 1, y: 0, scale: 1 }}
                                         exit={{ opacity: 0, y: -5, scale: 0.95 }}
                                         transition={{ duration: 0.15 }}
-                                        className="absolute top-full left-0 mt-1 bg-white/90 backdrop-blur-xl border border-brand-indigo/10 rounded-xl shadow-lg shadow-brand-indigo/5 overflow-hidden"
+                                        className="absolute top-full left-0 mt-1 bg-white/95 backdrop-blur-md border border-brand-indigo/10 rounded-xl shadow-lg shadow-brand-indigo/5 overflow-hidden translate-z-0"
                                     >
                                         {LANGS.filter((l) => l.code !== lang).map((l) => (
                                             <button
@@ -235,7 +235,7 @@ export default function Navbar() {
                         initial="initial"
                         animate="animate"
                         exit="exit"
-                        className="fixed inset-0 z-[90] bg-white/95 backdrop-blur-xl flex flex-col items-center justify-center overflow-hidden"
+                        className="fixed inset-0 z-[90] bg-white/98 backdrop-blur-md flex flex-col items-center justify-center overflow-hidden translate-z-0"
                         style={{ willChange: "clip-path, opacity" }}
                     >
                         {/* Background Orbs */}
