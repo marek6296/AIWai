@@ -5,7 +5,7 @@ import TextReveal from "@/components/animations/TextReveal";
 import ScrollReveal from "@/components/animations/ScrollReveal";
 import { useTranslation } from "@/i18n/useTranslation";
 import PremiumIcon from "@/components/ui/PremiumIcon";
-import PremiumStats from "./PremiumStats";
+import ProcessArchitecture from "./ProcessArchitecture";
 
 const ICONS: ("premium-design" | "ai-agents" | "growth")[] = [
     "premium-design",
@@ -31,7 +31,7 @@ export default function WhyUsSection() {
 
             <div className="container mx-auto relative z-10">
                 {/* Header */}
-                <div className="max-w-4xl mx-auto text-center mb-20">
+                <div className="max-w-4xl mx-auto text-center mb-20 px-6">
                     <TextReveal
                         as="h2"
                         className="text-4xl md:text-6xl lg:text-7xl font-display font-bold text-brand-indigo mb-6 tracking-tight"
@@ -46,7 +46,7 @@ export default function WhyUsSection() {
                 </div>
 
                 {/* Feature Cards */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-24">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-24 px-6">
                     {features.map((feature, i) => (
                         <motion.div
                             key={i}
@@ -68,8 +68,8 @@ export default function WhyUsSection() {
                     ))}
                 </div>
 
-                {/* Premium Neural Stats Section - UNIQUE & BEAUTIFUL */}
-                <PremiumStats />
+                {/* Blueprint of Intelligence (Methodology) - REPLACES STATS */}
+                <ProcessArchitecture />
             </div>
         </section>
     );
