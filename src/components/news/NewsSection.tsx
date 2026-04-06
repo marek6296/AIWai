@@ -30,6 +30,12 @@ export default function NewsSection() {
 
     useEffect(() => {
         const fetchNews = async () => {
+            if (!supabasePartner) {
+                console.warn("Partner Supabase client not initialized. Check credentials.");
+                setLoading(false);
+                return;
+            }
+
             try {
                 const { data, error } = await supabasePartner
                     .from("articles")

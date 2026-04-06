@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import { useTranslation } from "@/i18n/useTranslation";
+import Image from "next/image";
 
 interface Article {
     id: string;
@@ -27,10 +28,12 @@ export default function NewsCard({ article }: { article: Article }) {
         >
             {/* ── Image Wrapper ── */}
             <div className="relative aspect-[16/9] overflow-hidden">
-                <img
+                <Image
                     src={article.main_image || "/placeholder-news.jpg"}
                     alt={article.title}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                 
