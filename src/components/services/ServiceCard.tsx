@@ -26,7 +26,7 @@ export default function ServiceCard({ title, description, icon, onClick, index =
                 ease: [0.215, 0.61, 0.355, 1],
             }}
             onClick={onClick}
-            className="group relative cursor-pointer"
+            className="group relative cursor-pointer translate-z-0"
         >
             <div className="relative p-8 md:p-10 rounded-2xl border border-brand-indigo/[0.06] bg-white/60 backdrop-blur-sm hover:bg-white/90 transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_60px_-10px_rgba(28,31,58,0.08)] hover:border-brand-sand/30 h-full">
                 {/* Glow effect on hover */}

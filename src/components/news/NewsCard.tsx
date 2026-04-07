@@ -24,7 +24,7 @@ export default function NewsCard({ article }: { article: Article }) {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             whileHover={{ y: -5 }}
-            className="group relative h-full flex flex-col bg-white/[0.03] border border-white/10 rounded-2xl overflow-hidden backdrop-blur-md transition-all duration-300 hover:border-brand-sand/30 hover:bg-white/[0.05]"
+            className="group relative h-full flex flex-col bg-white/[0.03] border border-white/10 rounded-2xl overflow-hidden backdrop-blur-md transition-all duration-300 hover:border-brand-sand/30 hover:bg-white/[0.05] translate-z-0"
         >
             {/* ── Image Wrapper ── */}
             <div className="relative aspect-[16/9] overflow-hidden">
@@ -38,7 +38,7 @@ export default function NewsCard({ article }: { article: Article }) {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                 
                 {/* ── Category Badge ── */}
-                <div className="absolute top-4 left-4 px-3 py-1 rounded-full bg-brand-sand/20 backdrop-blur-md border border-brand-sand/30 text-[10px] font-bold uppercase tracking-wider text-brand-sand">
+                <div className="absolute top-4 left-4 px-3 py-1 rounded-full bg-brand-sand/30 border border-brand-sand/40 text-[10px] font-bold uppercase tracking-wider text-brand-sand">
                     {article.category}
                 </div>
             </div>
