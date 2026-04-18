@@ -39,13 +39,16 @@ export default function ParticleField() {
         if (!ctx) return;
 
         const isMobile = window.innerWidth < 768;
+        // Respect reduced-motion preference — skip entirely
+        const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (prefersReduced) return;
 
-        const CONNECTION_DISTANCE = isMobile ? 80 : (isSafari ? 120 : 160);
-        const CONNECTION_DIST_SQ = CONNECTION_DISTANCE * CONNECTION_DISTANCE; // avoid sqrt in loop
-        const MOUSE_RADIUS = isSafari ? 150 : 220;
+        const CONNECTION_DISTANCE = isMobile ? 60 : (isSafari ? 100 : 130);
+        const CONNECTION_DIST_SQ = CONNECTION_DISTANCE * CONNECTION_DISTANCE;
+        const MOUSE_RADIUS = isSafari ? 120 : 180;
         const MOUSE_RADIUS_SQ = MOUSE_RADIUS * MOUSE_RADIUS;
-        // DPR cap: 1 on Safari/mobile, max 2 on Chrome
-        const DPR = (isSafari || isMobile) ? 1 : Math.min(window.devicePixelRatio, 2);
+        // Always cap DPR at 1 — canvas animation doesn't benefit from retina
+        const DPR = 1;
 
         const getDocHeight = () =>
             Math.max(
@@ -74,9 +77,9 @@ export default function ParticleField() {
         const initParticles = () => {
             const { vw, vh, docH } = layoutRef.current;
 
-            // Fewer particles for better performance — quality > quantity
-            const topCount = isMobile ? 40 : (isSafari ? 80 : 180);
-            const restCount = isMobile ? 20 : (isSafari ? 40 : 80);
+            // Fewer particles — better performance on all devices
+            const topCount = isMobile ? 25 : (isSafari ? 50 : 100);
+            const restCount = isMobile ? 10 : (isSafari ? 25 : 40);
             const total = topCount + restCount;
 
             particlesRef.current = Array.from({ length: total }, (_, i) => {
@@ -248,11 +251,21 @@ export default function ParticleField() {
         initParticles();
         animate();
 
+        // Pause animation when tab is hidden — saves CPU/GPU
+        const onVisibility = () => {
+            if (document.hidden) {
+                cancelAnimationFrame(animationRef.current);
+            } else {
+                animate();
+            }
+        };
+
         const onResize = () => { resizeCanvas(); initParticles(); };
         window.addEventListener("resize", onResize, { passive: true });
         window.addEventListener("mousemove", onMouseMove, { passive: true });
         window.addEventListener("scroll", onScroll, { passive: true });
         document.addEventListener("mouseleave", onMouseLeave);
+        document.addEventListener("visibilitychange", onVisibility);
 
         return () => {
             cancelAnimationFrame(animationRef.current);
@@ -260,6 +273,7 @@ export default function ParticleField() {
             window.removeEventListener("mousemove", onMouseMove);
             window.removeEventListener("scroll", onScroll);
             document.removeEventListener("mouseleave", onMouseLeave);
+            document.removeEventListener("visibilitychange", onVisibility);
         };
     }, []);
 

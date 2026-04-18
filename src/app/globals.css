@@ -32,9 +32,12 @@ body {
   overflow-x: hidden;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
-  /* Hidden until JS reveals — prevents flash during hydration */
-  opacity: 0;
-  transition: opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+  animation: fadeInBody 0.25s ease-out both;
+}
+
+@keyframes fadeInBody {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 /* ──────────────────────────────────────

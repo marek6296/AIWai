@@ -9,8 +9,6 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useTranslation } from "@/i18n/useTranslation";
 
-gsap.registerPlugin(ScrollTrigger);
-
 interface Article {
     id: string;
     title: string;
@@ -57,6 +55,7 @@ export default function NewsSection() {
 
     useEffect(() => {
         if (!loading && sectionRef.current) {
+            gsap.registerPlugin(ScrollTrigger);
             const ctx = gsap.context(() => {
                 gsap.from(".news-fade", {
                     scrollTrigger: {
@@ -126,8 +125,8 @@ export default function NewsSection() {
                                 width={650}
                                 height={450}
                                 className="w-full h-auto object-cover transition-transform duration-1000 group-hover:scale-105"
-                                priority
-                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                loading="lazy"
+                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 650px"
                             />
                             {/* Sophisticated Glow on hover */}
                             <div className="absolute inset-0 bg-gradient-to-tr from-brand-indigo/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />

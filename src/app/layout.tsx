@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { Inter, Outfit } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
-const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" });
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
+const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit", display: "swap" });
 
 export const metadata: Metadata = {
   title: "AIWai | Intelligent Digital Architecture",
@@ -13,10 +13,9 @@ export const metadata: Metadata = {
     title: "AIWai | Intelligent Digital Architecture",
     description: "Premium AI agency delivering autonomous agents, intelligent chatbots, business automation, and world-class design.",
     type: "website",
+    url: "https://aiwai.app",
   },
 };
-
-import BodyReveal from "@/components/BodyReveal";
 
 export default function RootLayout({
   children,
@@ -25,10 +24,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://dmxosdgvmzvkeivknczv.supabase.co" />
+      </head>
       <body
         className={`${inter.variable} ${outfit.variable} bg-white text-brand-indigo antialiased`}
       >
-        <BodyReveal />
         {children}
       </body>
     </html>
