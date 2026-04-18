@@ -1,8 +1,7 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { supabasePartner } from "@/lib/supabasePartner";
 import NewsCard from "./NewsCard";
 import FadeIn from "@/components/animations/FadeIn";
 import { useTranslation } from "@/i18n/useTranslation";
@@ -21,11 +20,20 @@ export default function NewsSection() {
     const { t } = useTranslation();
     const [articles, setArticles] = useState<Article[]>([]);
     const [loading, setLoading] = useState(true);
+    const sectionRef = useRef<HTMLElement>(null);
+    const fetchedRef = useRef(false);
 
+    // Fetch only when section scrolls into view (300 px before).
+    // Dynamic import of supabasePartner keeps the ~194 KB Supabase bundle
+    // out of the initial JS payload — it loads on demand here.
     useEffect(() => {
+        const section = sectionRef.current;
+        if (!section) return;
+
         const fetchNews = async () => {
-            if (!supabasePartner) { setLoading(false); return; }
             try {
+                const { supabasePartner } = await import("@/lib/supabasePartner");
+                if (!supabasePartner) { setLoading(false); return; }
                 const { data, error } = await supabasePartner
                     .from("articles")
                     .select("*")
@@ -40,11 +48,22 @@ export default function NewsSection() {
                 setLoading(false);
             }
         };
-        fetchNews();
+
+        const observer = new IntersectionObserver(([entry]) => {
+            if (entry.isIntersecting && !fetchedRef.current) {
+                fetchedRef.current = true;
+                observer.disconnect();
+                fetchNews();
+            }
+        }, { rootMargin: "300px" });
+
+        observer.observe(section);
+        return () => observer.disconnect();
     }, []);
 
     return (
         <section
+            ref={sectionRef}
             id="aiwai-news"
             className="relative py-12 md:py-16 overflow-hidden"
         >

@@ -42,6 +42,12 @@ export default function FadeIn({
             return;
         }
 
+        // If already visible in viewport on mount, skip animation entirely.
+        // Avoids the brief opacity:0 flash for above-the-fold content on
+        // client-side navigation or fast hydration.
+        const rect = el.getBoundingClientRect();
+        if (rect.top >= 0 && rect.top < window.innerHeight) return;
+
         // Set initial hidden state via data attribute (not inline style or SSR class)
         // so SSR HTML is always visible and there's no hydration mismatch.
         el.dataset.fiReady = direction;

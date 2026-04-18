@@ -25,8 +25,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        {/* Fonts are self-hosted by next/font — no external preconnect needed.
+            Supabase DNS prefetch: NewsSection fetch fires on scroll. */}
         <link rel="dns-prefetch" href="https://dmxosdgvmzvkeivknczv.supabase.co" />
       </head>
       <body
