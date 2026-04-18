@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { motion } from 'framer-motion'
 import { Bot, Lock, User, ArrowRight, Sparkles } from 'lucide-react'
 
 export default function ChatbotAdminLogin() {
@@ -49,11 +48,9 @@ export default function ChatbotAdminLogin() {
             <div className="absolute top-1/4 left-1/4 w-[400px] h-[400px] rounded-full bg-[#D8B98A]/5 blur-[120px] pointer-events-none" />
             <div className="absolute bottom-1/4 right-1/4 w-[300px] h-[300px] rounded-full bg-[#1C1F3A]/30 blur-[100px] pointer-events-none" />
 
-            <motion.div
-                initial={{ opacity: 0, y: 24, scale: 0.97 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                transition={{ duration: 0.5, ease: [0.215, 0.61, 0.355, 1] }}
+            <div
                 className="w-full max-w-md relative z-10"
+                style={{ animation: 'adminCardReveal 0.5s cubic-bezier(0.215, 0.61, 0.355, 1) both' }}
             >
                 {/* Card */}
                 <div className="bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-2xl shadow-black/40">
@@ -106,13 +103,12 @@ export default function ChatbotAdminLogin() {
                         </div>
 
                         {error && (
-                            <motion.div
-                                initial={{ opacity: 0, y: -8 }}
-                                animate={{ opacity: 1, y: 0 }}
+                            <div
                                 className="p-3 bg-red-500/10 border border-red-500/20 text-red-400 text-sm rounded-xl"
+                                style={{ animation: 'adminFadeUp 0.2s ease both' }}
                             >
                                 {error}
-                            </motion.div>
+                            </div>
                         )}
 
                         <button
@@ -135,7 +131,7 @@ export default function ChatbotAdminLogin() {
                 <p className="text-center text-white/20 text-xs mt-6">
                     AIWai · Chatbot Management Console
                 </p>
-            </motion.div>
+            </div>
         </div>
     )
 }

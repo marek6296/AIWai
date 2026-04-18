@@ -1,158 +1,107 @@
 "use client";
 
-import { useEffect, useState, useCallback, useRef } from "react";
-import { motion, useMotionValue, useSpring } from "framer-motion";
+import { useEffect, useRef, useState, useCallback } from "react";
 
+// Framer Motion removed — vanilla JS cursor with RAF for smooth tracking.
 export default function CustomCursor() {
-    const cursorX = useMotionValue(-100);
-    const cursorY = useMotionValue(-100);
-    const dotX = useMotionValue(-100);
-    const dotY = useMotionValue(-100);
-
-    // Smooth spring for the outer ring
-    const springX = useSpring(cursorX, { damping: 28, stiffness: 220, mass: 0.5 });
-    const springY = useSpring(cursorY, { damping: 28, stiffness: 220, mass: 0.5 });
-
+    const ringRef = useRef<HTMLDivElement>(null);
+    const dotRef = useRef<HTMLDivElement>(null);
+    const [isMobile, setIsMobile] = useState(true);
     const [cursorState, setCursorState] = useState<"default" | "hover" | "text" | "hidden">("default");
-    const [isMobile, setIsMobile] = useState(true); // start hidden
 
-    // Throttled mouseover — only fire at ~60fps to avoid layout thrash
+    // Smooth ring position with lerp
+    const target = useRef({ x: -100, y: -100 });
+    const current = useRef({ x: -100, y: -100 });
+    const rafId = useRef<number | null>(null);
     const lastHoverTime = useRef(0);
+
+    const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+
+    const animate = useCallback(() => {
+        current.current.x = lerp(current.current.x, target.current.x, 0.18);
+        current.current.y = lerp(current.current.y, target.current.y, 0.18);
+        if (ringRef.current) {
+            ringRef.current.style.transform = `translate(${current.current.x}px, ${current.current.y}px) translate(-50%, -50%)`;
+        }
+        rafId.current = requestAnimationFrame(animate);
+    }, []);
 
     const handleMouseOver = useCallback((e: MouseEvent) => {
         const now = performance.now();
-        // Skip if we already updated within 16ms
         if (now - lastHoverTime.current < 16) return;
         lastHoverTime.current = now;
-
-        const target = e.target as HTMLElement;
-        const interactive = target.closest("a, button, [role='button'], input, textarea, select, [data-cursor='pointer']");
-        const textBlock = !interactive && target.closest("p, h1, h2, h3, h4, h5, h6, span, li, label");
-
-        if (interactive) {
-            setCursorState("hover");
-        } else if (textBlock) {
-            setCursorState("text");
-        } else {
-            setCursorState("default");
-        }
+        const t = e.target as HTMLElement;
+        const interactive = t.closest("a, button, [role='button'], input, textarea, select");
+        const textBlock = !interactive && t.closest("p, h1, h2, h3, h4, h5, h6, span, li, label");
+        setCursorState(interactive ? "hover" : textBlock ? "text" : "default");
     }, []);
 
     useEffect(() => {
-        // Only show custom cursor on desktop
         const mq = window.matchMedia("(pointer: fine) and (min-width: 769px)");
         setIsMobile(!mq.matches);
+        const onChange = (e: MediaQueryListEvent) => setIsMobile(!e.matches);
+        mq.addEventListener("change", onChange);
 
-        const handleChange = (e: MediaQueryListEvent) => setIsMobile(!e.matches);
-        mq.addEventListener("change", handleChange);
-
-        const moveCursor = (e: MouseEvent) => {
-            cursorX.set(e.clientX);
-            cursorY.set(e.clientY);
-            dotX.set(e.clientX);
-            dotY.set(e.clientY);
+        const onMove = (e: MouseEvent) => {
+            target.current = { x: e.clientX, y: e.clientY };
+            if (dotRef.current) dotRef.current.style.transform = `translate(${e.clientX}px, ${e.clientY}px) translate(-50%, -50%)`;
         };
+        const onLeave = () => setCursorState("hidden");
+        const onEnter = () => setCursorState("default");
 
-        const handleMouseLeave = () => setCursorState("hidden");
-        const handleMouseEnter = () => setCursorState("default");
-
-        window.addEventListener("mousemove", moveCursor, { passive: true });
+        window.addEventListener("mousemove", onMove, { passive: true });
         document.addEventListener("mouseover", handleMouseOver, { passive: true });
-        document.documentElement.addEventListener("mouseleave", handleMouseLeave);
-        document.documentElement.addEventListener("mouseenter", handleMouseEnter);
+        document.documentElement.addEventListener("mouseleave", onLeave);
+        document.documentElement.addEventListener("mouseenter", onEnter);
+        rafId.current = requestAnimationFrame(animate);
 
         return () => {
-            window.removeEventListener("mousemove", moveCursor);
+            window.removeEventListener("mousemove", onMove);
             document.removeEventListener("mouseover", handleMouseOver);
-            document.documentElement.removeEventListener("mouseleave", handleMouseLeave);
-            document.documentElement.removeEventListener("mouseenter", handleMouseEnter);
-            mq.removeEventListener("change", handleChange);
+            document.documentElement.removeEventListener("mouseleave", onLeave);
+            document.documentElement.removeEventListener("mouseenter", onEnter);
+            mq.removeEventListener("change", onChange);
+            if (rafId.current) cancelAnimationFrame(rafId.current);
         };
-    }, [cursorX, cursorY, dotX, dotY, handleMouseOver]);
+    }, [animate, handleMouseOver]);
 
     if (isMobile) return null;
 
-    const sizeMap = {
-        default: 36,
-        hover: 56,
-        text: 4,
-        hidden: 0,
-    };
-
-    const opacityMap = {
-        default: 1,
-        hover: 1,
-        text: 0.5,
-        hidden: 0,
-    };
-
+    const sizeMap = { default: 36, hover: 56, text: 4, hidden: 0 };
+    const opacityMap = { default: 1, hover: 1, text: 0.5, hidden: 0 };
     const ringSize = sizeMap[cursorState];
     const dotSize = cursorState === "hidden" ? 0 : cursorState === "hover" ? 4 : 6;
 
     return (
         <>
-            {/* Global style to hide the default cursor */}
-            <style jsx global>{`
-                *, *::before, *::after {
-                    cursor: none !important;
-                }
-            `}</style>
-
-            {/* Outer ring — follows with spring lag */}
-            <motion.div
-                className="fixed top-0 left-0 pointer-events-none z-[9999] mix-blend-difference"
+            <style>{`*, *::before, *::after { cursor: none !important; }`}</style>
+            {/* Outer ring with lerp lag */}
+            <div
+                ref={ringRef}
+                className="fixed top-0 left-0 pointer-events-none z-[9999] mix-blend-difference rounded-full border border-white"
                 style={{
-                    x: springX,
-                    y: springY,
-                    translateX: "-50%",
-                    translateY: "-50%",
+                    width: ringSize,
+                    height: ringSize,
+                    opacity: opacityMap[cursorState],
+                    background: cursorState === "hover" ? "rgba(255,255,255,0.06)" : "transparent",
+                    transition: "width 0.15s ease, height 0.15s ease, opacity 0.15s ease",
+                    willChange: "transform",
+                    marginLeft: -ringSize / 2,
+                    marginTop: -ringSize / 2,
+                }}
+            />
+            {/* Inner dot — instant follow */}
+            <div
+                ref={dotRef}
+                className="fixed top-0 left-0 pointer-events-none z-[9999] mix-blend-difference rounded-full bg-white"
+                style={{
+                    width: dotSize,
+                    height: dotSize,
+                    opacity: cursorState === "hidden" ? 0 : 1,
+                    transition: "width 0.1s ease, height 0.1s ease, opacity 0.1s ease",
                     willChange: "transform",
                 }}
-            >
-                <motion.div
-                    animate={{
-                        width: ringSize,
-                        height: ringSize,
-                        opacity: opacityMap[cursorState],
-                    }}
-                    transition={{
-                        type: "spring",
-                        damping: 22,
-                        stiffness: 320,
-                        mass: 0.3,
-                    }}
-                    className="rounded-full border border-white"
-                    style={{
-                        background: cursorState === "hover"
-                            ? "rgba(255, 255, 255, 0.06)"
-                            : "transparent",
-                        willChange: "width, height, opacity",
-                    }}
-                />
-            </motion.div>
-
-            {/* Inner dot — follows instantly */}
-            <motion.div
-                className="fixed top-0 left-0 pointer-events-none z-[9999] mix-blend-difference"
-                style={{
-                    x: dotX,
-                    y: dotY,
-                    translateX: "-50%",
-                    translateY: "-50%",
-                    willChange: "transform",
-                }}
-            >
-                <motion.div
-                    animate={{
-                        width: dotSize,
-                        height: dotSize,
-                        opacity: cursorState === "hidden" ? 0 : 1,
-                    }}
-                    transition={{ duration: 0.12 }}
-                    className="rounded-full bg-white"
-                    style={{ willChange: "width, height, opacity" }}
-                />
-            </motion.div>
+            />
         </>
     );
 }

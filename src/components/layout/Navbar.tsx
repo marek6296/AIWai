@@ -2,7 +2,6 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect, useCallback, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "@/i18n/useTranslation";
 import type { Lang } from "@/i18n/translations";
 
@@ -19,168 +18,112 @@ const LANGS: { code: Lang; flag: string; label: string }[] = [
     { code: "cs", flag: "🇨🇿", label: "CZ" },
 ];
 
+const scrollTo = (id: string) => {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+};
+
 export default function Navbar() {
     const { t, lang, setLang } = useTranslation();
     const [isOpen, setIsOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
-    const [hoveredItem, setHoveredItem] = useState<string | null>(null);
     const [langOpen, setLangOpen] = useState(false);
     const langRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        const handleScrollState = () => setScrolled(window.scrollY > 50);
-        window.addEventListener("scroll", handleScrollState, { passive: true });
-        return () => window.removeEventListener("scroll", handleScrollState);
+        const onScroll = () => setScrolled(window.scrollY > 50);
+        window.addEventListener("scroll", onScroll, { passive: true });
+        return () => window.removeEventListener("scroll", onScroll);
     }, []);
 
-    // Body lock for mobile menu
+    // Lock body scroll when menu is open
     useEffect(() => {
-        if (isOpen) {
-            document.body.style.overflow = "hidden";
-            document.documentElement.style.overflow = "hidden";
-        } else {
-            document.body.style.overflow = "unset";
-            document.documentElement.style.overflow = "unset";
-        }
-        return () => {
-            document.body.style.overflow = "unset";
-            document.documentElement.style.overflow = "unset";
-        };
+        document.body.style.overflow = isOpen ? "hidden" : "";
+        return () => { document.body.style.overflow = ""; };
     }, [isOpen]);
 
-    // Close language dropdown on outside click
+    // Close lang dropdown on outside click
     useEffect(() => {
-        const handleClickOutside = (e: MouseEvent) => {
+        const handler = (e: MouseEvent) => {
             if (langRef.current && !langRef.current.contains(e.target as Node)) {
                 setLangOpen(false);
             }
         };
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => document.removeEventListener("mousedown", handleClickOutside);
+        document.addEventListener("mousedown", handler);
+        return () => document.removeEventListener("mousedown", handler);
     }, []);
 
-    // Smooth scroll via Lenis — centers the section vertically in the viewport
-    const scrollToSection = useCallback((id: string) => {
-        const element = document.getElementById(id);
-        if (!element) return;
-
-        const vh = window.innerHeight;
-        const elH = element.offsetHeight;
-        const navbarH = 72;
-
-        const offset = elH < vh - navbarH
-            ? -Math.round((vh - elH) / 2)
-            : -navbarH;
-
-        const lenis = (window as unknown as { __lenis?: { scrollTo: (target: Element, opts: object) => void } }).__lenis;
-        if (lenis) {
-            lenis.scrollTo(element, { offset, duration: 1.2 });
-        } else {
-            element.scrollIntoView({ behavior: "smooth", block: "center" });
-        }
-    }, []);
-
-    const handleScroll = useCallback((e: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement>, id: string) => {
+    const handleScroll = useCallback((e: React.MouseEvent, id: string) => {
         e.preventDefault();
         setIsOpen(false);
-        setTimeout(() => scrollToSection(id), 50);
-    }, [scrollToSection]);
+        setTimeout(() => scrollTo(id), 50);
+    }, []);
 
     return (
         <>
-            {/* ── Main Nav — CSS entrance, no Framer Motion blocking first paint ── */}
-            <nav
-                className={`nav-entrance fixed top-0 left-0 right-0 z-[100] transition-all duration-500 translate-z-0 ${scrolled
-                        ? "py-3 bg-white/80 backdrop-blur-sm border-b border-brand-indigo/[0.06] shadow-[0_1px_30px_rgba(28,31,58,0.04)]"
-                        : "py-5 bg-transparent"
-                    }`}
-            >
+            {/* ── Main Nav — CSS entrance only ── */}
+            <nav className={`nav-entrance fixed top-0 left-0 right-0 z-[100] transition-all duration-500 ${
+                scrolled
+                    ? "py-3 bg-white/85 backdrop-blur-sm border-b border-brand-indigo/[0.06] shadow-[0_1px_30px_rgba(28,31,58,0.04)]"
+                    : "py-5 bg-transparent"
+            }`}>
                 <div className="container mx-auto flex justify-between items-center">
+
+                    {/* Logo + language */}
                     <div className="flex items-center gap-3 z-[110]">
                         <Link
                             href="/"
-                            onClick={(e) => {
-                                e.preventDefault();
-                                setIsOpen(false);
-                                scrollToSection("__top");
-                                const lenis = (window as unknown as { __lenis?: { scrollTo: (target: number, opts: object) => void } }).__lenis;
-                                if (lenis) lenis.scrollTo(0, { duration: 1.2 });
-                                else window.scrollTo({ top: 0, behavior: "smooth" });
-                            }}
+                            onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: "smooth" }); }}
                             className="relative flex items-center"
                         >
-                            <Image
-                                src="/logo.png"
-                                alt="AIWai"
-                                width={52}
-                                height={52}
-                                className="w-12 h-12 object-contain mix-blend-multiply"
-                                priority
-                            />
+                            <Image src="/logo.png" alt="AIWai" width={52} height={52} className="w-12 h-12 object-contain mix-blend-multiply" priority />
                         </Link>
 
-                        {/* Language Switcher Dropdown */}
+                        {/* Language switcher */}
                         <div className="relative" ref={langRef}>
                             <button
                                 onClick={() => setLangOpen(!langOpen)}
-                                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl hover:bg-brand-indigo/5 transition-all"
+                                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl hover:bg-brand-indigo/5 transition-colors"
                             >
                                 <span className="text-base">{LANGS.find((l) => l.code === lang)?.flag}</span>
-                                <svg className={`w-3 h-3 text-brand-indigo/40 transition-transform duration-200 ${langOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" /></svg>
+                                <svg className={`w-3 h-3 text-brand-indigo/40 transition-transform duration-200 ${langOpen ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
+                                </svg>
                             </button>
-                            <AnimatePresence>
-                                {langOpen && (
-                                    <motion.div
-                                        initial={{ opacity: 0, y: -5, scale: 0.95 }}
-                                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                                        exit={{ opacity: 0, y: -5, scale: 0.95 }}
-                                        transition={{ duration: 0.15 }}
-                                        className="absolute top-full left-0 mt-1 bg-white/95 backdrop-blur-md border border-brand-indigo/10 rounded-xl shadow-lg shadow-brand-indigo/5 overflow-hidden translate-z-0"
+
+                            {/* Dropdown — CSS visibility trick, no AnimatePresence */}
+                            <div className={`absolute top-full left-0 mt-1 bg-white/95 backdrop-blur-md border border-brand-indigo/10 rounded-xl shadow-lg overflow-hidden transition-all duration-150 ${
+                                langOpen ? "opacity-100 translate-y-0 visible pointer-events-auto" : "opacity-0 -translate-y-1 invisible pointer-events-none"
+                            }`}>
+                                {LANGS.filter((l) => l.code !== lang).map((l) => (
+                                    <button
+                                        key={l.code}
+                                        onClick={() => { setLang(l.code); setLangOpen(false); }}
+                                        className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-brand-indigo/5 transition-colors"
                                     >
-                                        {LANGS.filter((l) => l.code !== lang).map((l) => (
-                                            <button
-                                                key={l.code}
-                                                onClick={() => { setLang(l.code); setLangOpen(false); }}
-                                                className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-brand-indigo/5 transition-colors"
-                                            >
-                                                <span className="text-base">{l.flag}</span>
-                                                <span className="text-brand-indigo/60 text-xs font-medium uppercase">{l.label}</span>
-                                            </button>
-                                        ))}
-                                    </motion.div>
-                                )}
-                            </AnimatePresence>
+                                        <span className="text-base">{l.flag}</span>
+                                        <span className="text-brand-indigo/60 text-xs font-medium uppercase">{l.label}</span>
+                                    </button>
+                                ))}
+                            </div>
                         </div>
                     </div>
 
                     {/* Desktop Menu */}
-                    <div className="hidden md:flex items-center gap-1" onMouseLeave={() => setHoveredItem(null)}>
+                    <div className="hidden md:flex items-center gap-1">
                         <div className="flex items-center">
                             {NAV_IDS.map((id) => (
                                 <a
                                     key={id}
                                     href={`#${id}`}
                                     onClick={(e) => handleScroll(e, id)}
-                                    onMouseEnter={() => setHoveredItem(id)}
-                                    className="relative px-5 py-2.5 text-sm uppercase tracking-[0.15em] text-brand-indigo/60 hover:text-brand-indigo transition-colors cursor-pointer font-medium"
+                                    className="relative px-5 py-2.5 text-sm uppercase tracking-[0.15em] text-brand-indigo/60 hover:text-brand-indigo hover:bg-brand-indigo/[0.04] rounded-full transition-all duration-200 cursor-pointer font-medium"
                                 >
-                                    {hoveredItem === id && (
-                                        <motion.div
-                                            layoutId="navHover"
-                                            className="absolute inset-0 bg-brand-indigo/[0.04] rounded-full -z-10"
-                                            initial={{ opacity: 0 }}
-                                            animate={{ opacity: 1 }}
-                                            exit={{ opacity: 0 }}
-                                            transition={{ type: "spring", bounce: 0.2, duration: 0.5 }}
-                                        />
-                                    )}
                                     {t(NAV_KEYS[id])}
                                 </a>
                             ))}
                         </div>
-
                         <div className="w-px h-6 bg-brand-indigo/10 mx-3" />
-
                         <button
                             onClick={(e) => handleScroll(e, "contact")}
                             className="px-6 py-2.5 bg-brand-indigo text-white rounded-full text-xs font-bold tracking-[0.15em] uppercase hover:bg-brand-indigo/90 transition-all shadow-lg shadow-brand-indigo/10 hover:shadow-brand-indigo/20"
@@ -189,126 +132,105 @@ export default function Navbar() {
                         </button>
                     </div>
 
-                    {/* Mobile Menu Toggle */}
+                    {/* Mobile toggle — CSS icon swap */}
                     <button
                         onClick={() => setIsOpen(!isOpen)}
-                        className="md:hidden z-[110] text-brand-indigo relative p-2"
+                        className="md:hidden z-[110] text-brand-indigo p-2 relative w-9 h-9"
                         aria-label="Toggle Menu"
+                        aria-expanded={isOpen}
                     >
-                        {isOpen ? (
-                            <svg className="w-7 h-7" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <motion.path initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 0.3 }} d="M6 18L18 6M6 6L18 18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                            </svg>
-                        ) : (
-                            <svg className="w-7 h-7" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <motion.path initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 0.4 }} d="M4 8H20M12 16H20" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                            </svg>
-                        )}
+                        <span className={`absolute inset-0 flex items-center justify-center transition-all duration-200 ${isOpen ? "opacity-0 rotate-90 scale-75" : "opacity-100 rotate-0 scale-100"}`}>
+                            <svg className="w-7 h-7" viewBox="0 0 24 24" fill="none"><path d="M4 8H20M12 16H20" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /></svg>
+                        </span>
+                        <span className={`absolute inset-0 flex items-center justify-center transition-all duration-200 ${isOpen ? "opacity-100 rotate-0 scale-100" : "opacity-0 -rotate-90 scale-75"}`}>
+                            <svg className="w-7 h-7" viewBox="0 0 24 24" fill="none"><path d="M6 18L18 6M6 6L18 18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /></svg>
+                        </span>
                     </button>
                 </div>
             </nav>
 
-            {/* ── Mobile Menu ── */}
-            <AnimatePresence>
-                {isOpen && (
-                    <motion.div
-                        key="mobile-menu"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1, transition: { duration: 0.25, ease: "easeOut" } }}
-                        exit={{ opacity: 0, transition: { duration: 0.2, ease: "easeIn" } }}
-                        className="fixed inset-0 z-[90] bg-white/98 backdrop-blur-md flex flex-col items-center justify-center overflow-hidden translate-z-0"
-                        style={{ willChange: "opacity" }}
+            {/* ── Mobile Menu — CSS opacity + visibility ── */}
+            <div
+                aria-hidden={!isOpen}
+                className={`fixed inset-0 z-[90] bg-white/98 backdrop-blur-md flex flex-col items-center justify-center overflow-hidden transition-all duration-250 ${
+                    isOpen ? "opacity-100 visible pointer-events-auto" : "opacity-0 invisible pointer-events-none"
+                }`}
+            >
+                {/* Background orbs */}
+                <div className="absolute inset-0 pointer-events-none overflow-hidden">
+                    <div className="absolute top-[10%] left-[10%] w-[300px] h-[300px] bg-brand-sand/10 rounded-full blur-[100px]" />
+                    <div className="absolute bottom-[10%] right-[10%] w-[300px] h-[300px] bg-brand-indigo/5 rounded-full blur-[100px]" />
+                </div>
+
+                <div className="flex flex-col items-center gap-10 relative z-10 w-full px-12">
+                    {NAV_IDS.map((id, i) => (
+                        <div key={id} className="overflow-hidden w-full flex justify-center">
+                            <a
+                                href={`#${id}`}
+                                onClick={(e) => handleScroll(e, id)}
+                                className="text-5xl font-display font-bold tracking-tighter text-brand-indigo hover:text-brand-indigo/60 transition-colors cursor-pointer"
+                                style={{
+                                    opacity: isOpen ? 1 : 0,
+                                    transform: isOpen ? "translateY(0)" : "translateY(30px)",
+                                    transition: `opacity 0.4s ease ${0.08 + i * 0.06}s, transform 0.4s ease ${0.08 + i * 0.06}s`,
+                                }}
+                            >
+                                {t(NAV_KEYS[id])}
+                            </a>
+                        </div>
+                    ))}
+
+                    {/* Language switcher */}
+                    <div
+                        className="flex items-center gap-3"
+                        style={{
+                            opacity: isOpen ? 1 : 0,
+                            transform: isOpen ? "translateY(0)" : "translateY(20px)",
+                            transition: "opacity 0.4s ease 0.28s, transform 0.4s ease 0.28s",
+                        }}
                     >
-                        {/* Background Orbs */}
-                        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-                            <div className="absolute top-[10%] left-[10%] w-[300px] h-[300px] bg-brand-sand/10 rounded-full blur-[100px]" />
-                            <div className="absolute bottom-[10%] right-[10%] w-[300px] h-[300px] bg-brand-indigo/5 rounded-full blur-[100px]" />
-                        </div>
-
-                        <div className="flex flex-col items-center gap-10 relative z-10 w-full px-12">
-                            {NAV_IDS.map((id, i) => (
-                                <div key={id} className="overflow-hidden w-full flex justify-center">
-                                    <motion.a
-                                        href={`#${id}`}
-                                        variants={{
-                                            initial: { y: 60, opacity: 0 },
-                                            animate: {
-                                                y: 0,
-                                                opacity: 1,
-                                                transition: {
-                                                    delay: 0.3 + i * 0.08,
-                                                    duration: 0.6,
-                                                    ease: [0.215, 0.61, 0.355, 1]
-                                                }
-                                            },
-                                            exit: {
-                                                y: 30,
-                                                opacity: 0,
-                                                transition: { duration: 0.3, ease: "easeIn" }
-                                            }
-                                        }}
-                                        onClick={(e) => handleScroll(e, id)}
-                                        className="text-5xl font-display font-bold tracking-tighter text-brand-indigo hover:text-brand-indigo/60 transition-colors cursor-pointer"
-                                    >
-                                        {t(NAV_KEYS[id])}
-                                    </motion.a>
-                                </div>
-                            ))}
-
-                            {/* Mobile Language Switcher */}
-                            <motion.div
-                                variants={{
-                                    initial: { opacity: 0, y: 30 },
-                                    animate: { opacity: 1, y: 0, transition: { delay: 0.45, duration: 0.5 } },
-                                    exit: { opacity: 0, y: 10, transition: { duration: 0.2 } }
-                                }}
-                                className="flex items-center gap-3"
+                        {LANGS.map((l) => (
+                            <button
+                                key={l.code}
+                                onClick={() => { setLang(l.code); setIsOpen(false); }}
+                                className={`px-4 py-2.5 text-2xl rounded-xl transition-all ${
+                                    lang === l.code ? "bg-brand-indigo/10 ring-2 ring-brand-indigo/20 scale-110" : "opacity-40 hover:opacity-80"
+                                }`}
                             >
-                                {LANGS.map((l) => (
-                                    <button
-                                        key={l.code}
-                                        onClick={() => { setLang(l.code); setIsOpen(false); }}
-                                        className={`px-4 py-2.5 text-2xl rounded-xl transition-all ${lang === l.code
-                                            ? "bg-brand-indigo/10 ring-2 ring-brand-indigo/20 scale-110"
-                                            : "opacity-40 hover:opacity-80"
-                                        }`}
-                                    >
-                                        {l.flag}
-                                    </button>
-                                ))}
-                            </motion.div>
+                                {l.flag}
+                            </button>
+                        ))}
+                    </div>
 
-                            <motion.div
-                                variants={{
-                                    initial: { opacity: 0, y: 30 },
-                                    animate: { opacity: 1, y: 0, transition: { delay: 0.5, duration: 0.5 } },
-                                    exit: { opacity: 0, y: 10, transition: { duration: 0.2 } }
-                                }}
-                                className="w-full max-w-[280px]"
-                            >
-                                <button
-                                    onClick={(e) => handleScroll(e, "contact")}
-                                    className="w-full mt-6 px-12 py-5 bg-brand-indigo text-white rounded-full text-xl font-bold tracking-widest uppercase shadow-2xl active:scale-95 transition-transform"
-                                >
-                                    {t("nav.contact")}
-                                </button>
-                            </motion.div>
-                        </div>
-
-                        <motion.div
-                            variants={{
-                                initial: { opacity: 0 },
-                                animate: { opacity: 1, transition: { delay: 0.7 } },
-                                exit: { opacity: 0, transition: { duration: 0.2 } }
-                            }}
-                            className="absolute bottom-12 flex flex-col items-center gap-2 text-brand-indigo/25"
+                    {/* CTA */}
+                    <div
+                        className="w-full max-w-[280px]"
+                        style={{
+                            opacity: isOpen ? 1 : 0,
+                            transform: isOpen ? "translateY(0)" : "translateY(20px)",
+                            transition: "opacity 0.4s ease 0.32s, transform 0.4s ease 0.32s",
+                        }}
+                    >
+                        <button
+                            onClick={(e) => handleScroll(e, "contact")}
+                            className="w-full mt-6 px-12 py-5 bg-brand-indigo text-white rounded-full text-xl font-bold tracking-widest uppercase shadow-2xl active:scale-95 transition-transform"
                         >
-                            <span className="text-[10px] uppercase tracking-[0.3em] font-bold" style={{ userSelect: 'none' }}>AIWai</span>
-                            <span className="text-[10px] uppercase tracking-[0.1em]" style={{ userSelect: 'none' }}>Intelligent Digital Architecture</span>
-                        </motion.div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
+                            {t("nav.contact")}
+                        </button>
+                    </div>
+                </div>
+
+                <div
+                    className="absolute bottom-12 flex flex-col items-center gap-2 text-brand-indigo/25"
+                    style={{
+                        opacity: isOpen ? 1 : 0,
+                        transition: "opacity 0.4s ease 0.45s",
+                    }}
+                >
+                    <span className="text-[10px] uppercase tracking-[0.3em] font-bold select-none">AIWai</span>
+                    <span className="text-[10px] uppercase tracking-[0.1em] select-none">Intelligent Digital Architecture</span>
+                </div>
+            </div>
         </>
     );
 }

@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
-import { motion, AnimatePresence } from 'framer-motion'
 import {
     Bot, Settings, Brain, BookOpen, Zap, LogOut,
     Save, Upload, Trash2, CheckCircle, AlertCircle,
@@ -301,14 +300,10 @@ export default function ChatbotAdminPage() {
 
                 {/* Content */}
                 <main className="flex-1 min-w-0">
-                    <AnimatePresence mode="wait">
-                        <motion.div
-                            key={activeTab}
-                            initial={{ opacity: 0, y: 12 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: -8 }}
-                            transition={{ duration: 0.2 }}
-                        >
+                    <div
+                        key={activeTab}
+                        style={{ animation: 'adminTabReveal 0.2s ease both' }}
+                    >
 
                             {/* ── GENERAL ── */}
                             {activeTab === 'general' && (
@@ -507,13 +502,12 @@ export default function ChatbotAdminPage() {
                                         </div>
 
                                         {uploadStatus && (
-                                            <motion.div
-                                                initial={{ opacity: 0, y: 8 }}
-                                                animate={{ opacity: 1, y: 0 }}
+                                            <div
                                                 className={`mt-3 p-3 rounded-xl text-sm ${uploadStatus.startsWith('✅') ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-red-500/10 text-red-400 border border-red-500/20'}`}
+                                                style={{ animation: 'adminFadeUp 0.2s ease both' }}
                                             >
                                                 {uploadStatus}
-                                            </motion.div>
+                                            </div>
                                         )}
                                     </Card>
 
@@ -662,8 +656,7 @@ export default function ChatbotAdminPage() {
                                 </div>
                             )}
 
-                        </motion.div>
-                    </AnimatePresence>
+                    </div>
                 </main>
             </div>
         </div>

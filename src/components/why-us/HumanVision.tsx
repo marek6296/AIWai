@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { motion } from "framer-motion";
+import FadeIn from "@/components/animations/FadeIn";
 import { useTranslation } from "@/i18n/useTranslation";
 
 export default function HumanVision() {
@@ -13,15 +13,8 @@ export default function HumanVision() {
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-center">
 
                     {/* ── Left: Artistic Human Element ── */}
-                    <motion.div
-                        initial={{ opacity: 0, y: 10 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true, margin: "-20px" }}
-                        transition={{ duration: 0.6 }}
-                        className="lg:col-span-5 relative"
-                    >
+                    <FadeIn className="lg:col-span-5 relative">
                         <div className="relative aspect-[3/4] rounded-3xl overflow-hidden shadow-[0_30px_70px_-20px_rgba(28,31,58,0.1)]">
-                            {/* Premium Artistic Visual */}
                             <div className="absolute inset-0 bg-brand-indigo/5 flex items-center justify-center">
                                 <div className="absolute inset-0 bg-gradient-to-t from-brand-indigo/20 to-transparent z-10" />
                                 <div className="relative z-20 p-8 text-center">
@@ -34,36 +27,26 @@ export default function HumanVision() {
                                 </div>
                             </div>
                         </div>
-                    </motion.div>
+                    </FadeIn>
 
                     {/* ── Right: Philosophy Story ── */}
-                    <div className="lg:col-span-7 flex flex-col justify-center">
-                        <motion.div
-                            initial={{ opacity: 0, y: 10 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true, margin: "-20px" }}
-                            transition={{ duration: 0.6, delay: 0.12 }}
-                        >
-                            <h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-bold text-brand-indigo mb-6 tracking-tight leading-tight">
-                                {t("whyUs.philosophy.title")}
-                            </h2>
-
-                            <div className="space-y-5 text-brand-indigo/50 text-base md:text-lg leading-relaxed font-light">
-                                <p>{t("whyUs.philosophy.text1")}</p>
-                                <p>{t("whyUs.philosophy.text2")}</p>
+                    <FadeIn className="lg:col-span-7 flex flex-col justify-center" delay={0.1}>
+                        <h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-bold text-brand-indigo mb-6 tracking-tight leading-tight">
+                            {t("whyUs.philosophy.title")}
+                        </h2>
+                        <div className="space-y-5 text-brand-indigo/50 text-base md:text-lg leading-relaxed font-light">
+                            <p>{t("whyUs.philosophy.text1")}</p>
+                            <p>{t("whyUs.philosophy.text2")}</p>
+                        </div>
+                        <div className="mt-10 pt-8 border-t border-brand-indigo/[0.03]">
+                            <div className="font-display text-xl italic text-brand-indigo opacity-70 mb-1">
+                                {t("whyUs.philosophy.signature")}
                             </div>
-
-                            {/* Signature */}
-                            <div className="mt-10 pt-8 border-t border-brand-indigo/[0.03]">
-                                <div className="font-display text-xl italic text-brand-indigo opacity-70 mb-1">
-                                    {t("whyUs.philosophy.signature")}
-                                </div>
-                                <div className="text-[9px] uppercase tracking-[0.3em] font-bold text-brand-sand/60">
-                                    Founder
-                                </div>
+                            <div className="text-[9px] uppercase tracking-[0.3em] font-bold text-brand-sand/60">
+                                Founder
                             </div>
-                        </motion.div>
-                    </div>
+                        </div>
+                    </FadeIn>
                 </div>
             </div>
         </div>

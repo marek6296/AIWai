@@ -23,6 +23,8 @@
 
 html {
   background: #FFFFFF;
+  /* Smooth scroll for anchor links */
+  scroll-behavior: smooth;
 }
 
 body {
@@ -33,9 +35,44 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /* Smooth momentum scroll on iOS Safari */
   -webkit-overflow-scrolling: touch;
-  /* Never hide body — let content appear immediately */
+}
+
+/* ──────────────────────────────────────
+   FadeIn — IntersectionObserver + CSS
+   ────────────────────────────────────── */
+
+/* JS marks element [data-fi-ready] → CSS hides it.
+   SSR HTML never has this attribute → always visible without JS. */
+[data-fi-ready="up"] {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.55s ease, transform 0.55s ease;
+}
+[data-fi-ready="none"] {
+  opacity: 0;
+  transition: opacity 0.55s ease;
+}
+/* When IntersectionObserver fires → [data-fi-visible] → animate in */
+[data-fi-ready][data-fi-visible="true"] {
+  opacity: 1;
+  transform: none;
+}
+
+/* ──────────────────────────────────────
+   MagneticButton liquid fill (CSS only)
+   ────────────────────────────────────── */
+.magnetic-btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #1C1F3A;
+  transform: translateY(101%);
+  transition: transform 0.4s cubic-bezier(0.76, 0, 0.24, 1);
+  z-index: 0;
+}
+.magnetic-btn:hover::before {
+  transform: translateY(0);
 }
 
 /* ──────────────────────────────────────
@@ -50,47 +87,28 @@ body {
 }
 
 /* ──────────────────────────────────────
-   Lenis Smooth Scroll
-   ────────────────────────────────────── */
-html.lenis,
-html.lenis body {
-  height: auto;
-}
-
-.lenis.lenis-smooth {
-  scroll-behavior: auto !important;
-}
-
-.lenis.lenis-smooth [data-lenis-prevent] {
-  overscroll-behavior: contain;
-}
-
-.lenis.lenis-stopped {
-  overflow: hidden;
-}
-
-.lenis.lenis-scrolling iframe {
-  pointer-events: none;
-}
-
-/* ──────────────────────────────────────
    Performance & GPU Acceleration
    ────────────────────────────────────── */
 
-/* Sections get paint containment — browser skips repainting
-   siblings when one section changes */
+/* Paint containment for sections — browser skips repainting siblings */
 main > section {
   contain: layout style paint;
 }
 
-/* Hero floating orbs — promote to own compositor layer */
+/* content-visibility: auto — browser skips layout/paint for off-screen sections */
+main > section:not(:first-child) {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 600px;
+}
+
+/* Hero orbs — own compositor layer */
 .hero-orb {
   transform: translateZ(0);
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
 }
 
-/* Canvas (ParticleField) gets its own layer */
+/* Canvas gets its own layer */
 canvas[style*="position: fixed"] {
   transform: translateZ(0);
   image-rendering: pixelated;
@@ -103,7 +121,9 @@ canvas[style*="position: fixed"] {
   backface-visibility: hidden;
 }
 
-/* Respect user preference for reduced motion */
+/* ──────────────────────────────────────
+   Reduced Motion
+   ────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -112,9 +132,6 @@ canvas[style*="position: fixed"] {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
-  }
-  .hero-orb {
-    animation: none !important;
   }
 }
 
@@ -127,7 +144,6 @@ canvas[style*="position: fixed"] {
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     border: 1px solid var(--glass-border);
-    -webkit-transform: translateZ(0);
     transform: translateZ(0);
   }
 
@@ -136,23 +152,17 @@ canvas[style*="position: fixed"] {
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.5);
-    -webkit-transform: translateZ(0);
     transform: translateZ(0);
   }
 
   .glow-sm {
-    box-shadow: 0 0 20px var(--glow-brand),
-                0 4px 16px var(--glass-shadow);
+    box-shadow: 0 0 20px var(--glow-brand), 0 4px 16px var(--glass-shadow);
   }
-
   .glow-lg {
-    box-shadow: 0 0 40px var(--glow-brand),
-                0 8px 32px var(--glass-shadow);
+    box-shadow: 0 0 40px var(--glow-brand), 0 8px 32px var(--glass-shadow);
   }
-
   .glow-indigo {
-    box-shadow: 0 0 30px var(--glow-indigo),
-                0 4px 20px var(--glass-shadow);
+    box-shadow: 0 0 30px var(--glow-indigo), 0 4px 20px var(--glass-shadow);
   }
 
   .gradient-mesh {
@@ -177,114 +187,119 @@ canvas[style*="position: fixed"] {
 }
 
 /* ──────────────────────────────────────
-   Hero CSS-first Reveal (no JS needed)
+   Hero CSS-first Reveal (zero JS)
    ────────────────────────────────────── */
 @keyframes heroReveal {
-  from { opacity: 0; transform: translateY(36px); }
+  from { opacity: 0; transform: translateY(28px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
 .hero-line {
-  animation: heroReveal 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: heroReveal 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 .hero-line:nth-child(1) { animation-delay: 0.05s; }
-.hero-line:nth-child(2) { animation-delay: 0.18s; }
+.hero-line:nth-child(2) { animation-delay: 0.15s; }
 
 .hero-sub {
-  animation: heroReveal 0.85s cubic-bezier(0.22, 1, 0.36, 1) 0.32s both;
+  animation: heroReveal 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.28s both;
 }
-
 .hero-cta {
-  animation: heroReveal 0.85s cubic-bezier(0.22, 1, 0.36, 1) 0.46s both;
+  animation: heroReveal 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.4s both;
 }
 
+/* Orbs: reveal then float. Tailwind animate-float-* classes provide the float
+   but are overridden by cascade; use explicit combined animation instead. */
 .hero-orb {
-  animation: heroReveal 1.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation:
+    heroReveal 1.2s cubic-bezier(0.22, 1, 0.36, 1) both,
+    float 8s 1.2s ease-in-out infinite;
 }
-
-/* Disable hero animations when JS has enhanced them with GSAP */
-.gsap-ready .hero-line,
-.gsap-ready .hero-sub,
-.gsap-ready .hero-cta,
-.gsap-ready .hero-orb {
-  animation: none;
+.hero-orb:nth-child(2) {
+  animation:
+    heroReveal 1.2s 0.15s cubic-bezier(0.22, 1, 0.36, 1) both,
+    float 10s 1.35s ease-in-out infinite;
+}
+.hero-orb:nth-child(3) {
+  animation:
+    heroReveal 1.2s 0.3s cubic-bezier(0.22, 1, 0.36, 1) both,
+    float 6s 1.5s ease-in-out infinite;
 }
 
 /* ──────────────────────────────────────
-   Keyframe Animations
+   Keyframes
    ────────────────────────────────────── */
 @keyframes float {
-  0%, 100% { transform: translateZ(0) translateY(0px);   -webkit-transform: translateZ(0) translateY(0px); }
-  50%       { transform: translateZ(0) translateY(-18px); -webkit-transform: translateZ(0) translateY(-18px); }
+  0%, 100% { transform: translateZ(0) translateY(0px); }
+  50%       { transform: translateZ(0) translateY(-18px); }
 }
 
 @keyframes pulse-glow {
   0%, 100% { opacity: 0.4; transform: translateZ(0) scale(1); }
-  50% { opacity: 0.7; transform: translateZ(0) scale(1.05); }
+  50%       { opacity: 0.7; transform: translateZ(0) scale(1.05); }
 }
 
 @keyframes gradient-shift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
 
 @keyframes shimmer {
-  0% { transform: translateZ(0) translateX(-100%); }
+  0%   { transform: translateZ(0) translateX(-100%); }
   100% { transform: translateZ(0) translateX(100%); }
 }
 
+/* Chatbot walking animation keyframes */
+@keyframes legLeft {
+  0%, 100% { transform: rotate(-20deg); }
+  50%       { transform: rotate(20deg); }
+}
+@keyframes legRight {
+  0%, 100% { transform: rotate(20deg); }
+  50%       { transform: rotate(-20deg); }
+}
+@keyframes botBob {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-3px); }
+}
+
+/* Admin page CSS animations (replaces framer-motion) */
+@keyframes adminCardReveal {
+  from { opacity: 0; transform: translateY(24px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes adminTabReveal {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes adminFadeUp {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Success checkmark CSS stroke animation */
+.checkmark-draw {
+  stroke-dasharray: 40;
+  stroke-dashoffset: 40;
+  animation: drawCheck 0.5s ease-out 0.2s forwards;
+}
+@keyframes drawCheck {
+  to { stroke-dashoffset: 0; }
+}
+
 /* ──────────────────────────────────────
-   Custom Scrollbar (subtle)
+   Custom Scrollbar
    ────────────────────────────────────── */
-::-webkit-scrollbar {
-  width: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background: rgba(28, 31, 58, 0.15);
-  border-radius: 3px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(28, 31, 58, 0.3);
-}
-
-/* ──────────────────────────────────────
-   Microinteraction Keyframes
-   ────────────────────────────────────── */
-@keyframes scale-subtle {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.02); }
-  100% { transform: scale(1); }
-}
-
-@keyframes slide-up {
-  0% { transform: translateY(8px); opacity: 0; }
-  100% { transform: translateY(0); opacity: 1; }
-}
-
-@keyframes fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(28, 31, 58, 0.15); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(28, 31, 58, 0.3); }
 
 /* ──────────────────────────────────────
    Text Selection
    ────────────────────────────────────── */
-::selection {
-  background: rgba(216, 185, 138, 0.25);
-  color: #1C1F3A;
-}
-
-::-moz-selection {
-  background: rgba(216, 185, 138, 0.25);
-  color: #1C1F3A;
-}
+::selection      { background: rgba(216, 185, 138, 0.25); color: #1C1F3A; }
+::-moz-selection { background: rgba(216, 185, 138, 0.25); color: #1C1F3A; }
 
 /* ──────────────────────────────────────
    Focus States (a11y)
