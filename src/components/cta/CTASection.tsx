@@ -41,29 +41,29 @@ export default function CTASection() {
                     {t("cta.heading")}
                 </TextReveal>
 
-                <ScrollReveal delay={0.3}>
+                <ScrollReveal delay={0.1}>
                     <p className="text-white/40 text-lg max-w-xl mx-auto mb-12 font-light">
                         {t("cta.subheading")}
                     </p>
                 </ScrollReveal>
 
-                <ScrollReveal delay={0.5}>
+                <ScrollReveal delay={0.18}>
                     <button
                         onClick={scrollToContact}
                         className="inline-flex items-center gap-3 px-10 py-4 bg-white text-brand-indigo rounded-full text-sm font-bold uppercase tracking-[0.15em] hover:bg-white/90 transition-all shadow-2xl shadow-black/10 hover:shadow-black/20 group"
                     >
                         {t("cta.button")}
-                        <svg 
-                            className="w-5 h-5 transition-transform duration-500 group-hover:translate-x-1" 
-                            viewBox="0 0 24 24" 
-                            fill="none" 
+                        <svg
+                            className="w-5 h-5 transition-transform duration-500 group-hover:translate-x-1"
+                            viewBox="0 0 24 24"
+                            fill="none"
                             xmlns="http://www.w3.org/2000/svg"
                         >
-                            <path 
-                                d="M5 12H19M19 12L13 6M19 12L13 18" 
-                                stroke="currentColor" 
-                                strokeWidth="1.5" 
-                                strokeLinecap="round" 
+                            <path
+                                d="M5 12H19M19 12L13 6M19 12L13 18"
+                                stroke="currentColor"
+                                strokeWidth="1.5"
+                                strokeLinecap="round"
                                 strokeLinejoin="round"
                             />
                         </svg>

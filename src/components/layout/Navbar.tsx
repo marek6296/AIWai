@@ -88,12 +88,9 @@ export default function Navbar() {
 
     return (
         <>
-            {/* ── Main Nav ── */}
-            <motion.nav
-                initial={{ y: -20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.8, delay: 0.5, ease: [0.215, 0.61, 0.355, 1] }}
-                className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-500 translate-z-0 ${scrolled
+            {/* ── Main Nav — CSS entrance, no Framer Motion blocking first paint ── */}
+            <nav
+                className={`nav-entrance fixed top-0 left-0 right-0 z-[100] transition-all duration-500 translate-z-0 ${scrolled
                         ? "py-3 bg-white/80 backdrop-blur-sm border-b border-brand-indigo/[0.06] shadow-[0_1px_30px_rgba(28,31,58,0.04)]"
                         : "py-5 bg-transparent"
                     }`}
@@ -209,34 +206,18 @@ export default function Navbar() {
                         )}
                     </button>
                 </div>
-            </motion.nav>
+            </nav>
 
             {/* ── Mobile Menu ── */}
             <AnimatePresence>
                 {isOpen && (
                     <motion.div
                         key="mobile-menu"
-                        variants={{
-                            initial: {
-                                clipPath: "circle(0% at 92% 4%)",
-                                opacity: 0
-                            },
-                            animate: {
-                                clipPath: "circle(150% at 92% 4%)",
-                                opacity: 1,
-                                transition: { duration: 0.7, ease: [0.76, 0, 0.24, 1] }
-                            },
-                            exit: {
-                                clipPath: "circle(0% at 92% 4%)",
-                                opacity: 0,
-                                transition: { duration: 0.5, ease: [0.76, 0, 0.24, 1], delay: 0.1 }
-                            }
-                        }}
-                        initial="initial"
-                        animate="animate"
-                        exit="exit"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1, transition: { duration: 0.25, ease: "easeOut" } }}
+                        exit={{ opacity: 0, transition: { duration: 0.2, ease: "easeIn" } }}
                         className="fixed inset-0 z-[90] bg-white/98 backdrop-blur-md flex flex-col items-center justify-center overflow-hidden translate-z-0"
-                        style={{ willChange: "clip-path, opacity" }}
+                        style={{ willChange: "opacity" }}
                     >
                         {/* Background Orbs */}
                         <div className="absolute inset-0 pointer-events-none overflow-hidden">

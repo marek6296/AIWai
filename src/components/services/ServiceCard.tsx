@@ -17,12 +17,12 @@ export default function ServiceCard({ title, description, icon, onClick, index =
 
     return (
         <motion.div
-            initial={{ opacity: 0, y: 40 }}
+            initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-50px" }}
+            viewport={{ once: true, margin: "-20px" }}
             transition={{
-                delay: index * 0.12,
-                duration: 0.7,
+                delay: index * 0.07,
+                duration: 0.5,
                 ease: [0.215, 0.61, 0.355, 1],
             }}
             onClick={onClick}

@@ -11,13 +11,13 @@ export default function HumanVision() {
         <div className="relative w-full py-12 px-6 sm:px-12">
             <div className="max-w-6xl mx-auto">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-center">
-                    
-                    {/* ── Left: Artistic Human Element (Smaller) ── */}
+
+                    {/* ── Left: Artistic Human Element ── */}
                     <motion.div
-                        initial={{ opacity: 0, y: 20 }}
+                        initial={{ opacity: 0, y: 10 }}
                         whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.8 }}
+                        viewport={{ once: true, margin: "-20px" }}
+                        transition={{ duration: 0.6 }}
                         className="lg:col-span-5 relative"
                     >
                         <div className="relative aspect-[3/4] rounded-3xl overflow-hidden shadow-[0_30px_70px_-20px_rgba(28,31,58,0.1)]">
@@ -39,22 +39,18 @@ export default function HumanVision() {
                     {/* ── Right: Philosophy Story ── */}
                     <div className="lg:col-span-7 flex flex-col justify-center">
                         <motion.div
-                            initial={{ opacity: 0, y: 20 }}
+                            initial={{ opacity: 0, y: 10 }}
                             whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.8, delay: 0.2 }}
+                            viewport={{ once: true, margin: "-20px" }}
+                            transition={{ duration: 0.6, delay: 0.12 }}
                         >
                             <h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-bold text-brand-indigo mb-6 tracking-tight leading-tight">
                                 {t("whyUs.philosophy.title")}
                             </h2>
-                            
+
                             <div className="space-y-5 text-brand-indigo/50 text-base md:text-lg leading-relaxed font-light">
-                                <p>
-                                    {t("whyUs.philosophy.text1")}
-                                </p>
-                                <p>
-                                    {t("whyUs.philosophy.text2")}
-                                </p>
+                                <p>{t("whyUs.philosophy.text1")}</p>
+                                <p>{t("whyUs.philosophy.text2")}</p>
                             </div>
 
                             {/* Signature */}

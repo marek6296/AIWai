@@ -32,7 +32,21 @@ body {
   overflow-x: hidden;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Smooth momentum scroll on iOS Safari */
+  -webkit-overflow-scrolling: touch;
   /* Never hide body — let content appear immediately */
+}
+
+/* ──────────────────────────────────────
+   Navbar CSS Entrance
+   ────────────────────────────────────── */
+@keyframes navReveal {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.nav-entrance {
+  animation: navReveal 0.3s ease-out 0.05s both;
 }
 
 /* ──────────────────────────────────────
@@ -200,8 +214,8 @@ canvas[style*="position: fixed"] {
    Keyframe Animations
    ────────────────────────────────────── */
 @keyframes float {
-  0%, 100% { transform: translateZ(0) translateY(0px); }
-  50% { transform: translateZ(0) translateY(-18px); }
+  0%, 100% { transform: translateZ(0) translateY(0px);   -webkit-transform: translateZ(0) translateY(0px); }
+  50%       { transform: translateZ(0) translateY(-18px); -webkit-transform: translateZ(0) translateY(-18px); }
 }
 
 @keyframes pulse-glow {
