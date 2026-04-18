@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import gsap from "gsap";
 import MagneticButton from "@/components/ui/MagneticButton";
 import { useTranslation } from "@/i18n/useTranslation";
 
@@ -25,52 +24,43 @@ export default function HeroSection() {
     const { t } = useTranslation();
 
     useEffect(() => {
-        const ctx = gsap.context(() => {
-            const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+        // CSS animations already handle the reveal — GSAP only adds
+        // a richer orb animation as progressive enhancement.
+        // We never hide text with gsap.set() so text is always visible.
+        let gsapLoaded = false;
 
-            gsap.set(".hero-line", { y: 80, opacity: 0 });
-            gsap.set(".hero-sub", { y: 30, opacity: 0 });
-            gsap.set(".hero-cta", { y: 30, opacity: 0 });
-            gsap.set(".hero-orb", { scale: 0.5, opacity: 0 });
+        const enhance = async () => {
+            try {
+                const { default: gsap } = await import("gsap");
+                if (!sectionRef.current) return;
+                gsapLoaded = true;
 
-            tl.to(".hero-orb", {
-                scale: 1,
-                opacity: 1,
-                duration: 2,
-                stagger: 0.3,
-                ease: "power2.out",
-            })
-            .to(
-                ".hero-line",
-                {
-                    y: 0,
-                    opacity: 1,
-                    duration: 1.2,
-                    stagger: 0.15,
-                },
-                "-=1.5"
-            )
-            .to(
-                ".hero-sub",
-                {
-                    y: 0,
-                    opacity: 1,
-                    duration: 1,
-                },
-                "-=0.6"
-            )
-            .to(
-                ".hero-cta",
-                {
-                    y: 0,
-                    opacity: 1,
-                    duration: 0.8,
-                },
-                "-=0.4"
-            );
-        }, sectionRef);
+                // Mark section so CSS animations hand off to GSAP
+                document.documentElement.classList.add("gsap-ready");
 
-        return () => ctx.revert();
+                gsap.fromTo(
+                    ".hero-orb",
+                    { scale: 0.6, opacity: 0 },
+                    { scale: 1, opacity: 1, duration: 2, stagger: 0.3, ease: "power2.out" }
+                );
+            } catch {
+                // GSAP failed to load — CSS animations already showing content
+            }
+        };
+
+        // Defer GSAP until after first paint — requestIdleCallback on Chrome,
+        // setTimeout fallback for Safari
+        if (typeof requestIdleCallback !== "undefined") {
+            requestIdleCallback(enhance, { timeout: 2000 });
+        } else {
+            setTimeout(enhance, 100);
+        }
+
+        return () => {
+            if (gsapLoaded) {
+                document.documentElement.classList.remove("gsap-ready");
+            }
+        };
     }, []);
 
     const scrollToContact = () => lenisScroll("contact");

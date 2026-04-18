@@ -32,12 +32,7 @@ body {
   overflow-x: hidden;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
-  animation: fadeInBody 0.25s ease-out both;
-}
-
-@keyframes fadeInBody {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  /* Never hide body — let content appear immediately */
 }
 
 /* ──────────────────────────────────────
@@ -165,6 +160,40 @@ canvas[style*="position: fixed"] {
     -webkit-transform: translateZ(0);
     transform: translateZ(0);
   }
+}
+
+/* ──────────────────────────────────────
+   Hero CSS-first Reveal (no JS needed)
+   ────────────────────────────────────── */
+@keyframes heroReveal {
+  from { opacity: 0; transform: translateY(36px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.hero-line {
+  animation: heroReveal 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.hero-line:nth-child(1) { animation-delay: 0.05s; }
+.hero-line:nth-child(2) { animation-delay: 0.18s; }
+
+.hero-sub {
+  animation: heroReveal 0.85s cubic-bezier(0.22, 1, 0.36, 1) 0.32s both;
+}
+
+.hero-cta {
+  animation: heroReveal 0.85s cubic-bezier(0.22, 1, 0.36, 1) 0.46s both;
+}
+
+.hero-orb {
+  animation: heroReveal 1.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Disable hero animations when JS has enhanced them with GSAP */
+.gsap-ready .hero-line,
+.gsap-ready .hero-sub,
+.gsap-ready .hero-cta,
+.gsap-ready .hero-orb {
+  animation: none;
 }
 
 /* ──────────────────────────────────────

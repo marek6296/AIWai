@@ -28,10 +28,12 @@ export default function ParticleField() {
     const scrollYRef = useRef(0);
     const mouseRef = useRef({ x: -9999, y: -9999 });
 
-    // Cache layout measurements — update only on resize, NOT every frame
     const layoutRef = useRef({ vw: 0, vh: 0, docH: 0 });
 
     useEffect(() => {
+        // Skip on mobile entirely — particles block main thread and are invisible on small screens
+        if (window.innerWidth < 768) return;
+
         const canvas = canvasRef.current;
         if (!canvas) return;
         // willReadFrequently: false → GPU-accelerated canvas compositing
