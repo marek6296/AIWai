@@ -2,6 +2,7 @@
 import React from "react";
 import { ArrowRight } from "lucide-react";
 import FadeIn from "@/components/animations/FadeIn";
+import TiltCard from "@/components/ui/TiltCard";
 import { useTranslation } from "@/i18n/useTranslation";
 
 interface ServiceCardProps {
@@ -17,11 +18,8 @@ export default function ServiceCard({ title, description, icon, onClick, index =
 
     return (
         <FadeIn delay={index * 0.07}>
-            <div
-                onClick={onClick}
-                className="group relative cursor-pointer h-full"
-            >
-                <div className="relative p-8 md:p-10 rounded-2xl border border-brand-indigo/[0.06] bg-white/60 backdrop-blur-sm hover:bg-white/90 transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_60px_-10px_rgba(28,31,58,0.08)] hover:border-brand-sand/30 h-full">
+            <TiltCard onClick={onClick} className="group relative cursor-pointer h-full">
+                <div className="relative p-8 md:p-10 rounded-2xl border border-brand-indigo/[0.06] bg-white/60 backdrop-blur-sm hover:bg-white/90 transition-all duration-500 hover:shadow-[0_20px_60px_-10px_rgba(28,31,58,0.08)] hover:border-brand-sand/30 h-full">
                     <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-brand-sand/0 to-brand-indigo/0 group-hover:from-brand-sand/5 group-hover:to-brand-indigo/[0.02] transition-all duration-500 pointer-events-none" />
 
                     <div className="relative z-10 flex flex-col h-full">
@@ -42,7 +40,7 @@ export default function ServiceCard({ title, description, icon, onClick, index =
                         </div>
                     </div>
                 </div>
-            </div>
+            </TiltCard>
         </FadeIn>
     );
 }

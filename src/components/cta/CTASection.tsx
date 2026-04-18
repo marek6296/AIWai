@@ -8,15 +8,7 @@ export default function CTASection() {
     const { t } = useTranslation();
 
     const scrollToContact = () => {
-        const el = document.getElementById("contact");
-        if (el) {
-            const lenis = (window as unknown as { __lenis?: { scrollTo: (target: Element, opts: object) => void } }).__lenis;
-            if (lenis) {
-                lenis.scrollTo(el, { offset: 0, duration: 1.2 });
-            } else {
-                el.scrollIntoView({ behavior: "smooth" });
-            }
-        }
+        document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
     };
 
     return (

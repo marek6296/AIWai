@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "aiwai-dev",
+      "runtimeExecutable": "/usr/local/bin/node",
+      "runtimeArgs": ["/Users/marek/nove weby 2026/AIWai/node_modules/.bin/next", "dev", "--port", "3000"],
+      "port": 3000
+    }
+  ]
+}

@@ -31,23 +31,24 @@ export default function ParticleField() {
     const layoutRef = useRef({ vw: 0, vh: 0, docH: 0 });
 
     useEffect(() => {
-        // Skip on mobile — particles block main thread and are invisible on small screens
-        if (window.innerWidth < 768) return;
-        // Skip on Safari — canvas animation causes GPU contention with page animations
-        if (isSafari) return;
         // Respect reduced-motion preference
         if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+        const isMobile = window.innerWidth < 768;
 
         const canvas = canvasRef.current;
         if (!canvas) return;
         const ctx = canvas.getContext("2d", { alpha: true, willReadFrequently: false });
         if (!ctx) return;
 
+        // Adaptive settings per platform
+        // Safari: no connection lines (GPU contention), fewer particles
+        // Mobile: minimal particles, no connections
+        const showConnections = !isSafari && !isMobile;
         const CONNECTION_DISTANCE = 130;
         const CONNECTION_DIST_SQ = CONNECTION_DISTANCE * CONNECTION_DISTANCE;
         const MOUSE_RADIUS = 180;
         const MOUSE_RADIUS_SQ = MOUSE_RADIUS * MOUSE_RADIUS;
-        // Always cap DPR at 1 — canvas animation doesn't benefit from retina
         const DPR = 1;
 
         const getDocHeight = () =>
@@ -75,9 +76,9 @@ export default function ParticleField() {
 
         const initParticles = () => {
             const { vw, vh, docH } = layoutRef.current;
-            const topCount = 100;
-            const restCount = 40;
-            const total = topCount + restCount;
+            // Adaptive particle count: desktop=140, safari=30, mobile=20
+            const total = isMobile ? 20 : isSafari ? 30 : 140;
+            const topCount = Math.floor(total * 0.7);
 
             particlesRef.current = Array.from({ length: total }, (_, i) => {
                 const baseOpacity = Math.random() * 0.22 + 0.08;
@@ -187,8 +188,8 @@ export default function ParticleField() {
             }
             ctx.globalAlpha = 1;
 
-            // Connections — batch into opacity buckets
-            if (frameCount % 2 === 0) {
+            // Connections — skip on Safari/mobile to avoid GPU pressure
+            if (showConnections && frameCount % 2 === 0) {
                 const BUCKETS = 8;
                 const buckets: { path: Path2D; alpha: number }[] = [];
                 for (let k = 0; k < BUCKETS; k++) {

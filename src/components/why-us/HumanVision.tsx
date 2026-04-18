@@ -2,6 +2,7 @@
 
 import React from "react";
 import FadeIn from "@/components/animations/FadeIn";
+import StatCounter from "@/components/why-us/StatCounter";
 import { useTranslation } from "@/i18n/useTranslation";
 
 export default function HumanVision() {
@@ -45,6 +46,13 @@ export default function HumanVision() {
                             <div className="text-[9px] uppercase tracking-[0.3em] font-bold text-brand-sand/60">
                                 Founder
                             </div>
+                        </div>
+
+                        {/* Stats row */}
+                        <div className="mt-10 grid grid-cols-3 gap-6 pt-8 border-t border-brand-indigo/[0.04]">
+                            <StatCounter value={50} label="Projects" suffix="+" />
+                            <StatCounter value={3} label="Languages" />
+                            <StatCounter value={24} label="Support" suffix="/7" />
                         </div>
                     </FadeIn>
                 </div>
