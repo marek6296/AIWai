@@ -23,7 +23,7 @@ export default function HumanVision() {
                                             <path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"/>
                                         </svg>
                                     </div>
-                                    <div className="text-brand-indigo/30 font-display text-xs tracking-[0.4em] uppercase">Vision</div>
+                                    <div className="text-brand-indigo/30 font-display text-xs tracking-[0.4em] uppercase">{t("whyUs.vision")}</div>
                                 </div>
                             </div>
                         </div>
@@ -43,7 +43,7 @@ export default function HumanVision() {
                                 {t("whyUs.philosophy.signature")}
                             </div>
                             <div className="text-[9px] uppercase tracking-[0.3em] font-bold text-brand-sand/60">
-                                Founder
+                                {t("whyUs.founder")}
                             </div>
                         </div>
 

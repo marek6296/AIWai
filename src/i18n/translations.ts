@@ -86,6 +86,8 @@ export const translations: Record<Lang, Record<string, string>> = {
         'whyUs.philosophy.text1': 'Most agencies specialise — either they do design or they do tech. We do both, and more importantly, we understand how they connect. A beautiful website that loads slowly is a failure. An AI system that works but confuses users is a failure. We care about outcomes, not output.',
         'whyUs.philosophy.text2': 'Every project we take on starts with one question: what does success actually look like for your business? More leads, less manual work, a brand that looks the part — we build towards that, not towards a delivery checklist.',
         'whyUs.philosophy.signature': 'Marek, Founder of AIWai',
+        'whyUs.vision': 'Vision',
+        'whyUs.founder': 'Founder',
 
         // ── CTA ──
         'cta.label': 'Ready?',
@@ -210,6 +212,8 @@ export const translations: Record<Lang, Record<string, string>> = {
         'whyUs.philosophy.text1': 'Väčšina agentúr sa špecializuje — buď robia dizajn alebo technológie. My robíme oboje a hlavne chápeme, ako spolu súvisia. Krásny web, ktorý je pomalý, je zlyhanie. AI systém, ktorý funguje, ale mätie používateľov, je tiež zlyhanie. Nám záleží na výsledkoch, nie na deliverables.',
         'whyUs.philosophy.text2': 'Každý projekt začíname jednou otázkou: ako vyzerá úspech pre váš biznis? Viac leadov, menej manuálnej práce, značka, ktorá vyzerá profesionálne — na to stavíme, nie na zoznam splnených úloh.',
         'whyUs.philosophy.signature': 'Marek, Zakladateľ AIWai',
+        'whyUs.vision': 'Vízia',
+        'whyUs.founder': 'Zakladateľ',
 
         // ── CTA ──
         'cta.label': 'Začneme?',
@@ -334,6 +338,8 @@ export const translations: Record<Lang, Record<string, string>> = {
         'whyUs.philosophy.text1': 'Většina agentur se specializuje — buď dělají design nebo technologie. My děláme obojí a hlavně chápeme, jak spolu souvisí. Krásný web, který je pomalý, je selhání. AI systém, který funguje, ale matí uživatele, je taky selhání. Nám záleží na výsledcích, ne na deliverables.',
         'whyUs.philosophy.text2': 'Každý projekt začínáme jednou otázkou: jak vypadá úspěch pro váš byznys? Více leadů, méně manuální práce, značka, která vypadá profesionálně — na to stavíme, ne na seznam splněných úkolů.',
         'whyUs.philosophy.signature': 'Marek, Zakladatel AIWai',
+        'whyUs.vision': 'Vize',
+        'whyUs.founder': 'Zakladatel',
 
         // ── CTA ──
         'cta.label': 'Začneme?',
