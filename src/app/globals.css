@@ -249,25 +249,6 @@ canvas[style*="position: fixed"] {
   100% { transform: translateZ(0) translateX(100%); }
 }
 
-/* Chatbot walking animation keyframes */
-@keyframes legLeft {
-  0%, 100% { transform: rotate(-20deg); }
-  50%       { transform: rotate(20deg); }
-}
-@keyframes legRight {
-  0%, 100% { transform: rotate(20deg); }
-  50%       { transform: rotate(-20deg); }
-}
-@keyframes botBob {
-  0%, 100% { transform: translateY(0); }
-  50%       { transform: translateY(-3px); }
-}
-@keyframes bubbleReveal {
-  from { opacity: 0; transform: scale(0.8) translateY(10px); }
-  to   { opacity: 1; transform: scale(1) translateY(0); }
-}
-.chatbot-btn:hover  { transform: scale(1.05); }
-.chatbot-btn:active { transform: scale(0.95); }
 
 /* Admin page CSS animations (replaces framer-motion) */
 @keyframes adminCardReveal {
