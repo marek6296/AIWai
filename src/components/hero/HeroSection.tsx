@@ -43,7 +43,7 @@ export default function HeroSection() {
                         </div>
                     </div>
 
-                    <p className="hero-sub text-lg md:text-xl text-brand-indigo/50 max-w-2xl mx-auto leading-relaxed font-light">
+                    <p className="hero-sub text-lg md:text-xl text-brand-indigo/50 max-w-2xl md:max-w-4xl mx-auto leading-relaxed font-light md:whitespace-nowrap">
                         {t("hero.subtitle")}
                     </p>
 
