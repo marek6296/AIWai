@@ -9,6 +9,9 @@ export const translations: Record<Lang, Record<string, string>> = {
         'nav.contact': 'Contact',
 
         // ── Hero ──
+        'hero.line1': 'Complete',
+        'hero.line2.light': 'Digital',
+        'hero.line2.gradient': 'Agency.',
         'hero.subtitle': 'From logo to chatbot — we handle graphic design, websites, AI automation and chatbots for businesses that want everything done properly.',
         'hero.cta.start': 'Start a Project',
         'hero.cta.explore': 'See What We Do ↓',
@@ -130,6 +133,9 @@ export const translations: Record<Lang, Record<string, string>> = {
         'nav.contact': 'Kontakt',
 
         // ── Hero ──
+        'hero.line1': 'Kompletná',
+        'hero.line2.light': 'Digitálna',
+        'hero.line2.gradient': 'Agentúra.',
         'hero.subtitle': 'Od loga po chatbota — postaráme sa o grafický dizajn, webové stránky, AI automatizáciu a chatboty pre biznisy, ktoré chcú mať všetko spravené poriadne.',
         'hero.cta.start': 'Začať projekt',
         'hero.cta.explore': 'Čo robíme ↓',
@@ -251,6 +257,9 @@ export const translations: Record<Lang, Record<string, string>> = {
         'nav.contact': 'Kontakt',
 
         // ── Hero ──
+        'hero.line1': 'Kompletní',
+        'hero.line2.light': 'Digitální',
+        'hero.line2.gradient': 'Agentura.',
         'hero.subtitle': 'Od loga po chatbota — staráme se o grafický design, webové stránky, AI automatizaci a chatboty pro firmy, které chtějí mít vše udělané pořádně.',
         'hero.cta.start': 'Zahájit projekt',
         'hero.cta.explore': 'Co děláme ↓',

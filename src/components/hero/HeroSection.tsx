@@ -32,13 +32,13 @@ export default function HeroSection() {
                     <div className="space-y-0">
                         <div>
                             <h1 className="hero-line text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-display font-bold tracking-tight text-brand-indigo leading-[1.2]">
-                                Complete
+                                {t("hero.line1")}
                             </h1>
                         </div>
                         <div>
                             <h1 className="hero-line text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-display font-bold tracking-tight leading-[1.2]">
-                                <span className="text-brand-indigo/40 italic font-light">Digital</span>{" "}
-                                <span className="text-gradient">Agency.</span>
+                                <span className="text-brand-indigo/40 italic font-light">{t("hero.line2.light")}</span>{" "}
+                                <span className="text-gradient">{t("hero.line2.gradient")}</span>
                             </h1>
                         </div>
                     </div>

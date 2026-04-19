@@ -48,11 +48,17 @@ export default function HumanVision() {
                             </div>
                         </div>
 
-                        {/* Stats row */}
-                        <div className="mt-10 grid grid-cols-3 gap-6 pt-8 border-t border-brand-indigo/[0.04]">
-                            <StatCounter value={50} label="Projects" suffix="+" />
-                            <StatCounter value={3} label="Languages" />
-                            <StatCounter value={24} label="Support" suffix="/7" />
+                        {/* 3 Feature blocks */}
+                        <div className="mt-10 grid grid-cols-1 gap-4 pt-8 border-t border-brand-indigo/[0.04]">
+                            {[0, 1, 2].map((i) => (
+                                <div key={i} className="flex gap-4">
+                                    <div className="w-1.5 h-1.5 rounded-full bg-brand-sand/60 mt-2.5 flex-shrink-0" />
+                                    <div>
+                                        <span className="text-sm font-semibold text-brand-indigo">{t(`whyUs.feature.${i}.title`)} — </span>
+                                        <span className="text-sm text-brand-indigo/50 font-light">{t(`whyUs.feature.${i}.description`)}</span>
+                                    </div>
+                                </div>
+                            ))}
                         </div>
                     </FadeIn>
                 </div>
