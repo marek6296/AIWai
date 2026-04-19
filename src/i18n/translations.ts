@@ -10,8 +10,8 @@ export const translations: Record<Lang, Record<string, string>> = {
 
         // ── Hero ──
         'hero.line1': 'Web, design, AI.',
-        'hero.line2.light': 'Under',
-        'hero.line2.gradient': 'one roof.',
+        'hero.line2.light': 'All',
+        'hero.line2.gradient': 'in one.',
         'hero.subtitle': 'We take care of your web, design and AI — you focus on your business, we handle the rest.',
         'hero.cta.start': 'Let\'s talk',
         'hero.cta.explore': 'What we do ↓',
@@ -136,8 +136,8 @@ export const translations: Record<Lang, Record<string, string>> = {
 
         // ── Hero ──
         'hero.line1': 'Web, dizajn, AI.',
-        'hero.line2.light': 'Pod jednou',
-        'hero.line2.gradient': 'strechou.',
+        'hero.line2.light': 'Všetko',
+        'hero.line2.gradient': 'v jednom.',
         'hero.subtitle': 'Postaráme sa o váš web, dizajn aj AI — vy riešite biznis, my riešime zvyšok.',
         'hero.cta.start': 'Porozprávajme sa',
         'hero.cta.explore': 'Čo robíme ↓',
@@ -262,8 +262,8 @@ export const translations: Record<Lang, Record<string, string>> = {
 
         // ── Hero ──
         'hero.line1': 'Web, design, AI.',
-        'hero.line2.light': 'Pod jednou',
-        'hero.line2.gradient': 'střechou.',
+        'hero.line2.light': 'Vše',
+        'hero.line2.gradient': 'v jednom.',
         'hero.subtitle': 'Postaráme se o váš web, design i AI — vy řešíte byznys, my řešíme zbytek.',
         'hero.cta.start': 'Promluvme si',
         'hero.cta.explore': 'Co děláme ↓',
