@@ -2,7 +2,6 @@
 
 import React from "react";
 import FadeIn from "@/components/animations/FadeIn";
-import StatCounter from "@/components/why-us/StatCounter";
 import { useTranslation } from "@/i18n/useTranslation";
 
 export default function HumanVision() {
