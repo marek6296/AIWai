@@ -19,7 +19,7 @@ const STORAGE_KEY = 'aiwai_lang'
 const FADE_DURATION = 250 // ms
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-    const [lang, setLangState] = useState<Lang>('en')
+    const [lang, setLangState] = useState<Lang>('sk')
     const [mounted, setMounted] = useState(false)
     const wrapperRef = useRef<HTMLDivElement>(null)
 
@@ -62,11 +62,11 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
         return translations[lang]?.[key] ?? translations['en']?.[key] ?? key
     }, [lang])
 
-    // Avoid hydration mismatch — render English until mounted
+    // Avoid hydration mismatch — render Slovak until mounted
     const contextValue: LanguageContextType = {
-        lang: mounted ? lang : 'en',
+        lang: mounted ? lang : 'sk',
         setLang,
-        t: mounted ? t : (key: string) => translations['en']?.[key] ?? key,
+        t: mounted ? t : (key: string) => translations['sk']?.[key] ?? key,
     }
 
     return (
