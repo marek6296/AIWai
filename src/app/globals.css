@@ -46,12 +46,12 @@ body {
    SSR HTML never has this attribute → always visible without JS. */
 [data-fi-ready="up"] {
   opacity: 0;
-  transform: translateY(16px);
-  transition: opacity 0.55s ease, transform 0.55s ease;
+  transform: translateY(12px);
+  transition: opacity 0.32s ease-out, transform 0.32s ease-out;
 }
 [data-fi-ready="none"] {
   opacity: 0;
-  transition: opacity 0.55s ease;
+  transition: opacity 0.32s ease-out;
 }
 /* When IntersectionObserver fires → [data-fi-visible] → animate in */
 [data-fi-ready][data-fi-visible="true"] {

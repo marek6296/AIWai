@@ -42,11 +42,13 @@ export default function FadeIn({
             return;
         }
 
-        // If already visible in viewport on mount, skip animation entirely.
-        // Avoids the brief opacity:0 flash for above-the-fold content on
-        // client-side navigation or fast hydration.
+        // If already visible or near viewport on mount, skip animation entirely.
+        // Generous buffer so fast-scroll users never see blank gaps.
         const rect = el.getBoundingClientRect();
-        if (rect.top >= 0 && rect.top < window.innerHeight) return;
+        if (rect.top < window.innerHeight + 400) {
+            el.dataset.fiVisible = "true";
+            return;
+        }
 
         // Set initial hidden state via data attribute (not inline style or SSR class)
         // so SSR HTML is always visible and there's no hydration mismatch.
@@ -58,13 +60,23 @@ export default function FadeIn({
                 if (entry.isIntersecting) {
                     el.dataset.fiVisible = "true";
                     observer.disconnect();
+                    clearTimeout(safety);
                 }
             },
-            { threshold: 0.06, rootMargin: "0px 0px -24px 0px" }
+            // Fire 400px before element enters viewport — gives fast-scrollers
+            // time to see content revealed rather than a blank gap.
+            { threshold: 0, rootMargin: "0px 0px 400px 0px" }
         );
 
+        // Safety net — guarantees content never stays hidden longer than 900ms
+        // after mount, even if IO misfires during aggressive scroll.
+        const safety = window.setTimeout(() => {
+            el.dataset.fiVisible = "true";
+            observer.disconnect();
+        }, 900);
+
         observer.observe(el);
-        return () => observer.disconnect();
+        return () => { observer.disconnect(); clearTimeout(safety); };
     }, [delay, direction]);
 
     return (
