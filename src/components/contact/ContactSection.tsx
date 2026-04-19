@@ -13,7 +13,7 @@ export default function ContactSection() {
     const [formData, setFormData] = useState({
         name: "",
         email: "",
-        projectType: "Web Development",
+        projectType: "Website or Landing Page",
         message: "",
     });
 
@@ -35,7 +35,7 @@ export default function ContactSection() {
             ]);
             if (dbRes.ok || webhookRes.ok) {
                 setStatus("success");
-                setFormData({ name: "", email: "", projectType: "Web Development", message: "" });
+                setFormData({ name: "", email: "", projectType: "Website or Landing Page", message: "" });
             } else {
                 setStatus("error");
             }
@@ -45,9 +45,10 @@ export default function ContactSection() {
     };
 
     const projectTypes = [
-        { value: "Web Development", label: t("contact.projectType.web") },
-        { value: "AI Integration", label: t("contact.projectType.ai") },
-        { value: "Design System", label: t("contact.projectType.design") },
+        { value: "Website or Landing Page", label: t("contact.projectType.web") },
+        { value: "AI Chatbot", label: t("contact.projectType.chatbot") },
+        { value: "AI Automation", label: t("contact.projectType.automation") },
+        { value: "Graphic Design", label: t("contact.projectType.design") },
         { value: "Other", label: t("contact.projectType.other") },
     ];
 
