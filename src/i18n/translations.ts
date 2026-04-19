@@ -9,10 +9,10 @@ export const translations: Record<Lang, Record<string, string>> = {
         'nav.contact': 'Contact',
 
         // ── Hero ──
-        'hero.line1': 'Your business',
-        'hero.line2.light': 'online,',
-        'hero.line2.gradient': 'done right.',
-        'hero.subtitle': 'Web, design, AI chatbot or automation — one team, one call. No juggling four different vendors.',
+        'hero.line1': 'Web, design, AI.',
+        'hero.line2.light': 'Under',
+        'hero.line2.gradient': 'one roof.',
+        'hero.subtitle': 'One team for everything your business needs online. No hunting for four different vendors, no jargon, no surprises.',
         'hero.cta.start': 'Let\'s talk',
         'hero.cta.explore': 'What we do ↓',
 
@@ -135,10 +135,10 @@ export const translations: Record<Lang, Record<string, string>> = {
         'nav.contact': 'Kontakt',
 
         // ── Hero ──
-        'hero.line1': 'Váš biznis',
-        'hero.line2.light': 'online,',
-        'hero.line2.gradient': 'poriadne.',
-        'hero.subtitle': 'Web, dizajn, AI chatbot alebo automatizácia — jeden tím, jeden hovor. Bez hľadania štyroch rôznych dodávateľov.',
+        'hero.line1': 'Web, dizajn, AI.',
+        'hero.line2.light': 'Pod jednou',
+        'hero.line2.gradient': 'strechou.',
+        'hero.subtitle': 'Jeden tím pre všetko čo váš biznis potrebuje online. Bez hľadania štyroch dodávateľov, bez žargónu, bez prekvapení.',
         'hero.cta.start': 'Porozprávajme sa',
         'hero.cta.explore': 'Čo robíme ↓',
 
@@ -261,10 +261,10 @@ export const translations: Record<Lang, Record<string, string>> = {
         'nav.contact': 'Kontakt',
 
         // ── Hero ──
-        'hero.line1': 'Váš byznys',
-        'hero.line2.light': 'online,',
-        'hero.line2.gradient': 'pořádně.',
-        'hero.subtitle': 'Web, design, AI chatbot nebo automatizace — jeden tým, jeden hovor. Bez hledání čtyř různých dodavatelů.',
+        'hero.line1': 'Web, design, AI.',
+        'hero.line2.light': 'Pod jednou',
+        'hero.line2.gradient': 'střechou.',
+        'hero.subtitle': 'Jeden tým pro vše, co vaše firma potřebuje online. Bez hledání čtyř dodavatelů, bez žargonu, bez překvapení.',
         'hero.cta.start': 'Promluvme si',
         'hero.cta.explore': 'Co děláme ↓',
 
