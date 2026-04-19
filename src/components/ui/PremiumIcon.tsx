@@ -1,6 +1,7 @@
 "use client";
 
 export type IconType =
+  | "web"
   | "ai-agents"
   | "chatbots"
   | "automation"
@@ -17,6 +18,19 @@ interface PremiumIconProps {
 export default function PremiumIcon({ type, className = "", size = 120 }: PremiumIconProps) {
     const renderIcon = () => {
         switch (type) {
+            case "web":
+                return (
+                    <svg width={size} height={size} viewBox="0 0 100 100" fill="none">
+                        <rect x="20" y="28" width="60" height="44" rx="4" stroke="currentColor" strokeWidth="1.5" />
+                        <path d="M20 38H80" stroke="currentColor" strokeWidth="1" strokeOpacity="0.4" />
+                        <circle cx="30" cy="33" r="2" fill="currentColor" fillOpacity="0.3" />
+                        <circle cx="37" cy="33" r="2" fill="currentColor" fillOpacity="0.3" />
+                        <circle cx="44" cy="33" r="2" fill="currentColor" fillOpacity="0.3" />
+                        <path d="M32 50L38 56L32 62" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                        <path d="M42 62H58" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                        <path d="M40 72H60M50 72V80" stroke="currentColor" strokeWidth="1" strokeOpacity="0.4" />
+                    </svg>
+                );
             case "ai-agents":
                 return (
                     <svg width={size} height={size} viewBox="0 0 100 100" fill="none">

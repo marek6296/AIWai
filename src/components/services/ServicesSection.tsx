@@ -6,8 +6,8 @@ import TextReveal from "@/components/animations/TextReveal";
 import { useTranslation } from "@/i18n/useTranslation";
 import PremiumIcon from "@/components/ui/PremiumIcon";
 
-const ICONS: ("ai-agents" | "chatbots" | "automation" | "design")[] = [
-    "ai-agents",
+const ICONS: ("web" | "chatbots" | "automation" | "design")[] = [
+    "web",
     "chatbots",
     "automation",
     "design",

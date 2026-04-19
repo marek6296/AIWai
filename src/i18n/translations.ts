@@ -46,6 +46,22 @@ export const translations: Record<Lang, Record<string, string>> = {
         'services.3.howItWorks': 'We start with a short brand questionnaire to understand your business, your audience and what makes you different from competitors. From there we develop logo concepts and a full visual identity. You get working files in every format you need, plus a brand guide so everything stays consistent as you grow.',
         'services.3.includes': 'Logo & Visual Identity|Brand Style Guide|Social Media Templates|Print Materials|Banner & Ad Design|Web UI/UX Design',
 
+        // ── Process ──
+        'process.heading': 'How we work',
+        'process.subheading': 'No surprises, no ambiguity. Four steps from first message to live product.',
+        'process.step.0.number': '01',
+        'process.step.0.title': 'Discovery call',
+        'process.step.0.description': 'We talk about your business, your goals and what you actually need. No forms, no templates — just a conversation. Usually 30 minutes.',
+        'process.step.1.number': '02',
+        'process.step.1.title': 'Proposal & scope',
+        'process.step.1.description': 'We send a clear proposal: what we\'ll build, what\'s included, what it costs and when it\'ll be ready. No surprise invoices mid-project.',
+        'process.step.2.number': '03',
+        'process.step.2.title': 'Design & build',
+        'process.step.2.description': 'We design, build and keep you in the loop throughout. You see progress at every stage and can give feedback before anything is finalised.',
+        'process.step.3.number': '04',
+        'process.step.3.title': 'Launch & handover',
+        'process.step.3.description': 'We launch together, make sure everything works and hand it over properly. You get all files, access and documentation. We stay available after launch.',
+
         // ── Service Modal ──
         'modal.serviceOverview': 'Service Overview',
         'modal.whatIsIt': 'What is it?',
@@ -151,6 +167,22 @@ export const translations: Record<Lang, Record<string, string>> = {
         'services.3.howItWorks': 'Začíname krátkym brandovým dotazníkom — chceme pochopiť váš biznis, cieľovú skupinu a to, čím sa líšite od konkurencie. Na základe toho vypracujeme koncepty loga a kompletnú vizuálnu identitu. Dostanete pracovné súbory vo všetkých formátoch a brandovú príručku, aby všetko zostalo konzistentné.',
         'services.3.includes': 'Logo a vizuálna identita|Brand style guide|Šablóny pre sociálne siete|Tlačové materiály|Bannery a reklamy|Web UI/UX dizajn',
 
+        // ── Process ──
+        'process.heading': 'Ako pracujeme',
+        'process.subheading': 'Žiadne prekvapenia, žiadna neurčitosť. Štyri kroky od prvej správy po hotový produkt.',
+        'process.step.0.number': '01',
+        'process.step.0.title': 'Discovery call',
+        'process.step.0.description': 'Porozprávame sa o vašom biznise, cieľoch a tom, čo skutočne potrebujete. Žiadne formuláre, žiadne šablóny — len rozhovor. Zvyčajne 30 minút.',
+        'process.step.1.number': '02',
+        'process.step.1.title': 'Návrh a rozsah',
+        'process.step.1.description': 'Pošleme jasný návrh: čo postavíme, čo je zahrnuté, koľko to stojí a kedy to bude hotové. Žiadne prekvapujúce faktúry počas projektu.',
+        'process.step.2.number': '03',
+        'process.step.2.title': 'Dizajn a realizácia',
+        'process.step.2.description': 'Navrhujeme, stavíme a priebežne vás informujeme. Vidíte pokrok v každej fáze a môžete dávať spätnú väzbu, kým nie je nič definitívne.',
+        'process.step.3.number': '04',
+        'process.step.3.title': 'Spustenie a odovzdanie',
+        'process.step.3.description': 'Spúšťame spoločne, uistíme sa, že všetko funguje, a riadne odovzdáme. Dostanete všetky súbory, prístupy a dokumentáciu. Po spustení zostávame k dispozícii.',
+
         // ── Service Modal ──
         'modal.serviceOverview': 'Prehľad služby',
         'modal.whatIsIt': 'Čo to je?',
@@ -255,6 +287,22 @@ export const translations: Record<Lang, Record<string, string>> = {
         'services.3.whatIsIt': 'Design je často první věc, podle které vás zákazníci posuzují. Vytváříme vizuální identity, které jsou konzistentní, profesionální a skutečně odrážejí, čím je váš byznys výjimečný. Logo, barvy, typografie, šablony pro sociální sítě, tiskové materiály — vše, co dělá vaši značku rozpoznatelnou.',
         'services.3.howItWorks': 'Začínáme krátkým brandovým dotazníkem — chceme pochopit váš byznys, cílovou skupinu a to, čím se lišíte od konkurence. Na základě toho vypracujeme koncepty loga a kompletní vizuální identitu. Dostanete pracovní soubory ve všech formátech a brandovou příručku, aby vše zůstalo konzistentní.',
         'services.3.includes': 'Logo a vizuální identita|Brand style guide|Šablony pro sociální sítě|Tiskové materiály|Bannery a reklamy|Web UI/UX design',
+
+        // ── Process ──
+        'process.heading': 'Jak pracujeme',
+        'process.subheading': 'Žádná překvapení, žádná neurčitost. Čtyři kroky od první zprávy po hotový produkt.',
+        'process.step.0.number': '01',
+        'process.step.0.title': 'Discovery call',
+        'process.step.0.description': 'Pobavíme se o vašem byznysu, cílech a o tom, co skutečně potřebujete. Žádné formuláře, žádné šablony — jen rozhovor. Obvykle 30 minut.',
+        'process.step.1.number': '02',
+        'process.step.1.title': 'Návrh a rozsah',
+        'process.step.1.description': 'Pošleme jasný návrh: co postavíme, co je zahrnuto, kolik to stojí a kdy to bude hotové. Žádné překvapivé faktury v průběhu projektu.',
+        'process.step.2.number': '03',
+        'process.step.2.title': 'Design a realizace',
+        'process.step.2.description': 'Navrhujeme, stavíme a průběžně vás informujeme. Vidíte pokrok v každé fázi a můžete dávat zpětnou vazbu, než je cokoliv finální.',
+        'process.step.3.number': '04',
+        'process.step.3.title': 'Spuštění a předání',
+        'process.step.3.description': 'Spouštíme společně, ujistíme se, že vše funguje, a řádně předáme. Dostanete všechny soubory, přístupy a dokumentaci. Po spuštění zůstáváme k dispozici.',
 
         // ── Service Modal ──
         'modal.serviceOverview': 'Přehled služby',
