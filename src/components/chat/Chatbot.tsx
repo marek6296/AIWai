@@ -20,6 +20,21 @@ export default function Chatbot() {
     const [isLoading, setIsLoading] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
+    // Session ID — persisted in localStorage so refreshes keep the same conversation
+    const sessionIdRef = useRef<string>("");
+    useEffect(() => {
+        try {
+            let id = localStorage.getItem("aiwai_chat_session");
+            if (!id) {
+                id = `sess_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
+                localStorage.setItem("aiwai_chat_session", id);
+            }
+            sessionIdRef.current = id;
+        } catch {
+            sessionIdRef.current = `sess_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
+        }
+    }, []);
+
     // Walking Logic State
     const [isHovered, setIsHovered] = useState(false);
     const [windowWidth, setWindowWidth] = useState(0);
@@ -140,7 +155,7 @@ export default function Chatbot() {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ messages: newMessages }),
+                body: JSON.stringify({ messages: newMessages, sessionId: sessionIdRef.current }),
             });
 
             if (!response.ok) {

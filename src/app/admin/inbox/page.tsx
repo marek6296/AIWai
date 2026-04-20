@@ -1,7 +1,16 @@
 import { createClient } from '@/lib/supabase/server'
-import { format } from 'date-fns'
-import { sk } from 'date-fns/locale'
 import { Mail, Clock, User, Phone, Tag, MessageSquare, FileText, Inbox } from 'lucide-react'
+
+const TZ = 'Europe/Bratislava'
+
+function formatSKTime(dateStr: string, isDone: boolean): string {
+    if (!dateStr) return '—'
+    const date = new Date(dateStr)
+    const datePart = new Intl.DateTimeFormat('sk-SK', { timeZone: TZ, day: 'numeric', month: 'short' }).format(date)
+    if (isDone) return datePart
+    const timePart = new Intl.DateTimeFormat('sk-SK', { timeZone: TZ, hour: '2-digit', minute: '2-digit', hour12: false }).format(date)
+    return `${datePart}, ${timePart}`
+}
 import AdminNav from '../components/AdminNav'
 import DoneButton from './DoneButton'
 
@@ -23,8 +32,10 @@ export default async function InboxPage() {
     const newEmails = emails.filter(s => s.status !== 'done')
     const doneEmails = emails.filter(s => s.status === 'done')
 
+    const todaySK = new Intl.DateTimeFormat('sk-SK', { timeZone: 'Europe/Bratislava', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date())
     const todayCount = [...forms, ...emails].filter(s => {
-        return new Date(s.received_at).toDateString() === new Date().toDateString()
+        if (!s.received_at) return false
+        return new Intl.DateTimeFormat('sk-SK', { timeZone: 'Europe/Bratislava', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date(s.received_at)) === todaySK
     }).length
 
     return (
@@ -159,7 +170,7 @@ function SubmissionCard({ sub, isDone, table = 'form_submissions' }: { sub: Reco
                 <div className="flex flex-col items-end gap-2 shrink-0">
                     <div className="flex items-center gap-1 text-xs text-brand-indigo/35">
                         <Clock size={12} />
-                        {sub.received_at ? format(new Date(sub.received_at), isDone ? 'd. MMM' : 'd. MMM, HH:mm', { locale: sk }) : '—'}
+                        {formatSKTime(sub.received_at, isDone)}
                     </div>
                     <DoneButton id={sub.id} isDone={isDone} table={table} />
                 </div>
