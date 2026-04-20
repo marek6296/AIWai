@@ -11,6 +11,8 @@ interface Particle {
     driftSpeed: number;
     driftTurnSpeed: number;
     radius: number;
+    rotation: number;
+    rotationSpeed: number;
     opacity: number;
     baseOpacity: number;
     fadeSpeed: number;
@@ -21,6 +23,25 @@ const isSafari =
     typeof window !== "undefined"
         ? /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
         : false;
+
+// Draw an upward triangle ▲ centered at (cx, cy) with circumradius r and rotation angle
+function drawTriangle(ctx: CanvasRenderingContext2D, cx: number, cy: number, r: number, rot: number) {
+    ctx.beginPath();
+    ctx.moveTo(
+        cx + r * Math.cos(-Math.PI / 2 + rot),
+        cy + r * Math.sin(-Math.PI / 2 + rot)
+    );
+    ctx.lineTo(
+        cx + r * Math.cos(-Math.PI / 2 + (2 * Math.PI) / 3 + rot),
+        cy + r * Math.sin(-Math.PI / 2 + (2 * Math.PI) / 3 + rot)
+    );
+    ctx.lineTo(
+        cx + r * Math.cos(-Math.PI / 2 + (4 * Math.PI) / 3 + rot),
+        cy + r * Math.sin(-Math.PI / 2 + (4 * Math.PI) / 3 + rot)
+    );
+    ctx.closePath();
+    ctx.fill();
+}
 
 export default function ParticleField() {
     const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -36,19 +57,14 @@ export default function ParticleField() {
 
         const isMobile = window.innerWidth < 768;
 
-        // Skip particles entirely on low-end mobile (saves CPU + battery)
-        if (isMobile && !window.matchMedia("(min-device-pixel-ratio: 2)").matches) return;
-
         const canvas = canvasRef.current;
         if (!canvas) return;
         const ctx = canvas.getContext("2d", { alpha: true, willReadFrequently: false });
         if (!ctx) return;
 
         // Adaptive settings per platform
-        // Safari: no connection lines (GPU contention), fewer particles
-        // Mobile: minimal particles, no connections
         const showConnections = !isSafari && !isMobile;
-        const CONNECTION_DISTANCE = 130;
+        const CONNECTION_DISTANCE = 140;
         const CONNECTION_DIST_SQ = CONNECTION_DISTANCE * CONNECTION_DISTANCE;
         const MOUSE_RADIUS = 180;
         const MOUSE_RADIUS_SQ = MOUSE_RADIUS * MOUSE_RADIUS;
@@ -79,25 +95,40 @@ export default function ParticleField() {
 
         const initParticles = () => {
             const { vw, vh, docH } = layoutRef.current;
-            // Adaptive particle count: desktop=140, safari=30, mobile=8
-            const total = isMobile ? 8 : isSafari ? 30 : 140;
+            // Particle counts: mobile=18, safari=70, desktop=200
+            const total = isMobile ? 18 : isSafari ? 70 : 200;
+            // 70% of particles concentrated in hero/top area
             const topCount = Math.floor(total * 0.7);
 
             particlesRef.current = Array.from({ length: total }, (_, i) => {
-                const baseOpacity = Math.random() * 0.22 + 0.08;
+                // Higher base opacity so they're visible on all browsers
+                const baseOpacity = isMobile
+                    ? Math.random() * 0.35 + 0.22      // mobile: 0.22–0.57
+                    : isSafari
+                        ? Math.random() * 0.38 + 0.20  // safari: 0.20–0.58
+                        : Math.random() * 0.30 + 0.15; // chrome: 0.15–0.45
+
                 const isTop = i < topCount;
                 const pageY = isTop
                     ? Math.random() * Math.min(vh * 1.5, docH)
                     : Math.min(vh * 1.5, docH) + Math.random() * Math.max(docH - vh * 1.5, 1);
+
+                // Triangle size — slightly larger on mobile so they're clearly visible
+                const radius = isMobile
+                    ? Math.random() * 3 + 3        // mobile: 3–6px circumradius
+                    : Math.random() * 4 + 2.5;     // desktop: 2.5–6.5px
+
                 return {
                     pageX: Math.random() * vw,
                     pageY,
                     vx: 0,
                     vy: 0,
                     driftAngle: Math.random() * Math.PI * 2,
-                    driftSpeed: Math.random() * 0.35 + 0.1,
+                    driftSpeed: Math.random() * 0.35 + 0.08,
                     driftTurnSpeed: (Math.random() - 0.5) * 0.01,
-                    radius: Math.random() * 1.8 + 0.6,
+                    radius,
+                    rotation: Math.random() * Math.PI * 2,
+                    rotationSpeed: (Math.random() - 0.5) * 0.008,
                     opacity: baseOpacity,
                     baseOpacity,
                     fadeSpeed: Math.random() * 0.003 + 0.001,
@@ -138,6 +169,7 @@ export default function ParticleField() {
                 visible = new Uint8Array(len);
             }
 
+            // brand-indigo = #1C1F3A = rgb(28,31,58)
             ctx.fillStyle = "rgb(28,31,58)";
 
             for (let i = 0; i < len; i++) {
@@ -168,13 +200,16 @@ export default function ParticleField() {
                 p.pageX += p.vx;
                 p.pageY += p.vy;
 
+                // Slow rotation
+                p.rotation += p.rotationSpeed;
+
                 if (p.pageX < -10) p.pageX = vw + 10;
                 else if (p.pageX > vw + 10) p.pageX = -10;
                 if (p.pageY < -10) p.pageY = docH + 10;
                 else if (p.pageY > docH + 10) p.pageY = -10;
 
                 p.opacity += p.fadeSpeed;
-                if (p.opacity > p.baseOpacity + 0.08 || p.opacity < p.baseOpacity - 0.04) {
+                if (p.opacity > p.baseOpacity + 0.10 || p.opacity < p.baseOpacity - 0.06) {
                     p.fadeSpeed = -p.fadeSpeed;
                 }
 
@@ -186,14 +221,12 @@ export default function ParticleField() {
 
                 if (visible[i]) {
                     ctx.globalAlpha = p.opacity;
-                    ctx.beginPath();
-                    ctx.arc(sx, sy, p.radius, 0, Math.PI * 2);
-                    ctx.fill();
+                    drawTriangle(ctx, sx, sy, p.radius, p.rotation);
                 }
             }
             ctx.globalAlpha = 1;
 
-            // Connections — skip on Safari/mobile to avoid GPU pressure
+            // Connection lines — Chrome desktop only
             if (showConnections && frameCount % 2 === 0) {
                 const BUCKETS = 8;
                 const buckets: { path: Path2D; alpha: number }[] = [];
@@ -250,6 +283,7 @@ export default function ParticleField() {
         window.addEventListener("resize", onResize, { passive: true });
         window.addEventListener("mousemove", onMouseMove, { passive: true });
         window.addEventListener("scroll", onScroll, { passive: true });
+        document.removeEventListener("mouseleave", onMouseLeave);
         document.addEventListener("mouseleave", onMouseLeave);
         document.addEventListener("visibilitychange", onVisibility);
 
