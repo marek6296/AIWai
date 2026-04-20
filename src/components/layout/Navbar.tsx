@@ -123,6 +123,12 @@ export default function Navbar() {
                                 </a>
                             ))}
                         </div>
+                        <Link
+                            href="/cennik"
+                            className="relative px-5 py-2.5 text-sm uppercase tracking-[0.15em] text-brand-indigo/60 hover:text-brand-indigo hover:bg-brand-indigo/[0.04] rounded-full transition-all duration-200 font-medium"
+                        >
+                            {t("nav.pricing")}
+                        </Link>
                         <div className="w-px h-6 bg-brand-indigo/10 mx-3" />
                         <button
                             onClick={(e) => handleScroll(e, "contact")}
@@ -179,6 +185,21 @@ export default function Navbar() {
                             </a>
                         </div>
                     ))}
+
+                    <div className="overflow-hidden w-full flex justify-center">
+                        <Link
+                            href="/cennik"
+                            onClick={() => setIsOpen(false)}
+                            className="text-5xl font-display font-bold tracking-tighter text-brand-indigo hover:text-brand-indigo/60 transition-colors"
+                            style={{
+                                opacity: isOpen ? 1 : 0,
+                                transform: isOpen ? "translateY(0)" : "translateY(30px)",
+                                transition: `opacity 0.4s ease ${0.08 + NAV_IDS.length * 0.06}s, transform 0.4s ease ${0.08 + NAV_IDS.length * 0.06}s`,
+                            }}
+                        >
+                            {t("nav.pricing")}
+                        </Link>
+                    </div>
 
                     {/* Language switcher */}
                     <div
