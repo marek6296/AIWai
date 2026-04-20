@@ -18,7 +18,12 @@ function loadConfig() {
     try {
         if (fs.existsSync(CONFIG_PATH)) {
             const parsed = JSON.parse(fs.readFileSync(CONFIG_PATH, 'utf-8'));
-            return { ...DEFAULT_CONFIG, ...parsed };
+            // Deep merge — file values override defaults section by section
+            return {
+                general: { ...DEFAULT_CONFIG.general, ...parsed.general },
+                model: { ...DEFAULT_CONFIG.model, ...parsed.model },
+                advanced: { ...DEFAULT_CONFIG.advanced, ...parsed.advanced },
+            };
         }
     } catch { /* ignore */ }
     return DEFAULT_CONFIG;
