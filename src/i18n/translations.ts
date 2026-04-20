@@ -9,7 +9,7 @@ export const translations: Record<Lang, Record<string, string>> = {
         'nav.contact': 'Contact',
 
         // ── Hero ──
-        'hero.line1': 'Web, design, AI.',
+        'hero.line1': 'WEB, DESIGN, AI.',
         'hero.line2.light': 'All',
         'hero.line2.gradient': 'in one.',
         'hero.subtitle': 'We take care of your web, design and AI — you focus on your business, we handle the rest.',
@@ -135,7 +135,7 @@ export const translations: Record<Lang, Record<string, string>> = {
         'nav.contact': 'Kontakt',
 
         // ── Hero ──
-        'hero.line1': 'Web, Dizajn, AI.',
+        'hero.line1': 'WEB, DESIGN, AI.',
         'hero.line2.light': 'Všetko',
         'hero.line2.gradient': 'v jednom.',
         'hero.subtitle': 'Postaráme sa o váš web, dizajn aj AI — vy riešite biznis, my riešime zvyšok.',
@@ -261,7 +261,7 @@ export const translations: Record<Lang, Record<string, string>> = {
         'nav.contact': 'Kontakt',
 
         // ── Hero ──
-        'hero.line1': 'Web, design, AI.',
+        'hero.line1': 'WEB, DESIGN, AI.',
         'hero.line2.light': 'Vše',
         'hero.line2.gradient': 'v jednom.',
         'hero.subtitle': 'Postaráme se o váš web, design i AI — vy řešíte byznys, my řešíme zbytek.',
