@@ -36,6 +36,9 @@ export default function ParticleField() {
 
         const isMobile = window.innerWidth < 768;
 
+        // Skip particles entirely on low-end mobile (saves CPU + battery)
+        if (isMobile && !window.matchMedia("(min-device-pixel-ratio: 2)").matches) return;
+
         const canvas = canvasRef.current;
         if (!canvas) return;
         const ctx = canvas.getContext("2d", { alpha: true, willReadFrequently: false });
@@ -76,8 +79,8 @@ export default function ParticleField() {
 
         const initParticles = () => {
             const { vw, vh, docH } = layoutRef.current;
-            // Adaptive particle count: desktop=140, safari=30, mobile=20
-            const total = isMobile ? 20 : isSafari ? 30 : 140;
+            // Adaptive particle count: desktop=140, safari=30, mobile=8
+            const total = isMobile ? 8 : isSafari ? 30 : 140;
             const topCount = Math.floor(total * 0.7);
 
             particlesRef.current = Array.from({ length: total }, (_, i) => {
@@ -144,15 +147,17 @@ export default function ParticleField() {
                 p.vx += Math.cos(p.driftAngle) * p.driftSpeed * 0.05;
                 p.vy += Math.sin(p.driftAngle) * p.driftSpeed * 0.05;
 
-                const dx = p.pageX - mouse.x;
-                const dy = (p.pageY - scrollY) - mouse.y;
-                const distSq = dx * dx + dy * dy;
-                if (distSq < MOUSE_RADIUS_SQ && distSq > 0) {
-                    const dist = Math.sqrt(distSq);
-                    const t = 1 - dist / MOUSE_RADIUS;
-                    const force = t * t * 0.15;
-                    p.vx += (dx / dist) * force;
-                    p.vy += (dy / dist) * force;
+                if (!isMobile) {
+                    const dx = p.pageX - mouse.x;
+                    const dy = (p.pageY - scrollY) - mouse.y;
+                    const distSq = dx * dx + dy * dy;
+                    if (distSq < MOUSE_RADIUS_SQ && distSq > 0) {
+                        const dist = Math.sqrt(distSq);
+                        const t = 1 - dist / MOUSE_RADIUS;
+                        const force = t * t * 0.15;
+                        p.vx += (dx / dist) * force;
+                        p.vy += (dy / dist) * force;
+                    }
                 }
 
                 const speed = Math.sqrt(p.vx * p.vx + p.vy * p.vy);

@@ -264,6 +264,38 @@ canvas[style*="position: fixed"] {
 ::-moz-selection { background: rgba(216, 185, 138, 0.25); color: #1C1F3A; }
 
 /* ──────────────────────────────────────
+   Mobile Performance
+   ────────────────────────────────────── */
+@media (max-width: 767px) {
+  /* Kill expensive float animations on mobile */
+  .hero-orb {
+    animation: heroReveal 1.2s cubic-bezier(0.22, 1, 0.36, 1) both !important;
+  }
+
+  /* Remove backdrop-filter entirely on mobile — #1 GPU killer */
+  * {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+  .glass {
+    background: rgba(255, 255, 255, 0.96) !important;
+  }
+  .glass-strong {
+    background: rgba(255, 255, 255, 0.99) !important;
+  }
+
+  /* Simplify gradient mesh on mobile */
+  .gradient-mesh {
+    background: linear-gradient(180deg, rgba(244, 242, 237, 0.6), #FFFFFF) !important;
+  }
+
+  /* Reduce paint area for sections */
+  main > section {
+    contain: layout style;
+  }
+}
+
+/* ──────────────────────────────────────
    Focus States (a11y)
    ────────────────────────────────────── */
 :focus-visible {

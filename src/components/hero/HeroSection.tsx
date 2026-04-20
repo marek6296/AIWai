@@ -20,9 +20,9 @@ export default function HeroSection() {
             <div className="absolute inset-0 gradient-mesh" />
 
             {/* ── Floating Orbs — pure CSS, no JS required ── */}
-            <div className="hero-orb absolute top-[10%] left-[15%] w-[300px] h-[300px] md:w-[500px] md:h-[500px] rounded-full bg-brand-sand/10 blur-[80px] md:blur-[120px] animate-float-slow pointer-events-none" />
-            <div className="hero-orb absolute bottom-[15%] right-[10%] w-[250px] h-[250px] md:w-[400px] md:h-[400px] rounded-full bg-brand-indigo/5 blur-[80px] md:blur-[100px] animate-float-slower pointer-events-none" />
-            <div className="hero-orb absolute top-[50%] right-[30%] w-[150px] h-[150px] md:w-[250px] md:h-[250px] rounded-full bg-brand-sand/8 blur-[60px] md:blur-[80px] animate-float pointer-events-none" />
+            <div className="hero-orb absolute top-[10%] left-[15%] w-[200px] h-[200px] md:w-[500px] md:h-[500px] rounded-full bg-brand-sand/10 blur-[30px] md:blur-[120px] animate-float-slow pointer-events-none" />
+            <div className="hero-orb absolute bottom-[15%] right-[10%] w-[150px] h-[150px] md:w-[400px] md:h-[400px] rounded-full bg-brand-indigo/5 blur-[25px] md:blur-[100px] animate-float-slower pointer-events-none" />
+            <div className="hero-orb absolute top-[50%] right-[30%] w-[100px] h-[100px] md:w-[250px] md:h-[250px] rounded-full bg-brand-sand/8 blur-[20px] md:blur-[80px] animate-float pointer-events-none hidden md:block" />
 
             {/* ── Logo background ── */}
             <div className="absolute inset-0 flex items-center justify-center z-[2] pointer-events-none">

@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef, MouseEvent } from "react";
+import React, { useRef, MouseEvent, useEffect, useState } from "react";
 
 interface TiltCardProps {
     children: React.ReactNode;
@@ -9,8 +9,14 @@ interface TiltCardProps {
 
 export default function TiltCard({ children, className = "", onClick }: TiltCardProps) {
     const ref = useRef<HTMLDivElement>(null);
+    const [isTouch, setIsTouch] = useState(true);
+
+    useEffect(() => {
+        setIsTouch(window.matchMedia("(hover: none)").matches);
+    }, []);
 
     const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
+        if (isTouch) return;
         const el = ref.current;
         if (!el) return;
         const rect = el.getBoundingClientRect();
@@ -20,6 +26,7 @@ export default function TiltCard({ children, className = "", onClick }: TiltCard
     };
 
     const handleMouseLeave = () => {
+        if (isTouch) return;
         if (ref.current) ref.current.style.transform = "perspective(1000px) rotateX(0deg) rotateY(0deg)";
     };
 
@@ -30,9 +37,9 @@ export default function TiltCard({ children, className = "", onClick }: TiltCard
             onMouseLeave={handleMouseLeave}
             onClick={onClick}
             className={className}
-            style={{ transition: "transform 0.15s ease", transformStyle: "preserve-3d" }}
+            style={isTouch ? undefined : { transition: "transform 0.15s ease", transformStyle: "preserve-3d" }}
         >
-            <div style={{ transform: "translateZ(20px)" }} className="h-full w-full">
+            <div style={isTouch ? undefined : { transform: "translateZ(20px)" }} className="h-full w-full">
                 {children}
             </div>
         </div>
