@@ -97,7 +97,7 @@ export default function CennikPage() {
                         <h2 className="text-3xl md:text-4xl font-display font-bold text-brand-indigo mt-1">Logo & Dizajn</h2>
                         <p className="text-brand-indigo/40 mt-2 max-w-xl">Vizuálna identita, ktorá robí prvý dojem za vás.</p>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5 max-w-3xl">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                         <PricingCard
                             name="Logo Basic"
                             price="od €99"
@@ -123,6 +123,18 @@ export default function CennikPage() {
                                 "5 šablón pre sociálne siete",
                                 "Všetky formáty súborov",
                                 "Odovzdanie do 10 dní",
+                            ]}
+                        />
+                        <PricingCard
+                            name="Grafika pre sociálne siete"
+                            price="od €69"
+                            priceNote="balíček 10 grafík"
+                            features={[
+                                "10 prispôsobených grafík",
+                                "Formáty pre Instagram, FB, LinkedIn",
+                                "Editovateľné šablóny",
+                                "1 kolo revízií",
+                                "Odovzdanie do 5 dní",
                             ]}
                         />
                     </div>
