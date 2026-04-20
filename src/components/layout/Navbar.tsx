@@ -88,7 +88,7 @@ export default function Navbar() {
                 <div className="container mx-auto flex justify-between items-center">
 
                     {/* Logo + language */}
-                    <div className="flex items-center gap-3 z-[110]">
+                    <div className="hidden md:flex items-center gap-3 z-[110]">
                         <Link
                             href="/"
                             onClick={(e) => { if (isHome) { e.preventDefault(); window.scrollTo({ top: 0, behavior: "smooth" }); } }}
@@ -168,7 +168,7 @@ export default function Navbar() {
                     {/* Mobile toggle — CSS icon swap */}
                     <button
                         onClick={() => setIsOpen(!isOpen)}
-                        className="md:hidden z-[110] text-brand-indigo p-2 relative w-9 h-9"
+                        className="md:hidden ml-auto z-[110] text-brand-indigo p-2 relative w-9 h-9"
                         aria-label="Toggle Menu"
                         aria-expanded={isOpen}
                     >
