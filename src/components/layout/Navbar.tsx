@@ -35,6 +35,12 @@ export default function Navbar() {
     const langRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
+        // Disable browser scroll restoration so refresh always starts at top
+        if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+        window.scrollTo(0, 0);
+    }, []);
+
+    useEffect(() => {
         const onScroll = () => setScrolled(window.scrollY > 50);
         window.addEventListener("scroll", onScroll, { passive: true });
         return () => window.removeEventListener("scroll", onScroll);
