@@ -23,6 +23,7 @@
     "pdf-parse": "^2.4.5",
     "react": "^18",
     "react-dom": "^18",
+    "resend": "^6.12.0",
     "retell-client-js-sdk": "^2.0.7",
     "retell-sdk": "^5.4.0",
     "tailwind-merge": "^3.4.1"

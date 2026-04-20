@@ -1,16 +1,8 @@
 import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
-import nodemailer from 'nodemailer';
+import { Resend } from 'resend';
 
-const transporter = nodemailer.createTransport({
-    host: 'smtp.zoho.eu',
-    port: 587,
-    secure: false,
-    auth: {
-        user: 'marek@aiwai.app',
-        pass: process.env.ZOHO_SMTP_PASSWORD,
-    },
-});
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(req: Request) {
     try {
@@ -27,12 +19,12 @@ export async function POST(req: Request) {
             console.error('Supabase Error:', supabaseError);
         }
 
-        // Send email notification
-        if (process.env.ZOHO_SMTP_PASSWORD) {
-            await transporter.sendMail({
-                from: `"${name} (aiwai.app formulár)" <marek@aiwai.app>`,
+        // Send email notification via Resend
+        if (process.env.RESEND_API_KEY) {
+            await resend.emails.send({
+                from: 'AIWai Formulár <onboarding@resend.dev>',
                 to: 'marek@aiwai.app',
-                replyTo: `"${name}" <${email}>`,
+                replyTo: `${name} <${email}>`,
                 subject: `📩 ${name} — ${projectType}`,
                 html: `
                     <h2>Nová správa z webu aiwai.app</h2>
@@ -41,6 +33,8 @@ export async function POST(req: Request) {
                     <p><strong>Typ projektu:</strong> ${projectType}</p>
                     <p><strong>Správa:</strong></p>
                     <p>${message.replace(/\n/g, '<br>')}</p>
+                    <hr>
+                    <p style="color:#999;font-size:12px">Odpovedz priamo na tento email — odpoveď pôjde klientovi.</p>
                 `,
             });
         }
