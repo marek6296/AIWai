@@ -21,7 +21,10 @@ const LANGS: { code: Lang; flag: string; label: string }[] = [
 
 const scrollTo = (id: string) => {
     const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (!el) return;
+    const navHeight = document.querySelector("nav")?.offsetHeight ?? 80;
+    const top = el.getBoundingClientRect().top + window.scrollY - navHeight;
+    window.scrollTo({ top, behavior: "smooth" });
 };
 
 export default function Navbar() {
