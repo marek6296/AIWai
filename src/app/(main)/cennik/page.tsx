@@ -73,24 +73,8 @@ function PricingCard({ name, price, priceNote, features, highlight, badge }: Pri
 export default function CennikPage() {
     return (
         <main className="min-h-screen bg-white">
-            {/* Hero */}
-            <section className="relative pt-20 pb-0 overflow-hidden">
-                <div className="absolute inset-0 gradient-mesh" />
-                <div className="absolute top-[20%] left-[10%] w-[400px] h-[400px] rounded-full bg-brand-sand/8 blur-[120px] pointer-events-none" />
-                <div className="absolute top-[30%] right-[10%] w-[300px] h-[300px] rounded-full bg-brand-indigo/5 blur-[100px] pointer-events-none" />
-                <div className="container mx-auto px-6 relative z-10 text-center">
-                    <h1 className="text-5xl md:text-7xl font-display font-bold text-brand-indigo tracking-tight mb-5">
-                        Transparentné ceny.
-                    </h1>
-                    <p className="text-lg md:text-xl text-brand-indigo/40 max-w-2xl mx-auto font-light leading-relaxed">
-                        Viete čo dostanete a za koľko — ešte pred začatím.<br />
-                        Žiadne skryté poplatky, žiadne prekvapenia na faktúre.
-                    </p>
-                </div>
-            </section>
-
             {/* DIZAJN */}
-            <section className="pt-6 pb-10 md:pt-8 md:pb-14">
+            <section className="pt-24 pb-10 md:pt-28 md:pb-14">
                 <div className="container mx-auto px-6">
                     <div className="mb-10">
                         <span className="text-[10px] uppercase tracking-[0.35em] font-bold text-brand-sand/70">01</span>
