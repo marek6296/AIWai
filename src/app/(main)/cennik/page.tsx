@@ -149,7 +149,7 @@ export default function CennikPage() {
                         <h2 className="text-3xl md:text-4xl font-display font-bold text-brand-indigo mt-1">Marketing & Sociálne siete</h2>
                         <p className="text-brand-indigo/40 mt-2 max-w-xl">Kompletná mesačná správa sociálnych sietí — obsah, grafika, AI foto úpravy aj reklamy.</p>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                         <PricingCard
                             name="Marketing Starter"
                             price="od €250/mes"
@@ -244,7 +244,7 @@ export default function CennikPage() {
                         <h2 className="text-3xl md:text-4xl font-display font-bold text-brand-indigo mt-1">AI Chatbot</h2>
                         <p className="text-brand-indigo/40 mt-2 max-w-xl">Chatbot, ktorý pozná váš biznis a odpovedá namiesto vás — 24/7.</p>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                         <PricingCard
                             name="Chatbot Basic"
                             price="od €249"
@@ -283,7 +283,7 @@ export default function CennikPage() {
                         <h2 className="text-3xl md:text-4xl font-display font-bold text-brand-indigo mt-1">Automatizácia procesov</h2>
                         <p className="text-brand-indigo/40 mt-2 max-w-xl">Prepojíme vaše nástroje a ušetríme vám hodiny rutinnej práce každý týždeň.</p>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                         <PricingCard
                             name="Starter"
                             price="od €299"
