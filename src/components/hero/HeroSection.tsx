@@ -29,7 +29,7 @@ export default function HeroSection() {
                     alt=""
                     width={600}
                     height={600}
-                    className="w-[500px] h-[500px] md:w-[700px] md:h-[700px] object-contain opacity-[0.22] md:opacity-[0.12] mix-blend-multiply select-none"
+                    className="w-[500px] h-[500px] md:w-[700px] md:h-[700px] object-contain opacity-[0.35] md:opacity-[0.12] mix-blend-multiply select-none"
                     aria-hidden
                 />
             </div>
