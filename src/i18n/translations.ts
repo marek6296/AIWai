@@ -51,7 +51,7 @@ export const translations: Record<Lang, Record<string, string>> = {
 
         // ── Process ──
         'process.heading': 'How we work',
-        'process.subheading': 'No surprises, no ambiguity. Four steps from first message to live product.',
+        'process.subheading': 'Here\'s how it works — four steps and you always know where things stand.',
         'process.step.0.number': '01',
         'process.step.0.title': 'First call',
         'process.step.0.description': 'We have a quick call — you tell us what you need, we listen and ask questions. No forms, no pressure. Usually 30 minutes and you already know if we\'re the right fit.',
@@ -139,7 +139,7 @@ export const translations: Record<Lang, Record<string, string>> = {
         'hero.line2.light': 'Všetko',
         'hero.line2.gradient': 'v jednom.',
         'hero.subtitle': 'Postaráme sa o váš web, dizajn aj AI — vy riešite biznis, my riešime zvyšok.',
-        'hero.cta.start': 'Porozprávajme sa',
+        'hero.cta.start': 'Viac info',
         'hero.cta.explore': 'Čo robíme ↓',
 
         // ── Services ──
@@ -177,7 +177,7 @@ export const translations: Record<Lang, Record<string, string>> = {
 
         // ── Process ──
         'process.heading': 'Ako pracujeme',
-        'process.subheading': 'Žiadne prekvapenia, žiadna neurčitosť. Štyri kroky od prvej správy po hotový produkt.',
+        'process.subheading': 'Takto to u nás funguje — štyri kroky a vždy viete, kde sme.',
         'process.step.0.number': '01',
         'process.step.0.title': 'Úvodný hovor',
         'process.step.0.description': 'Zavoláme si — porozprávate nám, čo potrebujete, a my sa opýtame pár otázok. Žiadne formuláre, žiadny tlak. Trvá to asi 30 minút a hneď viete, či sme pre vás tí praví.',
@@ -303,7 +303,7 @@ export const translations: Record<Lang, Record<string, string>> = {
 
         // ── Process ──
         'process.heading': 'Jak pracujeme',
-        'process.subheading': 'Žádná překvapení, žádná neurčitost. Čtyři kroky od první zprávy po hotový produkt.',
+        'process.subheading': 'Takto to u nás funguje — čtyři kroky a vždy víte, kde jsme.',
         'process.step.0.number': '01',
         'process.step.0.title': 'Úvodní hovor',
         'process.step.0.description': 'Zavoláme si — řeknete nám, co potřebujete, a my se zeptáme pár otázek. Žádné formuláře, žádný tlak. Trvá to asi 30 minut a hned víte, jestli jsme pro vás ti praví.',
