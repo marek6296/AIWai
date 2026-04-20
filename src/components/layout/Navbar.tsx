@@ -23,10 +23,12 @@ const scrollTo = (id: string) => {
     const el = document.getElementById(id);
     if (!el) return;
     const navHeight = document.querySelector("nav")?.offsetHeight ?? 80;
-    // Scroll to the first heading inside the section so padding doesn't create a huge gap
+    // If section has a heading, scroll to it with breathing room
+    // If not (e.g. about), scroll exactly to section top so previous section stays hidden
     const heading = el.querySelector("h1, h2") as HTMLElement | null;
-    const target = heading ?? el;
-    const top = target.getBoundingClientRect().top + window.scrollY - navHeight - 24;
+    const top = heading
+        ? heading.getBoundingClientRect().top + window.scrollY - navHeight - 24
+        : el.getBoundingClientRect().top + window.scrollY - navHeight;
     window.scrollTo({ top, behavior: "smooth" });
 };
 
