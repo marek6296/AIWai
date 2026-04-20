@@ -35,9 +35,13 @@ export default function Navbar() {
     const langRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        // Disable browser scroll restoration so refresh always starts at top
         if ("scrollRestoration" in history) history.scrollRestoration = "manual";
-        window.scrollTo(0, 0);
+        // On page reload, strip the hash and go to top (hash stays from prev nav)
+        const nav = performance.getEntriesByType("navigation")[0] as PerformanceNavigationTiming;
+        if (nav?.type === "reload" && window.location.hash) {
+            window.history.replaceState(null, "", window.location.pathname);
+            window.scrollTo(0, 0);
+        }
     }, []);
 
     useEffect(() => {
