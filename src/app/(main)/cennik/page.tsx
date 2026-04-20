@@ -134,7 +134,7 @@ export default function CennikPage() {
                                 "15 brandovaných šablón (feed + stories)",
                                 "Profilový obrázok + cover fotka",
                                 "Highlight covers pre Instagram",
-                                "Editovateľné súbory (Canva alebo Figma)",
+                                "Editovateľné súbory (Photoshop / Illustrator)",
                                 "Jednotný vizuálny štýl podľa vašej značky",
                                 "Odovzdanie do 7 dní",
                             ]}
@@ -154,7 +154,7 @@ export default function CennikPage() {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                         <PricingCard
                             name="Marketing Starter"
-                            price="od €250/mes"
+                            price="od €200/mes"
                             priceNote="mesačná správa"
                             badge="Nové"
                             features={[
@@ -168,17 +168,17 @@ export default function CennikPage() {
                         />
                         <PricingCard
                             name="Marketing Pro + Ads"
-                            price="od €399/mes"
+                            price="od €300/mes"
                             priceNote="správa + reklamy"
                             highlight
                             badge="Odporúčame"
                             features={[
                                 "Všetko z Marketing Starter",
-                                "Návrh a spustenie Meta Ads kampaní",
-                                "Cielenie, retargeting a A/B testovanie",
-                                "Správa reklamného účtu (budget v cene nie je)",
-                                "Optimalizácia kampaní každý týždeň",
-                                "Týždenné výkonnostné reporty",
+                                "Tvorba a spustenie Meta Ads kampaní",
+                                "Správa reklamného rozpočtu (budget nie je v cene)",
+                                "Priebežná optimalizácia reklám počas mesiaca",
+                                "Týždenné reporty výkonu kampaní",
+                                "Konzultácia stratégie každý mesiac",
                             ]}
                         />
                     </div>
