@@ -72,7 +72,7 @@ export default function ContactSection() {
                         {t("contact.subheading")}
                     </p>
                     <div className="flex flex-col gap-3 text-brand-indigo/50">
-                        <a href="mailto:dony.jaij.sk@gmail.com" className="hover:text-brand-indigo transition-colors text-base">dony.jaij.sk@gmail.com</a>
+                        <a href="mailto:marek@aiwai.app" className="hover:text-brand-indigo transition-colors text-base">marek@aiwai.app</a>
                         <a href="tel:+421902876198" className="hover:text-brand-indigo transition-colors text-base">+421 902 876 198</a>
                     </div>
                 </FadeIn>
