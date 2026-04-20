@@ -135,7 +135,7 @@ export const translations: Record<Lang, Record<string, string>> = {
         'nav.contact': 'Kontakt',
 
         // ── Hero ──
-        'hero.line1': 'Web, dizajn, AI.',
+        'hero.line1': 'Web, Dizajn, AI.',
         'hero.line2.light': 'Všetko',
         'hero.line2.gradient': 'v jednom.',
         'hero.subtitle': 'Postaráme sa o váš web, dizajn aj AI — vy riešite biznis, my riešime zvyšok.',
