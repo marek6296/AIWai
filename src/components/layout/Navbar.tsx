@@ -94,7 +94,7 @@ export default function Navbar() {
                             onClick={(e) => { if (isHome) { e.preventDefault(); window.scrollTo({ top: 0, behavior: "smooth" }); } }}
                             className="relative flex items-center"
                         >
-                            <Image src="/logo.png" alt="AIWai" width={52} height={52} className="w-12 h-12 object-contain mix-blend-multiply" priority />
+                            <Image src="/logo.png" alt="AIWai" width={52} height={52} className="hidden md:block w-12 h-12 object-contain mix-blend-multiply" priority />
                         </Link>
 
                         {/* Language switcher */}
