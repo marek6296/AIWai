@@ -26,8 +26,8 @@ export default function AdminNav() {
 
             <div className="flex flex-col gap-2 flex-1">
                 <Link
-                    href="/admin"
-                    className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors font-medium text-sm ${pathname === '/admin'
+                    href="/admin/chatbot-settings"
+                    className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors font-medium text-sm ${pathname === '/admin/chatbot-settings'
                         ? 'bg-brand-indigo text-white'
                         : 'text-brand-indigo/60 hover:bg-brand-indigo/5 hover:text-brand-indigo'
                         }`}
