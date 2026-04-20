@@ -24,7 +24,7 @@ const nextConfig = {
         optimizeCss: true,
         // Only list packages actually installed — framer-motion/gsap/lenis were removed
         optimizePackageImports: ['lucide-react', '@supabase/supabase-js'],
-        serverComponentsExternalPackages: ['pdf-parse'],
+        serverComponentsExternalPackages: ['pdf-parse', 'nodemailer', 'resend'],
     },
 
     webpack: (config) => {
