@@ -10,9 +10,9 @@ export const translations: Record<Lang, Record<string, string>> = {
         'nav.pricing': 'Pricing',
 
         // ── Hero ──
-        'hero.line1': 'WEB, DESIGN, AI.',
+        'hero.line1': 'WEB DESIGN AI',
         'hero.line2.light': 'Marketing',
-        'hero.line2.gradient': 'Automation.',
+        'hero.line2.gradient': 'Automation',
         'hero.subtitle': 'Web, design, AI chatbots, marketing and automation — you run your business, we handle everything digital.',
         'hero.cta.start': 'Let\'s talk',
         'hero.cta.explore': 'What we do ↓',
@@ -157,9 +157,9 @@ export const translations: Record<Lang, Record<string, string>> = {
         'nav.pricing': 'Cenník',
 
         // ── Hero ──
-        'hero.line1': 'WEB, DESIGN, AI.',
+        'hero.line1': 'WEB DESIGN AI',
         'hero.line2.light': 'Marketing',
-        'hero.line2.gradient': 'Automatizácia.',
+        'hero.line2.gradient': 'Automatizácia',
         'hero.subtitle': 'Web, Dizajn, AI chatboty, Marketing aj Automatizácia — vy riešite biznis, my riešime všetko digitálne.',
         'hero.cta.start': 'Viac info',
         'hero.cta.explore': 'Čo robíme ↓',
@@ -304,9 +304,9 @@ export const translations: Record<Lang, Record<string, string>> = {
         'nav.pricing': 'Ceník',
 
         // ── Hero ──
-        'hero.line1': 'WEB, DESIGN, AI.',
+        'hero.line1': 'WEB DESIGN AI',
         'hero.line2.light': 'Marketing',
-        'hero.line2.gradient': 'Automatizace.',
+        'hero.line2.gradient': 'Automatizace',
         'hero.subtitle': 'Web, design, AI chatboti, marketing i automatizace — vy řešíte byznys, my řešíme vše digitální.',
         'hero.cta.start': 'Promluvme si',
         'hero.cta.explore': 'Co děláme ↓',
