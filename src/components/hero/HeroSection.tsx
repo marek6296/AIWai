@@ -13,13 +13,11 @@ export default function HeroSection() {
     const { t } = useTranslation();
 
     return (
-        <section
-            className="relative min-h-screen w-full overflow-hidden flex items-center justify-center"
-        >
+        <section className="relative min-h-[100dvh] w-full overflow-hidden">
             {/* ── Gradient Mesh Background ── */}
             <div className="absolute inset-0 gradient-mesh" />
 
-            {/* ── Floating Orbs — pure CSS, no JS required ── */}
+            {/* ── Floating Orbs ── */}
             <div className="hero-orb absolute top-[10%] left-[15%] w-[200px] h-[200px] md:w-[500px] md:h-[500px] rounded-full bg-brand-sand/10 blur-[30px] md:blur-[120px] animate-float-slow pointer-events-none" />
             <div className="hero-orb absolute bottom-[15%] right-[10%] w-[150px] h-[150px] md:w-[400px] md:h-[400px] rounded-full bg-brand-indigo/5 blur-[25px] md:blur-[100px] animate-float-slower pointer-events-none" />
             <div className="hero-orb absolute top-[50%] right-[30%] w-[100px] h-[100px] md:w-[250px] md:h-[250px] rounded-full bg-brand-sand/8 blur-[20px] md:blur-[80px] animate-float pointer-events-none hidden md:block" />
@@ -39,41 +37,54 @@ export default function HeroSection() {
             {/* ── Subtle Grid ── */}
             <div className="absolute inset-0 bg-[linear-gradient(rgba(28,31,58,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(28,31,58,0.02)_1px,transparent_1px)] bg-[size:60px_60px] pointer-events-none" />
 
-            {/* ── Content — CSS-only animations, visible immediately ── */}
-            <div className="relative z-10 container mx-auto text-center px-6 pt-20 pb-32 md:py-32">
-                <div className="max-w-5xl mx-auto space-y-14 md:space-y-8">
-                    <div className="space-y-0">
-                        <div>
-                            <h1 className="hero-line text-center font-display font-bold tracking-tight text-brand-indigo leading-[1.15] whitespace-nowrap" style={{fontSize:"clamp(1.75rem,8.5vw,6rem)"}}>
-                                {t("hero.line1").split("|").map((word, i, arr) => (
-                                    <span key={i}>
-                                        {word}
-                                        {i < arr.length - 1 && (
-                                            <span className="inline-block text-brand-indigo align-middle" style={{fontSize:"0.45em", verticalAlign:"middle", position:"relative", top:"-0.05em", margin:"0 0.3em"}}>▲</span>
-                                        )}
-                                    </span>
-                                ))}
-                            </h1>
-                        </div>
-                        <div>
-                            <div className="hero-line text-center font-display font-bold tracking-tight text-brand-indigo/45 leading-[1.15]" style={{fontSize:"clamp(1.75rem,8.5vw,6rem)"}}>
-                                <span className="block text-center">{t("hero.line2.light")}</span>
-                                <span className="block text-center">{t("hero.line2.gradient")}</span>
-                            </div>
-                        </div>
-                    </div>
+            {/* ── Content ── */}
+            <div className="relative z-10 container mx-auto px-6 text-center
+                flex flex-col justify-between
+                h-[100dvh] pt-24 pb-16
+                md:h-auto md:justify-center md:items-center md:py-32">
 
-                    <p className="hero-sub text-lg md:text-xl text-brand-indigo/50 max-w-2xl md:max-w-4xl mx-auto leading-relaxed font-light md:whitespace-nowrap">
+                {/* Headline block — stays near top on mobile */}
+                <div className="w-full max-w-5xl md:mx-auto space-y-0">
+                    <h1
+                        className="hero-line font-display font-bold tracking-tight text-brand-indigo leading-[1.1] whitespace-nowrap"
+                        style={{ fontSize: "clamp(2rem,9vw,6rem)" }}
+                    >
+                        {t("hero.line1").split("|").map((word, i, arr) => (
+                            <span key={i}>
+                                {word}
+                                {i < arr.length - 1 && (
+                                    <span
+                                        className="inline-block text-brand-indigo align-middle"
+                                        style={{ fontSize: "0.45em", verticalAlign: "middle", position: "relative", top: "-0.05em", margin: "0 0.3em" }}
+                                    >▲</span>
+                                )}
+                            </span>
+                        ))}
+                    </h1>
+                    <div
+                        className="hero-line font-display font-bold tracking-tight text-brand-indigo/40 leading-[1.1]"
+                        style={{ fontSize: "clamp(2rem,9vw,6rem)" }}
+                    >
+                        <span className="block">{t("hero.line2.light")}</span>
+                        <span className="block">{t("hero.line2.gradient")}</span>
+                    </div>
+                </div>
+
+                {/* Subtitle + CTA — pinned to bottom on mobile */}
+                <div className="w-full max-w-4xl md:mx-auto space-y-5 md:space-y-8 md:mt-10">
+                    <p className="hero-sub text-base md:text-xl text-brand-indigo/50 mx-auto leading-relaxed font-light md:whitespace-nowrap">
                         {t("hero.subtitle")}
                     </p>
-
-                    <div className="hero-cta flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 pt-4">
-                        <MagneticButton onClick={() => smoothScrollTo("contact")} className="whitespace-nowrap w-full sm:w-auto">
+                    <div className="hero-cta flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
+                        <MagneticButton
+                            onClick={() => smoothScrollTo("contact")}
+                            className="whitespace-nowrap w-full sm:w-auto"
+                        >
                             {t("hero.cta.start")}
                         </MagneticButton>
                         <button
                             onClick={() => smoothScrollTo("services")}
-                            className="px-8 py-3 sm:py-4 text-xs font-bold uppercase tracking-[0.2em] text-brand-indigo/40 hover:text-brand-indigo transition-colors whitespace-nowrap"
+                            className="px-8 py-3 text-xs font-bold uppercase tracking-[0.2em] text-brand-indigo/40 hover:text-brand-indigo transition-colors whitespace-nowrap"
                         >
                             {t("hero.cta.explore")}
                         </button>
