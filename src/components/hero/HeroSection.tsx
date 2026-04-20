@@ -44,19 +44,19 @@ export default function HeroSection() {
                 <div className="max-w-5xl mx-auto space-y-8">
                     <div className="space-y-0">
                         <div>
-                            <h1 className="hero-line text-center text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-display font-bold tracking-tight text-brand-indigo leading-[1.2]">
+                            <h1 className="hero-line text-center font-display font-bold tracking-tight text-brand-indigo leading-[1.2] whitespace-nowrap" style={{fontSize:"clamp(1.75rem,8.5vw,6rem)"}}>
                                 {t("hero.line1").split("|").map((word, i, arr) => (
                                     <span key={i}>
                                         {word}
                                         {i < arr.length - 1 && (
-                                            <span className="inline-block mx-4 text-brand-indigo align-middle" style={{fontSize:"0.45em", verticalAlign:"middle", position:"relative", top:"-0.05em"}}>▲</span>
+                                            <span className="inline-block text-brand-indigo align-middle" style={{fontSize:"0.45em", verticalAlign:"middle", position:"relative", top:"-0.05em", margin:"0 0.3em"}}>▲</span>
                                         )}
                                     </span>
                                 ))}
                             </h1>
                         </div>
                         <div>
-                            <h1 className="hero-line text-center text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-display font-bold tracking-tight leading-[1.2]">
+                            <h1 className="hero-line text-center font-display font-bold tracking-tight leading-[1.2]" style={{fontSize:"clamp(1.75rem,8.5vw,6rem)"}}>
                                 <span className="text-brand-indigo/40 italic font-light block text-center">{t("hero.line2.light")}</span>
                                 <span className="text-gradient block text-center">{t("hero.line2.gradient")}</span>
                             </h1>
