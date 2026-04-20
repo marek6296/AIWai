@@ -25,36 +25,36 @@ export const translations: Record<Lang, Record<string, string>> = {
         // Service 0 — Web Development
         'services.0.title': 'Web Development',
         'services.0.description': 'Fast, modern websites and web apps built to convert visitors into customers.',
-        'services.0.whatIsIt': 'We build websites that actually do their job. Clean design, fast loading, mobile-ready, and built to rank on Google. Whether you need a company presentation site, a product landing page, or a full web application — we build it properly with modern technology, not a page-builder template.',
-        'services.0.howItWorks': 'Every project starts with a conversation about your business goals, not a template picker. We map out the user journey first, then design in high fidelity before writing a single line of code. We build with Next.js and React — the same stack used by the world\'s best digital products. You get full code ownership and a site you can be proud of.',
+        'services.0.whatIsIt': 'We build you a professional website that loads fast and works perfectly on mobile and desktop. Your customers can find you on Google, see right away what you do, and easily get in touch. No templates, no shortcuts — a real website that works.',
+        'services.0.howItWorks': '',
         'services.0.includes': 'Company Websites|Landing Pages|E-commerce Stores|Web Applications|SEO Optimisation|Speed & Performance',
 
         // Service 1 — AI Chatbots
         'services.1.title': 'AI Chatbots',
         'services.1.description': 'Smart chatbots trained on your business — answers questions, captures leads, books meetings.',
-        'services.1.whatIsIt': 'We build chatbots that actually know your business. Trained on your products, services, FAQs and processes — not generic scripts. The chatbot answers in your tone, handles common questions around the clock, and escalates to a human when needed. No hallucinations. No wrong answers. No embarrassing moments.',
-        'services.1.howItWorks': 'We connect your existing documentation, product catalogue or knowledge base to the chatbot using RAG technology. The bot has access only to your specific data and answers based on that — nothing made up. We handle the full integration: your website, WhatsApp, or wherever your customers actually are.',
+        'services.1.whatIsIt': 'A chatbot that knows your business and answers customers on your behalf — 24 hours a day. We train it on your products, services and FAQs so the answers are accurate and helpful. It handles routine questions, captures leads and books meetings while you sleep.',
+        'services.1.howItWorks': '',
         'services.1.includes': '24/7 Customer Support|Lead Capture & Qualification|Appointment Booking|Multi-language|CRM Integration|Voice AI (Phone Bots)',
 
         // Service 2 — AI Automation
         'services.2.title': 'AI Automation',
         'services.2.description': 'Stop doing manually what a machine can handle — orders, emails, invoices, reports.',
-        'services.2.whatIsIt': 'Business automation means your tools talk to each other and handle the boring work. New order → automatically entered in your system. Invoice received → processed and filed. Customer email → categorised and answered. We map what your team currently does by hand and build the workflows that eliminate it — so you focus on the work that actually matters.',
-        'services.2.howItWorks': 'We start with a process audit — looking at what your team does repeatedly and where time gets wasted. Then we build automation using Make.com, n8n or custom API connections. AI handles the parts that need judgement: reading documents, categorising inputs, making decisions. You just review the outputs.',
+        'services.2.whatIsIt': 'We connect your tools and automate repetitive work — new orders, emails, invoices. Your team stops wasting time on manual tasks and can focus on what actually matters. New order comes in? It\'s in the system automatically. Invoice arrives? Filed. Email from a customer? Answered.',
+        'services.2.howItWorks': '',
         'services.2.includes': 'Make.com & n8n Workflows|Email & CRM Automation|Invoice Processing|Data Sync Between Tools|Automated Reporting|Document AI',
 
         // Service 3 — Design & Branding
         'services.3.title': 'Design & Branding',
         'services.3.description': 'Logo, brand identity, social graphics — visuals that make people remember your business.',
-        'services.3.whatIsIt': 'Design is often the first thing your customers judge you on. We create visual identities that are consistent, professional and actually reflect what your business stands for. Logo, colours, typography, social media templates, print materials — everything that makes your brand recognisable and trustworthy in every context.',
-        'services.3.howItWorks': 'We start with a short brand questionnaire to understand your business, your audience and what makes you different from competitors. From there we develop logo concepts and a full visual identity. You get working files in every format you need, plus a brand guide so everything stays consistent as you grow.',
+        'services.3.whatIsIt': 'We create a logo and visual identity that looks professional on your website, social media and in print. Customers instantly recognise your brand and remember it. You get logo files in every format you need, plus a brand guide so everything stays consistent.',
+        'services.3.howItWorks': '',
         'services.3.includes': 'Logo & Visual Identity|Brand Style Guide|Social Media Templates|Print Materials|Banner & Ad Design|Web UI/UX Design',
 
         // Service 4 — Social Media & Ads
         'services.4.title': 'Social Media & Ads',
         'services.4.description': 'Facebook and Instagram management, paid campaigns — reach and convert your target audience.',
-        'services.4.whatIsIt': 'We manage your social media presence on Facebook and Instagram — regular posts, Stories, community management and paid advertising campaigns. From content creation to ad targeting and monthly reporting — one team handles everything so you can focus on your business.',
-        'services.4.howItWorks': 'We start by understanding your target audience and business goals. Then we create a monthly content plan, design all graphics, write captions, schedule posts and monitor engagement. For paid ads, we handle campaign setup, audience targeting, budget management and weekly reporting so you always know what\'s working.',
+        'services.4.whatIsIt': 'We manage your Facebook and Instagram — regular posts, graphics, captions and paid ad campaigns. Everything from content creation to monthly reporting. You focus on your business, we take care of social media.',
+        'services.4.howItWorks': '',
         'services.4.includes': 'Facebook & Instagram Management|Monthly Content Plan|Post Design & Copywriting|Meta Ads Campaigns|Audience Targeting & Retargeting|Monthly Performance Reports',
 
         // ── Process ──
@@ -172,36 +172,36 @@ export const translations: Record<Lang, Record<string, string>> = {
         // Service 0 — Tvorba webov
         'services.0.title': 'Tvorba webov',
         'services.0.description': 'Rýchle, moderné webové stránky a aplikácie, ktoré premieňajú návštevníkov na zákazníkov.',
-        'services.0.whatIsIt': 'Robíme weby, ktoré skutočne fungujú. Čistý dizajn, rýchle načítanie, mobilná verzia a dobrý Google ranking. Či ide o firemnú prezentáciu, produktovú landing page alebo webovú aplikáciu — robíme to poriadne s modernou technológiou, nie cez page-builder šablóny.',
-        'services.0.howItWorks': 'Každý projekt začína rozhovorom o cieľoch vášho podnikania, nie výberom šablóny. Najprv nakreslíme user journey, potom navrhneme vo vysokej kvalite a až nakoniec píšeme kód. Stavíme v Next.js a React — rovnaký stack ako používajú najlepšie digitálne produkty na svete. Dostanete plné vlastníctvo kódu a web, na ktorý budete hrdí.',
+        'services.0.whatIsIt': 'Postavíme vám web, ktorý vyzerá profesionálne, načíta sa rýchlo a funguje rovnako dobre na mobile aj počítači. Zákazník vás ľahko nájde na Googli, hneď vidí čo robíte a bez problémov vás kontaktuje. Žiadne šablóny — poriadne urobený web, ktorý má zmysel.',
+        'services.0.howItWorks': '',
         'services.0.includes': 'Firemné weby|Landing pages|E-shopy|Webové aplikácie|SEO optimalizácia|Rýchlosť a výkon',
 
         // Service 1 — AI Chatboty
         'services.1.title': 'AI Chatboty',
         'services.1.description': 'Inteligentné chatboty natrénované na váš biznis — odpovedajú, zachytávajú leady, rezervujú stretnutia.',
-        'services.1.whatIsIt': 'Robíme chatboty, ktoré skutočne poznajú váš biznis. Natrénované na vašich produktoch, službách, FAQ a procesoch — nie na generických skriptoch. Chatbot odpovedá vo vašom tóne, vybavuje bežné otázky 24/7 a eskaluje na človeka, keď treba. Žiadne vymyslené odpovede, žiadne trapné momenty.',
-        'services.1.howItWorks': 'Prepojíme vašu existujúcu dokumentáciu, katalóg produktov alebo knowledge base s chatbotom pomocou RAG technológie. Bot má prístup len k vašim dátam a odpovedá výhradne na ich základe. Zariadíme celú integráciu — na váš web, WhatsApp alebo kde sú vaši zákazníci.',
+        'services.1.whatIsIt': 'Chatbot, ktorý pozná váš biznis a odpovedá zákazníkom namiesto vás — 24 hodín denne. Natrénujeme ho na vašich produktoch, službách a bežných otázkach, aby odpovede boli správne a v slovenčine. Zachytáva leady, rezervuje stretnutia a vybavuje rutinné otázky kým vy spíte.',
+        'services.1.howItWorks': '',
         'services.1.includes': 'Zákaznícka podpora 24/7|Zachytávanie a kvalifikácia leadov|Rezervácia stretnutí|Viacjazyčnosť|Integrácia s CRM|Hlasové AI (telefónne boty)',
 
         // Service 2 — AI Automatizácia
         'services.2.title': 'AI Automatizácia',
         'services.2.description': 'Prestaňte ručne robiť to, čo zvládne stroj — objednávky, emaily, faktúry, reporty.',
-        'services.2.whatIsIt': 'Automatizácia biznisu znamená, že vaše nástroje spolu komunikujú a vybavujú rutinnú prácu. Nová objednávka → automaticky zapísaná do systému. Prijatá faktúra → spracovaná a uložená. Email od zákazníka → zatriedený a pripravená odpoveď. Zmapujeme, čo váš tím robí ručne, a postavíme procesy, ktoré to eliminujú.',
-        'services.2.howItWorks': 'Začíname auditom procesov — pozrieme sa, čo váš tím robí opakovane a kde sa stráca čas. Potom postavíme automatizáciu cez Make.com, n8n alebo vlastné API prepojenia. AI rieši časti, kde treba úsudok — čítanie dokumentov, triedenie vstupov, rozhodovanie. Vy len kontrolujete výsledky.',
+        'services.2.whatIsIt': 'Prepojíme vaše nástroje a zautomatizujeme opakujúcu sa prácu — objednávky, emaily, faktúry. Váš tím sa prestane venovať rutinným veciam a môže riešiť dôležitejšie úlohy. Prišla objednávka? Sama sa zapíše. Faktúra? Uložená. Email od zákazníka? Vybavený.',
+        'services.2.howItWorks': '',
         'services.2.includes': 'Make.com & n8n workflow|Email a CRM automatizácia|Spracovanie faktúr|Synchronizácia dát|Automatizované reporty|Document AI',
 
         // Service 3 — Dizajn & Branding
         'services.3.title': 'Dizajn & Branding',
         'services.3.description': 'Logo, vizuálna identita, grafika pre sociálne siete — vizuály, vďaka ktorým si ľudia zapamätajú váš biznis.',
-        'services.3.whatIsIt': 'Dizajn je často prvá vec, podľa ktorej vás zákazníci súdia. Vytvárame vizuálne identity, ktoré sú konzistentné, profesionálne a skutočne odrážajú, čím je váš biznis výnimočný. Logo, farby, typografia, šablóny pre sociálne siete, tlačové materiály — všetko, čo robí vašu značku rozpoznateľnou.',
-        'services.3.howItWorks': 'Začíname krátkym brandovým dotazníkom — chceme pochopiť váš biznis, cieľovú skupinu a to, čím sa líšite od konkurencie. Na základe toho vypracujeme koncepty loga a kompletnú vizuálnu identitu. Dostanete pracovné súbory vo všetkých formátoch a brandovú príručku, aby všetko zostalo konzistentné.',
+        'services.3.whatIsIt': 'Vytvoríme vám logo a vizuálnu identitu, ktorá vyzerá profesionálne na webe, sociálnych sieťach aj v tlači. Zákazník okamžite spozná vašu značku a zapamätá si ju. Dostanete súbory vo všetkých formátoch a jednoduchú príručku, aby všetko zostalo jednotné.',
+        'services.3.howItWorks': '',
         'services.3.includes': 'Logo a vizuálna identita|Brand style guide|Šablóny pre sociálne siete|Tlačové materiály|Bannery a reklamy|Web UI/UX dizajn',
 
         // Service 4 — Sociálne siete & Reklamy
         'services.4.title': 'Sociálne siete & Reklamy',
         'services.4.description': 'Správa Facebooku a Instagramu, platené kampane — oslovia a konvertujú vašu cieľovú skupinu.',
-        'services.4.whatIsIt': 'Spravujeme vašu prítomnosť na Facebooku a Instagrame — pravidelné príspevky, Stories, správa komunity a platené reklamné kampane. Od tvorby obsahu po cielenie reklám a mesačné reporty — jeden tím vybavuje všetko, vy sa sústredíte na biznis.',
-        'services.4.howItWorks': 'Začíname pochopením vašej cieľovej skupiny a obchodných cieľov. Potom vytvoríme mesačný obsahový plán, navrhneme grafiku, napíšeme texty, naplánujeme príspevky a sledujeme zapojenie. Pri platených reklamách riešime nastavenie kampaní, cielenie, správu rozpočtu a týždenné reporty — vždy viete, čo funguje.',
+        'services.4.whatIsIt': 'Postaráme sa o vaše Facebook a Instagram profily — pravidelné príspevky, grafika, texty aj platené reklamy. Od obsahu až po mesačné reporty — jeden tím vybavuje všetko. Vy sa venujete biznisu, my riešime sociálne siete.',
+        'services.4.howItWorks': '',
         'services.4.includes': 'Správa Facebooku & Instagramu|Mesačný obsahový plán|Grafika a texty príspevkov|Meta Ads kampane|Cielenie a retargeting|Mesačné výkonnostné reporty',
 
         // ── Process ──
@@ -319,36 +319,36 @@ export const translations: Record<Lang, Record<string, string>> = {
         // Service 0 — Tvorba webů
         'services.0.title': 'Tvorba webů',
         'services.0.description': 'Rychlé, moderní weby a webové aplikace, které mění návštěvníky na zákazníky.',
-        'services.0.whatIsIt': 'Děláme weby, které skutečně fungují. Čistý design, rychlé načítání, mobilní verze a dobré Google rankování. Ať jde o firemní prezentaci, produktovou landing page nebo webovou aplikaci — děláme to pořádně s moderní technologií, ne přes page-builder šablony.',
-        'services.0.howItWorks': 'Každý projekt začíná rozhovorem o cílech vašeho podnikání, ne výběrem šablony. Nejdříve nakreslíme user journey, pak navrhneme ve vysoké kvalitě a teprve pak píšeme kód. Stavíme v Next.js a React — stejný stack jako používají nejlepší digitální produkty na světě. Dostanete plné vlastnictví kódu a web, na který budete hrdí.',
+        'services.0.whatIsIt': 'Postavíme vám web, který vypadá profesionálně, načte se rychle a funguje stejně dobře na mobilu i počítači. Zákazník vás snadno najde na Googlu, hned vidí co děláte a bez problémů vás kontaktuje. Žádné šablony — pořádně udělaný web, který má smysl.',
+        'services.0.howItWorks': '',
         'services.0.includes': 'Firemní weby|Landing pages|E-shopy|Webové aplikace|SEO optimalizace|Rychlost a výkon',
 
         // Service 1 — AI Chatboti
         'services.1.title': 'AI Chatboti',
         'services.1.description': 'Chytré chatboty natrénované na váš byznys — odpovídají, zachytávají leady, rezervují schůzky.',
-        'services.1.whatIsIt': 'Děláme chatboty, které skutečně znají váš byznys. Natrénované na vašich produktech, službách, FAQ a procesech — ne na generických skriptech. Chatbot odpovídá ve vašem tónu, vyřizuje běžné dotazy 24/7 a eskaluje na člověka, když je třeba. Žádné vymyšlené odpovědi, žádné trapné situace.',
-        'services.1.howItWorks': 'Propojíme vaši stávající dokumentaci, katalog produktů nebo knowledge base s chatbotem pomocí RAG technologie. Bot má přístup pouze k vašim datům a odpovídá výhradně na jejich základě. Zajistíme celou integraci — na váš web, WhatsApp nebo kde jsou vaši zákazníci.',
+        'services.1.whatIsIt': 'Chatbot, který zná váš byznys a odpovídá zákazníkům místo vás — 24 hodin denně. Natrénujeme ho na vašich produktech, službách a běžných dotazech, aby odpovědi byly správné a v češtině. Zachytává leady, rezervuje schůzky a vyřizuje rutinní dotazy zatímco vy spíte.',
+        'services.1.howItWorks': '',
         'services.1.includes': 'Zákaznická podpora 24/7|Zachytávání a kvalifikace leadů|Rezervace schůzek|Vícejazyčnost|Integrace s CRM|Hlasové AI (telefonní boty)',
 
         // Service 2 — AI Automatizace
         'services.2.title': 'AI Automatizace',
         'services.2.description': 'Přestaňte ručně dělat to, co zvládne stroj — objednávky, e-maily, faktury, reporty.',
-        'services.2.whatIsIt': 'Automatizace byznysu znamená, že vaše nástroje spolu komunikují a vyřizují rutinní práci. Nová objednávka → automaticky zapsaná do systému. Přijatá faktura → zpracována a uložena. E-mail od zákazníka → setříděn a připravena odpověď. Zmapujeme, co váš tým dělá ručně, a postavíme procesy, které to eliminují.',
-        'services.2.howItWorks': 'Začínáme auditem procesů — díváme se, co váš tým dělá opakovaně a kde se ztrácí čas. Pak postavíme automatizaci přes Make.com, n8n nebo vlastní API propojení. AI řeší části, kde je potřeba úsudek — čtení dokumentů, třídění vstupů, rozhodování. Vy jen kontrolujete výsledky.',
+        'services.2.whatIsIt': 'Propojíme vaše nástroje a zautomatizujeme opakující se práci — objednávky, e-maily, faktury. Váš tým přestane ztrácet čas rutinními úkoly a může řešit důležitější věci. Přišla objednávka? Sama se zapíše. Faktura? Uložena. E-mail od zákazníka? Vyřízeno.',
+        'services.2.howItWorks': '',
         'services.2.includes': 'Make.com & n8n workflow|E-mail a CRM automatizace|Zpracování faktur|Synchronizace dat|Automatizované reporty|Document AI',
 
         // Service 3 — Design & Branding
         'services.3.title': 'Design & Branding',
         'services.3.description': 'Logo, vizuální identita, grafika pro sociální sítě — vizuály, díky kterým si lidé zapamatují vaši firmu.',
-        'services.3.whatIsIt': 'Design je často první věc, podle které vás zákazníci posuzují. Vytváříme vizuální identity, které jsou konzistentní, profesionální a skutečně odrážejí, čím je váš byznys výjimečný. Logo, barvy, typografie, šablony pro sociální sítě, tiskové materiály — vše, co dělá vaši značku rozpoznatelnou.',
-        'services.3.howItWorks': 'Začínáme krátkým brandovým dotazníkem — chceme pochopit váš byznys, cílovou skupinu a to, čím se lišíte od konkurence. Na základě toho vypracujeme koncepty loga a kompletní vizuální identitu. Dostanete pracovní soubory ve všech formátech a brandovou příručku, aby vše zůstalo konzistentní.',
+        'services.3.whatIsIt': 'Vytvoříme vám logo a vizuální identitu, která vypadá profesionálně na webu, sociálních sítích i v tisku. Zákazník okamžitě rozpozná vaši značku a zapamatuje si ji. Dostanete soubory ve všech formátech a jednoduchou příručku, aby vše zůstalo jednotné.',
+        'services.3.howItWorks': '',
         'services.3.includes': 'Logo a vizuální identita|Brand style guide|Šablony pro sociální sítě|Tiskové materiály|Bannery a reklamy|Web UI/UX design',
 
         // Service 4 — Sociální sítě & Reklamy
         'services.4.title': 'Sociální sítě & Reklamy',
         'services.4.description': 'Správa Facebooku a Instagramu, placené kampaně — oslovíte a konvertujete svou cílovou skupinu.',
-        'services.4.whatIsIt': 'Spravujeme vaši přítomnost na Facebooku a Instagramu — pravidelné příspěvky, Stories, správa komunity a placené reklamní kampaně. Od tvorby obsahu po cílení reklam a měsíční reporty — jeden tým vyřizuje vše, vy se soustředíte na byznys.',
-        'services.4.howItWorks': 'Začínáme pochopením vaší cílové skupiny a obchodních cílů. Pak vytvoříme měsíční obsahový plán, navrhneme grafiku, napíšeme texty, naplánujeme příspěvky a sledujeme zapojení. U placených reklam řešíme nastavení kampaní, cílení, správu rozpočtu a týdenní reporty — vždy víte, co funguje.',
+        'services.4.whatIsIt': 'Postaráme se o vaše Facebook a Instagram profily — pravidelné příspěvky, grafika, texty i placené reklamy. Od obsahu až po měsíční reporty — jeden tým vyřizuje vše. Vy se věnujete byznysu, my řešíme sociální sítě.',
+        'services.4.howItWorks': '',
         'services.4.includes': 'Správa Facebooku & Instagramu|Měsíční obsahový plán|Grafika a texty příspěvků|Meta Ads kampaně|Cílení a retargeting|Měsíční výkonnostní reporty',
 
         // ── Process ──
