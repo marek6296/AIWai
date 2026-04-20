@@ -129,11 +129,53 @@ export default function CennikPage() {
                 </div>
             </section>
 
-            {/* WEB */}
+            {/* MARKETING & SOCIÁLNE SIETE */}
             <section className="py-16 md:py-20 bg-[#FAFAFA]">
                 <div className="container mx-auto px-6">
                     <div className="mb-10">
                         <span className="text-[10px] uppercase tracking-[0.35em] font-bold text-brand-sand/70">02</span>
+                        <h2 className="text-3xl md:text-4xl font-display font-bold text-brand-indigo mt-1">Marketing & Sociálne siete</h2>
+                        <p className="text-brand-indigo/40 mt-2 max-w-xl">Kompletná mesačná správa sociálnych sietí — obsah, grafika, AI foto úpravy aj reklamy.</p>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5 max-w-3xl">
+                        <PricingCard
+                            name="Marketing Starter"
+                            price="od €250/mes"
+                            priceNote="mesačná správa"
+                            badge="Nové"
+                            features={[
+                                "Plán príspevkov na celý mesiac",
+                                "Facebook + Instagram + Stories",
+                                "Vaše fotky prerobené pomocou AI do profesionálneho štýlu",
+                                "Texty príspevkov — copywriting",
+                                "Správa komentárov a správ",
+                                "Mesačný report výsledkov",
+                            ]}
+                        />
+                        <PricingCard
+                            name="Marketing Pro + Ads"
+                            price="od €399/mes"
+                            priceNote="správa + reklamy"
+                            highlight
+                            badge="Odporúčame"
+                            features={[
+                                "Všetko z Marketing Starter",
+                                "Návrh a spustenie Meta Ads kampaní",
+                                "Cielenie, retargeting a A/B testovanie",
+                                "Správa reklamného účtu (budget v cene nie je)",
+                                "Optimalizácia kampaní každý týždeň",
+                                "Týždenné výkonnostné reporty",
+                            ]}
+                        />
+                    </div>
+                </div>
+            </section>
+
+            {/* WEB */}
+            <section className="py-16 md:py-20">
+                <div className="container mx-auto px-6">
+                    <div className="mb-10">
+                        <span className="text-[10px] uppercase tracking-[0.35em] font-bold text-brand-sand/70">03</span>
                         <h2 className="text-3xl md:text-4xl font-display font-bold text-brand-indigo mt-1">Web & E-shop</h2>
                         <p className="text-brand-indigo/40 mt-2 max-w-xl">Moderný web, ktorý načíta rýchlo a predáva.</p>
                     </div>
@@ -183,10 +225,10 @@ export default function CennikPage() {
             </section>
 
             {/* CHATBOT */}
-            <section className="py-16 md:py-20">
+            <section className="py-16 md:py-20 bg-[#FAFAFA]">
                 <div className="container mx-auto px-6">
                     <div className="mb-10">
-                        <span className="text-[10px] uppercase tracking-[0.35em] font-bold text-brand-sand/70">03</span>
+                        <span className="text-[10px] uppercase tracking-[0.35em] font-bold text-brand-sand/70">04</span>
                         <h2 className="text-3xl md:text-4xl font-display font-bold text-brand-indigo mt-1">AI Chatbot</h2>
                         <p className="text-brand-indigo/40 mt-2 max-w-xl">Chatbot, ktorý pozná váš biznis a odpovedá namiesto vás — 24/7.</p>
                     </div>
@@ -222,10 +264,10 @@ export default function CennikPage() {
             </section>
 
             {/* AUTOMATIZÁCIA */}
-            <section className="py-16 md:py-20 bg-[#FAFAFA]">
+            <section className="py-16 md:py-20">
                 <div className="container mx-auto px-6">
                     <div className="mb-10">
-                        <span className="text-[10px] uppercase tracking-[0.35em] font-bold text-brand-sand/70">04</span>
+                        <span className="text-[10px] uppercase tracking-[0.35em] font-bold text-brand-sand/70">05</span>
                         <h2 className="text-3xl md:text-4xl font-display font-bold text-brand-indigo mt-1">Automatizácia procesov</h2>
                         <p className="text-brand-indigo/40 mt-2 max-w-xl">Prepojíme vaše nástroje a ušetríme vám hodiny rutinnej práce každý týždeň.</p>
                     </div>
@@ -253,48 +295,6 @@ export default function CennikPage() {
                                 "AI spracovanie dokumentov",
                                 "Integrácia ERP / vlastných systémov",
                                 "Mesačná podpora a monitoring",
-                            ]}
-                        />
-                    </div>
-                </div>
-            </section>
-
-            {/* SOCIÁLNE SIETE */}
-            <section className="py-16 md:py-20">
-                <div className="container mx-auto px-6">
-                    <div className="mb-10">
-                        <span className="text-[10px] uppercase tracking-[0.35em] font-bold text-brand-sand/70">05</span>
-                        <h2 className="text-3xl md:text-4xl font-display font-bold text-brand-indigo mt-1">Marketing & Sociálne siete</h2>
-                        <p className="text-brand-indigo/40 mt-2 max-w-xl">Kompletná mesačná správa sociálnych sietí — obsah, grafika, AI foto úpravy aj reklamy.</p>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5 max-w-3xl">
-                        <PricingCard
-                            name="Marketing Starter"
-                            price="od €250/mes"
-                            priceNote="mesačná správa"
-                            badge="Nové"
-                            features={[
-                                "Plán príspevkov na celý mesiac",
-                                "Facebook + Instagram + Stories",
-                                "Vaše fotky prerobené pomocou AI do profesionálneho štýlu",
-                                "Texty príspevkov — copywriting",
-                                "Správa komentárov a správ",
-                                "Mesačný report výsledkov",
-                            ]}
-                        />
-                        <PricingCard
-                            name="Marketing Pro + Ads"
-                            price="od €399/mes"
-                            priceNote="správa + reklamy"
-                            highlight
-                            badge="Odporúčame"
-                            features={[
-                                "Všetko z Marketing Starter",
-                                "Návrh a spustenie Meta Ads kampaní",
-                                "Cielenie, retargeting a A/B testovanie",
-                                "Správa reklamného účtu (budget v cene nie je)",
-                                "Optimalizácia kampaní každý týždeň",
-                                "Týždenné výkonnostné reporty",
                             ]}
                         />
                     </div>
