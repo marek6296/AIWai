@@ -188,7 +188,7 @@ export default function Chatbot() {
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 20, scale: 0.95 }}
                         transition={{ duration: 0.2 }}
-                        className={`fixed bottom-[calc(1.5rem+80px)] left-4 right-4 mx-auto sm:left-auto sm:right-6 sm:mx-0 ${alignment === "left" ? "sm:origin-bottom-left" : "sm:origin-bottom-right"} w-auto sm:w-[400px] max-w-[400px] h-[500px] max-h-[70vh] sm:max-h-none bg-white/80 backdrop-blur-xl border border-brand-indigo/10 rounded-2xl shadow-2xl overflow-hidden flex flex-col z-[60]`}
+                        className={`fixed bottom-[calc(1.5rem+80px)] left-2 right-2 mx-auto sm:left-auto sm:right-6 sm:mx-0 ${alignment === "left" ? "sm:origin-bottom-left" : "sm:origin-bottom-right"} w-auto sm:w-[400px] max-w-[400px] h-[min(500px,calc(100dvh-130px))] sm:h-[500px] sm:max-h-none bg-white sm:bg-white/80 sm:backdrop-blur-xl border border-brand-indigo/10 rounded-2xl shadow-2xl overflow-hidden flex flex-col z-[60]`}
                     >
                         {/* Header */}
                         <div className="p-4 bg-brand-indigo/5 border-b border-brand-indigo/5 flex justify-between items-center">
@@ -256,14 +256,15 @@ export default function Chatbot() {
                         </div>
 
                         {/* Input */}
-                        <form onSubmit={handleSubmit} className="p-4 bg-white/50 border-t border-brand-indigo/5">
+                        <form onSubmit={handleSubmit} className="p-4 bg-white border-t border-brand-indigo/5">
                             <div className="relative flex items-center">
                                 <input
                                     type="text"
                                     value={input}
                                     onChange={(e) => setInput(e.target.value)}
                                     placeholder={t("chatbot.placeholder")}
-                                    className="w-full bg-brand-offwhite border border-brand-indigo/10 rounded-full py-3 pl-4 pr-12 text-sm text-brand-indigo placeholder:text-brand-indigo/40 focus:outline-none focus:border-brand-indigo/30 transition-colors"
+                                    className="w-full bg-brand-offwhite border border-brand-indigo/10 rounded-full py-3 pl-4 pr-12 text-brand-indigo placeholder:text-brand-indigo/40 focus:outline-none focus:border-brand-indigo/30 transition-colors"
+                                    style={{ fontSize: "16px" }}
                                 />
                                 <button
                                     type="submit"
