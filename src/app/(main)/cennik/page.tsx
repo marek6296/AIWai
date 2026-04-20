@@ -74,7 +74,7 @@ export default function CennikPage() {
     return (
         <main className="min-h-screen bg-white">
             {/* Hero */}
-            <section className="relative pt-28 pb-12 overflow-hidden">
+            <section className="relative pt-20 pb-6 overflow-hidden">
                 <div className="absolute inset-0 gradient-mesh" />
                 <div className="absolute top-[20%] left-[10%] w-[400px] h-[400px] rounded-full bg-brand-sand/8 blur-[120px] pointer-events-none" />
                 <div className="absolute top-[30%] right-[10%] w-[300px] h-[300px] rounded-full bg-brand-indigo/5 blur-[100px] pointer-events-none" />
@@ -90,7 +90,7 @@ export default function CennikPage() {
             </section>
 
             {/* DIZAJN */}
-            <section className="py-16 md:py-20">
+            <section className="py-10 md:py-14">
                 <div className="container mx-auto px-6">
                     <div className="mb-10">
                         <span className="text-[10px] uppercase tracking-[0.35em] font-bold text-brand-sand/70">01</span>
