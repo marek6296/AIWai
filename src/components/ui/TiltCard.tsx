@@ -9,7 +9,7 @@ interface TiltCardProps {
 
 export default function TiltCard({ children, className = "", onClick }: TiltCardProps) {
     const ref = useRef<HTMLDivElement>(null);
-    const [isTouch, setIsTouch] = useState(true);
+    const [isTouch, setIsTouch] = useState(false);
 
     useEffect(() => {
         setIsTouch(window.matchMedia("(hover: none)").matches);

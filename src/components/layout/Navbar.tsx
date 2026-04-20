@@ -175,7 +175,7 @@ export default function Navbar() {
             {/* ── Mobile Menu — CSS opacity + visibility ── */}
             <div
                 aria-hidden={!isOpen}
-                className={`fixed inset-0 z-[90] bg-white/98 backdrop-blur-md flex flex-col items-center justify-center overflow-hidden transition-all duration-250 ${
+                className={`fixed inset-0 z-[90] bg-white flex flex-col items-center justify-center overflow-hidden transition-[opacity,visibility] duration-300 ease-in-out ${
                     isOpen ? "opacity-100 visible pointer-events-auto" : "opacity-0 invisible pointer-events-none"
                 }`}
             >
