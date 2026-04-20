@@ -26,7 +26,12 @@ function loadConfig() {
     return DEFAULT_CONFIG
 }
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+// Lazy-initialized so missing OPENAI_API_KEY doesn't crash at build time
+let _openai: OpenAI | null = null
+function getOpenAI() {
+    if (!_openai) _openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+    return _openai
+}
 
 export async function POST(req: Request) {
     try {
@@ -58,7 +63,7 @@ export async function POST(req: Request) {
 
         const modelConfig = config.model || DEFAULT_CONFIG.model
 
-        const completion = await openai.chat.completions.create({
+        const completion = await getOpenAI().chat.completions.create({
             model: modelConfig.model || 'gpt-4o',
             messages: [systemPrompt, ...trimmedMessages],
             max_tokens: modelConfig.maxTokens || 500,

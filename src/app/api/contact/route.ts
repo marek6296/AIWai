@@ -2,7 +2,12 @@ import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Lazy-initialized so missing RESEND_API_KEY doesn't crash at build time
+let _resend: Resend | null = null
+function getResend() {
+    if (!_resend) _resend = new Resend(process.env.RESEND_API_KEY)
+    return _resend
+}
 
 export async function POST(req: Request) {
     try {
@@ -21,7 +26,7 @@ export async function POST(req: Request) {
 
         // Send email notification via Resend
         if (process.env.RESEND_API_KEY) {
-            await resend.emails.send({
+            await getResend().emails.send({
                 from: 'AIWai Formulár <onboarding@resend.dev>',
                 to: 'marek@aiwai.app',
                 replyTo: `${name} <${email}>`,
