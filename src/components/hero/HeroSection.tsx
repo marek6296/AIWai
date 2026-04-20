@@ -50,8 +50,8 @@ export default function HeroSection() {
                         </div>
                         <div>
                             <h1 className="hero-line text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-display font-bold tracking-tight leading-[1.2]">
-                                <span className="text-brand-indigo/40 italic font-light">{t("hero.line2.light")}</span>{" "}
-                                <span className="text-gradient">{t("hero.line2.gradient")}</span>
+                                <span className="text-brand-indigo/40 italic font-light block">{t("hero.line2.light")}</span>
+                                <span className="text-gradient block">{t("hero.line2.gradient")}</span>
                             </h1>
                         </div>
                     </div>
