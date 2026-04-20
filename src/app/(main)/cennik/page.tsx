@@ -97,7 +97,7 @@ export default function CennikPage() {
                         <h2 className="text-3xl md:text-4xl font-display font-bold text-brand-indigo mt-1">Logo & Dizajn</h2>
                         <p className="text-brand-indigo/40 mt-2 max-w-xl">Vizuálna identita, ktorá robí prvý dojem za vás.</p>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5 max-w-3xl">
                         <PricingCard
                             name="Logo Basic"
                             price="od €99"
@@ -123,18 +123,6 @@ export default function CennikPage() {
                                 "5 šablón pre sociálne siete",
                                 "Všetky formáty súborov",
                                 "Odovzdanie do 10 dní",
-                            ]}
-                        />
-                        <PricingCard
-                            name="Grafika pre sociálne siete"
-                            price="od €69"
-                            priceNote="balíček 10 grafík"
-                            features={[
-                                "10 prispôsobených grafík",
-                                "Formáty pre Instagram, FB, LinkedIn",
-                                "Editovateľné šablóny",
-                                "1 kolo revízií",
-                                "Odovzdanie do 5 dní",
                             ]}
                         />
                     </div>
@@ -276,35 +264,37 @@ export default function CennikPage() {
                 <div className="container mx-auto px-6">
                     <div className="mb-10">
                         <span className="text-[10px] uppercase tracking-[0.35em] font-bold text-brand-sand/70">05</span>
-                        <h2 className="text-3xl md:text-4xl font-display font-bold text-brand-indigo mt-1">Sociálne siete & Reklamy</h2>
-                        <p className="text-brand-indigo/40 mt-2 max-w-xl">Správa Facebooku a Instagramu + platené Meta Ads kampane.</p>
+                        <h2 className="text-3xl md:text-4xl font-display font-bold text-brand-indigo mt-1">Marketing & Sociálne siete</h2>
+                        <p className="text-brand-indigo/40 mt-2 max-w-xl">Kompletná mesačná správa sociálnych sietí — obsah, grafika, AI foto úpravy aj reklamy.</p>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-5 max-w-3xl">
                         <PricingCard
-                            name="Social Starter"
-                            price="od €199/mes"
+                            name="Marketing Starter"
+                            price="od €250/mes"
                             priceNote="mesačná správa"
+                            badge="Nové"
                             features={[
-                                "12 príspevkov mesačne",
-                                "Facebook + Instagram",
-                                "Grafika a texty príspevkov",
-                                "Správa komentárov",
-                                "Mesačný report",
+                                "Plán príspevkov na celý mesiac",
+                                "Facebook + Instagram + Stories",
+                                "Vaše fotky prerobené pomocou AI do profesionálneho štýlu",
+                                "Texty príspevkov — copywriting",
+                                "Správa komentárov a správ",
+                                "Mesačný report výsledkov",
                             ]}
                         />
                         <PricingCard
-                            name="Social Pro + Ads"
-                            price="od €349/mes"
+                            name="Marketing Pro + Ads"
+                            price="od €399/mes"
                             priceNote="správa + reklamy"
                             highlight
                             badge="Odporúčame"
                             features={[
-                                "20 príspevkov mesačne",
-                                "Facebook + Instagram + Stories",
-                                "Meta Ads kampane (budget v cene nie je)",
-                                "Cielenie a retargeting",
-                                "Týždenné reporty",
-                                "Optimalizácia kampaní",
+                                "Všetko z Marketing Starter",
+                                "Návrh a spustenie Meta Ads kampaní",
+                                "Cielenie, retargeting a A/B testovanie",
+                                "Správa reklamného účtu (budget v cene nie je)",
+                                "Optimalizácia kampaní každý týždeň",
+                                "Týždenné výkonnostné reporty",
                             ]}
                         />
                     </div>

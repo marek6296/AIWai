@@ -50,7 +50,6 @@ export default function ContactSection() {
             options: [
                 { value: "Logo Basic", label: t("contact.product.logoBasic") },
                 { value: "Logo + Brand", label: t("contact.product.logoBrand") },
-                { value: "Social Media Graphics", label: t("contact.product.socialGraphics") },
             ],
         },
         {
