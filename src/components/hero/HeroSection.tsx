@@ -41,7 +41,8 @@ export default function HeroSection() {
 
             {/* ── Content — CSS-only animations, visible immediately ── */}
             <div className="relative z-10 container mx-auto text-center px-6 pt-20 pb-32 md:py-32">
-                <div className="max-w-5xl mx-auto space-y-14 md:space-y-8">
+                <div className="max-w-5xl mx-auto">
+                    {/* Headline — don't move */}
                     <div className="space-y-0">
                         <div>
                             <h1 className="hero-line text-center font-display font-bold tracking-tight text-brand-indigo leading-[1.15] whitespace-nowrap" style={{fontSize:"clamp(1.75rem,8.5vw,6rem)"}}>
@@ -63,20 +64,23 @@ export default function HeroSection() {
                         </div>
                     </div>
 
-                    <p className="hero-sub text-lg md:text-xl text-brand-indigo/50 max-w-2xl md:max-w-4xl mx-auto leading-relaxed font-light md:whitespace-nowrap">
-                        {t("hero.subtitle")}
-                    </p>
+                    {/* Subtitle + CTA — pushed lower on mobile, close together */}
+                    <div className="mt-28 md:mt-8 space-y-4 md:space-y-8">
+                        <p className="hero-sub text-lg md:text-xl text-brand-indigo/50 max-w-2xl md:max-w-4xl mx-auto leading-relaxed font-light md:whitespace-nowrap">
+                            {t("hero.subtitle")}
+                        </p>
 
-                    <div className="hero-cta flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 pt-4">
-                        <MagneticButton onClick={() => smoothScrollTo("contact")} className="whitespace-nowrap w-full sm:w-auto">
-                            {t("hero.cta.start")}
-                        </MagneticButton>
-                        <button
-                            onClick={() => smoothScrollTo("services")}
-                            className="px-8 py-3 sm:py-4 text-xs font-bold uppercase tracking-[0.2em] text-brand-indigo/40 hover:text-brand-indigo transition-colors whitespace-nowrap"
-                        >
-                            {t("hero.cta.explore")}
-                        </button>
+                        <div className="hero-cta flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
+                            <MagneticButton onClick={() => smoothScrollTo("contact")} className="whitespace-nowrap w-full sm:w-auto">
+                                {t("hero.cta.start")}
+                            </MagneticButton>
+                            <button
+                                onClick={() => smoothScrollTo("services")}
+                                className="px-8 py-3 sm:py-4 text-xs font-bold uppercase tracking-[0.2em] text-brand-indigo/40 hover:text-brand-indigo transition-colors whitespace-nowrap"
+                            >
+                                {t("hero.cta.explore")}
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
