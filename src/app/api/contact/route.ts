@@ -21,7 +21,7 @@ export async function POST(req: Request) {
 
         // Send email notification via Resend
         if (process.env.RESEND_API_KEY) {
-            await resend.emails.send({
+            const { data: emailData, error: resendError } = await resend.emails.send({
                 from: 'AIWai Formulár <formular@aiwai.app>',
                 to: 'marek@aiwai.app',
                 replyTo: `${name} <${email}>`,
@@ -42,6 +42,13 @@ export async function POST(req: Request) {
                     </div>
                 `,
             });
+            if (resendError) {
+                console.error('Resend Error:', JSON.stringify(resendError));
+            } else {
+                console.log('Resend OK, id:', emailData?.id);
+            }
+        } else {
+            console.warn('RESEND_API_KEY not set — email skipped');
         }
 
         return NextResponse.json({ success: true, data });
