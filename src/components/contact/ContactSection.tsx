@@ -13,7 +13,7 @@ export default function ContactSection() {
     const [formData, setFormData] = useState({
         name: "",
         email: "",
-        projectType: "New website or e-shop",
+        projectType: "Company Website",
         message: "",
     });
 
@@ -35,7 +35,7 @@ export default function ContactSection() {
             ]);
             if (dbRes.ok || webhookRes.ok) {
                 setStatus("success");
-                setFormData({ name: "", email: "", projectType: "Website or Landing Page", message: "" });
+                setFormData({ name: "", email: "", projectType: "Company Website", message: "" });
             } else {
                 setStatus("error");
             }
@@ -44,15 +44,44 @@ export default function ContactSection() {
         }
     };
 
-    const projectTypes = [
-        { value: "New website or e-shop", label: t("contact.projectType.web") },
-        { value: "Simple presentation page", label: t("contact.projectType.landing") },
-        { value: "Chatbot", label: t("contact.projectType.chatbot") },
-        { value: "Automation", label: t("contact.projectType.automation") },
-        { value: "Logo and visual identity", label: t("contact.projectType.design") },
-        { value: "Social media graphics", label: t("contact.projectType.social") },
-        { value: "Social media management & ads", label: t("contact.projectType.marketing") },
-        { value: "Other", label: t("contact.projectType.other") },
+    const projectGroups = [
+        {
+            group: t("contact.group.design"),
+            options: [
+                { value: "Logo Basic", label: t("contact.product.logoBasic") },
+                { value: "Logo + Brand", label: t("contact.product.logoBrand") },
+                { value: "Social Media Graphics", label: t("contact.product.socialGraphics") },
+            ],
+        },
+        {
+            group: t("contact.group.web"),
+            options: [
+                { value: "Presentation Website", label: t("contact.product.landingPage") },
+                { value: "Company Website", label: t("contact.product.companyWeb") },
+                { value: "E-shop", label: t("contact.product.eshop") },
+            ],
+        },
+        {
+            group: t("contact.group.chatbot"),
+            options: [
+                { value: "Chatbot Basic", label: t("contact.product.chatbotBasic") },
+                { value: "Chatbot Pro", label: t("contact.product.chatbotPro") },
+            ],
+        },
+        {
+            group: t("contact.group.automation"),
+            options: [
+                { value: "Automation Starter", label: t("contact.product.automationStarter") },
+                { value: "Automation Pro / Enterprise", label: t("contact.product.automationPro") },
+            ],
+        },
+        {
+            group: t("contact.group.social"),
+            options: [
+                { value: "Social Starter", label: t("contact.product.socialStarter") },
+                { value: "Social Pro + Ads", label: t("contact.product.socialPro") },
+            ],
+        },
     ];
 
     return (
@@ -150,9 +179,14 @@ export default function ContactSection() {
                                 onChange={(e) => setFormData({ ...formData, projectType: e.target.value })}
                                 className="w-full bg-transparent border-b border-brand-indigo/10 py-2.5 text-brand-indigo outline-none focus:border-brand-indigo/40 transition-all appearance-none cursor-pointer"
                             >
-                                {projectTypes.map((pt) => (
-                                    <option key={pt.value} value={pt.value}>{pt.label}</option>
+                                {projectGroups.map((g) => (
+                                    <optgroup key={g.group} label={g.group}>
+                                        {g.options.map((opt) => (
+                                            <option key={opt.value} value={opt.value}>{opt.label}</option>
+                                        ))}
+                                    </optgroup>
                                 ))}
+                                <option value="Other">{t("contact.projectType.other")}</option>
                             </select>
                         </div>
 
