@@ -45,7 +45,14 @@ export default function HeroSection() {
                     <div className="space-y-0">
                         <div>
                             <h1 className="hero-line text-center text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-display font-bold tracking-tight text-brand-indigo leading-[1.2]">
-                                {t("hero.line1")}
+                                {t("hero.line1").split("|").map((word, i, arr) => (
+                                    <span key={i}>
+                                        {word}
+                                        {i < arr.length - 1 && (
+                                            <span className="inline-block mx-4 text-brand-indigo align-middle" style={{fontSize:"0.45em", verticalAlign:"middle", position:"relative", top:"-0.05em"}}>▲</span>
+                                        )}
+                                    </span>
+                                ))}
                             </h1>
                         </div>
                         <div>
