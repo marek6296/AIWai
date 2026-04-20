@@ -39,7 +39,7 @@ function PricingCard({ name, price, priceNote, features, highlight, badge }: Pri
                 <h3 className={`text-base font-semibold uppercase tracking-[0.1em] mb-3 ${highlight ? "text-white/60" : "text-brand-indigo/50"}`}>
                     {name}
                 </h3>
-                <div className={`text-4xl font-display font-bold ${highlight ? "text-white" : "text-brand-indigo"}`}>
+                <div className={`text-3xl font-display font-bold ${highlight ? "text-white" : "text-brand-indigo"}`}>
                     {price}
                 </div>
                 {priceNote && (
@@ -74,15 +74,12 @@ export default function CennikPage() {
     return (
         <main className="min-h-screen bg-white">
             {/* Hero */}
-            <section className="relative pt-36 pb-20 overflow-hidden">
+            <section className="relative pt-28 pb-12 overflow-hidden">
                 <div className="absolute inset-0 gradient-mesh" />
                 <div className="absolute top-[20%] left-[10%] w-[400px] h-[400px] rounded-full bg-brand-sand/8 blur-[120px] pointer-events-none" />
                 <div className="absolute top-[30%] right-[10%] w-[300px] h-[300px] rounded-full bg-brand-indigo/5 blur-[100px] pointer-events-none" />
                 <div className="container mx-auto px-6 relative z-10 text-center">
-                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-indigo/5 border border-brand-indigo/10 mb-6">
-                        <span className="text-[10px] uppercase tracking-[0.3em] font-bold text-brand-indigo/50">Cenník</span>
-                    </div>
-                    <h1 className="text-5xl md:text-7xl font-display font-bold text-brand-indigo tracking-tight mb-6">
+                    <h1 className="text-5xl md:text-7xl font-display font-bold text-brand-indigo tracking-tight mb-5">
                         Transparentné ceny.
                     </h1>
                     <p className="text-lg md:text-xl text-brand-indigo/40 max-w-2xl mx-auto font-light leading-relaxed">
@@ -103,7 +100,7 @@ export default function CennikPage() {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                         <PricingCard
                             name="Logo Basic"
-                            price="od €199"
+                            price="od €99"
                             priceNote="jednorazová platba"
                             features={[
                                 "3 návrhy loga",
@@ -115,7 +112,7 @@ export default function CennikPage() {
                         />
                         <PricingCard
                             name="Logo + Brand"
-                            price="od €449"
+                            price="od €229"
                             priceNote="jednorazová platba"
                             badge="Populárne"
                             highlight
@@ -130,7 +127,7 @@ export default function CennikPage() {
                         />
                         <PricingCard
                             name="Grafika pre sociálne siete"
-                            price="od €149"
+                            price="od €69"
                             priceNote="balíček 10 grafík"
                             features={[
                                 "10 prispôsobených grafík",
@@ -155,7 +152,7 @@ export default function CennikPage() {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                         <PricingCard
                             name="Prezentačná stránka"
-                            price="od €599"
+                            price="od €299"
                             priceNote="jednorazová platba"
                             features={[
                                 "1–3 stránky",
@@ -167,7 +164,7 @@ export default function CennikPage() {
                         />
                         <PricingCard
                             name="Firemný web"
-                            price="od €1 199"
+                            price="od €599"
                             priceNote="jednorazová platba"
                             badge="Najpredávanejší"
                             highlight
@@ -182,7 +179,7 @@ export default function CennikPage() {
                         />
                         <PricingCard
                             name="E-shop"
-                            price="od €1 999"
+                            price="od €999"
                             priceNote="jednorazová platba"
                             features={[
                                 "Produktový katalóg",
@@ -208,7 +205,7 @@ export default function CennikPage() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-5 max-w-3xl">
                         <PricingCard
                             name="Chatbot Basic"
-                            price="od €449"
+                            price="od €249"
                             priceNote="jednorazová platba"
                             features={[
                                 "Odpovede na časté otázky",
@@ -220,7 +217,7 @@ export default function CennikPage() {
                         />
                         <PricingCard
                             name="Chatbot Pro"
-                            price="od €899"
+                            price="od €499"
                             priceNote="jednorazová platba"
                             highlight
                             features={[
@@ -247,7 +244,7 @@ export default function CennikPage() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-5 max-w-3xl">
                         <PricingCard
                             name="Starter"
-                            price="od €549"
+                            price="od €299"
                             priceNote="jednorazová platba"
                             features={[
                                 "2–3 automatické workflow",
