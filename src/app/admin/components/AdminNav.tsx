@@ -1,18 +1,16 @@
 'use client'
 
-import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
-import { LogOut, LayoutDashboard, Bot } from 'lucide-react'
+import { LogOut, Bot, Inbox, Settings } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
 export default function AdminNav() {
     const router = useRouter()
     const pathname = usePathname()
-    const supabase = createClient()
 
     async function handleLogout() {
-        await supabase.auth.signOut()
+        await fetch('/api/auth/simple-logout', { method: 'POST' })
         router.refresh()
         router.push('/login')
     }
@@ -34,8 +32,18 @@ export default function AdminNav() {
                         : 'text-brand-indigo/60 hover:bg-brand-indigo/5 hover:text-brand-indigo'
                         }`}
                 >
-                    <LayoutDashboard size={18} />
-                    Dashboard
+                    <Settings size={18} />
+                    Chatbot
+                </Link>
+                <Link
+                    href="/admin/inbox"
+                    className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors font-medium text-sm ${pathname?.startsWith('/admin/inbox') || pathname?.startsWith('/admin/client')
+                        ? 'bg-brand-indigo text-white'
+                        : 'text-brand-indigo/60 hover:bg-brand-indigo/5 hover:text-brand-indigo'
+                        }`}
+                >
+                    <Inbox size={18} />
+                    Inbox
                 </Link>
             </div>
 

@@ -22,19 +22,23 @@ export async function POST(req: Request) {
         // Send email notification via Resend
         if (process.env.RESEND_API_KEY) {
             await resend.emails.send({
-                from: 'AIWai Formulár <onboarding@resend.dev>',
+                from: 'AIWai Formulár <formular@aiwai.app>',
                 to: 'marek@aiwai.app',
                 replyTo: `${name} <${email}>`,
-                subject: `📩 ${name} — ${projectType}`,
+                subject: `[AIWai Formulár] ${name} — ${projectType}`,
+                text: `Nová správa z webu aiwai.app\n\nMeno: ${name}\nEmail: ${email}\nTyp projektu: ${projectType}\nSprávа:\n${message}`,
                 html: `
-                    <h2>Nová správa z webu aiwai.app</h2>
-                    <p><strong>Meno:</strong> ${name}</p>
-                    <p><strong>Email:</strong> <a href="mailto:${email}">${email}</a></p>
-                    <p><strong>Typ projektu:</strong> ${projectType}</p>
-                    <p><strong>Správa:</strong></p>
-                    <p>${message.replace(/\n/g, '<br>')}</p>
-                    <hr>
-                    <p style="color:#999;font-size:12px">Odpovedz priamo na tento email — odpoveď pôjde klientovi.</p>
+                    <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:24px;border:1px solid #e5e7eb;border-radius:8px;">
+                        <h2 style="color:#111827;margin-top:0;">📩 Nová správa z webu aiwai.app</h2>
+                        <table style="width:100%;border-collapse:collapse;">
+                            <tr><td style="padding:8px 0;color:#6b7280;width:140px;vertical-align:top;">Meno:</td><td style="padding:8px 0;font-weight:600;">${name}</td></tr>
+                            <tr><td style="padding:8px 0;color:#6b7280;vertical-align:top;">Email:</td><td style="padding:8px 0;"><a href="mailto:${email}" style="color:#6366f1;">${email}</a></td></tr>
+                            <tr><td style="padding:8px 0;color:#6b7280;vertical-align:top;">Typ projektu:</td><td style="padding:8px 0;">${projectType}</td></tr>
+                            <tr><td style="padding:8px 0;color:#6b7280;vertical-align:top;">Správа:</td><td style="padding:8px 0;">${message.replace(/\n/g, '<br>')}</td></tr>
+                        </table>
+                        <hr style="border:none;border-top:1px solid #e5e7eb;margin:20px 0;">
+                        <p style="color:#9ca3af;font-size:12px;margin:0;">Odpovedz priamo na tento email — odpoveď pôjde klientovi na <strong>${email}</strong></p>
+                    </div>
                 `,
             });
         }

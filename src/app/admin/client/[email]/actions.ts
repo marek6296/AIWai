@@ -3,21 +3,9 @@
 import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
 
-export async function toggleBotActive(email: string, currentStatus: boolean) {
-    const supabase = createClient()
-
-    const { error } = await supabase
-        .from('clients')
-        .update({ bot_active: !currentStatus })
-        .eq('email', email)
-
-    if (error) {
-        return { error: error.message }
-    }
-
-    revalidatePath('/admin')
-    revalidatePath(`/admin/client/${encodeURIComponent(email)}`)
-    return { success: true }
+// Legacy stub — kept for backward compatibility with BotToggle/BotQuickToggle
+export async function toggleBotActive(_email: string, _active: boolean) {
+    return { success: true, error: null }
 }
 
 export async function reviewDraftMessage(formData: FormData) {
@@ -34,42 +22,57 @@ export async function reviewDraftMessage(formData: FormData) {
 
     if (action === 'reject') {
         const { error } = await supabase
-            .from('email_history')
+            .from('lead_messages')
             .update({ message_status: 'rejected' })
             .eq('id', messageId)
 
         if (error) return { error: error.message }
+
     } else if (action === 'approve') {
-        // Save the updated content and change status to sent
+        // Save updated content and mark as sent
         const { error } = await supabase
-            .from('email_history')
+            .from('lead_messages')
             .update({
                 content: content,
                 message_status: 'sent',
-                created_at: new Date().toISOString() // Refresh timestamps to match "sent" time
+                created_at: new Date().toISOString()
             })
             .eq('id', messageId)
 
         if (error) return { error: error.message }
 
-        // Odoslanie do Make.com webhooku
+        // Update lead status to replied
+        await supabase
+            .from('leads')
+            .update({ status: 'replied' })
+            .eq('email', clientEmail)
+
+        // Fetch message record for webhook
+        const { data: msgRecord } = await supabase
+            .from('lead_messages')
+            .select('subject, thread_id, to_email')
+            .eq('id', messageId)
+            .single()
+
+        // Send via n8n Send Email Webhook
         try {
-            await fetch('https://hook.eu1.make.com/4fhojqtphcxqwehkjjr2tmqjnp67wz01', {
+            await fetch('https://primary-production-bc31.up.railway.app/webhook/send-email', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    clientEmail: clientEmail,
+                    draft_id: messageId,
+                    reply_to_email: msgRecord?.to_email || clientEmail,
+                    subject: msgRecord?.subject || 'Re: AIWai',
                     content: content,
-                    subject: 'Re: AIWai'
+                    thread_id: msgRecord?.thread_id || ''
                 })
-            });
+            })
         } catch (e) {
-            console.error("Chyba pri odosielani do Make.com", e);
+            console.error('Chyba pri odosielani do n8n webhook', e)
         }
     }
 
     revalidatePath(`/admin/client/${encodeURIComponent(clientEmail)}`)
+    revalidatePath('/admin/inbox')
     return { success: true }
 }

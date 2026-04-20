@@ -2,11 +2,12 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import {
     Bot, Settings, Brain, BookOpen, Zap, LogOut,
     Save, Upload, Trash2, CheckCircle, AlertCircle,
     ChevronDown, Power, FileText, RotateCcw, Eye, EyeOff,
-    Sparkles
+    Sparkles, Inbox
 } from 'lucide-react'
 
 /* ─── Types ─── */
@@ -257,6 +258,14 @@ export default function ChatbotAdminPage() {
                             {saving ? <Sparkles size={16} className="animate-spin" /> : saveStatus === 'success' ? <CheckCircle size={16} /> : saveStatus === 'error' ? <AlertCircle size={16} /> : <Save size={16} />}
                             {saving ? 'Ukladám...' : saveStatus === 'success' ? 'Uložené!' : saveStatus === 'error' ? 'Chyba!' : 'Uložiť'}
                         </button>
+
+                        <Link
+                            href="/admin/inbox"
+                            className="flex items-center gap-2 px-4 py-2 rounded-xl text-white/50 hover:text-white border border-white/10 hover:border-white/20 hover:bg-white/5 transition-all text-sm font-medium"
+                        >
+                            <Inbox size={16} />
+                            Inbox
+                        </Link>
 
                         <button onClick={handleLogout} className="p-2 rounded-xl text-white/40 hover:text-white/80 hover:bg-white/5 transition-all" title="Odhlásiť">
                             <LogOut size={18} />
