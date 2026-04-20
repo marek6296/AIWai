@@ -161,7 +161,7 @@ export const translations: Record<Lang, Record<string, string>> = {
         'hero.line2.light': 'Marketing',
         'hero.line2.gradient': 'Automatizácia',
         'hero.subtitle': 'Web, Dizajn, AI chatboty, Marketing aj Automatizácia — vy riešite biznis, my riešime všetko digitálne.',
-        'hero.cta.start': 'Viac info',
+        'hero.cta.start': 'Kontaktujte nás',
         'hero.cta.explore': 'Čo robíme ↓',
 
         // ── Services ──

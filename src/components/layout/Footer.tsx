@@ -1,51 +1,114 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Github, Twitter, Linkedin } from "lucide-react";
+
+const NAV_LINKS = [
+    { label: "Domov", href: "/" },
+    { label: "Služby", href: "/#services" },
+    { label: "O nás", href: "/#about" },
+    { label: "Cenník", href: "/cennik" },
+    { label: "AIWai News", href: "/blog" },
+    { label: "Kontakt", href: "/#contact" },
+];
 
 export default function Footer() {
     return (
         <footer className="bg-white relative overflow-hidden">
-            {/* Top gradient border */}
             <div className="h-px bg-gradient-to-r from-transparent via-brand-indigo/10 to-transparent" />
 
-            <div className="container mx-auto py-12 md:py-16 relative z-10">
-                <div className="flex flex-col md:flex-row justify-between items-center mb-10">
-                    <div className="mb-8 md:mb-0 flex items-center gap-4">
-                        <Image
-                            src="/logo.png"
-                            alt="AIWai Logo"
-                            width={48}
-                            height={48}
-                            className="object-contain opacity-70"
-                        />
-                        <div className="text-left">
-                            <h2 className="text-xl font-display font-bold text-brand-indigo leading-none">AIWai</h2>
-                            <p className="text-brand-indigo/40 text-xs mt-1 tracking-wide">Intelligent Digital Architecture</p>
-                            <a href="mailto:marek@aiwai.app" className="text-brand-indigo/30 hover:text-brand-indigo transition-colors text-[11px] block mt-2">marek@aiwai.app</a>
-                            <a href="tel:+421902076186" className="text-brand-indigo/30 hover:text-brand-indigo transition-colors text-[11px] block mt-0.5">+421 902 076 186</a>
+            <div className="container mx-auto px-6 py-14 md:py-20 relative z-10">
+                {/* Main grid */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8 mb-14">
+                    {/* Brand */}
+                    <div>
+                        <div className="flex items-center gap-3 mb-4">
+                            <Image
+                                src="/logo.png"
+                                alt="AIWai Logo"
+                                width={40}
+                                height={40}
+                                className="object-contain opacity-70"
+                            />
+                            <span className="text-xl font-display font-bold text-brand-indigo">AIWai</span>
+                        </div>
+                        <p className="text-brand-indigo/35 text-sm font-light leading-relaxed max-w-[220px]">
+                            Web, dizajn, AI chatboty, marketing a automatizácia — od jedného tímu.
+                        </p>
+                        <div className="mt-5 space-y-1.5">
+                            <a href="mailto:marek@aiwai.app" className="text-brand-indigo/40 hover:text-brand-indigo transition-colors text-sm block">
+                                marek@aiwai.app
+                            </a>
+                            <a href="tel:+421902876198" className="text-brand-indigo/40 hover:text-brand-indigo transition-colors text-sm block">
+                                +421 902 876 198
+                            </a>
                         </div>
                     </div>
 
-                    <div className="flex gap-6">
-                        <Link href="#" className="text-brand-indigo/30 hover:text-brand-indigo/60 transition-all hover:scale-110 duration-300">
-                            <Twitter size={20} strokeWidth={1.5} />
-                        </Link>
-                        <Link href="#" className="text-brand-indigo/30 hover:text-brand-indigo/60 transition-all hover:scale-110 duration-300">
-                            <Github size={20} strokeWidth={1.5} />
-                        </Link>
-                        <Link href="#" className="text-brand-indigo/30 hover:text-brand-indigo/60 transition-all hover:scale-110 duration-300">
-                            <Linkedin size={20} strokeWidth={1.5} />
-                        </Link>
+                    {/* Navigation */}
+                    <div>
+                        <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-brand-indigo/30 mb-5">Navigácia</p>
+                        <ul className="space-y-3">
+                            {NAV_LINKS.map((link) => (
+                                <li key={link.href}>
+                                    <Link
+                                        href={link.href}
+                                        className="text-brand-indigo/50 hover:text-brand-indigo transition-colors text-sm"
+                                    >
+                                        {link.label}
+                                    </Link>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+
+                    {/* Legal + Social */}
+                    <div>
+                        <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-brand-indigo/30 mb-5">Sledujte nás</p>
+                        <div className="flex items-center gap-4 mb-8">
+                            {/* Facebook */}
+                            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook"
+                                className="w-9 h-9 rounded-full border border-brand-indigo/10 flex items-center justify-center text-brand-indigo/30 hover:border-brand-indigo hover:text-brand-indigo hover:bg-brand-indigo/[0.03] transition-all duration-200">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+                            </a>
+                            {/* Instagram */}
+                            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram"
+                                className="w-9 h-9 rounded-full border border-brand-indigo/10 flex items-center justify-center text-brand-indigo/30 hover:border-brand-indigo hover:text-brand-indigo hover:bg-brand-indigo/[0.03] transition-all duration-200">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
+                            </a>
+                            {/* LinkedIn */}
+                            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"
+                                className="w-9 h-9 rounded-full border border-brand-indigo/10 flex items-center justify-center text-brand-indigo/30 hover:border-brand-indigo hover:text-brand-indigo hover:bg-brand-indigo/[0.03] transition-all duration-200">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
+                            </a>
+                        </div>
+
+                        <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-brand-indigo/30 mb-4">Právne</p>
+                        <ul className="space-y-2.5">
+                            <li>
+                                <Link href="/ochrana-osobnych-udajov" className="text-brand-indigo/40 hover:text-brand-indigo transition-colors text-sm">
+                                    Ochrana osobných údajov
+                                </Link>
+                            </li>
+                            <li>
+                                <Link href="/obchodne-podmienky" className="text-brand-indigo/40 hover:text-brand-indigo transition-colors text-sm">
+                                    Obchodné podmienky
+                                </Link>
+                            </li>
+                        </ul>
                     </div>
                 </div>
 
-                <div className="text-center md:text-left text-brand-indigo/15 text-[11px] tracking-wide">
-                    &copy; {new Date().getFullYear()} AIWai. All rights reserved.
+                {/* Bottom bar */}
+                <div className="pt-8 border-t border-brand-indigo/[0.06] flex flex-col sm:flex-row items-center justify-between gap-3">
+                    <p className="text-brand-indigo/20 text-[11px] tracking-wide">
+                        &copy; {new Date().getFullYear()} AIWai. Všetky práva vyhradené.
+                    </p>
+                    <p className="text-brand-indigo/15 text-[11px]">
+                        Slovensko · IČO: —
+                    </p>
                 </div>
             </div>
 
-            {/* Background glow */}
             <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1/2 h-1/2 bg-brand-indigo/[0.02] blur-[100px] pointer-events-none" />
         </footer>
     );

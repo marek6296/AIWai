@@ -44,7 +44,7 @@ export default function HeroSection() {
                 <div className="max-w-5xl mx-auto space-y-8">
                     <div className="space-y-0">
                         <div>
-                            <h1 className="hero-line text-center font-display font-bold tracking-tight text-brand-indigo leading-[1.2] whitespace-nowrap" style={{fontSize:"clamp(1.75rem,8.5vw,6rem)"}}>
+                            <h1 className="hero-line text-center font-display font-bold tracking-tight text-brand-indigo leading-[1.15] whitespace-nowrap" style={{fontSize:"clamp(1.75rem,8.5vw,6rem)"}}>
                                 {t("hero.line1").split("|").map((word, i, arr) => (
                                     <span key={i}>
                                         {word}
@@ -56,10 +56,10 @@ export default function HeroSection() {
                             </h1>
                         </div>
                         <div>
-                            <h1 className="hero-line text-center font-display font-bold tracking-tight leading-[1.2]" style={{fontSize:"clamp(1.75rem,8.5vw,6rem)"}}>
-                                <span className="text-brand-indigo/40 italic font-light block text-center">{t("hero.line2.light")}</span>
-                                <span className="text-gradient block text-center">{t("hero.line2.gradient")}</span>
-                            </h1>
+                            <div className="hero-line text-center font-display font-bold tracking-tight text-brand-indigo/45 leading-[1.15]" style={{fontSize:"clamp(1.75rem,8.5vw,6rem)"}}>
+                                <span className="block text-center">{t("hero.line2.light")}</span>
+                                <span className="block text-center">{t("hero.line2.gradient")}</span>
+                            </div>
                         </div>
                     </div>
 
@@ -73,7 +73,7 @@ export default function HeroSection() {
                         </MagneticButton>
                         <button
                             onClick={() => smoothScrollTo("services")}
-                            className="px-8 py-4 text-xs font-bold uppercase tracking-[0.2em] text-brand-indigo/60 hover:text-brand-indigo transition-colors"
+                            className="px-8 py-4 text-xs font-bold uppercase tracking-[0.2em] text-brand-indigo/40 hover:text-brand-indigo transition-colors"
                         >
                             {t("hero.cta.explore")}
                         </button>
