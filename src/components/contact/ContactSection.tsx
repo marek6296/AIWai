@@ -13,7 +13,7 @@ export default function ContactSection() {
     const [formData, setFormData] = useState({
         name: "",
         email: "",
-        projectType: "Website or Landing Page",
+        projectType: "New website or e-shop",
         message: "",
     });
 
@@ -45,10 +45,12 @@ export default function ContactSection() {
     };
 
     const projectTypes = [
-        { value: "Website or Landing Page", label: t("contact.projectType.web") },
-        { value: "AI Chatbot", label: t("contact.projectType.chatbot") },
-        { value: "AI Automation", label: t("contact.projectType.automation") },
-        { value: "Graphic Design", label: t("contact.projectType.design") },
+        { value: "New website or e-shop", label: t("contact.projectType.web") },
+        { value: "Simple presentation page", label: t("contact.projectType.landing") },
+        { value: "Chatbot", label: t("contact.projectType.chatbot") },
+        { value: "Automation", label: t("contact.projectType.automation") },
+        { value: "Logo and visual identity", label: t("contact.projectType.design") },
+        { value: "Social media graphics", label: t("contact.projectType.social") },
         { value: "Other", label: t("contact.projectType.other") },
     ];
 
