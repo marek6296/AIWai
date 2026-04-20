@@ -19,7 +19,7 @@ export const translations: Record<Lang, Record<string, string>> = {
 
         // ── Services ──
         'services.heading': 'What we do',
-        'services.subheading': 'Four services. One team. Everything your business needs online.',
+        'services.subheading': 'Five services. One team. Everything your business needs online.',
         'services.learnMore': 'Learn more',
 
         // Service 0 — Web Development
@@ -49,6 +49,13 @@ export const translations: Record<Lang, Record<string, string>> = {
         'services.3.whatIsIt': 'Design is often the first thing your customers judge you on. We create visual identities that are consistent, professional and actually reflect what your business stands for. Logo, colours, typography, social media templates, print materials — everything that makes your brand recognisable and trustworthy in every context.',
         'services.3.howItWorks': 'We start with a short brand questionnaire to understand your business, your audience and what makes you different from competitors. From there we develop logo concepts and a full visual identity. You get working files in every format you need, plus a brand guide so everything stays consistent as you grow.',
         'services.3.includes': 'Logo & Visual Identity|Brand Style Guide|Social Media Templates|Print Materials|Banner & Ad Design|Web UI/UX Design',
+
+        // Service 4 — Social Media & Ads
+        'services.4.title': 'Social Media & Ads',
+        'services.4.description': 'Facebook and Instagram management, paid campaigns — reach and convert your target audience.',
+        'services.4.whatIsIt': 'We manage your social media presence on Facebook and Instagram — regular posts, Stories, community management and paid advertising campaigns. From content creation to ad targeting and monthly reporting — one team handles everything so you can focus on your business.',
+        'services.4.howItWorks': 'We start by understanding your target audience and business goals. Then we create a monthly content plan, design all graphics, write captions, schedule posts and monitor engagement. For paid ads, we handle campaign setup, audience targeting, budget management and weekly reporting so you always know what\'s working.',
+        'services.4.includes': 'Facebook & Instagram Management|Monthly Content Plan|Post Design & Copywriting|Meta Ads Campaigns|Audience Targeting & Retargeting|Monthly Performance Reports',
 
         // ── Process ──
         'process.heading': 'How we work',
@@ -114,6 +121,7 @@ export const translations: Record<Lang, Record<string, string>> = {
         'contact.projectType.automation': 'Automating repetitive tasks',
         'contact.projectType.design': 'Logo and visual identity',
         'contact.projectType.social': 'Social media graphics',
+        'contact.projectType.marketing': 'Social media management & ads',
         'contact.projectType.other': 'Something else',
 
         // ── Chatbot ──
@@ -148,7 +156,7 @@ export const translations: Record<Lang, Record<string, string>> = {
 
         // ── Services ──
         'services.heading': 'Čo robíme',
-        'services.subheading': 'Štyri služby. Jeden tím. Všetko, čo váš biznis potrebuje online.',
+        'services.subheading': 'Päť služieb. Jeden tím. Všetko, čo váš biznis potrebuje online.',
         'services.learnMore': 'Viac info',
 
         // Service 0 — Tvorba webov
@@ -178,6 +186,13 @@ export const translations: Record<Lang, Record<string, string>> = {
         'services.3.whatIsIt': 'Dizajn je často prvá vec, podľa ktorej vás zákazníci súdia. Vytvárame vizuálne identity, ktoré sú konzistentné, profesionálne a skutočne odrážajú, čím je váš biznis výnimočný. Logo, farby, typografia, šablóny pre sociálne siete, tlačové materiály — všetko, čo robí vašu značku rozpoznateľnou.',
         'services.3.howItWorks': 'Začíname krátkym brandovým dotazníkom — chceme pochopiť váš biznis, cieľovú skupinu a to, čím sa líšite od konkurencie. Na základe toho vypracujeme koncepty loga a kompletnú vizuálnu identitu. Dostanete pracovné súbory vo všetkých formátoch a brandovú príručku, aby všetko zostalo konzistentné.',
         'services.3.includes': 'Logo a vizuálna identita|Brand style guide|Šablóny pre sociálne siete|Tlačové materiály|Bannery a reklamy|Web UI/UX dizajn',
+
+        // Service 4 — Sociálne siete & Reklamy
+        'services.4.title': 'Sociálne siete & Reklamy',
+        'services.4.description': 'Správa Facebooku a Instagramu, platené kampane — oslovia a konvertujú vašu cieľovú skupinu.',
+        'services.4.whatIsIt': 'Spravujeme vašu prítomnosť na Facebooku a Instagrame — pravidelné príspevky, Stories, správa komunity a platené reklamné kampane. Od tvorby obsahu po cielenie reklám a mesačné reporty — jeden tím vybavuje všetko, vy sa sústredíte na biznis.',
+        'services.4.howItWorks': 'Začíname pochopením vašej cieľovej skupiny a obchodných cieľov. Potom vytvoríme mesačný obsahový plán, navrhneme grafiku, napíšeme texty, naplánujeme príspevky a sledujeme zapojenie. Pri platených reklamách riešime nastavenie kampaní, cielenie, správu rozpočtu a týždenné reporty — vždy viete, čo funguje.',
+        'services.4.includes': 'Správa Facebooku & Instagramu|Mesačný obsahový plán|Grafika a texty príspevkov|Meta Ads kampane|Cielenie a retargeting|Mesačné výkonnostné reporty',
 
         // ── Process ──
         'process.heading': 'Ako pracujeme',
@@ -243,6 +258,7 @@ export const translations: Record<Lang, Record<string, string>> = {
         'contact.projectType.automation': 'Automatizácia opakujúcich sa úloh',
         'contact.projectType.design': 'Logo a vizuálna identita',
         'contact.projectType.social': 'Grafika pre sociálne siete',
+        'contact.projectType.marketing': 'Správa sociálnych sietí a reklamy',
         'contact.projectType.other': 'Niečo iné',
 
         // ── Chatbot ──
@@ -277,7 +293,7 @@ export const translations: Record<Lang, Record<string, string>> = {
 
         // ── Services ──
         'services.heading': 'Co děláme',
-        'services.subheading': 'Čtyři služby. Jeden tým. Vše, co vaše firma potřebuje online.',
+        'services.subheading': 'Pět služeb. Jeden tým. Vše, co vaše firma potřebuje online.',
         'services.learnMore': 'Více info',
 
         // Service 0 — Tvorba webů
@@ -307,6 +323,13 @@ export const translations: Record<Lang, Record<string, string>> = {
         'services.3.whatIsIt': 'Design je často první věc, podle které vás zákazníci posuzují. Vytváříme vizuální identity, které jsou konzistentní, profesionální a skutečně odrážejí, čím je váš byznys výjimečný. Logo, barvy, typografie, šablony pro sociální sítě, tiskové materiály — vše, co dělá vaši značku rozpoznatelnou.',
         'services.3.howItWorks': 'Začínáme krátkým brandovým dotazníkem — chceme pochopit váš byznys, cílovou skupinu a to, čím se lišíte od konkurence. Na základě toho vypracujeme koncepty loga a kompletní vizuální identitu. Dostanete pracovní soubory ve všech formátech a brandovou příručku, aby vše zůstalo konzistentní.',
         'services.3.includes': 'Logo a vizuální identita|Brand style guide|Šablony pro sociální sítě|Tiskové materiály|Bannery a reklamy|Web UI/UX design',
+
+        // Service 4 — Sociální sítě & Reklamy
+        'services.4.title': 'Sociální sítě & Reklamy',
+        'services.4.description': 'Správa Facebooku a Instagramu, placené kampaně — oslovíte a konvertujete svou cílovou skupinu.',
+        'services.4.whatIsIt': 'Spravujeme vaši přítomnost na Facebooku a Instagramu — pravidelné příspěvky, Stories, správa komunity a placené reklamní kampaně. Od tvorby obsahu po cílení reklam a měsíční reporty — jeden tým vyřizuje vše, vy se soustředíte na byznys.',
+        'services.4.howItWorks': 'Začínáme pochopením vaší cílové skupiny a obchodních cílů. Pak vytvoříme měsíční obsahový plán, navrhneme grafiku, napíšeme texty, naplánujeme příspěvky a sledujeme zapojení. U placených reklam řešíme nastavení kampaní, cílení, správu rozpočtu a týdenní reporty — vždy víte, co funguje.',
+        'services.4.includes': 'Správa Facebooku & Instagramu|Měsíční obsahový plán|Grafika a texty příspěvků|Meta Ads kampaně|Cílení a retargeting|Měsíční výkonnostní reporty',
 
         // ── Process ──
         'process.heading': 'Jak pracujeme',
@@ -372,6 +395,7 @@ export const translations: Record<Lang, Record<string, string>> = {
         'contact.projectType.automation': 'Automatizace opakujících se úkolů',
         'contact.projectType.design': 'Logo a vizuální identita',
         'contact.projectType.social': 'Grafika pro sociální sítě',
+        'contact.projectType.marketing': 'Správa sociálních sítí a reklamy',
         'contact.projectType.other': 'Něco jiného',
 
         // ── Chatbot ──

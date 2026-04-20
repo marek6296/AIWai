@@ -51,6 +51,7 @@ export default function ContactSection() {
         { value: "Automation", label: t("contact.projectType.automation") },
         { value: "Logo and visual identity", label: t("contact.projectType.design") },
         { value: "Social media graphics", label: t("contact.projectType.social") },
+        { value: "Social media management & ads", label: t("contact.projectType.marketing") },
         { value: "Other", label: t("contact.projectType.other") },
     ];
 

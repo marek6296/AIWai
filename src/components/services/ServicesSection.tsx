@@ -6,18 +6,19 @@ import TextReveal from "@/components/animations/TextReveal";
 import { useTranslation } from "@/i18n/useTranslation";
 import PremiumIcon from "@/components/ui/PremiumIcon";
 
-const ICONS: ("web" | "chatbots" | "automation" | "design")[] = [
+const ICONS: ("web" | "chatbots" | "automation" | "design" | "social")[] = [
     "web",
     "chatbots",
     "automation",
     "design",
+    "social",
 ];
 
 export default function ServicesSection() {
     const { t } = useTranslation();
     const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
-    const services = [0, 1, 2, 3].map((i) => ({
+    const services = [0, 1, 2, 3, 4].map((i) => ({
         title: t(`services.${i}.title`),
         description: t(`services.${i}.description`),
         icon: <PremiumIcon type={ICONS[i]} size={42} />,
@@ -51,7 +52,7 @@ export default function ServicesSection() {
                 </div>
 
                 {/* Cards Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 md:gap-8">
                     {services.map((service, index) => (
                         <ServiceCard
                             key={index}

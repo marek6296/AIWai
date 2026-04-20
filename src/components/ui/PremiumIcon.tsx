@@ -7,7 +7,8 @@ export type IconType =
   | "automation"
   | "design"
   | "premium-design"
-  | "growth";
+  | "growth"
+  | "social";
 
 interface PremiumIconProps {
     type: IconType;
@@ -93,6 +94,20 @@ export default function PremiumIcon({ type, className = "", size = 120 }: Premiu
                         <rect x="59" y="25" width="6" height="50" rx="1" stroke="currentColor" strokeWidth="1.5" />
                         <path d="M30 65C40 65 50 45 75 20" stroke="currentColor" strokeWidth="1.2" strokeDasharray="3 3" strokeOpacity="0.5" />
                         <path d="M70 20H75V25" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                );
+            case "social":
+                return (
+                    <svg width={size} height={size} viewBox="0 0 100 100" fill="none">
+                        {/* Megaphone body */}
+                        <path d="M28 42H40L68 28V72L40 58H28V42Z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
+                        {/* Speaker base */}
+                        <path d="M28 42V58" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                        {/* Sound waves */}
+                        <path d="M74 38C77 41.5 77 58.5 74 62" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeOpacity="0.5" />
+                        <path d="M79 33C84 39 84 61 79 67" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeOpacity="0.25" />
+                        {/* Like thumb */}
+                        <path d="M32 64L35 76C35.5 78 37 79 39 78L41 77C42.5 76.5 43 75 42.5 73.5L40 64" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" strokeOpacity="0.6" />
                     </svg>
                 );
             default:

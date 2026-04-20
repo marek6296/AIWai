@@ -271,6 +271,46 @@ export default function CennikPage() {
                 </div>
             </section>
 
+            {/* SOCIÁLNE SIETE */}
+            <section className="py-16 md:py-20">
+                <div className="container mx-auto px-6">
+                    <div className="mb-10">
+                        <span className="text-[10px] uppercase tracking-[0.35em] font-bold text-brand-sand/70">05</span>
+                        <h2 className="text-3xl md:text-4xl font-display font-bold text-brand-indigo mt-1">Sociálne siete & Reklamy</h2>
+                        <p className="text-brand-indigo/40 mt-2 max-w-xl">Správa Facebooku a Instagramu + platené Meta Ads kampane.</p>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5 max-w-3xl">
+                        <PricingCard
+                            name="Social Starter"
+                            price="od €199/mes"
+                            priceNote="mesačná správa"
+                            features={[
+                                "12 príspevkov mesačne",
+                                "Facebook + Instagram",
+                                "Grafika a texty príspevkov",
+                                "Správa komentárov",
+                                "Mesačný report",
+                            ]}
+                        />
+                        <PricingCard
+                            name="Social Pro + Ads"
+                            price="od €349/mes"
+                            priceNote="správa + reklamy"
+                            highlight
+                            badge="Odporúčame"
+                            features={[
+                                "20 príspevkov mesačne",
+                                "Facebook + Instagram + Stories",
+                                "Meta Ads kampane (budget v cene nie je)",
+                                "Cielenie a retargeting",
+                                "Týždenné reporty",
+                                "Optimalizácia kampaní",
+                            ]}
+                        />
+                    </div>
+                </div>
+            </section>
+
             {/* Note */}
             <section className="py-12">
                 <div className="container mx-auto px-6 max-w-3xl">
