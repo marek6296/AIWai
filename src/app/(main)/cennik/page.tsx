@@ -105,8 +105,9 @@ export default function CennikPage() {
                             features={[
                                 "3 návrhy loga",
                                 "2 kolá revízií",
-                                "Formáty PNG, SVG, PDF",
+                                "Formáty PNG a JPEG",
                                 "Svetlá aj tmavá verzia",
+                                "Bez vektorových súborov",
                                 "Odovzdanie do 5 dní",
                             ]}
                         />
@@ -117,11 +118,11 @@ export default function CennikPage() {
                             badge="Populárne"
                             highlight
                             features={[
-                                "Logo (3 návrhy, 3 kolá revízií)",
-                                "Farebná paleta + typografia",
-                                "Brand style guide (PDF)",
+                                "Logo (3 návrhy + 3 kolá revízií)",
+                                "Vektorové súbory (SVG, AI, PDF) — tlač bez straty kvality",
+                                "Svetlá, tmavá aj farebná verzia loga",
+                                "Brand manuál — farby, písmo a pravidlá použitia",
                                 "5 šablón pre sociálne siete",
-                                "Všetky formáty súborov",
                                 "Odovzdanie do 10 dní",
                             ]}
                         />
