@@ -29,9 +29,6 @@ export default function HumanVision() {
 
                     {/* ── Right: Philosophy Story ── */}
                     <FadeIn className="lg:col-span-7 flex flex-col justify-center" delay={0.1}>
-                        <h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-bold text-brand-indigo mb-6 tracking-tight leading-tight">
-                            {t("whyUs.philosophy.title")}
-                        </h2>
                         <div className="space-y-5 text-brand-indigo/50 text-base md:text-lg leading-relaxed font-light">
                             <p>{t("whyUs.philosophy.text1")}</p>
                             <p>{t("whyUs.philosophy.text2")}</p>
