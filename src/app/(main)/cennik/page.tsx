@@ -127,14 +127,15 @@ export default function CennikPage() {
                         />
                         <PricingCard
                             name="Grafika pre sociálne siete"
-                            price="od €69"
-                            priceNote="balíček 10 grafík"
+                            price="od €149"
+                            priceNote="jednorazový balíček šablón"
                             features={[
-                                "10 prispôsobených grafík",
-                                "Formáty pre Instagram, FB, LinkedIn",
-                                "Editovateľné šablóny",
-                                "1 kolo revízií",
-                                "Odovzdanie do 5 dní",
+                                "15 brandovaných šablón (feed + stories)",
+                                "Profilový obrázok + cover fotka",
+                                "Highlight covers pre Instagram",
+                                "Editovateľné súbory (Canva alebo Figma)",
+                                "Jednotný vizuálny štýl podľa vašej značky",
+                                "Odovzdanie do 7 dní",
                             ]}
                         />
                     </div>
