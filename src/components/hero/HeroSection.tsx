@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import MagneticButton from "@/components/ui/MagneticButton";
 import { useTranslation } from "@/i18n/useTranslation";
 
@@ -22,6 +23,18 @@ export default function HeroSection() {
             <div className="hero-orb absolute top-[10%] left-[15%] w-[300px] h-[300px] md:w-[500px] md:h-[500px] rounded-full bg-brand-sand/10 blur-[80px] md:blur-[120px] animate-float-slow pointer-events-none" />
             <div className="hero-orb absolute bottom-[15%] right-[10%] w-[250px] h-[250px] md:w-[400px] md:h-[400px] rounded-full bg-brand-indigo/5 blur-[80px] md:blur-[100px] animate-float-slower pointer-events-none" />
             <div className="hero-orb absolute top-[50%] right-[30%] w-[150px] h-[150px] md:w-[250px] md:h-[250px] rounded-full bg-brand-sand/8 blur-[60px] md:blur-[80px] animate-float pointer-events-none" />
+
+            {/* ── Logo background ── */}
+            <div className="absolute inset-0 flex items-center justify-center z-[2] pointer-events-none">
+                <Image
+                    src="/logo.png"
+                    alt=""
+                    width={600}
+                    height={600}
+                    className="w-[400px] h-[400px] md:w-[600px] md:h-[600px] object-contain opacity-50 mix-blend-multiply select-none"
+                    aria-hidden
+                />
+            </div>
 
             {/* ── Subtle Grid ── */}
             <div className="absolute inset-0 bg-[linear-gradient(rgba(28,31,58,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(28,31,58,0.02)_1px,transparent_1px)] bg-[size:60px_60px] pointer-events-none" />
