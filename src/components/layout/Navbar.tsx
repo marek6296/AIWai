@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useTranslation } from "@/i18n/useTranslation";
 import type { Lang } from "@/i18n/translations";
@@ -25,6 +26,9 @@ const scrollTo = (id: string) => {
 
 export default function Navbar() {
     const { t, lang, setLang } = useTranslation();
+    const pathname = usePathname();
+    const router = useRouter();
+    const isHome = pathname === "/";
     const [isOpen, setIsOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
     const [langOpen, setLangOpen] = useState(false);
@@ -56,8 +60,12 @@ export default function Navbar() {
     const handleScroll = useCallback((e: React.MouseEvent, id: string) => {
         e.preventDefault();
         setIsOpen(false);
-        setTimeout(() => scrollTo(id), 50);
-    }, []);
+        if (isHome) {
+            setTimeout(() => scrollTo(id), 50);
+        } else {
+            router.push(`/#${id}`);
+        }
+    }, [isHome, router]);
 
     return (
         <>
@@ -73,7 +81,7 @@ export default function Navbar() {
                     <div className="flex items-center gap-3 z-[110]">
                         <Link
                             href="/"
-                            onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: "smooth" }); }}
+                            onClick={(e) => { if (isHome) { e.preventDefault(); window.scrollTo({ top: 0, behavior: "smooth" }); } }}
                             className="relative flex items-center"
                         >
                             <Image src="/logo.png" alt="AIWai" width={52} height={52} className="w-12 h-12 object-contain mix-blend-multiply" priority />
@@ -130,12 +138,21 @@ export default function Navbar() {
                             {t("nav.pricing")}
                         </Link>
                         <div className="w-px h-6 bg-brand-indigo/10 mx-3" />
-                        <button
-                            onClick={(e) => handleScroll(e, "contact")}
-                            className="px-6 py-2.5 bg-brand-indigo text-white rounded-full text-xs font-bold tracking-[0.15em] uppercase hover:bg-brand-indigo/90 transition-all shadow-lg shadow-brand-indigo/10 hover:shadow-brand-indigo/20"
-                        >
-                            {t("nav.contact")}
-                        </button>
+                        {isHome ? (
+                            <button
+                                onClick={(e) => handleScroll(e, "contact")}
+                                className="px-6 py-2.5 bg-brand-indigo text-white rounded-full text-xs font-bold tracking-[0.15em] uppercase hover:bg-brand-indigo/90 transition-all shadow-lg shadow-brand-indigo/10 hover:shadow-brand-indigo/20"
+                            >
+                                {t("nav.contact")}
+                            </button>
+                        ) : (
+                            <Link
+                                href="/#contact"
+                                className="px-6 py-2.5 bg-brand-indigo text-white rounded-full text-xs font-bold tracking-[0.15em] uppercase hover:bg-brand-indigo/90 transition-all shadow-lg shadow-brand-indigo/10 hover:shadow-brand-indigo/20"
+                            >
+                                {t("nav.contact")}
+                            </Link>
+                        )}
                     </div>
 
                     {/* Mobile toggle — CSS icon swap */}
