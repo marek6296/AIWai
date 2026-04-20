@@ -30,9 +30,10 @@ export async function POST(req: Request) {
         // Send email notification
         if (process.env.ZOHO_SMTP_PASSWORD) {
             await transporter.sendMail({
-                from: '"AIWai Web" <marek@aiwai.app>',
+                from: '"Formulár aiwai.app" <marek@aiwai.app>',
                 to: 'marek@aiwai.app',
-                subject: `Nová správa od ${name} — ${projectType}`,
+                replyTo: `"${name}" <${email}>`,
+                subject: `📩 ${name} — ${projectType}`,
                 html: `
                     <h2>Nová správa z webu aiwai.app</h2>
                     <p><strong>Meno:</strong> ${name}</p>
