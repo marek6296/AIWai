@@ -40,7 +40,7 @@ export default function HeroSection() {
             <div className="absolute inset-0 bg-[linear-gradient(rgba(28,31,58,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(28,31,58,0.02)_1px,transparent_1px)] bg-[size:60px_60px] pointer-events-none" />
 
             {/* ── Content — CSS-only animations, visible immediately ── */}
-            <div className="relative z-10 container mx-auto text-center px-6 py-32">
+            <div className="relative z-10 container mx-auto text-center px-6 pt-20 pb-32 md:py-32">
                 <div className="max-w-5xl mx-auto space-y-8">
                     <div className="space-y-0">
                         <div>
