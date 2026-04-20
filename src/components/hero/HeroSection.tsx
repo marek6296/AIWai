@@ -41,7 +41,7 @@ export default function HeroSection() {
 
             {/* ── Content — CSS-only animations, visible immediately ── */}
             <div className="relative z-10 container mx-auto text-center px-6 pt-20 pb-32 md:py-32">
-                <div className="max-w-5xl mx-auto space-y-8">
+                <div className="max-w-5xl mx-auto space-y-14 md:space-y-8">
                     <div className="space-y-0">
                         <div>
                             <h1 className="hero-line text-center font-display font-bold tracking-tight text-brand-indigo leading-[1.15] whitespace-nowrap" style={{fontSize:"clamp(1.75rem,8.5vw,6rem)"}}>
@@ -67,13 +67,13 @@ export default function HeroSection() {
                         {t("hero.subtitle")}
                     </p>
 
-                    <div className="hero-cta flex items-center justify-center gap-4 pt-4">
-                        <MagneticButton onClick={() => smoothScrollTo("contact")}>
+                    <div className="hero-cta flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 pt-4">
+                        <MagneticButton onClick={() => smoothScrollTo("contact")} className="whitespace-nowrap w-full sm:w-auto">
                             {t("hero.cta.start")}
                         </MagneticButton>
                         <button
                             onClick={() => smoothScrollTo("services")}
-                            className="px-8 py-4 text-xs font-bold uppercase tracking-[0.2em] text-brand-indigo/40 hover:text-brand-indigo transition-colors"
+                            className="px-8 py-3 sm:py-4 text-xs font-bold uppercase tracking-[0.2em] text-brand-indigo/40 hover:text-brand-indigo transition-colors whitespace-nowrap"
                         >
                             {t("hero.cta.explore")}
                         </button>
