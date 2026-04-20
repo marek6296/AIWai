@@ -6,12 +6,12 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "sw
 const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit", display: "swap" });
 
 export const metadata: Metadata = {
-  title: "AIWai — Complete Digital Agency | Web, Design, AI & Automation",
-  description: "AIWai is a full-service digital agency offering web development, graphic design, AI chatbots and business automation. One team for everything your business needs online.",
-  keywords: ["digital agency", "web development", "AI chatbot", "business automation", "graphic design", "branding", "Make.com", "n8n", "Slovakia"],
+  title: "AIWai — Web, Dizajn, AI Chatbot & Automatizácia",
+  description: "Digitálna agentúra pre malé a stredné firmy. Tvoríme weby, loga, AI chatboty a automatizujeme procesy. Jedno miesto pre všetko digitálne.",
+  keywords: ["digitálna agentúra", "tvorba webu", "AI chatbot", "automatizácia", "logo dizajn", "branding", "Make.com", "n8n", "Slovensko"],
   openGraph: {
-    title: "AIWai — Complete Digital Agency",
-    description: "Web development, graphic design, AI chatbots and business automation. One team, everything digital.",
+    title: "AIWai — Web, Dizajn, AI & Automatizácia",
+    description: "Weby, logá, AI chatboty a automatizácia pre váš biznis. Jedno miesto pre všetko digitálne.",
     type: "website",
     url: "https://aiwai.app",
   },
