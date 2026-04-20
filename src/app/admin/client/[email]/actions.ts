@@ -4,7 +4,9 @@ import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
 
 // Legacy stub — kept for backward compatibility with BotToggle/BotQuickToggle
-export async function toggleBotActive(_email: string, _active: boolean) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export async function toggleBotActive(email: string, active: boolean) {
+    void email; void active
     return { success: true, error: null }
 }
 
