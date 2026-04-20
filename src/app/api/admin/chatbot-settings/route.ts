@@ -8,7 +8,7 @@ const DEFAULT_CONFIG = {
     general: {
         name: 'AIWai Assistant',
         welcomeMessage: "Hi! I'm AIWai. How can I help you build something great today?",
-        contactEmail: 'hello@aiwai.com',
+        contactEmail: 'marek@aiwai.app',
         language: 'auto',
         personality: 'professional',
         enabled: true,
@@ -30,7 +30,7 @@ The agency specializes in:
 
 Your tone is professional, futuristic, helpful, and concise. 
 You should help users understand how AIWai can elevate their business.
-If asked about pricing, suggest contacting the team directly via the contact form or email hello@aiwai.com.
+If asked about pricing, suggest contacting the team directly via the contact form or email marek@aiwai.app.
 Keep responses brief and engaging.
 IMPORTANT: Always detect the language of the user's input and respond in exactly that same language.`,
     knowledge: {

@@ -22,7 +22,7 @@ export default function Footer() {
                         <div className="text-left">
                             <h2 className="text-xl font-display font-bold text-brand-indigo leading-none">AIWai</h2>
                             <p className="text-brand-indigo/40 text-xs mt-1 tracking-wide">Intelligent Digital Architecture</p>
-                            <a href="mailto:dony.jaij.sk@gmail.com" className="text-brand-indigo/30 hover:text-brand-indigo transition-colors text-[11px] block mt-2">dony.jaij.sk@gmail.com</a>
+                            <a href="mailto:marek@aiwai.app" className="text-brand-indigo/30 hover:text-brand-indigo transition-colors text-[11px] block mt-2">marek@aiwai.app</a>
                             <a href="tel:+421902076186" className="text-brand-indigo/30 hover:text-brand-indigo transition-colors text-[11px] block mt-0.5">+421 902 076 186</a>
                         </div>
                     </div>

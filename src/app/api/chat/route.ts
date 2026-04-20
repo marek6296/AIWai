@@ -6,12 +6,12 @@ import path from 'path'
 const CONFIG_PATH = path.join(process.cwd(), 'data', 'chatbot-config.json')
 
 const DEFAULT_CONFIG = {
-    general: { enabled: true, contactEmail: 'hello@aiwai.com', language: 'auto' },
+    general: { enabled: true, contactEmail: 'marek@aiwai.app', language: 'auto' },
     model: { model: 'gpt-4o', temperature: 0.7, maxTokens: 500, topP: 1.0, frequencyPenalty: 0, presencePenalty: 0 },
     systemPrompt: `You are AIWai, an intelligent digital architect and assistant for the AIWai agency.
 The agency specializes in AI Agents, AI Chatbots, Automation, and Design & Graphics.
 Your tone is professional, futuristic, helpful, and concise.
-If asked about pricing, suggest contacting hello@aiwai.com.
+If asked about pricing, suggest contacting marek@aiwai.app.
 IMPORTANT: Always respond in the same language as the user's input.`,
     knowledge: { combinedText: '' },
     advanced: { maxHistory: 10, fallbackMessage: "I'm currently recalibrating my neural pathways. Please try again later." },
