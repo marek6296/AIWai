@@ -25,7 +25,7 @@ export async function POST(req: Request) {
                 from: 'AIWai Formulár <formular@aiwai.app>',
                 to: 'marek@aiwai.app',
                 replyTo: `${name} <${email}>`,
-                subject: `[AIWai Formulár] ${name} — ${projectType}`,
+                subject: `${name} — ${projectType}`,
                 text: `Nová správa z webu aiwai.app\n\nMeno: ${name}\nEmail: ${email}\nTelefón: ${phone || '—'}\nTyp projektu: ${projectType}\nSprávа:\n${message}`,
                 html: `
                     <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:24px;border:1px solid #e5e7eb;border-radius:8px;">
