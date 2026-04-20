@@ -13,6 +13,7 @@ export default function ContactSection() {
     const [formData, setFormData] = useState({
         name: "",
         email: "",
+        phone: "",
         projectType: "Company Website",
         message: "",
     });
@@ -35,7 +36,7 @@ export default function ContactSection() {
             ]);
             if (dbRes.ok || webhookRes.ok) {
                 setStatus("success");
-                setFormData({ name: "", email: "", projectType: "Company Website", message: "" });
+                setFormData({ name: "", email: "", phone: "", projectType: "Company Website", message: "" });
             } else {
                 setStatus("error");
             }
@@ -166,6 +167,20 @@ export default function ContactSection() {
                                 type="email" required value={formData.email}
                                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                                 onFocus={() => setFocused("email")}
+                                onBlur={(e) => !e.target.value && setFocused(null)}
+                                className="w-full bg-transparent border-b border-brand-indigo/10 py-2.5 text-brand-indigo outline-none focus:border-brand-indigo/40 transition-all"
+                            />
+                        </div>
+
+                        {/* Phone */}
+                        <div className="relative group">
+                            <label className={`absolute left-0 transition-all duration-300 pointer-events-none text-sm ${focused === "phone" || formData.phone ? "-top-6 text-brand-indigo" : "top-2.5 text-brand-indigo/30"}`}>
+                                Telefón (nepovinné)
+                            </label>
+                            <input
+                                type="tel" value={formData.phone}
+                                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                                onFocus={() => setFocused("phone")}
                                 onBlur={(e) => !e.target.value && setFocused(null)}
                                 className="w-full bg-transparent border-b border-brand-indigo/10 py-2.5 text-brand-indigo outline-none focus:border-brand-indigo/40 transition-all"
                             />

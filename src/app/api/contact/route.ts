@@ -7,12 +7,12 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 export async function POST(req: Request) {
     try {
         const body = await req.json();
-        const { name, email, projectType, message } = body;
+        const { name, email, phone, projectType, message } = body;
 
         // Save to Supabase
         const { data, error: supabaseError } = await supabase
             .from('contacts')
-            .insert([{ name, email, project_type: projectType, message, created_at: new Date().toISOString() }])
+            .insert([{ name, email, phone, project_type: projectType, message, created_at: new Date().toISOString() }])
             .select();
 
         if (supabaseError) {
@@ -26,13 +26,14 @@ export async function POST(req: Request) {
                 to: 'marek@aiwai.app',
                 replyTo: `${name} <${email}>`,
                 subject: `[AIWai Formulár] ${name} — ${projectType}`,
-                text: `Nová správa z webu aiwai.app\n\nMeno: ${name}\nEmail: ${email}\nTyp projektu: ${projectType}\nSprávа:\n${message}`,
+                text: `Nová správa z webu aiwai.app\n\nMeno: ${name}\nEmail: ${email}\nTelefón: ${phone || '—'}\nTyp projektu: ${projectType}\nSprávа:\n${message}`,
                 html: `
                     <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:24px;border:1px solid #e5e7eb;border-radius:8px;">
                         <h2 style="color:#111827;margin-top:0;">📩 Nová správa z webu aiwai.app</h2>
                         <table style="width:100%;border-collapse:collapse;">
                             <tr><td style="padding:8px 0;color:#6b7280;width:140px;vertical-align:top;">Meno:</td><td style="padding:8px 0;font-weight:600;">${name}</td></tr>
                             <tr><td style="padding:8px 0;color:#6b7280;vertical-align:top;">Email:</td><td style="padding:8px 0;"><a href="mailto:${email}" style="color:#6366f1;">${email}</a></td></tr>
+                            <tr><td style="padding:8px 0;color:#6b7280;vertical-align:top;">Telefón:</td><td style="padding:8px 0;">${phone || '—'}</td></tr>
                             <tr><td style="padding:8px 0;color:#6b7280;vertical-align:top;">Typ projektu:</td><td style="padding:8px 0;">${projectType}</td></tr>
                             <tr><td style="padding:8px 0;color:#6b7280;vertical-align:top;">Správа:</td><td style="padding:8px 0;">${message.replace(/\n/g, '<br>')}</td></tr>
                         </table>
