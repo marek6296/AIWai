@@ -126,7 +126,7 @@ function SubmissionsSection({ title, newItems, doneItems, emptyText, badge, icon
     )
 }
 
-function SubmissionCard({ sub, badge, isDone, table = 'form_submissions' }: { sub: Record<string, string>; badge: string; isDone: boolean; table?: 'form_submissions' | 'email_submissions' }) {
+function SubmissionCard({ sub, isDone, table = 'form_submissions' }: { sub: Record<string, string>; badge?: string; isDone: boolean; table?: 'form_submissions' | 'email_submissions' }) {
     return (
         <div className={`bg-white rounded-2xl p-${isDone ? '4' : '5'} border transition-all ${
             isDone
