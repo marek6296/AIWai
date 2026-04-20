@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import OpenAI from 'openai';
+import { GoogleGenerativeAI, Content } from '@google/generative-ai';
 import fs from 'fs';
 import path from 'path';
 import { AIWAI_SYSTEM_PROMPT } from '@/lib/chatbot/knowledge';
@@ -10,7 +10,7 @@ const CONFIG_PATH = path.join(process.cwd(), 'data', 'chatbot-config.json');
 
 const DEFAULT_CONFIG = {
     general: { enabled: true, contactEmail: 'marek@aiwai.app', language: 'auto' },
-    model: { model: 'gpt-4o', temperature: 0.7, maxTokens: 500, topP: 1.0, frequencyPenalty: 0, presencePenalty: 0 },
+    model: { model: 'gemini-2.5-flash', temperature: 0.7, maxTokens: 1000 },
     advanced: { maxHistory: 12, fallbackMessage: 'Prepáč, teraz mi nejde pripojenie. Napíš priamo na marek@aiwai.app.' },
 };
 
@@ -24,10 +24,10 @@ function loadConfig() {
     return DEFAULT_CONFIG;
 }
 
-let _openai: OpenAI | null = null;
-function getOpenAI() {
-    if (!_openai) _openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-    return _openai;
+let _genAI: GoogleGenerativeAI | null = null;
+function getGenAI() {
+    if (!_genAI) _genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
+    return _genAI;
 }
 
 interface ChatMessage {
@@ -36,29 +36,44 @@ interface ChatMessage {
 }
 
 /**
- * Detekuje jazyk z prvej user správy (veľmi hrubý heuristický odhad).
- * Default = 'sk'.
+ * Convert our OpenAI-style message array to Gemini history format.
+ * - system messages are skipped (handled via systemInstruction)
+ * - assistant → model
+ * - The last user message is NOT included in history; it's sent via sendMessage()
+ */
+function toGeminiHistory(messages: ChatMessage[]): Content[] {
+    const history: Content[] = [];
+    // all except the very last message (which we send as the new turn)
+    const prev = messages.slice(0, -1);
+    for (const m of prev) {
+        if (m.role === 'system') continue;
+        history.push({
+            role: m.role === 'assistant' ? 'model' : 'user',
+            parts: [{ text: m.content }],
+        });
+    }
+    return history;
+}
+
+/**
+ * Detekuje jazyk z prvej user správy.
  */
 function detectLanguage(text: string): string {
     const lower = text.toLowerCase();
-    // Slovak-specific characters
     if (/[ľĺčšťžýáíéóúňďôäöř]/.test(lower)) {
-        // CZ has ř, SK rarely; SK has ľĺŕť, CZ rarely
         if (/[řůě]/.test(lower) && !/[ľĺŕ]/.test(lower)) return 'cs';
         return 'sk';
     }
-    // English heuristic: common english words
     if (/\b(the|and|you|what|how|price|cost|website|chatbot)\b/.test(lower)) return 'en';
     return 'sk';
 }
 
 /**
- * Upsert conversation row + insert all new messages. Non-blocking for the
- * chat response — if DB fails we log it but still respond to the user.
+ * Upsert conversation row + insert all new messages. Non-blocking.
  */
 async function persistConversation(opts: {
     sessionId: string;
-    messages: ChatMessage[];       // full history including latest assistant reply
+    messages: ChatMessage[];
     userMessages: string[];
     lastUserMsg: string;
     assistantReply: string;
@@ -69,13 +84,11 @@ async function persistConversation(opts: {
     try {
         const admin = getSupabaseAdmin();
 
-        // Analyze tags + lead data from all user messages so far
         const tags = extractTags(userMessages);
         const lead = extractLead(userMessages);
         const firstUserMsg = userMessages[0] ?? '';
         const interest = lead.hasAny ? buildInterestSummary(tags, firstUserMsg) : null;
 
-        // Upsert conversation
         const { data: existing, error: selectErr } = await admin
             .from('chatbot_conversations')
             .select('id, is_lead')
@@ -117,7 +130,6 @@ async function persistConversation(opts: {
         } else {
             conversationId = existing.id;
 
-            // Update existing conversation with latest tags/lead info
             const updates: Record<string, unknown> = {
                 tags,
                 last_user_msg: lastUserMsg.slice(0, 500),
@@ -138,16 +150,12 @@ async function persistConversation(opts: {
             if (updErr) console.error('[chat] supabase update error:', updErr);
         }
 
-        // Insert the new user message + assistant reply (the two latest)
-        const newUserMsg = lastUserMsg;
         const msgsToInsert: { conversation_id: string; role: 'user' | 'assistant'; content: string }[] = [];
-        if (newUserMsg) msgsToInsert.push({ conversation_id: conversationId, role: 'user', content: newUserMsg });
+        if (lastUserMsg) msgsToInsert.push({ conversation_id: conversationId, role: 'user', content: lastUserMsg });
         if (assistantReply) msgsToInsert.push({ conversation_id: conversationId, role: 'assistant', content: assistantReply });
 
         if (msgsToInsert.length > 0) {
-            const { error: msgErr } = await admin
-                .from('chatbot_messages')
-                .insert(msgsToInsert);
+            const { error: msgErr } = await admin.from('chatbot_messages').insert(msgsToInsert);
             if (msgErr) console.error('[chat] supabase insert messages error:', msgErr);
         }
     } catch (err) {
@@ -172,45 +180,51 @@ export async function POST(req: Request) {
             });
         }
 
-        // Trim history
         const maxHistory = config.advanced?.maxHistory ?? 12;
         const trimmed = messages.slice(-maxHistory);
 
-        // Build OpenAI input
-        const systemPrompt = { role: 'system' as const, content: AIWAI_SYSTEM_PROMPT };
-        const modelConfig = config.model || DEFAULT_CONFIG.model;
+        // Last user message is what we send
+        const lastUserMsg = trimmed.filter((m) => m.role === 'user').pop();
+        if (!lastUserMsg) {
+            return NextResponse.json({ message: { role: 'assistant', content: '' } });
+        }
 
-        const completion = await getOpenAI().chat.completions.create({
-            model: modelConfig.model || 'gpt-4o',
-            messages: [systemPrompt, ...trimmed],
-            max_tokens: modelConfig.maxTokens || 500,
-            temperature: modelConfig.temperature ?? 0.7,
-            top_p: modelConfig.topP ?? 1.0,
-            frequency_penalty: modelConfig.frequencyPenalty ?? 0,
-            presence_penalty: modelConfig.presencePenalty ?? 0,
+        const modelName = config.model?.model || 'gemini-2.5-flash';
+        const temperature = config.model?.temperature ?? 0.7;
+        const maxOutputTokens = config.model?.maxTokens || 1000;
+
+        const model = getGenAI().getGenerativeModel({
+            model: modelName,
+            systemInstruction: AIWAI_SYSTEM_PROMPT,
+            generationConfig: {
+                temperature,
+                maxOutputTokens,
+            },
         });
 
-        const responseMessage = completion.choices[0].message;
-        const assistantReply = responseMessage.content || '';
+        const history = toGeminiHistory(trimmed);
+        const chat = model.startChat({ history });
+        const result = await chat.sendMessage(lastUserMsg.content);
+        const assistantReply = result.response.text();
 
-        // Fire-and-forget DB persistence (do not block response)
+        // Fire-and-forget DB persistence
         if (sessionId) {
             const userMessages = trimmed.filter((m) => m.role === 'user').map((m) => m.content);
-            const lastUser = userMessages[userMessages.length - 1] ?? '';
             const language = detectLanguage(userMessages[0] ?? '');
 
-            // Don't await — fire async
             persistConversation({
                 sessionId,
                 messages: trimmed,
                 userMessages,
-                lastUserMsg: lastUser,
+                lastUserMsg: lastUserMsg.content,
                 assistantReply,
                 language,
             }).catch((e) => console.error('[chat] persist error:', e));
         }
 
-        return NextResponse.json({ message: responseMessage });
+        return NextResponse.json({
+            message: { role: 'assistant', content: assistantReply },
+        });
     } catch (error) {
         console.error('[chat] error:', error);
         const config = loadConfig();
