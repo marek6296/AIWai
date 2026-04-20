@@ -2,17 +2,25 @@
 
 import { useState } from 'react'
 import { CheckCircle, RotateCcw } from 'lucide-react'
-import { markFormDone, markFormNew } from './actions'
+import { markDone, markNew } from './actions'
 
-export default function DoneButton({ id, isDone }: { id: string; isDone: boolean }) {
+export default function DoneButton({
+    id,
+    isDone,
+    table = 'form_submissions'
+}: {
+    id: string
+    isDone: boolean
+    table?: 'form_submissions' | 'email_submissions'
+}) {
     const [loading, setLoading] = useState(false)
 
     async function handleClick() {
         setLoading(true)
         if (isDone) {
-            await markFormNew(id)
+            await markNew(id, table)
         } else {
-            await markFormDone(id)
+            await markDone(id, table)
         }
         setLoading(false)
     }

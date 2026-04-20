@@ -3,20 +3,16 @@
 import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
 
-export async function markFormDone(id: string) {
+type Table = 'form_submissions' | 'email_submissions'
+
+export async function markDone(id: string, table: Table) {
     const supabase = createClient()
-    await supabase
-        .from('form_submissions')
-        .update({ status: 'done' })
-        .eq('id', id)
+    await supabase.from(table).update({ status: 'done' }).eq('id', id)
     revalidatePath('/admin/inbox')
 }
 
-export async function markFormNew(id: string) {
+export async function markNew(id: string, table: Table) {
     const supabase = createClient()
-    await supabase
-        .from('form_submissions')
-        .update({ status: 'new' })
-        .eq('id', id)
+    await supabase.from(table).update({ status: 'new' }).eq('id', id)
     revalidatePath('/admin/inbox')
 }
