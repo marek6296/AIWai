@@ -23,7 +23,7 @@ const scrollTo = (id: string) => {
     const el = document.getElementById(id);
     if (!el) return;
     const navHeight = document.querySelector("nav")?.offsetHeight ?? 80;
-    const top = el.getBoundingClientRect().top + window.scrollY - navHeight;
+    const top = el.getBoundingClientRect().top + window.scrollY - navHeight - 32;
     window.scrollTo({ top, behavior: "smooth" });
 };
 
