@@ -47,7 +47,7 @@ export default function ParticleField() {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const animationRef = useRef<number>(0);
     const particlesRef = useRef<Particle[]>([]);
-    const scrollYRef = useRef(0);
+
     const mouseRef = useRef({ x: -9999, y: -9999 });
     const layoutRef = useRef({ vw: 0, vh: 0, docH: 0 });
 
