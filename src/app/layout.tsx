@@ -20,8 +20,8 @@ export const metadata: Metadata = {
     images: [
       {
         url: "/og-image.png",
-        width: 1200,
-        height: 681,
+        width: 2400,
+        height: 1260,
         alt: "AIWai — Web, Dizajn, AI & Automatizácia",
       },
     ],
