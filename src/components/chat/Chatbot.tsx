@@ -29,10 +29,10 @@ function parseChips(raw: string): { display: string; chips: string[] } {
 }
 
 const INITIAL_CHIPS = [
-    "💡 Chcem web",
-    "🤖 Chatbot / AI agent",
-    "⚡ Automatizácia",
-    "💰 Ukáž ceny",
+    "Chcem nový web alebo e-shop",
+    "Zaujíma ma AI chatbot pre firmu",
+    "Čo dokáže automatizácia procesov?",
+    "Aké sú vaše ceny?",
 ];
 
 export default function Chatbot() {
@@ -256,12 +256,12 @@ export default function Chatbot() {
                                             {t("chatbot.bubble.initial")}
                                         </p>
                                     </div>
-                                    <div className="flex flex-wrap gap-2 justify-center mt-2">
+                                    <div className="flex flex-col gap-2 w-full max-w-[280px] mt-2">
                                         {INITIAL_CHIPS.map((chip) => (
                                             <button
                                                 key={chip}
                                                 onClick={() => handleChip(chip)}
-                                                className="px-3 py-1.5 bg-brand-indigo/5 border border-brand-indigo/15 rounded-full text-xs font-medium text-brand-indigo hover:bg-brand-indigo hover:text-white transition-colors"
+                                                className="px-4 py-2.5 bg-white border border-brand-indigo/15 rounded-xl text-xs font-medium text-brand-indigo/80 hover:bg-brand-indigo hover:text-white hover:border-brand-indigo transition-all duration-200 text-left"
                                             >
                                                 {chip}
                                             </button>
@@ -304,12 +304,12 @@ export default function Chatbot() {
 
                             {/* Quick reply chips after assistant response */}
                             {!isLoading && activeChips.length > 0 && (
-                                <div className="flex flex-wrap gap-1.5 pt-1">
+                                <div className="flex flex-col gap-1.5 pt-1">
                                     {activeChips.map((chip) => (
                                         <button
                                             key={chip}
                                             onClick={() => handleChip(chip)}
-                                            className="px-3 py-1.5 bg-white border border-brand-indigo/20 rounded-full text-xs font-medium text-brand-indigo hover:bg-brand-indigo hover:text-white hover:border-brand-indigo transition-colors"
+                                            className="px-4 py-2.5 bg-white border border-brand-indigo/15 rounded-xl text-xs font-medium text-brand-indigo/80 hover:bg-brand-indigo hover:text-white hover:border-brand-indigo transition-all duration-200 text-left"
                                         >
                                             {chip}
                                         </button>
