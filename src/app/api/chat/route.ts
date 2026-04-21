@@ -5,6 +5,7 @@ import path from 'path';
 import { AIWAI_SYSTEM_PROMPT } from '@/lib/chatbot/knowledge';
 import { extractTags, extractLead, buildInterestSummary } from '@/lib/chatbot/analyzer';
 import { getSupabaseAdmin } from '@/lib/supabase/admin';
+import { getLivePricing } from '@/lib/chatbot/pricing';
 
 const CONFIG_PATH = path.join(process.cwd(), 'data', 'chatbot-config.json');
 
@@ -198,9 +199,15 @@ export async function POST(req: Request) {
         const temperature = config.model?.temperature ?? 0.7;
         const maxOutputTokens = config.model?.maxTokens || 1000;
 
+        // Inject live pricing (non-blocking — fall back to knowledge.ts prices if table missing)
+        const livePricing = await getLivePricing().catch(() => '');
+        const systemInstruction = livePricing
+            ? `${livePricing}\n\n${AIWAI_SYSTEM_PROMPT}`
+            : AIWAI_SYSTEM_PROMPT;
+
         const model = getGenAI().getGenerativeModel({
             model: modelName,
-            systemInstruction: AIWAI_SYSTEM_PROMPT,
+            systemInstruction,
             generationConfig: {
                 temperature,
                 maxOutputTokens,

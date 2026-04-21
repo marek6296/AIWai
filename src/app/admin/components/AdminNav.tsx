@@ -1,7 +1,7 @@
 'use client'
 
 import { useRouter, usePathname } from 'next/navigation'
-import { LogOut, Bot, Inbox, Settings, MessagesSquare, Sparkles, BarChart3 } from 'lucide-react'
+import { LogOut, Bot, Inbox, Settings, MessagesSquare, Sparkles, BarChart3, DollarSign } from 'lucide-react'
 import Link from 'next/link'
 
 export default function AdminNav() {
@@ -52,6 +52,10 @@ export default function AdminNav() {
 
                 <div className="h-px bg-brand-indigo/10 my-3" />
 
+                <Link href="/admin/pricing" className={linkCls(isActive('/admin/pricing'))}>
+                    <DollarSign size={18} />
+                    Cenník bota
+                </Link>
                 <Link href="/admin/chatbot-settings" className={linkCls(isActive('/admin/chatbot-settings'))}>
                     <Settings size={18} />
                     Nastavenia
