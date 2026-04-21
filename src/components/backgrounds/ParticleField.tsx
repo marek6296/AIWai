@@ -97,7 +97,7 @@ export default function ParticleField() {
             const { vw, vh, docH } = layoutRef.current;
             // Particle counts: mobile=18, safari=70, desktop=200
             const total = isMobile ? 18 : isSafari ? 70 : 200;
-            // 70% of particles concentrated in hero/top area (desktop only)
+            // 70% of particles concentrated in hero/top area
             const topCount = Math.floor(total * 0.7);
 
             particlesRef.current = Array.from({ length: total }, (_, i) => {
@@ -107,14 +107,11 @@ export default function ParticleField() {
                         ? Math.random() * 0.38 + 0.20
                         : Math.random() * 0.30 + 0.15;
 
-                // Mobile: spawn in screen space (0..vw, 0..vh)
-                // Desktop: spawn in page space spread across full doc height
+                // All platforms: page-space coords spread across full document height
                 const isTop = i < topCount;
-                const pageY = isMobile
-                    ? Math.random() * vh
-                    : isTop
-                        ? Math.random() * Math.min(vh * 1.5, docH)
-                        : Math.min(vh * 1.5, docH) + Math.random() * Math.max(docH - vh * 1.5, 1);
+                const pageY = isTop
+                    ? Math.random() * Math.min(vh * 1.5, docH)
+                    : Math.min(vh * 1.5, docH) + Math.random() * Math.max(docH - vh * 1.5, 1);
 
                 const radius = isMobile
                     ? Math.random() * 3 + 3
@@ -144,9 +141,8 @@ export default function ParticleField() {
         const onMouseLeave = () => {
             mouseRef.current = { x: -9999, y: -9999 };
         };
-        const onScroll = () => {
-            scrollYRef.current = window.scrollY;
-        };
+        // scrollY is now read directly inside the animation frame (window.scrollY)
+        // so no scroll event listener is needed — eliminates mobile async scroll lag
 
         let scrX: Float32Array;
         let scrY: Float32Array;
@@ -156,7 +152,8 @@ export default function ParticleField() {
         const animate = () => {
             frameCount++;
             const { vw, vh, docH } = layoutRef.current;
-            const scrollY = scrollYRef.current;
+            // Read scrollY directly in the frame — avoids mobile async scroll event lag
+            const scrollY = window.scrollY;
             const mouse = mouseRef.current;
             const buffer = CONNECTION_DISTANCE;
 
@@ -205,29 +202,18 @@ export default function ParticleField() {
                 // Slow rotation
                 p.rotation += p.rotationSpeed;
 
-                // Mobile: particles live in screen space — wrap within viewport only, no scrollY
-                // Desktop: particles live in page space — wrap within full document height
-                if (isMobile) {
-                    if (p.pageX < -10) p.pageX = vw + 10;
-                    else if (p.pageX > vw + 10) p.pageX = -10;
-                    if (p.pageY < -10) p.pageY = vh + 10;
-                    else if (p.pageY > vh + 10) p.pageY = -10;
-                } else {
-                    if (p.pageX < -10) p.pageX = vw + 10;
-                    else if (p.pageX > vw + 10) p.pageX = -10;
-                    if (p.pageY < -10) p.pageY = docH + 10;
-                    else if (p.pageY > docH + 10) p.pageY = -10;
-                }
+                if (p.pageX < -10) p.pageX = vw + 10;
+                else if (p.pageX > vw + 10) p.pageX = -10;
+                if (p.pageY < -10) p.pageY = docH + 10;
+                else if (p.pageY > docH + 10) p.pageY = -10;
 
                 p.opacity += p.fadeSpeed;
                 if (p.opacity > p.baseOpacity + 0.10 || p.opacity < p.baseOpacity - 0.06) {
                     p.fadeSpeed = -p.fadeSpeed;
                 }
 
-                // Mobile: sx/sy are already screen coords — no scrollY offset needed
-                // Desktop: subtract scrollY to convert page→screen
                 const sx = p.pageX;
-                const sy = isMobile ? p.pageY : p.pageY - scrollY;
+                const sy = p.pageY - scrollY;
                 scrX[i] = sx;
                 scrY[i] = sy;
                 visible[i] = (sy > -buffer && sy < vh + buffer) ? 1 : 0;
@@ -306,7 +292,6 @@ export default function ParticleField() {
         };
         window.addEventListener("resize", onResize, { passive: true });
         window.addEventListener("mousemove", onMouseMove, { passive: true });
-        window.addEventListener("scroll", onScroll, { passive: true });
         document.removeEventListener("mouseleave", onMouseLeave);
         document.addEventListener("mouseleave", onMouseLeave);
         document.addEventListener("visibilitychange", onVisibility);
@@ -315,7 +300,6 @@ export default function ParticleField() {
             cancelAnimationFrame(animationRef.current);
             window.removeEventListener("resize", onResize);
             window.removeEventListener("mousemove", onMouseMove);
-            window.removeEventListener("scroll", onScroll);
             document.removeEventListener("mouseleave", onMouseLeave);
             document.removeEventListener("visibilitychange", onVisibility);
         };
