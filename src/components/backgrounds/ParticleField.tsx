@@ -97,26 +97,28 @@ export default function ParticleField() {
             const { vw, vh, docH } = layoutRef.current;
             // Particle counts: mobile=18, safari=70, desktop=200
             const total = isMobile ? 18 : isSafari ? 70 : 200;
-            // 70% of particles concentrated in hero/top area
+            // 70% of particles concentrated in hero/top area (desktop only)
             const topCount = Math.floor(total * 0.7);
 
             particlesRef.current = Array.from({ length: total }, (_, i) => {
-                // Higher base opacity so they're visible on all browsers
                 const baseOpacity = isMobile
-                    ? Math.random() * 0.35 + 0.22      // mobile: 0.22–0.57
+                    ? Math.random() * 0.35 + 0.22
                     : isSafari
-                        ? Math.random() * 0.38 + 0.20  // safari: 0.20–0.58
-                        : Math.random() * 0.30 + 0.15; // chrome: 0.15–0.45
+                        ? Math.random() * 0.38 + 0.20
+                        : Math.random() * 0.30 + 0.15;
 
+                // Mobile: spawn in screen space (0..vw, 0..vh)
+                // Desktop: spawn in page space spread across full doc height
                 const isTop = i < topCount;
-                const pageY = isTop
-                    ? Math.random() * Math.min(vh * 1.5, docH)
-                    : Math.min(vh * 1.5, docH) + Math.random() * Math.max(docH - vh * 1.5, 1);
+                const pageY = isMobile
+                    ? Math.random() * vh
+                    : isTop
+                        ? Math.random() * Math.min(vh * 1.5, docH)
+                        : Math.min(vh * 1.5, docH) + Math.random() * Math.max(docH - vh * 1.5, 1);
 
-                // Triangle size — slightly larger on mobile so they're clearly visible
                 const radius = isMobile
-                    ? Math.random() * 3 + 3        // mobile: 3–6px circumradius
-                    : Math.random() * 4 + 2.5;     // desktop: 2.5–6.5px
+                    ? Math.random() * 3 + 3
+                    : Math.random() * 4 + 2.5;
 
                 return {
                     pageX: Math.random() * vw,
@@ -203,18 +205,29 @@ export default function ParticleField() {
                 // Slow rotation
                 p.rotation += p.rotationSpeed;
 
-                if (p.pageX < -10) p.pageX = vw + 10;
-                else if (p.pageX > vw + 10) p.pageX = -10;
-                if (p.pageY < -10) p.pageY = docH + 10;
-                else if (p.pageY > docH + 10) p.pageY = -10;
+                // Mobile: particles live in screen space — wrap within viewport only, no scrollY
+                // Desktop: particles live in page space — wrap within full document height
+                if (isMobile) {
+                    if (p.pageX < -10) p.pageX = vw + 10;
+                    else if (p.pageX > vw + 10) p.pageX = -10;
+                    if (p.pageY < -10) p.pageY = vh + 10;
+                    else if (p.pageY > vh + 10) p.pageY = -10;
+                } else {
+                    if (p.pageX < -10) p.pageX = vw + 10;
+                    else if (p.pageX > vw + 10) p.pageX = -10;
+                    if (p.pageY < -10) p.pageY = docH + 10;
+                    else if (p.pageY > docH + 10) p.pageY = -10;
+                }
 
                 p.opacity += p.fadeSpeed;
                 if (p.opacity > p.baseOpacity + 0.10 || p.opacity < p.baseOpacity - 0.06) {
                     p.fadeSpeed = -p.fadeSpeed;
                 }
 
+                // Mobile: sx/sy are already screen coords — no scrollY offset needed
+                // Desktop: subtract scrollY to convert page→screen
                 const sx = p.pageX;
-                const sy = p.pageY - scrollY;
+                const sy = isMobile ? p.pageY : p.pageY - scrollY;
                 scrX[i] = sx;
                 scrY[i] = sy;
                 visible[i] = (sy > -buffer && sy < vh + buffer) ? 1 : 0;
@@ -279,7 +292,18 @@ export default function ParticleField() {
             }
         };
 
-        const onResize = () => { resizeCanvas(); initParticles(); };
+        // On mobile, iOS fires resize when the address bar shows/hides (vh changes).
+        // Reinitialising particles on every such resize causes a visible flash/jump.
+        // We only reinit when the WIDTH changes (real orientation change).
+        let lastVw = window.innerWidth;
+        const onResize = () => {
+            const newVw = window.innerWidth;
+            resizeCanvas();
+            if (!isMobile || newVw !== lastVw) {
+                initParticles();
+                lastVw = newVw;
+            }
+        };
         window.addEventListener("resize", onResize, { passive: true });
         window.addEventListener("mousemove", onMouseMove, { passive: true });
         window.addEventListener("scroll", onScroll, { passive: true });
