@@ -53,7 +53,17 @@ function readConfig() {
             return DEFAULT_CONFIG
         }
         const raw = fs.readFileSync(CONFIG_PATH, 'utf-8')
-        return JSON.parse(raw)
+        const parsed = JSON.parse(raw)
+        // Always deep-merge with defaults so missing keys never cause crashes
+        return {
+            ...DEFAULT_CONFIG,
+            ...parsed,
+            general:  { ...DEFAULT_CONFIG.general,  ...(parsed.general  || {}) },
+            model:    { ...DEFAULT_CONFIG.model,    ...(parsed.model    || {}) },
+            knowledge:{ ...DEFAULT_CONFIG.knowledge, ...(parsed.knowledge || {}) },
+            advanced: { ...DEFAULT_CONFIG.advanced,  ...(parsed.advanced || {}) },
+            systemPrompt: parsed.systemPrompt ?? DEFAULT_CONFIG.systemPrompt,
+        }
     } catch {
         return DEFAULT_CONFIG
     }
