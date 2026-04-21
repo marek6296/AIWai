@@ -44,9 +44,11 @@ export default function HeroSection() {
                 md:h-auto md:justify-center md:items-center md:py-32">
 
                 {/* Headline block — stays near top on mobile */}
-                <div className="w-full max-w-5xl md:mx-auto space-y-0">
+                <div className="group w-full max-w-5xl md:mx-auto space-y-0 cursor-default
+                    transition-transform duration-500 ease-out hover:-translate-y-2">
                     <h1
-                        className="hero-line font-display font-bold tracking-tight text-brand-indigo leading-[1.1] whitespace-nowrap"
+                        className="hero-line font-display font-bold tracking-tight text-brand-indigo leading-[1.1] whitespace-nowrap
+                            transition-transform duration-500 ease-out group-hover:scale-[1.015] origin-center"
                         style={{ fontSize: "clamp(2rem,9vw,6rem)" }}
                     >
                         {t("hero.line1").split("|").map((word, i, arr) => (
@@ -62,7 +64,9 @@ export default function HeroSection() {
                         ))}
                     </h1>
                     <div
-                        className="hero-line font-display font-bold tracking-tight text-brand-indigo/40 leading-[1.1]"
+                        className="hero-line font-display font-bold tracking-tight leading-[1.1]
+                            text-brand-indigo/40 group-hover:text-brand-indigo/75
+                            transition-[color,opacity] duration-500 ease-out"
                         style={{ fontSize: "clamp(2rem,9vw,6rem)" }}
                     >
                         <span className="block">{t("hero.line2.light")}</span>
