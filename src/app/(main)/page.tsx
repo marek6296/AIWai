@@ -6,8 +6,6 @@ const ProcessSection  = dynamic(() => import("@/components/process/ProcessSectio
 const WhyUsSection    = dynamic(() => import("@/components/why-us/WhyUsSection"));
 const CTASection      = dynamic(() => import("@/components/cta/CTASection"));
 const ContactSection  = dynamic(() => import("@/components/contact/ContactSection"));
-const NewsSection     = dynamic(() => import("@/components/news/NewsSection"));
-
 export default function Home() {
     return (
         <main className="min-h-screen bg-white">
@@ -17,7 +15,6 @@ export default function Home() {
             <WhyUsSection />
             <CTASection />
             <ContactSection />
-            <NewsSection />
         </main>
     );
 }

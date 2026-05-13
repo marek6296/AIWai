@@ -19,6 +19,41 @@
   --mesh-1: rgba(216, 185, 138, 0.15);
   --mesh-2: rgba(28, 31, 58, 0.05);
   --mesh-3: rgba(244, 242, 237, 0.8);
+
+  /* Redesign luxury palette */
+  --gold: #C9A875;
+  --gold-bright: #E4C896;
+  --gold-deep: #8C6F3F;
+  --cream: #F5EDDC;
+  --ink: #0A1628;
+  --char: #0A0A0F;
+}
+
+/* ──────────────────────────────────────
+   Redesign luxury utilities
+   ────────────────────────────────────── */
+.gold-grid {
+  background-image:
+    linear-gradient(rgba(201, 168, 117, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(201, 168, 117, 0.05) 1px, transparent 1px);
+  background-size: 80px 80px;
+}
+
+.gold-vlines {
+  background-image: linear-gradient(
+    90deg,
+    transparent 0,
+    transparent calc(100% / 12 - 1px),
+    rgba(201, 168, 117, 0.06) calc(100% / 12 - 1px),
+    rgba(201, 168, 117, 0.06) calc(100% / 12),
+    transparent calc(100% / 12)
+  );
+  background-size: calc(100% / 12) 100%;
+}
+
+.gold-hr {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(201, 168, 117, 0.4) 20%, rgba(201, 168, 117, 0.4) 80%, transparent);
 }
 
 html {
@@ -53,6 +88,9 @@ body {
 }
 .magnetic-btn:hover::before {
   transform: translateY(0);
+}
+.magnetic-btn--gold::before {
+  background: #C9A875;
 }
 
 /* ──────────────────────────────────────

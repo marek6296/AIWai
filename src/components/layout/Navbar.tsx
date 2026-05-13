@@ -6,9 +6,8 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { useTranslation } from "@/i18n/useTranslation";
 import type { Lang } from "@/i18n/translations";
 
-const NAV_IDS = ["aiwai-news", "services", "about"] as const;
+const NAV_IDS = ["services", "about"] as const;
 const NAV_KEYS: Record<string, string> = {
-    "aiwai-news": "nav.news",
     services: "nav.services",
     about: "nav.about",
 };
@@ -75,6 +74,8 @@ export default function Navbar() {
         return () => document.removeEventListener("mousedown", handler);
     }, []);
 
+    const darkMode = isHome && !scrolled;
+
     const handleScroll = useCallback((e: React.MouseEvent, id: string) => {
         e.preventDefault();
         setIsOpen(false);
@@ -109,10 +110,10 @@ export default function Navbar() {
                         <div className="relative" ref={langRef}>
                             <button
                                 onClick={() => setLangOpen(!langOpen)}
-                                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl hover:bg-brand-indigo/5 transition-colors"
+                                className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl transition-colors ${darkMode ? "hover:bg-cream/5" : "hover:bg-brand-indigo/5"}`}
                             >
                                 <span className="text-base">{LANGS.find((l) => l.code === lang)?.flag}</span>
-                                <svg className={`w-3 h-3 text-brand-indigo/40 transition-transform duration-200 ${langOpen ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <svg className={`w-3 h-3 transition-transform duration-200 ${darkMode ? "text-cream/40" : "text-brand-indigo/40"} ${langOpen ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
                                 </svg>
                             </button>
@@ -143,7 +144,11 @@ export default function Navbar() {
                                     key={id}
                                     href={`#${id}`}
                                     onClick={(e) => handleScroll(e, id)}
-                                    className="relative px-5 py-2.5 text-sm uppercase tracking-[0.15em] text-brand-indigo/60 hover:text-brand-indigo hover:bg-brand-indigo/[0.04] rounded-full transition-all duration-200 cursor-pointer font-medium"
+                                    className={`relative px-5 py-2.5 text-sm uppercase tracking-[0.15em] rounded-full transition-all duration-200 cursor-pointer font-medium ${
+                                        darkMode
+                                            ? "text-cream/70 hover:text-gold hover:bg-cream/5"
+                                            : "text-brand-indigo/60 hover:text-brand-indigo hover:bg-brand-indigo/[0.04]"
+                                    }`}
                                 >
                                     {t(NAV_KEYS[id])}
                                 </a>
@@ -151,15 +156,23 @@ export default function Navbar() {
                         </div>
                         <Link
                             href="/cennik"
-                            className="relative px-5 py-2.5 text-sm uppercase tracking-[0.15em] text-brand-indigo/60 hover:text-brand-indigo hover:bg-brand-indigo/[0.04] rounded-full transition-all duration-200 font-medium"
+                            className={`relative px-5 py-2.5 text-sm uppercase tracking-[0.15em] rounded-full transition-all duration-200 font-medium ${
+                                darkMode
+                                    ? "text-cream/70 hover:text-gold hover:bg-cream/5"
+                                    : "text-brand-indigo/60 hover:text-brand-indigo hover:bg-brand-indigo/[0.04]"
+                            }`}
                         >
                             {t("nav.pricing")}
                         </Link>
-                        <div className="w-px h-6 bg-brand-indigo/10 mx-3" />
+                        <div className={`w-px h-6 mx-3 ${darkMode ? "bg-cream/15" : "bg-brand-indigo/10"}`} />
                         {isHome ? (
                             <button
                                 onClick={(e) => handleScroll(e, "contact")}
-                                className="px-6 py-2.5 bg-brand-indigo text-white rounded-full text-xs font-bold tracking-[0.15em] uppercase hover:bg-brand-indigo/90 transition-all shadow-lg shadow-brand-indigo/10 hover:shadow-brand-indigo/20"
+                                className={`px-6 py-2.5 rounded-full text-xs font-bold tracking-[0.15em] uppercase transition-all shadow-lg ${
+                                    darkMode
+                                        ? "bg-gold text-ink hover:bg-gold-bright shadow-gold/20"
+                                        : "bg-brand-indigo text-white hover:bg-brand-indigo/90 shadow-brand-indigo/10 hover:shadow-brand-indigo/20"
+                                }`}
                             >
                                 {t("nav.contact")}
                             </button>
@@ -176,7 +189,7 @@ export default function Navbar() {
                     {/* Mobile toggle — CSS icon swap */}
                     <button
                         onClick={() => setIsOpen(!isOpen)}
-                        className="md:hidden ml-auto z-[110] text-brand-indigo p-2 relative w-9 h-9"
+                        className={`md:hidden ml-auto z-[110] p-2 relative w-9 h-9 ${darkMode ? "text-cream" : "text-brand-indigo"}`}
                         aria-label="Toggle Menu"
                         aria-expanded={isOpen}
                     >

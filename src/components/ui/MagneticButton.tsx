@@ -2,16 +2,20 @@
 import { useRef, useState } from "react";
 import clsx from "clsx";
 
+type Variant = "dark" | "gold";
+
 interface MagneticButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     children: React.ReactNode;
     className?: string;
+    variant?: Variant;
 }
 
 /**
  * Premium CTA button — liquid fill hover via CSS, click ripple via vanilla JS.
- * No Framer Motion.
+ * variant="dark" (default) = indigo border, fills with indigo on hover
+ * variant="gold" = gold border on cream, fills with gold on hover (for dark backgrounds)
  */
-export default function MagneticButton({ children, className, ...props }: MagneticButtonProps) {
+export default function MagneticButton({ children, className, variant = "dark", ...props }: MagneticButtonProps) {
     const ref = useRef<HTMLButtonElement>(null);
     const [ripple, setRipple] = useState<{ x: number; y: number; key: number } | null>(null);
 
@@ -23,13 +27,19 @@ export default function MagneticButton({ children, className, ...props }: Magnet
         props.onClick?.(e);
     };
 
+    const variantClasses =
+        variant === "gold"
+            ? "magnetic-btn magnetic-btn--gold border-2 border-gold text-cream hover:text-ink"
+            : "magnetic-btn border-2 border-brand-indigo text-brand-indigo hover:text-white";
+
     return (
         <button
             ref={ref}
             className={clsx(
-                "magnetic-btn relative px-10 py-4 border-2 border-brand-indigo text-brand-indigo",
+                "relative px-10 py-4",
                 "uppercase tracking-[0.2em] text-xs font-bold overflow-hidden",
-                "hover:text-white transition-colors duration-300 shadow-sm",
+                "transition-colors duration-300 shadow-sm",
+                variantClasses,
                 className
             )}
             {...props}
