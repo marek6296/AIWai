@@ -58,19 +58,25 @@ export default function StarField() {
             }));
         }
 
-        // Initial speed boost — particles fly fast on first load, then ease into normal drift.
-        // 7× faster at t=0, decays per frame and settles to 1× after ~0.8s.
-        let speedBoost = 7;
-        const BOOST_DECAY = 0.96;    // per frame; reaches 1.0 in ~48 frames (~0.8s @ 60fps)
-        const BOOST_MIN = 1.0;
+        // Initial speed boost — smoothly decelerates from 4× to 1× over ~2.2s
+        // using an easeOut-quad curve (steady, organic slowdown — not exponential).
+        const BOOST_START = 4;
+        const BOOST_FRAMES = 130;     // ~2.2s @ 60fps
+        let boostFrame = 0;
 
         function frame() {
             if (!running) return;
             ctx!.clearRect(0, 0, width, height);
 
-            // Ease the speed boost toward normal (1.0)
-            if (speedBoost > BOOST_MIN) {
-                speedBoost = Math.max(BOOST_MIN, speedBoost * BOOST_DECAY);
+            // Speed boost calculation: easeOutQuad from BOOST_START down to 1.0
+            let speedBoost: number;
+            if (boostFrame >= BOOST_FRAMES) {
+                speedBoost = 1;
+            } else {
+                const t = boostFrame / BOOST_FRAMES;
+                const eased = 1 - (1 - t) * (1 - t);
+                speedBoost = BOOST_START - (BOOST_START - 1) * eased;
+                boostFrame++;
             }
 
             for (let i = 0; i < particles.length; i++) {
