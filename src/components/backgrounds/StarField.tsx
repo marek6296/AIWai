@@ -64,20 +64,43 @@ export default function StarField() {
         const BOOST_FRAMES = 130;     // ~2.2s @ 60fps
         let boostFrame = 0;
 
+        // Scroll-driven speed boost — fast scrolling whooshes the particles,
+        // settles back to normal a moment after the user stops.
+        let scrollVelocity = 0;          // accumulated scroll energy
+        const SCROLL_GAIN = 0.18;        // how much each scrolled pixel adds
+        const SCROLL_DECAY = 0.92;       // per-frame falloff (~1s back to rest)
+        const SCROLL_BOOST_FACTOR = 0.45; // how strongly velocity boosts speed
+        const SCROLL_CAP = 7;            // max additional multiplier
+        let lastScrollY = typeof window !== "undefined" ? window.scrollY : 0;
+
+        function onScroll() {
+            const y = window.scrollY;
+            const dy = Math.abs(y - lastScrollY);
+            scrollVelocity = Math.min(scrollVelocity + dy * SCROLL_GAIN, SCROLL_CAP * 4);
+            lastScrollY = y;
+        }
+        window.addEventListener("scroll", onScroll, { passive: true });
+
         function frame() {
             if (!running) return;
             ctx!.clearRect(0, 0, width, height);
 
-            // Speed boost calculation: easeOutQuad from BOOST_START down to 1.0
-            let speedBoost: number;
+            // Intro speed boost: easeOutQuad from BOOST_START down to 1.0
+            let introBoost: number;
             if (boostFrame >= BOOST_FRAMES) {
-                speedBoost = 1;
+                introBoost = 1;
             } else {
                 const t = boostFrame / BOOST_FRAMES;
                 const eased = 1 - (1 - t) * (1 - t);
-                speedBoost = BOOST_START - (BOOST_START - 1) * eased;
+                introBoost = BOOST_START - (BOOST_START - 1) * eased;
                 boostFrame++;
             }
+
+            // Scroll boost decays each frame; whichever boost is bigger wins.
+            scrollVelocity *= SCROLL_DECAY;
+            if (scrollVelocity < 0.02) scrollVelocity = 0;
+            const scrollMultiplier = Math.min(1 + scrollVelocity * SCROLL_BOOST_FACTOR, SCROLL_CAP);
+            const speedBoost = Math.max(introBoost, scrollMultiplier);
 
             for (let i = 0; i < particles.length; i++) {
                 const p = particles[i];
@@ -165,6 +188,7 @@ export default function StarField() {
             running = false;
             cancelAnimationFrame(rafId);
             window.removeEventListener("resize", onResize);
+            window.removeEventListener("scroll", onScroll);
             document.removeEventListener("visibilitychange", onVisibility);
         };
     }, []);
