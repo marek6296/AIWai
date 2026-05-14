@@ -72,10 +72,10 @@ export default function HeroSection() {
                     <Image
                         src="/logo.png"
                         alt="AIWai"
-                        width={96}
-                        height={96}
+                        width={160}
+                        height={160}
                         priority
-                        className="w-20 h-20 object-contain drop-shadow-[0_4px_18px_rgba(201,168,117,0.25)]"
+                        className="w-32 h-32 sm:w-36 sm:h-36 object-contain drop-shadow-[0_6px_22px_rgba(201,168,117,0.3)]"
                     />
                 </div>
 
