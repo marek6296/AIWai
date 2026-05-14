@@ -1,25 +1,30 @@
+"use client";
+
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-
-const NAV_LINKS = [
-    { label: "Domov", href: "/" },
-    { label: "Služby", href: "/sluzby" },
-    { label: "Realizácie", href: "/realizacie" },
-    { label: "Cenník", href: "/cennik" },
-    { label: "O nás", href: "/#about" },
-    { label: "Kontakt", href: "/#contact" },
-];
-
-const SERVICE_LINKS = [
-    { label: "Tvorba webu", href: "/sluzby/tvorba-webu" },
-    { label: "AI chatbot", href: "/sluzby/ai-chatbot" },
-    { label: "Automatizácia", href: "/sluzby/ai-automatizacia" },
-    { label: "Logo & branding", href: "/sluzby/logo-branding" },
-    { label: "Sociálne siete", href: "/sluzby/sprava-socialnych-sieti" },
-];
+import { useTranslation } from "@/i18n/useTranslation";
 
 export default function Footer() {
+    const { t } = useTranslation();
+
+    const navLinks = [
+        { label: t("footer.nav.home"), href: "/" },
+        { label: t("footer.nav.services"), href: "/sluzby" },
+        { label: t("footer.nav.work"), href: "/realizacie" },
+        { label: t("footer.nav.pricing"), href: "/cennik" },
+        { label: t("footer.nav.about"), href: "/#about" },
+        { label: t("footer.nav.contact"), href: "/#contact" },
+    ];
+
+    const serviceLinks = [
+        { label: t("footer.service.web"), href: "/sluzby/tvorba-webu" },
+        { label: t("footer.service.chatbot"), href: "/sluzby/ai-chatbot" },
+        { label: t("footer.service.automation"), href: "/sluzby/ai-automatizacia" },
+        { label: t("footer.service.branding"), href: "/sluzby/logo-branding" },
+        { label: t("footer.service.social"), href: "/sluzby/sprava-socialnych-sieti" },
+    ];
+
     return (
         <footer className="bg-char relative overflow-hidden border-t border-cream/5">
             {/* Subtle ambient glow */}
@@ -44,7 +49,7 @@ export default function Footer() {
                             <span className="text-xl font-display font-bold text-cream">AIWai</span>
                         </div>
                         <p className="text-cream/45 text-sm font-light leading-relaxed max-w-[220px]">
-                            Web, dizajn, AI chatboty, marketing a automatizácia — od jedného tímu.
+                            {t("footer.tagline")}
                         </p>
                         <div className="mt-5 space-y-1.5">
                             <a href="mailto:marek@aiwai.app" className="text-cream/50 hover:text-gold transition-colors text-sm block">
@@ -58,9 +63,9 @@ export default function Footer() {
 
                     {/* Navigation */}
                     <div>
-                        <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-gold/70 mb-5">Navigácia</p>
+                        <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-gold/70 mb-5">{t("footer.section.nav")}</p>
                         <ul className="space-y-3">
-                            {NAV_LINKS.map((link) => (
+                            {navLinks.map((link) => (
                                 <li key={link.href}>
                                     <Link
                                         href={link.href}
@@ -73,11 +78,11 @@ export default function Footer() {
                         </ul>
                     </div>
 
-                    {/* Services + Sister sites */}
+                    {/* Services */}
                     <div>
-                        <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-gold/70 mb-5">Služby</p>
+                        <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-gold/70 mb-5">{t("footer.section.services")}</p>
                         <ul className="space-y-3">
-                            {SERVICE_LINKS.map((link) => (
+                            {serviceLinks.map((link) => (
                                 <li key={link.href}>
                                     <Link
                                         href={link.href}
@@ -92,7 +97,7 @@ export default function Footer() {
 
                     {/* Legal + Social */}
                     <div>
-                        <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-gold/70 mb-5">Sledujte nás</p>
+                        <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-gold/70 mb-5">{t("footer.section.follow")}</p>
                         <div className="flex items-center gap-4 mb-8">
                             {/* Facebook */}
                             <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook"
@@ -111,16 +116,16 @@ export default function Footer() {
                             </a>
                         </div>
 
-                        <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-gold/70 mb-4">Právne</p>
+                        <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-gold/70 mb-4">{t("footer.section.legal")}</p>
                         <ul className="space-y-2.5">
                             <li>
                                 <Link href="/ochrana-osobnych-udajov" className="text-cream/50 hover:text-gold transition-colors text-sm">
-                                    Ochrana osobných údajov
+                                    {t("footer.legal.privacy")}
                                 </Link>
                             </li>
                             <li>
                                 <Link href="/obchodne-podmienky" className="text-cream/50 hover:text-gold transition-colors text-sm">
-                                    Obchodné podmienky
+                                    {t("footer.legal.terms")}
                                 </Link>
                             </li>
                         </ul>
@@ -130,10 +135,10 @@ export default function Footer() {
                 {/* Bottom bar */}
                 <div className="pt-6 md:pt-8 border-t border-cream/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
                     <p className="text-cream/30 text-[11px] tracking-wide">
-                        &copy; {new Date().getFullYear()} AIWai. Všetky práva vyhradené.
+                        &copy; {new Date().getFullYear()} AIWai. {t("footer.copyright")}
                     </p>
                     <p className="text-cream/25 text-[11px]">
-                        Slovensko · IČO: —
+                        {t("footer.country")} · {t("footer.ico")}
                     </p>
                 </div>
             </div>
