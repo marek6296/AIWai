@@ -8,6 +8,7 @@ export const translations: Record<Lang, Record<string, string>> = {
         'nav.about': 'About',
         'nav.contact': 'Contact',
         'nav.pricing': 'Pricing',
+        'nav.work': 'Work',
 
         // ── Hero ──
         'hero.line1': 'WEB|DESIGN|AI',
@@ -155,6 +156,7 @@ export const translations: Record<Lang, Record<string, string>> = {
         'nav.about': 'O nás',
         'nav.contact': 'Kontakt',
         'nav.pricing': 'Cenník',
+        'nav.work': 'Realizácie',
 
         // ── Hero ──
         'hero.line1': 'WEB|DESIGN|AI',
@@ -302,6 +304,7 @@ export const translations: Record<Lang, Record<string, string>> = {
         'nav.about': 'O nás',
         'nav.contact': 'Kontakt',
         'nav.pricing': 'Ceník',
+        'nav.work': 'Realizace',
 
         // ── Hero ──
         'hero.line1': 'WEB|DESIGN|AI',

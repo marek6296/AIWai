@@ -82,8 +82,8 @@ export default function Navbar() {
         return () => document.removeEventListener("mousedown", handler);
     }, []);
 
-    // Home and cennik pages are dark — navbar stays in dark mode regardless of scroll
-    const DARK_PAGES = ["/", "/cennik"];
+    // Home, cennik and realizacie pages are dark — navbar stays in dark mode regardless of scroll
+    const DARK_PAGES = ["/", "/cennik", "/realizacie"];
     const isDarkPage = DARK_PAGES.includes(pathname);
     const darkMode = isDarkPage;
 
@@ -189,6 +189,16 @@ export default function Navbar() {
                             ))}
                         </div>
                         <Link
+                            href="/realizacie"
+                            className={`relative px-5 py-2.5 text-sm uppercase tracking-[0.15em] rounded-full transition-all duration-200 font-medium ${
+                                darkMode
+                                    ? "text-cream/70 hover:text-gold hover:bg-cream/5"
+                                    : "text-brand-indigo/60 hover:text-brand-indigo hover:bg-brand-indigo/[0.04]"
+                            }`}
+                        >
+                            {t("nav.work")}
+                        </Link>
+                        <Link
                             href="/cennik"
                             className={`relative px-5 py-2.5 text-sm uppercase tracking-[0.15em] rounded-full transition-all duration-200 font-medium ${
                                 darkMode
@@ -267,6 +277,16 @@ export default function Navbar() {
                             </a>
                         </div>
                     ))}
+
+                    <div className="aiwai-menu-item overflow-hidden w-full flex justify-center">
+                        <Link
+                            href="/realizacie"
+                            onClick={closeMobileMenu}
+                            className="text-5xl font-display font-bold tracking-tighter text-cream hover:text-gold transition-colors"
+                        >
+                            {t("nav.work")}
+                        </Link>
+                    </div>
 
                     <div className="aiwai-menu-item overflow-hidden w-full flex justify-center">
                         <Link
