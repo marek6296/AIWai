@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import MagneticButton from "@/components/ui/MagneticButton";
 import TextReveal from "@/components/animations/TextReveal";
 import FadeIn from "@/components/animations/FadeIn";
@@ -19,6 +19,23 @@ export default function ContactSection() {
         projectType: "Company Website",
         message: "",
     });
+
+    useEffect(() => {
+        if (typeof window === "undefined") return;
+        const params = new URLSearchParams(window.location.search);
+        const service = params.get("service");
+        if (!service) return;
+        const validValues = new Set([
+            "Logo Basic", "Logo + Brand", "Social Media Graphics",
+            "Presentation Website", "Company Website", "E-shop",
+            "Chatbot Basic", "Chatbot Pro",
+            "Automation Starter", "Automation Pro / Enterprise",
+            "Social Starter", "Social Pro + Ads", "Other",
+        ]);
+        if (validValues.has(service)) {
+            setFormData((prev) => ({ ...prev, projectType: service }));
+        }
+    }, []);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();

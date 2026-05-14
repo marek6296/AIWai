@@ -83,9 +83,10 @@ interface PricingCardProps {
     features: string[];
     highlight?: boolean;
     badge?: string;
+    serviceValue: string;
 }
 
-function PricingCard({ name, price, priceNote, features, highlight, badge }: PricingCardProps) {
+function PricingCard({ name, price, priceNote, features, highlight, badge, serviceValue }: PricingCardProps) {
     return (
         <div className={`relative rounded-2xl p-7 flex flex-col gap-6 transition-all duration-300 ${
             highlight
@@ -125,7 +126,7 @@ function PricingCard({ name, price, priceNote, features, highlight, badge }: Pri
                 ))}
             </ul>
             <Link
-                href="/#contact"
+                href={`/?service=${encodeURIComponent(serviceValue)}#contact`}
                 className={`mt-2 text-center py-3 px-6 rounded-xl text-xs font-bold uppercase tracking-[0.15em] transition-all duration-200 ${
                     highlight
                         ? "bg-ink text-gold hover:bg-char hover:text-gold-bright"
@@ -185,6 +186,7 @@ export default function CennikPage() {
                             name="Logo Basic"
                             price="od €69"
                             priceNote="jednorazová platba"
+                            serviceValue="Logo Basic"
                             features={[
                                 "3 návrhy loga",
                                 "2 kolá revízií",
@@ -200,6 +202,7 @@ export default function CennikPage() {
                             priceNote="jednorazová platba"
                             badge="Populárne"
                             highlight
+                            serviceValue="Logo + Brand"
                             features={[
                                 "Logo (3 návrhy + 3 kolá revízií)",
                                 "Vektorové súbory (SVG, AI, PDF) — tlač bez straty kvality",
@@ -213,6 +216,7 @@ export default function CennikPage() {
                             name="Grafika pre sociálne siete"
                             price="od €99"
                             priceNote="jednorazový balíček šablón"
+                            serviceValue="Social Media Graphics"
                             features={[
                                 "15 brandovaných šablón (feed + stories)",
                                 "Profilový obrázok + cover fotka",
@@ -241,6 +245,7 @@ export default function CennikPage() {
                             price="od €139/mes"
                             priceNote="mesačná správa"
                             badge="Nové"
+                            serviceValue="Social Starter"
                             features={[
                                 "Plán príspevkov na celý mesiac",
                                 "Facebook + Instagram + Stories",
@@ -256,6 +261,7 @@ export default function CennikPage() {
                             priceNote="správa + reklamy"
                             highlight
                             badge="Odporúčame"
+                            serviceValue="Social Pro + Ads"
                             features={[
                                 "Všetko z Marketing Starter",
                                 "Tvorba a spustenie Meta Ads kampaní",
@@ -283,6 +289,7 @@ export default function CennikPage() {
                             name="Prezentačná stránka"
                             price="od €199"
                             priceNote="jednorazová platba"
+                            serviceValue="Presentation Website"
                             features={[
                                 "1–3 stránky",
                                 "Kontaktný formulár",
@@ -297,6 +304,7 @@ export default function CennikPage() {
                             priceNote="jednorazová platba"
                             badge="Najpredávanejší"
                             highlight
+                            serviceValue="Company Website"
                             features={[
                                 "5–10 stránok",
                                 "CMS — obsah editujete sami",
@@ -310,6 +318,7 @@ export default function CennikPage() {
                             name="E-shop"
                             price="od €699"
                             priceNote="jednorazová platba"
+                            serviceValue="E-shop"
                             features={[
                                 "Produktový katalóg",
                                 "Online platby (Stripe, PayPal)",
@@ -337,6 +346,7 @@ export default function CennikPage() {
                             name="Chatbot Basic"
                             price="od €169"
                             priceNote="jednorazová platba"
+                            serviceValue="Chatbot Basic"
                             features={[
                                 "Odpovede na časté otázky",
                                 "Integrácia na váš web",
@@ -350,6 +360,7 @@ export default function CennikPage() {
                             price="od €349"
                             priceNote="jednorazová platba"
                             highlight
+                            serviceValue="Chatbot Pro"
                             features={[
                                 "Vlastná knowledge base (vaše dokumenty)",
                                 "Zachytávanie leadov",
@@ -377,6 +388,7 @@ export default function CennikPage() {
                             name="Starter"
                             price="od €199"
                             priceNote="jednorazová platba"
+                            serviceValue="Automation Starter"
                             features={[
                                 "2–3 automatické workflow",
                                 "Prepojenie 2–3 nástrojov",
@@ -390,6 +402,7 @@ export default function CennikPage() {
                             price="Dohodou"
                             priceNote="podľa rozsahu projektu"
                             highlight
+                            serviceValue="Automation Pro / Enterprise"
                             features={[
                                 "Neobmedzené workflow",
                                 "Komplexné systémové prepojenia",
