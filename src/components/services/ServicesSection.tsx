@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import ServiceModal from "@/components/services/ServiceModal";
 import TextReveal from "@/components/animations/TextReveal";
@@ -9,6 +10,15 @@ import { useTranslation } from "@/i18n/useTranslation";
 
 const TAGS = ["WEB", "AI", "AI", "DIZAJN", "MARKETING"];
 
+// Maps homepage service index (translations services.0..4) to SEO landing page slug.
+const SERVICE_SLUGS = [
+    "tvorba-webu",
+    "ai-chatbot",
+    "ai-automatizacia",
+    "logo-branding",
+    "sprava-socialnych-sieti",
+];
+
 export default function ServicesSection() {
     const { t } = useTranslation();
     const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
@@ -17,6 +27,7 @@ export default function ServicesSection() {
         title: t(`services.${i}.title`),
         description: t(`services.${i}.description`),
         tag: TAGS[i],
+        slug: SERVICE_SLUGS[i],
         details: {
             whatIsIt: t(`services.${i}.whatIsIt`),
             includes: t(`services.${i}.includes`).split("|"),
@@ -81,6 +92,17 @@ export default function ServicesSection() {
                                     <ArrowRight className="w-3.5 h-3.5 md:w-4 md:h-4 text-cream/50 group-hover:text-ink group-hover:translate-x-0.5 transition-all duration-300" />
                                 </div>
                             </button>
+                            {/* SEO-friendly crawlable link to the service landing page.
+                                Visible to users as a discreet "Detail" link, indexed by Google. */}
+                            <div className="-mx-6 px-6 md:pl-[88px] -mt-2 mb-1">
+                                <Link
+                                    href={`/sluzby/${service.slug}`}
+                                    className="inline-flex items-center gap-1.5 text-[11px] font-medium tracking-[0.18em] uppercase text-cream/40 hover:text-gold transition-colors"
+                                >
+                                    Detail služby
+                                    <ArrowRight className="w-3 h-3" />
+                                </Link>
+                            </div>
                         </FadeIn>
                     ))}
                 </div>

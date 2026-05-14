@@ -4,11 +4,24 @@ import Image from "next/image";
 
 const NAV_LINKS = [
     { label: "Domov", href: "/" },
-    { label: "Služby", href: "/#services" },
-    { label: "O nás", href: "/#about" },
+    { label: "Služby", href: "/sluzby" },
+    { label: "Realizácie", href: "/realizacie" },
     { label: "Cenník", href: "/cennik" },
-    { label: "AIWai News", href: "/blog" },
+    { label: "O nás", href: "/#about" },
     { label: "Kontakt", href: "/#contact" },
+];
+
+const SERVICE_LINKS = [
+    { label: "Tvorba webu", href: "/sluzby/tvorba-webu" },
+    { label: "AI chatbot", href: "/sluzby/ai-chatbot" },
+    { label: "Automatizácia", href: "/sluzby/ai-automatizacia" },
+    { label: "Logo & branding", href: "/sluzby/logo-branding" },
+    { label: "Sociálne siete", href: "/sluzby/sprava-socialnych-sieti" },
+];
+
+const SISTER_SITES = [
+    { label: "AIWai News", href: "https://aiwai.news", description: "AI spravodajstvo" },
+    { label: "AIWai Tools", href: "https://aiwai.tools", description: "AI nástroje" },
 ];
 
 export default function Footer() {
@@ -22,7 +35,7 @@ export default function Footer() {
 
             <div className="container mx-auto px-6 py-12 md:py-20 relative z-10">
                 {/* Main grid */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-8 mb-10 md:mb-14">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-8 mb-10 md:mb-14">
                     {/* Brand */}
                     <div>
                         <div className="flex items-center gap-3 mb-4">
@@ -60,6 +73,40 @@ export default function Footer() {
                                     >
                                         {link.label}
                                     </Link>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+
+                    {/* Services + Sister sites */}
+                    <div>
+                        <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-gold/70 mb-5">Služby</p>
+                        <ul className="space-y-3 mb-8">
+                            {SERVICE_LINKS.map((link) => (
+                                <li key={link.href}>
+                                    <Link
+                                        href={link.href}
+                                        className="text-cream/55 hover:text-gold transition-colors text-sm"
+                                    >
+                                        {link.label}
+                                    </Link>
+                                </li>
+                            ))}
+                        </ul>
+
+                        <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-gold/70 mb-4">AIWai ekosystém</p>
+                        <ul className="space-y-2.5">
+                            {SISTER_SITES.map((site) => (
+                                <li key={site.href}>
+                                    <a
+                                        href={site.href}
+                                        target="_blank"
+                                        rel="noopener"
+                                        className="text-cream/55 hover:text-gold transition-colors text-sm inline-flex flex-col"
+                                    >
+                                        <span>{site.label}</span>
+                                        <span className="text-cream/30 text-[11px]">{site.description}</span>
+                                    </a>
                                 </li>
                             ))}
                         </ul>

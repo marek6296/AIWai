@@ -6,9 +6,8 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { useTranslation } from "@/i18n/useTranslation";
 import type { Lang } from "@/i18n/translations";
 
-const NAV_IDS = ["services", "about"] as const;
+const NAV_IDS = ["about"] as const;
 const NAV_KEYS: Record<string, string> = {
-    services: "nav.services",
     about: "nav.about",
 };
 
@@ -83,8 +82,9 @@ export default function Navbar() {
     }, []);
 
     // Home, cennik and realizacie pages are dark — navbar stays in dark mode regardless of scroll
-    const DARK_PAGES = ["/", "/cennik", "/realizacie"];
-    const isDarkPage = DARK_PAGES.includes(pathname);
+    const DARK_PAGES = ["/", "/cennik", "/realizacie", "/sluzby"];
+    const isDarkPage =
+        DARK_PAGES.includes(pathname) || pathname.startsWith("/sluzby/");
     const darkMode = isDarkPage;
 
     const handleScroll = useCallback((e: React.MouseEvent, id: string) => {
@@ -189,6 +189,16 @@ export default function Navbar() {
                             ))}
                         </div>
                         <Link
+                            href="/sluzby"
+                            className={`relative px-5 py-2.5 text-sm uppercase tracking-[0.15em] rounded-full transition-all duration-200 font-medium ${
+                                darkMode
+                                    ? "text-cream/70 hover:text-gold hover:bg-cream/5"
+                                    : "text-brand-indigo/60 hover:text-brand-indigo hover:bg-brand-indigo/[0.04]"
+                            }`}
+                        >
+                            {t("nav.services")}
+                        </Link>
+                        <Link
                             href="/realizacie"
                             className={`relative px-5 py-2.5 text-sm uppercase tracking-[0.15em] rounded-full transition-all duration-200 font-medium ${
                                 darkMode
@@ -277,6 +287,16 @@ export default function Navbar() {
                             </a>
                         </div>
                     ))}
+
+                    <div className="aiwai-menu-item overflow-hidden w-full flex justify-center">
+                        <Link
+                            href="/sluzby"
+                            onClick={closeMobileMenu}
+                            className="text-5xl font-display font-bold tracking-tighter text-cream hover:text-gold transition-colors"
+                        >
+                            {t("nav.services")}
+                        </Link>
+                    </div>
 
                     <div className="aiwai-menu-item overflow-hidden w-full flex justify-center">
                         <Link

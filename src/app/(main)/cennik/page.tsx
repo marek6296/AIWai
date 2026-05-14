@@ -1,10 +1,67 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import SectionBackground from "@/components/backgrounds/SectionBackground";
+import JsonLd from "@/components/seo/JsonLd";
+import { breadcrumbSchema, SITE_URL } from "@/lib/seo/schemas";
 
 export const metadata: Metadata = {
-    title: "Cenník — AIWai",
-    description: "Transparentné ceny bez prekvapení. Web, dizajn, AI chatbot a automatizácia — vyberte si čo potrebujete.",
+    title: "Cenník — Web, AI chatbot, automatizácia, logo, marketing",
+    description:
+        "Transparentné ceny: logo od €99, web od €299, e-shop od €999, chatbot od €249, automatizácia od €299, marketing od €200/mes.",
+    alternates: { canonical: "/cennik" },
+    openGraph: {
+        title: "Cenník AIWai — Transparentné ceny bez prekvapení",
+        description:
+            "Logo od €99, web od €299, e-shop od €999, AI chatbot od €249. Jasná cena pred začatím.",
+        url: `${SITE_URL}/cennik`,
+        type: "website",
+        locale: "sk_SK",
+        siteName: "AIWai",
+        images: ["/og-image.png"],
+    },
+    twitter: {
+        card: "summary_large_image",
+        title: "Cenník AIWai — Transparentné ceny",
+        description:
+            "Logo od €99, web od €299, e-shop od €999, AI chatbot od €249.",
+        images: ["/og-image.png"],
+    },
+};
+
+const cennikBreadcrumbs = breadcrumbSchema([
+    { name: "AIWai", url: "/" },
+    { name: "Cenník", url: "/cennik" },
+]);
+
+const cennikOffers = {
+    "@context": "https://schema.org",
+    "@type": "OfferCatalog",
+    "@id": `${SITE_URL}/cennik#catalog`,
+    name: "Cenník AIWai",
+    url: `${SITE_URL}/cennik`,
+    provider: { "@id": `${SITE_URL}/#organization` },
+    itemListElement: [
+        { name: "Logo Basic", price: "99", description: "Logo v 3 variantoch (SVG, PNG, PDF)." },
+        { name: "Logo + Brand", price: "229", description: "Logo + brand guide + šablóny pre soc. siete." },
+        { name: "Grafika pre sociálne siete", price: "149", description: "Set 5–10 príspevkov pre Facebook a Instagram." },
+        { name: "Prezentačná stránka", price: "299", description: "1–3 stránky, kontaktný formulár, mobilná verzia." },
+        { name: "Firemný web", price: "599", description: "Viacstránkový web, blog, SEO, CMS." },
+        { name: "E-shop", price: "999", description: "Produkty, košík, platobná brána." },
+        { name: "Chatbot Basic", price: "249", description: "Chat widget na webe, tréning na 1 dokumente." },
+        { name: "Chatbot Pro", price: "499", description: "Chat + Voice AI, CRM integrácia." },
+        { name: "Automatizácia Starter", price: "299", description: "1 workflow v Make.com." },
+        { name: "Marketing Starter", price: "200", description: "Mesačná správa soc. sietí." },
+        { name: "Marketing Pro + Ads", price: "300", description: "Mesačná správa + Meta Ads kampane." },
+    ].map((offer, idx) => ({
+        "@type": "Offer",
+        position: idx + 1,
+        name: offer.name,
+        description: offer.description,
+        price: offer.price,
+        priceCurrency: "EUR",
+        availability: "https://schema.org/InStock",
+        seller: { "@id": `${SITE_URL}/#organization` },
+    })),
 };
 
 const CheckIcon = ({ highlight }: { highlight?: boolean }) => (
@@ -94,13 +151,29 @@ function SectionHeader({ index, title, description }: { index: string; title: st
 export default function CennikPage() {
     return (
         <main className="min-h-screen bg-char relative overflow-hidden">
+            <JsonLd id="ld-cennik-breadcrumb" data={cennikBreadcrumbs} />
+            <JsonLd id="ld-cennik-offers" data={cennikOffers} />
             {/* Site-wide animated dark background — single instance covers all sections */}
             <div className="absolute inset-0 pointer-events-none">
                 <SectionBackground variant="soft" topFade={false} />
             </div>
 
+            {/* Page Hero with H1 — SEO-critical, was missing before */}
+            <section className="pt-28 pb-6 md:pt-32 md:pb-8 relative z-10">
+                <div className="container mx-auto px-6 max-w-4xl">
+                    <h1 className="font-display font-bold text-cream text-[2.5rem] md:text-6xl lg:text-7xl tracking-tight leading-[1.05] mb-5">
+                        Cenník — transparentne, bez prekvapení
+                    </h1>
+                    <p className="text-cream/65 text-lg md:text-xl font-light leading-relaxed max-w-3xl">
+                        Jasné ceny pred začatím projektu. Logo, web, e-shop, AI chatbot,
+                        automatizácia a marketing — vyberte si, čo potrebujete. Konzultácia
+                        zdarma do 24 hodín.
+                    </p>
+                </div>
+            </section>
+
             {/* DIZAJN */}
-            <section className="pt-24 pb-10 md:pt-28 md:pb-14 relative z-10">
+            <section className="pt-12 pb-10 md:pt-16 md:pb-14 relative z-10">
                 <div className="container mx-auto px-6">
                     <SectionHeader
                         index="01"
