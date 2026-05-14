@@ -64,8 +64,10 @@ export default function StarField() {
         const BOOST_FRAMES = 130;     // ~2.2s @ 60fps
         let boostFrame = 0;
 
-        // Scroll-driven speed boost — fast scrolling whooshes the particles,
-        // settles back to normal a moment after the user stops.
+        // Scroll-driven speed boost — DESKTOP ONLY.
+        // Mobile scroll events fire too aggressively (momentum/rubber-band)
+        // and choke the canvas RAF loop, so we skip the listener there entirely.
+        const isMobile = window.innerWidth < 768;
         let scrollVelocity = 0;          // accumulated scroll energy
         const SCROLL_GAIN = 0.18;        // how much each scrolled pixel adds
         const SCROLL_DECAY = 0.92;       // per-frame falloff (~1s back to rest)
@@ -79,7 +81,9 @@ export default function StarField() {
             scrollVelocity = Math.min(scrollVelocity + dy * SCROLL_GAIN, SCROLL_CAP * 4);
             lastScrollY = y;
         }
-        window.addEventListener("scroll", onScroll, { passive: true });
+        if (!isMobile) {
+            window.addEventListener("scroll", onScroll, { passive: true });
+        }
 
         function frame() {
             if (!running) return;
@@ -97,9 +101,13 @@ export default function StarField() {
             }
 
             // Scroll boost decays each frame; whichever boost is bigger wins.
+            // On mobile scrollVelocity is never populated → scrollMultiplier = 1,
+            // so effective boost is just the intro curve → identical to pre-scroll-feature.
             scrollVelocity *= SCROLL_DECAY;
             if (scrollVelocity < 0.02) scrollVelocity = 0;
-            const scrollMultiplier = Math.min(1 + scrollVelocity * SCROLL_BOOST_FACTOR, SCROLL_CAP);
+            const scrollMultiplier = isMobile
+                ? 1
+                : Math.min(1 + scrollVelocity * SCROLL_BOOST_FACTOR, SCROLL_CAP);
             const speedBoost = Math.max(introBoost, scrollMultiplier);
 
             for (let i = 0; i < particles.length; i++) {
@@ -188,7 +196,7 @@ export default function StarField() {
             running = false;
             cancelAnimationFrame(rafId);
             window.removeEventListener("resize", onResize);
-            window.removeEventListener("scroll", onScroll);
+            if (!isMobile) window.removeEventListener("scroll", onScroll);
             document.removeEventListener("visibilitychange", onVisibility);
         };
     }, []);
