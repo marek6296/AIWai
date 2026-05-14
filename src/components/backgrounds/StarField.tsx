@@ -45,7 +45,9 @@ export default function StarField() {
         }
 
         function spawn() {
-            const count = window.innerWidth < 768 ? 70 : 160;
+            // Lighter particle count on mobile — keeps RAF under budget so
+            // scroll never drops frames.
+            const count = window.innerWidth < 768 ? 35 : 160;
             particles = Array.from({ length: count }, () => ({
                 x: Math.random() * width,
                 y: Math.random() * height,
@@ -140,19 +142,23 @@ export default function StarField() {
                 ctx!.fill();
             }
 
-            for (let i = 0; i < particles.length; i++) {
-                for (let j = i + 1; j < particles.length; j++) {
-                    const dx = particles[i].x - particles[j].x;
-                    const dy = particles[i].y - particles[j].y;
-                    const dist = Math.sqrt(dx * dx + dy * dy);
-                    if (dist < 140) {
-                        const alpha = ((140 - dist) / 140) * 0.18;
-                        ctx!.strokeStyle = `rgba(201, 168, 117, ${alpha})`;
-                        ctx!.lineWidth = 0.5;
-                        ctx!.beginPath();
-                        ctx!.moveTo(particles[i].x, particles[i].y);
-                        ctx!.lineTo(particles[j].x, particles[j].y);
-                        ctx!.stroke();
+            // Connection lines — O(n²), too heavy for mobile. Desktop only.
+            if (!isMobile) {
+                for (let i = 0; i < particles.length; i++) {
+                    for (let j = i + 1; j < particles.length; j++) {
+                        const dx = particles[i].x - particles[j].x;
+                        const dy = particles[i].y - particles[j].y;
+                        const distSq = dx * dx + dy * dy;
+                        if (distSq < 19600) { // 140² — avoid sqrt unless needed
+                            const dist = Math.sqrt(distSq);
+                            const alpha = ((140 - dist) / 140) * 0.18;
+                            ctx!.strokeStyle = `rgba(201, 168, 117, ${alpha})`;
+                            ctx!.lineWidth = 0.5;
+                            ctx!.beginPath();
+                            ctx!.moveTo(particles[i].x, particles[i].y);
+                            ctx!.lineTo(particles[j].x, particles[j].y);
+                            ctx!.stroke();
+                        }
                     }
                 }
             }
@@ -170,9 +176,17 @@ export default function StarField() {
             }
         }
 
+        // On iOS the address bar showing/hiding fires resize even though
+        // width hasn't changed. Only re-spawn particles on real width changes
+        // (orientation/breakpoint), otherwise just rescale the canvas.
+        let lastWidth = window.innerWidth;
         function onResize() {
             resize();
-            spawn();
+            const newWidth = window.innerWidth;
+            if (newWidth !== lastWidth) {
+                spawn();
+                lastWidth = newWidth;
+            }
         }
 
         resize();
@@ -192,12 +206,37 @@ export default function StarField() {
         window.addEventListener("resize", onResize);
         document.addEventListener("visibilitychange", onVisibility);
 
+        // IntersectionObserver — pause the RAF loop when the canvas (hero)
+        // is fully off-screen. Saves a huge amount of work on mobile while
+        // user is scrolling through the rest of the page.
+        let observer: IntersectionObserver | null = null;
+        if (typeof IntersectionObserver !== "undefined") {
+            observer = new IntersectionObserver(
+                (entries) => {
+                    const entry = entries[0];
+                    if (!entry) return;
+                    if (entry.isIntersecting) {
+                        if (!running && !reduced) {
+                            running = true;
+                            frame();
+                        }
+                    } else {
+                        running = false;
+                        cancelAnimationFrame(rafId);
+                    }
+                },
+                { threshold: 0 }
+            );
+            observer.observe(canvas);
+        }
+
         return () => {
             running = false;
             cancelAnimationFrame(rafId);
             window.removeEventListener("resize", onResize);
             if (!isMobile) window.removeEventListener("scroll", onScroll);
             document.removeEventListener("visibilitychange", onVisibility);
+            if (observer) observer.disconnect();
         };
     }, []);
 
