@@ -16,6 +16,8 @@ interface Project {
     stack: string[];
     url: string;
     badge?: string;
+    /** When true the card is showcase-only — no link, no URL shown. */
+    private?: boolean;
 }
 
 interface Group {
@@ -126,7 +128,8 @@ const GROUPS: Group[] = [
                 description: "Agent na generovanie leadov — scrapuje firmy z Google Maps, analyzuje ich weby cez Claude a generuje personalizované outreach emaily.",
                 stack: ["Python", "FastAPI", "Playwright", "Claude API"],
                 url: "https://lead-agent-dashboard-smoky.vercel.app",
-                badge: "V produkcii",
+                badge: "Interný nástroj",
+                private: true,
             },
         ],
     },
@@ -148,13 +151,11 @@ const GROUPS: Group[] = [
 ];
 
 function ProjectCard({ project }: { project: Project }) {
-    return (
-        <a
-            href={project.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group relative rounded-2xl overflow-hidden bg-cream/[0.03] border border-cream/10 backdrop-blur-sm hover:border-gold/40 hover:bg-cream/[0.05] transition-all duration-500 flex flex-col"
-        >
+    const isPrivate = !!project.private;
+
+    // Shared inner content — same markup for both <a> and <div> wrappers.
+    const inner = (
+        <>
             {/* Screenshot */}
             <div className="relative aspect-[16/10] overflow-hidden bg-char-soft">
                 <Image
@@ -162,24 +163,41 @@ function ProjectCard({ project }: { project: Project }) {
                     alt={project.name}
                     fill
                     sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
-                    className="object-cover object-top transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+                    className={`object-cover object-top transition-transform duration-700 ease-out ${
+                        isPrivate ? "" : "group-hover:scale-[1.04]"
+                    }`}
                 />
                 {/* Gradient overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-char via-char/10 to-transparent opacity-90 group-hover:opacity-70 transition-opacity duration-500" />
+                <div className={`absolute inset-0 bg-gradient-to-t from-char via-char/10 to-transparent opacity-90 transition-opacity duration-500 ${
+                    isPrivate ? "" : "group-hover:opacity-70"
+                }`} />
                 {/* Badge */}
                 {project.badge && (
                     <div className="absolute top-4 left-4">
-                        <span className="text-[10px] font-bold uppercase tracking-[0.2em] px-3 py-1 rounded-full bg-gold text-ink">
+                        <span className={`text-[10px] font-bold uppercase tracking-[0.2em] px-3 py-1 rounded-full ${
+                            isPrivate
+                                ? "bg-cream/10 text-cream/80 border border-cream/20 backdrop-blur-md"
+                                : "bg-gold text-ink"
+                        }`}>
                             {project.badge}
                         </span>
                     </div>
                 )}
-                {/* External icon */}
-                <div className="absolute top-4 right-4 w-9 h-9 rounded-full bg-char/70 backdrop-blur-md flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-[-4px] group-hover:translate-y-0">
-                    <svg className="w-4 h-4 text-gold" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                    </svg>
-                </div>
+                {/* Lock badge for private — replaces the external-link icon */}
+                {isPrivate ? (
+                    <div className="absolute top-4 right-4 w-9 h-9 rounded-full bg-char/70 backdrop-blur-md flex items-center justify-center" title="Privátny projekt — náhľad bez odkazu">
+                        <svg className="w-4 h-4 text-gold/80" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                            <rect x="5" y="11" width="14" height="9" rx="2" />
+                            <path strokeLinecap="round" d="M8 11V8a4 4 0 1 1 8 0v3" />
+                        </svg>
+                    </div>
+                ) : (
+                    <div className="absolute top-4 right-4 w-9 h-9 rounded-full bg-char/70 backdrop-blur-md flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-[-4px] group-hover:translate-y-0">
+                        <svg className="w-4 h-4 text-gold" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                        </svg>
+                    </div>
+                )}
             </div>
 
             {/* Body */}
@@ -188,7 +206,9 @@ function ProjectCard({ project }: { project: Project }) {
                     <div className="text-[10px] uppercase tracking-[0.25em] text-gold/80 font-bold mb-1.5">
                         {project.category}
                     </div>
-                    <h3 className="text-xl font-display font-bold text-cream group-hover:text-gold-bright transition-colors">
+                    <h3 className={`text-xl font-display font-bold text-cream transition-colors ${
+                        isPrivate ? "" : "group-hover:text-gold-bright"
+                    }`}>
                         {project.name}
                     </h3>
                 </div>
@@ -205,10 +225,46 @@ function ProjectCard({ project }: { project: Project }) {
                         </span>
                     ))}
                 </div>
-                <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.2em] font-bold text-cream/40 group-hover:text-gold transition-colors pt-1">
-                    <span>{project.url.replace(/^https?:\/\//, "").replace(/\/$/, "")}</span>
+                <div className={`flex items-center gap-2 text-[11px] uppercase tracking-[0.2em] font-bold pt-1 ${
+                    isPrivate
+                        ? "text-cream/40"
+                        : "text-cream/40 group-hover:text-gold transition-colors"
+                }`}>
+                    {isPrivate ? (
+                        <span className="flex items-center gap-1.5">
+                            <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.2}>
+                                <rect x="5" y="11" width="14" height="9" rx="2" />
+                                <path strokeLinecap="round" d="M8 11V8a4 4 0 1 1 8 0v3" />
+                            </svg>
+                            Privátny projekt
+                        </span>
+                    ) : (
+                        <span>{project.url.replace(/^https?:\/\//, "").replace(/\/$/, "")}</span>
+                    )}
                 </div>
             </div>
+        </>
+    );
+
+    const sharedClasses =
+        "group relative rounded-2xl overflow-hidden bg-cream/[0.03] border border-cream/10 backdrop-blur-sm transition-all duration-500 flex flex-col";
+
+    if (isPrivate) {
+        return (
+            <div className={`${sharedClasses} hover:border-cream/20`} aria-label={`${project.name} (privátny projekt — bez odkazu)`}>
+                {inner}
+            </div>
+        );
+    }
+
+    return (
+        <a
+            href={project.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`${sharedClasses} hover:border-gold/40 hover:bg-cream/[0.05]`}
+        >
+            {inner}
         </a>
     );
 }
