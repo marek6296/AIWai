@@ -283,6 +283,9 @@ canvas[style*="position: fixed"] {
   to   { opacity: 1; transform: translateY(0); }
 }
 
+.hero-logo {
+  animation: heroReveal 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
 .hero-line {
   animation: heroReveal 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
 }

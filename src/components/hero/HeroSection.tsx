@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import MagneticButton from "@/components/ui/MagneticButton";
 import StarField from "@/components/backgrounds/StarField";
 import HexagonOverlay from "@/components/backgrounds/HexagonOverlay";
@@ -65,6 +66,18 @@ export default function HeroSection() {
                 flex flex-col justify-center gap-10
                 min-h-[100dvh] pt-24 pb-36
                 md:h-auto md:justify-center md:items-center md:gap-0 md:py-32 md:pb-32">
+
+                {/* Mobile logo — only shown above headline on small screens */}
+                <div className="hero-logo md:hidden flex justify-center">
+                    <Image
+                        src="/logo.png"
+                        alt="AIWai"
+                        width={96}
+                        height={96}
+                        priority
+                        className="w-20 h-20 object-contain drop-shadow-[0_4px_18px_rgba(201,168,117,0.25)]"
+                    />
+                </div>
 
                 {/* Headline block */}
                 <div className="group w-full max-w-5xl md:mx-auto space-y-0 cursor-default
