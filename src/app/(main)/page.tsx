@@ -8,7 +8,7 @@ const CTASection      = dynamic(() => import("@/components/cta/CTASection"));
 const ContactSection  = dynamic(() => import("@/components/contact/ContactSection"));
 export default function Home() {
     return (
-        <main className="min-h-screen bg-white">
+        <main className="min-h-screen bg-char">
             <HeroSection />
             <ServicesSection />
             <ProcessSection />

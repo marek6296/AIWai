@@ -41,10 +41,11 @@ export default function ProcessSection() {
     }));
 
     return (
-        <section className="py-20 md:py-28 bg-brand-indigo relative overflow-hidden">
-            {/* Subtle texture */}
-            <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:60px_60px] pointer-events-none" />
-            <div className="absolute top-[10%] right-[5%] w-[400px] h-[400px] bg-brand-sand/5 rounded-full blur-[120px] pointer-events-none" />
+        <section className="py-20 md:py-28 bg-char relative overflow-hidden">
+            {/* Static CSS grid — no framer-motion, no data URL → no hydration mismatch */}
+            <div aria-hidden="true" className="absolute inset-0 pointer-events-none gold-vlines opacity-40" />
+            <div aria-hidden="true" className="absolute -top-40 -right-40 w-[600px] h-[600px] rounded-full pointer-events-none" style={{ background: "radial-gradient(circle, rgba(201,168,117,0.12) 0%, transparent 65%)" }} />
+            <div aria-hidden="true" className="absolute -bottom-40 -left-40 w-[500px] h-[500px] rounded-full pointer-events-none" style={{ background: "radial-gradient(circle, rgba(201,168,117,0.08) 0%, transparent 65%)" }} />
 
             <div className="container mx-auto relative z-10">
                 <FadeIn className="text-center mb-16 space-y-4">
@@ -62,7 +63,7 @@ export default function ProcessSection() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-white/[0.06] rounded-2xl overflow-hidden">
                     {steps.map((step, i) => (
                         <FadeIn key={i} delay={i * 0.08}>
-                            <div className="bg-brand-indigo p-8 md:p-10 h-full flex flex-col gap-6 hover:bg-white/[0.03] transition-colors duration-300">
+                            <div className="bg-char p-8 md:p-10 h-full flex flex-col gap-6 hover:bg-white/[0.03] transition-colors duration-300">
                                 <div className="flex items-start justify-between">
                                     <div className="w-10 h-10 rounded-xl border border-white/10 flex items-center justify-center text-brand-sand/70">
                                         {step.icon}

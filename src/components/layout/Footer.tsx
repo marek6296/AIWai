@@ -13,8 +13,12 @@ const NAV_LINKS = [
 
 export default function Footer() {
     return (
-        <footer className="bg-white relative overflow-hidden">
-            <div className="h-px bg-gradient-to-r from-transparent via-brand-indigo/10 to-transparent" />
+        <footer className="bg-char relative overflow-hidden border-t border-cream/5">
+            {/* Subtle ambient glow */}
+            <div aria-hidden="true" className="absolute -top-32 left-1/2 -translate-x-1/2 w-[700px] h-[300px] rounded-full pointer-events-none"
+                style={{ background: "radial-gradient(ellipse, rgba(201,168,117,0.10) 0%, transparent 70%)" }} />
+            <div aria-hidden="true" className="absolute inset-0 pointer-events-none gold-vlines opacity-30" />
+            <div className="h-px bg-gradient-to-r from-transparent via-gold/30 to-transparent" />
 
             <div className="container mx-auto px-6 py-14 md:py-20 relative z-10">
                 {/* Main grid */}
@@ -27,18 +31,18 @@ export default function Footer() {
                                 alt="AIWai Logo"
                                 width={40}
                                 height={40}
-                                className="object-contain opacity-70"
+                                className="object-contain opacity-90"
                             />
-                            <span className="text-xl font-display font-bold text-brand-indigo">AIWai</span>
+                            <span className="text-xl font-display font-bold text-cream">AIWai</span>
                         </div>
-                        <p className="text-brand-indigo/35 text-sm font-light leading-relaxed max-w-[220px]">
+                        <p className="text-cream/45 text-sm font-light leading-relaxed max-w-[220px]">
                             Web, dizajn, AI chatboty, marketing a automatizácia — od jedného tímu.
                         </p>
                         <div className="mt-5 space-y-1.5">
-                            <a href="mailto:marek@aiwai.app" className="text-brand-indigo/40 hover:text-brand-indigo transition-colors text-sm block">
+                            <a href="mailto:marek@aiwai.app" className="text-cream/50 hover:text-gold transition-colors text-sm block">
                                 marek@aiwai.app
                             </a>
-                            <a href="tel:+421902876198" className="text-brand-indigo/40 hover:text-brand-indigo transition-colors text-sm block">
+                            <a href="tel:+421902876198" className="text-cream/50 hover:text-gold transition-colors text-sm block">
                                 +421 902 876 198
                             </a>
                         </div>
@@ -46,13 +50,13 @@ export default function Footer() {
 
                     {/* Navigation */}
                     <div>
-                        <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-brand-indigo/30 mb-5">Navigácia</p>
+                        <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-gold/70 mb-5">Navigácia</p>
                         <ul className="space-y-3">
                             {NAV_LINKS.map((link) => (
                                 <li key={link.href}>
                                     <Link
                                         href={link.href}
-                                        className="text-brand-indigo/50 hover:text-brand-indigo transition-colors text-sm"
+                                        className="text-cream/55 hover:text-gold transition-colors text-sm"
                                     >
                                         {link.label}
                                     </Link>
@@ -63,34 +67,34 @@ export default function Footer() {
 
                     {/* Legal + Social */}
                     <div>
-                        <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-brand-indigo/30 mb-5">Sledujte nás</p>
+                        <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-gold/70 mb-5">Sledujte nás</p>
                         <div className="flex items-center gap-4 mb-8">
                             {/* Facebook */}
                             <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook"
-                                className="w-9 h-9 rounded-full border border-brand-indigo/10 flex items-center justify-center text-brand-indigo/30 hover:border-brand-indigo hover:text-brand-indigo hover:bg-brand-indigo/[0.03] transition-all duration-200">
+                                className="w-9 h-9 rounded-full border border-cream/15 flex items-center justify-center text-cream/40 hover:border-gold hover:text-gold hover:bg-gold/5 transition-all duration-200">
                                 <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
                             </a>
                             {/* Instagram */}
                             <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram"
-                                className="w-9 h-9 rounded-full border border-brand-indigo/10 flex items-center justify-center text-brand-indigo/30 hover:border-brand-indigo hover:text-brand-indigo hover:bg-brand-indigo/[0.03] transition-all duration-200">
+                                className="w-9 h-9 rounded-full border border-cream/15 flex items-center justify-center text-cream/40 hover:border-gold hover:text-gold hover:bg-gold/5 transition-all duration-200">
                                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
                             </a>
                             {/* LinkedIn */}
                             <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"
-                                className="w-9 h-9 rounded-full border border-brand-indigo/10 flex items-center justify-center text-brand-indigo/30 hover:border-brand-indigo hover:text-brand-indigo hover:bg-brand-indigo/[0.03] transition-all duration-200">
+                                className="w-9 h-9 rounded-full border border-cream/15 flex items-center justify-center text-cream/40 hover:border-gold hover:text-gold hover:bg-gold/5 transition-all duration-200">
                                 <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
                             </a>
                         </div>
 
-                        <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-brand-indigo/30 mb-4">Právne</p>
+                        <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-gold/70 mb-4">Právne</p>
                         <ul className="space-y-2.5">
                             <li>
-                                <Link href="/ochrana-osobnych-udajov" className="text-brand-indigo/40 hover:text-brand-indigo transition-colors text-sm">
+                                <Link href="/ochrana-osobnych-udajov" className="text-cream/50 hover:text-gold transition-colors text-sm">
                                     Ochrana osobných údajov
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/obchodne-podmienky" className="text-brand-indigo/40 hover:text-brand-indigo transition-colors text-sm">
+                                <Link href="/obchodne-podmienky" className="text-cream/50 hover:text-gold transition-colors text-sm">
                                     Obchodné podmienky
                                 </Link>
                             </li>
@@ -99,17 +103,15 @@ export default function Footer() {
                 </div>
 
                 {/* Bottom bar */}
-                <div className="pt-8 border-t border-brand-indigo/[0.06] flex flex-col sm:flex-row items-center justify-between gap-3">
-                    <p className="text-brand-indigo/20 text-[11px] tracking-wide">
+                <div className="pt-8 border-t border-cream/10 flex flex-col sm:flex-row items-center justify-between gap-3">
+                    <p className="text-cream/30 text-[11px] tracking-wide">
                         &copy; {new Date().getFullYear()} AIWai. Všetky práva vyhradené.
                     </p>
-                    <p className="text-brand-indigo/15 text-[11px]">
+                    <p className="text-cream/25 text-[11px]">
                         Slovensko · IČO: —
                     </p>
                 </div>
             </div>
-
-            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1/2 h-1/2 bg-brand-indigo/[0.02] blur-[100px] pointer-events-none" />
         </footer>
     );
 }

@@ -9,7 +9,7 @@ export default function MainLayout({ children }: Readonly<{ children: React.Reac
             <Navbar />
             {children}
             <Footer />
-            {/* ParticleField + ScrollProgress + Chatbot mount after idle — see DeferredShell */}
+            {/* ScrollProgress + Chatbot mount after idle — see DeferredShell */}
             <DeferredShell />
         </LanguageProvider>
     );

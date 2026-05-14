@@ -12,16 +12,14 @@ export default function CTASection() {
     };
 
     return (
-        <section className="py-28 md:py-36 relative overflow-hidden">
-            {/* Background */}
-            <div className="absolute inset-0 bg-brand-indigo" />
-            <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:50px_50px] pointer-events-none" />
-            <div className="absolute top-[20%] right-[10%] w-[400px] h-[400px] bg-brand-sand/10 rounded-full blur-[120px] pointer-events-none" />
-            <div className="absolute bottom-[10%] left-[10%] w-[300px] h-[300px] bg-white/5 rounded-full blur-[100px] pointer-events-none" />
+        <section className="py-28 md:py-36 bg-char relative overflow-hidden">
+            <div aria-hidden="true" className="absolute inset-0 pointer-events-none gold-vlines opacity-40" />
+            <div aria-hidden="true" className="absolute top-[10%] right-[5%] w-[600px] h-[600px] rounded-full pointer-events-none" style={{ background: "radial-gradient(circle, rgba(201,168,117,0.15) 0%, transparent 65%)" }} />
+            <div aria-hidden="true" className="absolute bottom-[10%] left-[5%] w-[500px] h-[500px] rounded-full pointer-events-none" style={{ background: "radial-gradient(circle, rgba(201,168,117,0.08) 0%, transparent 65%)" }} />
 
             <div className="container mx-auto relative z-10 text-center">
                 <ScrollReveal>
-                    <p className="text-brand-sand/80 uppercase tracking-[0.2em] text-xs font-bold mb-6">
+                    <p className="text-gold/80 uppercase tracking-[0.2em] text-xs font-bold mb-6">
                         {t("cta.label")}
                     </p>
                 </ScrollReveal>

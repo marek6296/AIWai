@@ -9,7 +9,18 @@ import { useTranslation } from "@/i18n/useTranslation";
 
 const smoothScrollTo = (id: string) => {
     const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (!el) return;
+    const navHeight = document.querySelector("nav")?.offsetHeight ?? 80;
+    const viewportH = window.innerHeight;
+    const form = el.querySelector("form");
+    if (form) {
+        const formRect = form.getBoundingClientRect();
+        const available = viewportH - navHeight;
+        const offset = Math.max(24, (available - formRect.height) / 2);
+        window.scrollTo({ top: Math.max(0, formRect.top + window.scrollY - navHeight - offset), behavior: "smooth" });
+        return;
+    }
+    el.scrollIntoView({ behavior: "smooth", block: "start" });
 };
 
 export default function HeroSection() {

@@ -4,6 +4,7 @@ import { ArrowRight } from "lucide-react";
 import ServiceModal from "@/components/services/ServiceModal";
 import TextReveal from "@/components/animations/TextReveal";
 import FadeIn from "@/components/animations/FadeIn";
+import SectionBackground from "@/components/backgrounds/SectionBackground";
 import { useTranslation } from "@/i18n/useTranslation";
 
 const TAGS = ["WEB", "AI", "AI", "DIZAJN", "MARKETING"];
@@ -25,20 +26,19 @@ export default function ServicesSection() {
     const selectedService = selectedIndex !== null ? services[selectedIndex] : null;
 
     return (
-        <section id="services" className="py-20 md:py-28 bg-white relative overflow-hidden">
-            <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-brand-indigo/10 to-transparent" />
-            <div className="absolute top-[30%] right-[-5%] w-[500px] h-[500px] bg-brand-sand/[0.04] rounded-full blur-[120px] pointer-events-none" />
+        <section id="services" className="py-20 md:py-28 bg-char relative overflow-hidden">
+            <SectionBackground variant="default" />
 
             <div className="container mx-auto px-6 relative z-10">
                 {/* Header */}
                 <div className="mb-16 md:mb-20 max-w-3xl">
                     <TextReveal
                         as="h2"
-                        className="text-4xl md:text-6xl font-display font-bold tracking-tight text-brand-indigo mb-5"
+                        className="text-4xl md:text-6xl font-display font-bold tracking-tight text-cream mb-5"
                     >
                         {t("services.heading")}
                     </TextReveal>
-                    <p className="text-brand-indigo/40 text-lg font-light">
+                    <p className="text-cream/50 text-lg font-light">
                         {t("services.subheading")}
                     </p>
                 </div>
@@ -49,36 +49,36 @@ export default function ServicesSection() {
                         <FadeIn key={index} delay={index * 0.06}>
                             <button
                                 onClick={() => setSelectedIndex(index)}
-                                className={`group w-full text-left border-t border-brand-indigo/[0.07] py-7 md:py-9 flex items-start md:items-center gap-5 md:gap-10 hover:bg-brand-indigo/[0.02] -mx-6 px-6 transition-all duration-300 ${index === 4 ? "border-b" : ""}`}
+                                className={`group w-full text-left border-t border-cream/10 py-7 md:py-9 flex items-start md:items-center gap-5 md:gap-10 hover:bg-cream/[0.03] -mx-6 px-6 transition-all duration-300 ${index === 4 ? "border-b" : ""}`}
                             >
                                 {/* Number */}
-                                <span className="text-[11px] font-bold tracking-[0.25em] text-brand-sand/50 group-hover:text-brand-sand transition-colors duration-300 shrink-0 w-7 pt-1 md:pt-0">
+                                <span className="text-[11px] font-bold tracking-[0.25em] text-gold/60 group-hover:text-gold transition-colors duration-300 shrink-0 w-7 pt-1 md:pt-0">
                                     {String(index + 1).padStart(2, "0")}
                                 </span>
 
                                 {/* Title + mobile description */}
                                 <div className="flex-1 min-w-0 md:w-72 md:flex-none md:shrink-0">
                                     <div className="flex items-center gap-3 mb-0.5">
-                                        <h3 className="font-display font-bold text-brand-indigo tracking-tight text-xl md:text-3xl group-hover:translate-x-1 transition-transform duration-300">
+                                        <h3 className="font-display font-bold text-cream tracking-tight text-xl md:text-3xl group-hover:translate-x-1 transition-transform duration-300">
                                             {service.title}
                                         </h3>
-                                        <span className="text-[9px] font-bold tracking-[0.25em] text-brand-sand/60 bg-brand-sand/8 border border-brand-sand/20 px-2 py-0.5 rounded-full hidden sm:inline-block group-hover:border-brand-sand/40 transition-colors duration-300">
+                                        <span className="text-[9px] font-bold tracking-[0.25em] text-gold/80 bg-gold/10 border border-gold/25 px-2 py-0.5 rounded-full hidden sm:inline-block group-hover:border-gold/60 group-hover:text-gold transition-colors duration-300">
                                             {service.tag}
                                         </span>
                                     </div>
-                                    <p className="md:hidden text-brand-indigo/40 text-sm font-light leading-snug mt-1.5 group-hover:text-brand-indigo/60 transition-colors duration-300">
+                                    <p className="md:hidden text-cream/45 text-sm font-light leading-snug mt-1.5 group-hover:text-cream/70 transition-colors duration-300">
                                         {service.description}
                                     </p>
                                 </div>
 
                                 {/* Description — desktop inline */}
-                                <p className="hidden md:block text-brand-indigo/35 text-base font-light leading-relaxed flex-1 group-hover:text-brand-indigo/60 transition-colors duration-300">
+                                <p className="hidden md:block text-cream/40 text-base font-light leading-relaxed flex-1 group-hover:text-cream/70 transition-colors duration-300">
                                     {service.description}
                                 </p>
 
                                 {/* Arrow */}
-                                <div className="ml-auto shrink-0 w-9 h-9 md:w-11 md:h-11 rounded-full border border-brand-indigo/10 group-hover:border-brand-indigo group-hover:bg-brand-indigo flex items-center justify-center transition-all duration-300">
-                                    <ArrowRight className="w-3.5 h-3.5 md:w-4 md:h-4 text-brand-indigo/25 group-hover:text-white group-hover:translate-x-0.5 transition-all duration-300" />
+                                <div className="ml-auto shrink-0 w-9 h-9 md:w-11 md:h-11 rounded-full border border-cream/15 group-hover:border-gold group-hover:bg-gold flex items-center justify-center transition-all duration-300">
+                                    <ArrowRight className="w-3.5 h-3.5 md:w-4 md:h-4 text-cream/40 group-hover:text-ink group-hover:translate-x-0.5 transition-all duration-300" />
                                 </div>
                             </button>
                         </FadeIn>

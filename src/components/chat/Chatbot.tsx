@@ -226,13 +226,13 @@ export default function Chatbot() {
                         {/* Header */}
                         <div className="p-4 bg-brand-indigo/5 border-b border-brand-indigo/5 flex justify-between items-center">
                             <div className="flex items-center gap-3">
-                                <div className="w-8 h-8 rounded-full bg-brand-indigo flex items-center justify-center p-1">
-                                    <PremiumIcon type="ai-agents" size={24} className="text-white" />
+                                <div className="w-8 h-8 rounded-full bg-gold flex items-center justify-center p-1">
+                                    <PremiumIcon type="ai-agents" size={24} className="text-ink" />
                                 </div>
                                 <div>
                                     <h3 className="text-brand-indigo font-bold text-sm">{t("chatbot.header")}</h3>
                                     <div className="flex items-center gap-1.5">
-                                        <span className="w-2 h-2 rounded-full bg-brand-indigo shadow-[0_0_10px_rgba(10,10,80,0.8)] animate-pulse" />
+                                        <span className="w-2 h-2 rounded-full bg-gold shadow-[0_0_10px_rgba(201,168,117,0.8)] animate-pulse" />
                                         <span className="text-[10px] text-brand-indigo/60 uppercase tracking-widest">Online</span>
                                     </div>
                                 </div>
@@ -275,7 +275,7 @@ export default function Chatbot() {
                                     <div
                                         className={`max-w-[82%] p-3 rounded-2xl text-sm ${
                                             message.role === "user"
-                                                ? "bg-brand-indigo text-white rounded-tr-sm"
+                                                ? "bg-gold text-ink rounded-tr-sm"
                                                 : "bg-brand-offwhite text-brand-indigo border border-brand-indigo/5 rounded-tl-sm"
                                         }`}
                                     >
@@ -334,7 +334,7 @@ export default function Chatbot() {
                                 <button
                                     type="submit"
                                     disabled={isLoading || !input.trim()}
-                                    className="absolute right-2 p-2 bg-brand-indigo text-white rounded-full hover:bg-brand-indigo/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                    className="absolute right-2 p-2 bg-gold text-ink rounded-full hover:bg-gold-bright disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                                 >
                                     {isLoading ? (
                                         <Sparkles size={16} className="animate-spin" />
@@ -359,8 +359,8 @@ export default function Chatbot() {
                     <div className="absolute bottom-1 left-1/2 -translate-x-1/2 flex gap-4 z-40"
                         style={{ transform: `translateX(-50%) scaleX(${direction === -1 ? 1 : -1})` }}
                     >
-                        <motion.div className="w-2.5 h-5 bg-brand-indigo rounded-b-full origin-top" variants={leftLegVariants} animate={isWalking ? "walking" : "idle"} />
-                        <motion.div className="w-2.5 h-5 bg-brand-indigo rounded-b-full origin-top" variants={rightLegVariants} animate={isWalking ? "walking" : "idle"} />
+                        <motion.div className="w-2.5 h-5 bg-gold rounded-b-full origin-top" variants={leftLegVariants} animate={isWalking ? "walking" : "idle"} />
+                        <motion.div className="w-2.5 h-5 bg-gold rounded-b-full origin-top" variants={rightLegVariants} animate={isWalking ? "walking" : "idle"} />
                     </div>
 
                     <motion.button
@@ -384,7 +384,7 @@ export default function Chatbot() {
                             )}
                         </AnimatePresence>
 
-                        <div className="absolute inset-0 rounded-full bg-brand-indigo text-white shadow-xl shadow-brand-indigo/20 overflow-hidden flex items-center justify-center">
+                        <div className="absolute inset-0 rounded-full bg-gold text-ink shadow-xl shadow-gold/30 overflow-hidden flex items-center justify-center">
                             <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
                             <div style={{ transform: `scaleX(${direction === 1 && !isOpen ? -1 : 1})` }}>
                                 <AnimatePresence mode="wait">
@@ -394,7 +394,7 @@ export default function Chatbot() {
                                         </motion.div>
                                     ) : (
                                         <motion.div key="open" initial={{ scale: 0.5, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.5, opacity: 0 }}>
-                                            <PremiumIcon type="ai-agents" size={36} className="text-white" />
+                                            <PremiumIcon type="ai-agents" size={36} className="text-ink" />
                                         </motion.div>
                                     )}
                                 </AnimatePresence>
@@ -402,7 +402,7 @@ export default function Chatbot() {
                         </div>
 
                         {!isOpen && (
-                            <span className="absolute top-0 right-0 w-3.5 h-3.5 bg-brand-indigo border-2 border-white rounded-full shadow-[0_0_15px_4px_rgba(10,10,90,0.8)] z-10" />
+                            <span className="absolute top-0 right-0 w-3.5 h-3.5 bg-gold border-2 border-white rounded-full shadow-[0_0_12px_4px_rgba(201,168,117,0.7)] z-10" />
                         )}
                     </motion.button>
                 </div>

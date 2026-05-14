@@ -22,8 +22,15 @@ const scrollTo = (id: string) => {
     const el = document.getElementById(id);
     if (!el) return;
     const navHeight = document.querySelector("nav")?.offsetHeight ?? 80;
-    // If section has a heading, scroll to it with breathing room
-    // If not (e.g. about), scroll exactly to section top so previous section stays hidden
+    const viewportH = window.innerHeight;
+    const form = el.querySelector("form");
+    if (form) {
+        const formRect = form.getBoundingClientRect();
+        const available = viewportH - navHeight;
+        const offset = Math.max(24, (available - formRect.height) / 2);
+        window.scrollTo({ top: Math.max(0, formRect.top + window.scrollY - navHeight - offset), behavior: "smooth" });
+        return;
+    }
     const heading = el.querySelector("h1, h2") as HTMLElement | null;
     const top = heading
         ? heading.getBoundingClientRect().top + window.scrollY - navHeight - 24
@@ -74,7 +81,8 @@ export default function Navbar() {
         return () => document.removeEventListener("mousedown", handler);
     }, []);
 
-    const darkMode = isHome && !scrolled;
+    // Home page is now dark throughout — keep navbar in dark mode regardless of scroll
+    const darkMode = isHome;
 
     const handleScroll = useCallback((e: React.MouseEvent, id: string) => {
         e.preventDefault();
@@ -91,7 +99,9 @@ export default function Navbar() {
             {/* ── Main Nav — CSS entrance only ── */}
             <nav className={`nav-entrance fixed top-0 left-0 right-0 z-[100] transition-all duration-500 ${
                 scrolled
-                    ? "py-3 bg-white/85 backdrop-blur-sm border-b border-brand-indigo/[0.06] shadow-[0_1px_30px_rgba(28,31,58,0.04)]"
+                    ? isHome
+                        ? "py-3 bg-char/80 backdrop-blur-md border-b border-cream/10 shadow-[0_1px_30px_rgba(0,0,0,0.3)]"
+                        : "py-3 bg-white/85 backdrop-blur-sm border-b border-brand-indigo/[0.06] shadow-[0_1px_30px_rgba(28,31,58,0.04)]"
                     : "py-5 bg-transparent"
             }`}>
                 <div className="container mx-auto flex justify-between items-center">
@@ -103,7 +113,14 @@ export default function Navbar() {
                             onClick={(e) => { if (isHome) { e.preventDefault(); window.scrollTo({ top: 0, behavior: "smooth" }); } }}
                             className="hidden md:flex relative items-center"
                         >
-                            <Image src="/logo.png" alt="AIWai" width={52} height={52} className="w-12 h-12 object-contain mix-blend-multiply" priority />
+                            <Image
+                                src="/logo.png"
+                                alt="AIWai"
+                                width={52}
+                                height={52}
+                                className={`w-12 h-12 object-contain ${isHome ? "" : "mix-blend-multiply"}`}
+                                priority
+                            />
                         </Link>
 
                         {/* Language switcher */}
