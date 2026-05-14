@@ -62,17 +62,17 @@ export default function HeroSection() {
 
             {/* ── Content ── */}
             <div className="relative z-10 container mx-auto px-6 text-center
-                flex flex-col justify-between
-                h-[100dvh] pt-24 pb-16
-                md:h-auto md:justify-center md:items-center md:py-32">
+                flex flex-col justify-center gap-10
+                min-h-[100dvh] pt-24 pb-36
+                md:h-auto md:justify-center md:items-center md:gap-0 md:py-32 md:pb-32">
 
                 {/* Headline block */}
                 <div className="group w-full max-w-5xl md:mx-auto space-y-0 cursor-default
                     transition-transform duration-500 ease-out hover:-translate-y-2">
                     <h1
-                        className="hero-line font-display font-bold tracking-tight text-cream leading-[1.1] whitespace-nowrap
+                        className="hero-line font-display font-bold tracking-tight text-cream leading-[1.05] md:whitespace-nowrap
                             transition-transform duration-500 ease-out group-hover:scale-[1.015] origin-center"
-                        style={{ fontSize: "clamp(2rem,9vw,6rem)" }}
+                        style={{ fontSize: "clamp(2.25rem,9.5vw,6rem)" }}
                     >
                         {t("hero.line1").split("|").map((word, i, arr) => (
                             <span key={i}>
@@ -87,10 +87,10 @@ export default function HeroSection() {
                         ))}
                     </h1>
                     <div
-                        className="hero-line font-display font-bold tracking-tight leading-[1.1]
+                        className="hero-line font-display font-bold tracking-tight leading-[1.05]
                             text-cream/40 group-hover:text-cream/75
                             transition-[color,opacity] duration-500 ease-out"
-                        style={{ fontSize: "clamp(2rem,9vw,6rem)" }}
+                        style={{ fontSize: "clamp(2.25rem,9.5vw,6rem)" }}
                     >
                         <span className="block">{t("hero.line2.light")}</span>
                         <span className="block">{t("hero.line2.gradient")}</span>
@@ -98,11 +98,11 @@ export default function HeroSection() {
                 </div>
 
                 {/* Subtitle + CTA */}
-                <div className="w-full max-w-4xl md:mx-auto space-y-5 md:space-y-8 md:mt-10">
-                    <p className="hero-sub text-base md:text-xl text-cream/60 mx-auto leading-relaxed font-light md:whitespace-nowrap">
+                <div className="w-full max-w-4xl md:mx-auto space-y-6 md:space-y-8 md:mt-10">
+                    <p className="hero-sub text-[15px] md:text-xl text-cream/65 mx-auto leading-relaxed font-light max-w-md md:max-w-none md:whitespace-nowrap">
                         {t("hero.subtitle")}
                     </p>
-                    <div className="hero-cta flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
+                    <div className="hero-cta flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-4">
                         <MagneticButton
                             onClick={() => smoothScrollTo("contact")}
                             variant="gold"
@@ -112,7 +112,7 @@ export default function HeroSection() {
                         </MagneticButton>
                         <button
                             onClick={() => smoothScrollTo("services")}
-                            className="px-8 py-3 text-xs font-bold uppercase tracking-[0.2em] text-cream/40 hover:text-gold transition-colors whitespace-nowrap"
+                            className="px-8 py-4 md:py-3 text-sm md:text-xs font-bold uppercase tracking-[0.2em] text-cream/60 hover:text-gold transition-colors whitespace-nowrap"
                         >
                             {t("hero.cta.explore")}
                         </button>

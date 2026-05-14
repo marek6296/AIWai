@@ -41,21 +41,21 @@ export default function ProcessSection() {
     }));
 
     return (
-        <section className="py-20 md:py-28 bg-char relative overflow-hidden">
+        <section className="py-16 md:py-28 bg-char relative overflow-hidden">
             {/* Static CSS grid — no framer-motion, no data URL → no hydration mismatch */}
             <div aria-hidden="true" className="absolute inset-0 pointer-events-none gold-vlines opacity-40" />
             <div aria-hidden="true" className="absolute -top-40 -right-40 w-[600px] h-[600px] rounded-full pointer-events-none" style={{ background: "radial-gradient(circle, rgba(201,168,117,0.12) 0%, transparent 65%)" }} />
             <div aria-hidden="true" className="absolute -bottom-40 -left-40 w-[500px] h-[500px] rounded-full pointer-events-none" style={{ background: "radial-gradient(circle, rgba(201,168,117,0.08) 0%, transparent 65%)" }} />
 
             <div className="container mx-auto relative z-10">
-                <FadeIn className="text-center mb-16 space-y-4">
+                <FadeIn className="text-center mb-12 md:mb-16 space-y-3 md:space-y-4">
                     <TextReveal
                         as="h2"
-                        className="text-4xl md:text-5xl font-display font-bold tracking-tight text-white"
+                        className="text-[2.25rem] md:text-5xl font-display font-bold tracking-tight text-white leading-[1.1]"
                     >
                         {t("process.heading")}
                     </TextReveal>
-                    <p className="text-white/40 max-w-xl mx-auto text-lg font-light">
+                    <p className="text-white/50 max-w-xl mx-auto text-base md:text-lg font-light px-4 md:px-0">
                         {t("process.subheading")}
                     </p>
                 </FadeIn>
@@ -63,9 +63,9 @@ export default function ProcessSection() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-white/[0.06] rounded-2xl overflow-hidden">
                     {steps.map((step, i) => (
                         <FadeIn key={i} delay={i * 0.08}>
-                            <div className="bg-char p-8 md:p-10 h-full flex flex-col gap-6 hover:bg-white/[0.03] transition-colors duration-300">
+                            <div className="bg-char p-6 md:p-10 h-full flex flex-col gap-4 md:gap-6 hover:bg-white/[0.03] transition-colors duration-300">
                                 <div className="flex items-start justify-between">
-                                    <div className="w-10 h-10 rounded-xl border border-white/10 flex items-center justify-center text-brand-sand/70">
+                                    <div className="w-10 h-10 rounded-xl border border-white/10 flex items-center justify-center text-gold/70">
                                         {step.icon}
                                     </div>
                                     <span className="text-5xl font-display font-bold text-white/[0.06] leading-none select-none">
@@ -73,10 +73,10 @@ export default function ProcessSection() {
                                     </span>
                                 </div>
                                 <div>
-                                    <h3 className="text-lg font-display font-semibold text-white mb-3">
+                                    <h3 className="text-lg font-display font-semibold text-white mb-2 md:mb-3">
                                         {step.title}
                                     </h3>
-                                    <p className="text-white/40 text-sm leading-relaxed font-light">
+                                    <p className="text-white/45 text-sm leading-relaxed font-light">
                                         {step.description}
                                     </p>
                                 </div>

@@ -20,9 +20,9 @@ export default function Footer() {
             <div aria-hidden="true" className="absolute inset-0 pointer-events-none gold-vlines opacity-30" />
             <div className="h-px bg-gradient-to-r from-transparent via-gold/30 to-transparent" />
 
-            <div className="container mx-auto px-6 py-14 md:py-20 relative z-10">
+            <div className="container mx-auto px-6 py-12 md:py-20 relative z-10">
                 {/* Main grid */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8 mb-14">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-8 mb-10 md:mb-14">
                     {/* Brand */}
                     <div>
                         <div className="flex items-center gap-3 mb-4">
@@ -103,7 +103,7 @@ export default function Footer() {
                 </div>
 
                 {/* Bottom bar */}
-                <div className="pt-8 border-t border-cream/10 flex flex-col sm:flex-row items-center justify-between gap-3">
+                <div className="pt-6 md:pt-8 border-t border-cream/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
                     <p className="text-cream/30 text-[11px] tracking-wide">
                         &copy; {new Date().getFullYear()} AIWai. Všetky práva vyhradené.
                     </p>

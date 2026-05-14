@@ -93,20 +93,20 @@ export default function ContactSection() {
     ];
 
     return (
-        <section id="contact" className="py-28 md:py-36 bg-char relative overflow-hidden">
+        <section id="contact" className="py-20 md:py-36 bg-char relative overflow-hidden">
             <SectionBackground variant="default" />
 
-            <div className="container mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-20 items-center relative z-10">
+            <div className="container mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center relative z-10">
 
                 {/* Text */}
                 <FadeIn>
                     <TextReveal
                         as="h2"
-                        className="text-5xl md:text-7xl font-display font-bold text-cream mb-8 tracking-tight"
+                        className="text-[2.5rem] md:text-7xl font-display font-bold text-cream mb-6 md:mb-8 tracking-tight leading-[1.05]"
                     >
                         {t("contact.heading")}
                     </TextReveal>
-                    <p className="text-lg text-cream/55 max-w-lg mb-12 font-light leading-relaxed">
+                    <p className="text-base md:text-lg text-cream/60 max-w-lg mb-8 md:mb-12 font-light leading-relaxed">
                         {t("contact.subheading")}
                     </p>
                     <div className="flex flex-col gap-3">
@@ -125,7 +125,7 @@ export default function ContactSection() {
                 <FadeIn delay={0.1}>
                     <form
                         onSubmit={handleSubmit}
-                        className="space-y-8 p-8 md:p-10 rounded-2xl border border-cream/10 bg-cream/[0.03] backdrop-blur-md relative shadow-[0_30px_80px_-20px_rgba(0,0,0,0.5)]"
+                        className="space-y-7 md:space-y-8 p-6 md:p-10 rounded-2xl border border-cream/10 bg-cream/[0.03] backdrop-blur-md relative shadow-[0_30px_80px_-20px_rgba(0,0,0,0.5)]"
                     >
                         {/* Success overlay */}
                         {status === "success" && (

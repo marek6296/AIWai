@@ -359,8 +359,18 @@ export default function Chatbot() {
                     <div className="absolute bottom-1 left-1/2 -translate-x-1/2 flex gap-4 z-40"
                         style={{ transform: `translateX(-50%) scaleX(${direction === -1 ? 1 : -1})` }}
                     >
-                        <motion.div className="w-2.5 h-5 bg-gold rounded-b-full origin-top" variants={leftLegVariants} animate={isWalking ? "walking" : "idle"} />
-                        <motion.div className="w-2.5 h-5 bg-gold rounded-b-full origin-top" variants={rightLegVariants} animate={isWalking ? "walking" : "idle"} />
+                        <motion.div
+                            className="w-2.5 h-5 rounded-b-full origin-top"
+                            style={{ background: "linear-gradient(180deg, #A88B5C 0%, #8C6F3F 100%)" }}
+                            variants={leftLegVariants}
+                            animate={isWalking ? "walking" : "idle"}
+                        />
+                        <motion.div
+                            className="w-2.5 h-5 rounded-b-full origin-top"
+                            style={{ background: "linear-gradient(180deg, #A88B5C 0%, #8C6F3F 100%)" }}
+                            variants={rightLegVariants}
+                            animate={isWalking ? "walking" : "idle"}
+                        />
                     </div>
 
                     <motion.button
@@ -377,15 +387,24 @@ export default function Chatbot() {
                                     initial={{ opacity: 0, y: 10, scale: 0.8 }}
                                     animate={{ opacity: 1, y: 0, scale: 1 }}
                                     exit={{ opacity: 0, y: 10, scale: 0.8 }}
-                                    className="absolute bottom-full right-0 mb-3 w-48 bg-white text-brand-indigo p-3 rounded-xl rounded-br-none shadow-lg text-xs font-medium border border-brand-indigo/10 z-50 pointer-events-none"
+                                    className="absolute bottom-full right-0 mb-3 w-48 bg-char/95 backdrop-blur-md text-cream p-3 rounded-xl rounded-br-none shadow-xl shadow-black/40 text-xs font-medium border border-gold/25 z-50 pointer-events-none"
                                 >
                                     {bubbleMessage}
                                 </motion.div>
                             )}
                         </AnimatePresence>
 
-                        <div className="absolute inset-0 rounded-full bg-gold text-ink shadow-lg shadow-black/20 overflow-hidden flex items-center justify-center ring-1 ring-gold-deep/30">
-                            <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+                        {/* Polished bronze button — gradient + subtle inner highlight + thin gold ring,
+                            looks like a luxury watch bezel rather than a flat glowing gold disc. */}
+                        <div
+                            className="absolute inset-0 rounded-full text-ink overflow-hidden flex items-center justify-center"
+                            style={{
+                                background: "linear-gradient(135deg, #D4B27F 0%, #B49364 55%, #8C6F3F 100%)",
+                                boxShadow:
+                                    "0 6px 16px rgba(0,0,0,0.45), 0 1px 0 rgba(255,255,255,0.18) inset, 0 -2px 6px rgba(0,0,0,0.25) inset, 0 0 0 1px rgba(140,111,63,0.55)",
+                            }}
+                        >
+                            <div className="absolute inset-0 bg-white/15 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
                             <div style={{ transform: `scaleX(${direction === 1 && !isOpen ? -1 : 1})` }}>
                                 <AnimatePresence mode="wait">
                                     {isOpen ? (
@@ -394,7 +413,7 @@ export default function Chatbot() {
                                         </motion.div>
                                     ) : (
                                         <motion.div key="open" initial={{ scale: 0.5, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.5, opacity: 0 }}>
-                                            <PremiumIcon type="ai-agents" size={36} className="text-ink" />
+                                            <PremiumIcon type="ai-agents" size={36} className="text-ink/80" />
                                         </motion.div>
                                     )}
                                 </AnimatePresence>
@@ -402,7 +421,13 @@ export default function Chatbot() {
                         </div>
 
                         {!isOpen && (
-                            <span className="absolute top-0 right-0 w-3 h-3 bg-gold border-2 border-char rounded-full z-10" />
+                            <span
+                                className="absolute top-0.5 right-0.5 w-2.5 h-2.5 rounded-full z-10"
+                                style={{
+                                    background: "#C9A875",
+                                    boxShadow: "0 0 0 2px #0A0A0F, 0 0 0 3px rgba(201,168,117,0.35)",
+                                }}
+                            />
                         )}
                     </motion.button>
                 </div>
