@@ -58,15 +58,27 @@ export default function StarField() {
             }));
         }
 
+        // Initial speed boost — particles fly fast on first load, then ease into normal drift.
+        // 7× faster at t=0, decays per frame and settles to 1× after ~2.5s.
+        let speedBoost = 7;
+        const BOOST_DECAY = 0.978;   // per frame; reaches 1.0 in ~150 frames (~2.5s @ 60fps)
+        const BOOST_MIN = 1.0;
+
         function frame() {
             if (!running) return;
             ctx!.clearRect(0, 0, width, height);
 
+            // Ease the speed boost toward normal (1.0)
+            if (speedBoost > BOOST_MIN) {
+                speedBoost = Math.max(BOOST_MIN, speedBoost * BOOST_DECAY);
+            }
+
             for (let i = 0; i < particles.length; i++) {
                 const p = particles[i];
-                p.x += p.vx;
-                p.y += p.vy;
-                p.twinkle += p.twinkleSpeed;
+                p.x += p.vx * speedBoost;
+                p.y += p.vy * speedBoost;
+                // Twinkle also kicks faster initially for a brief sparkle burst
+                p.twinkle += p.twinkleSpeed * speedBoost;
                 if (p.x < 0) p.x = width;
                 if (p.x > width) p.x = 0;
                 if (p.y < 0) p.y = height;

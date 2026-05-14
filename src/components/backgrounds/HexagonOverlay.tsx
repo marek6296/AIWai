@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
+import { useEffect, useState } from "react";
 
 function Hex({
     className,
@@ -16,13 +17,37 @@ function Hex({
     reverse?: boolean;
 }) {
     const reduced = useReducedMotion();
+    // boosted=true → fast initial spin; switches to normal slow rotation after the burst
+    const [boosted, setBoosted] = useState(true);
+
+    useEffect(() => {
+        if (reduced) {
+            setBoosted(false);
+            return;
+        }
+        // Let the fast intro run for ~2s, then ease into the normal slow loop.
+        const id = setTimeout(() => setBoosted(false), 2000);
+        return () => clearTimeout(id);
+    }, [reduced]);
+
+    const sign = reverse ? -1 : 1;
+    // Fast intro: spin ~1.5 full turns over 2 seconds, then handoff to slow loop.
+    const introTransition = { duration: 2, ease: "easeOut" as const };
+    const loopTransition = { duration, ease: "linear" as const, repeat: Infinity };
+
     return (
         <motion.svg
             viewBox="0 0 100 100"
             className={`absolute pointer-events-none ${className}`}
             style={{ opacity }}
-            animate={reduced ? undefined : { rotate: reverse ? -360 : 360 }}
-            transition={reduced ? undefined : { duration, ease: "linear", repeat: Infinity }}
+            animate={
+                reduced
+                    ? undefined
+                    : boosted
+                        ? { rotate: sign * 540 }   // 1.5 turns in 2s — visible "swoosh"
+                        : { rotate: sign * 360 }
+            }
+            transition={reduced ? undefined : boosted ? introTransition : loopTransition}
             aria-hidden="true"
         >
             <path
