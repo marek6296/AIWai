@@ -69,13 +69,10 @@ export default function ServicesSection() {
 
                                 {/* Title + mobile description */}
                                 <div className="flex-1 min-w-0 md:w-72 md:flex-none md:shrink-0">
-                                    <div className="flex items-center gap-3 mb-1">
+                                    <div className="mb-1">
                                         <h3 className="font-display font-bold text-cream tracking-tight text-lg md:text-3xl group-hover:translate-x-1 transition-transform duration-300">
                                             {service.title}
                                         </h3>
-                                        <span className="text-[9px] font-bold tracking-[0.25em] text-gold/80 bg-gold/10 border border-gold/25 px-2 py-0.5 rounded-full hidden sm:inline-block group-hover:border-gold/60 group-hover:text-gold transition-colors duration-300">
-                                            {service.tag}
-                                        </span>
                                     </div>
                                     <p className="md:hidden text-cream/55 text-[13px] font-light leading-snug mt-1 group-hover:text-cream/70 transition-colors duration-300">
                                         {service.description}
