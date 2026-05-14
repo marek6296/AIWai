@@ -68,6 +68,10 @@ export default function StarField() {
         // Mobile scroll events fire too aggressively (momentum/rubber-band)
         // and choke the canvas RAF loop, so we skip the listener there entirely.
         const isMobile = window.innerWidth < 768;
+        // Real iOS Safari (NOT Chrome on iOS): canvas + momentum scroll = judder.
+        const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+        const isSafariMobile = isMobile && isSafari;
+
         let scrollVelocity = 0;          // accumulated scroll energy
         const SCROLL_GAIN = 0.18;        // how much each scrolled pixel adds
         const SCROLL_DECAY = 0.92;       // per-frame falloff (~1s back to rest)
@@ -83,6 +87,27 @@ export default function StarField() {
         }
         if (!isMobile) {
             window.addEventListener("scroll", onScroll, { passive: true });
+        }
+
+        // Safari iOS: pause canvas RAF while the user is actively scrolling,
+        // resume ~150ms after they stop. This frees GPU for smooth momentum
+        // scrolling — biggest impact on the "buggy" feel without touching Chrome.
+        let safariScrollTimeout: ReturnType<typeof setTimeout> | null = null;
+        function onSafariScrollPause() {
+            if (running) {
+                running = false;
+                cancelAnimationFrame(rafId);
+            }
+            if (safariScrollTimeout) clearTimeout(safariScrollTimeout);
+            safariScrollTimeout = setTimeout(() => {
+                if (!running && !reduced && document.visibilityState !== "hidden") {
+                    running = true;
+                    frame();
+                }
+            }, 150);
+        }
+        if (isSafariMobile) {
+            window.addEventListener("scroll", onSafariScrollPause, { passive: true });
         }
 
         function frame() {
@@ -170,9 +195,21 @@ export default function StarField() {
             }
         }
 
+        // iOS Safari fires resize whenever the address bar shows/hides during scroll
+        // even though width hasn't changed. Re-spawning particles then = visible flash.
+        // Guard against that on Safari mobile only; other browsers behave fine.
+        let lastWidth = window.innerWidth;
         function onResize() {
             resize();
-            spawn();
+            if (isSafariMobile) {
+                const newWidth = window.innerWidth;
+                if (newWidth !== lastWidth) {
+                    spawn();
+                    lastWidth = newWidth;
+                }
+            } else {
+                spawn();
+            }
         }
 
         resize();
@@ -195,8 +232,10 @@ export default function StarField() {
         return () => {
             running = false;
             cancelAnimationFrame(rafId);
+            if (safariScrollTimeout) clearTimeout(safariScrollTimeout);
             window.removeEventListener("resize", onResize);
             if (!isMobile) window.removeEventListener("scroll", onScroll);
+            if (isSafariMobile) window.removeEventListener("scroll", onSafariScrollPause);
             document.removeEventListener("visibilitychange", onVisibility);
         };
     }, []);
