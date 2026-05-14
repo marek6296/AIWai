@@ -25,14 +25,14 @@ function Hex({
             setBoosted(false);
             return;
         }
-        // Let the fast intro run for ~2s, then ease into the normal slow loop.
-        const id = setTimeout(() => setBoosted(false), 2000);
+        // Let the fast intro run for ~1.1s, then ease into the normal slow loop.
+        const id = setTimeout(() => setBoosted(false), 1100);
         return () => clearTimeout(id);
     }, [reduced]);
 
     const sign = reverse ? -1 : 1;
-    // Fast intro: spin ~1.5 full turns over 2 seconds, then handoff to slow loop.
-    const introTransition = { duration: 2, ease: "easeOut" as const };
+    // Fast intro: ~1 turn over 1.1s, then handoff to slow loop.
+    const introTransition = { duration: 1.1, ease: "easeOut" as const };
     const loopTransition = { duration, ease: "linear" as const, repeat: Infinity };
 
     return (
@@ -44,7 +44,7 @@ function Hex({
                 reduced
                     ? undefined
                     : boosted
-                        ? { rotate: sign * 540 }   // 1.5 turns in 2s — visible "swoosh"
+                        ? { rotate: sign * 360 }   // 1 turn in 1.1s — quick swoosh
                         : { rotate: sign * 360 }
             }
             transition={reduced ? undefined : boosted ? introTransition : loopTransition}

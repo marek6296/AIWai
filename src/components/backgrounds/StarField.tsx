@@ -59,9 +59,9 @@ export default function StarField() {
         }
 
         // Initial speed boost — particles fly fast on first load, then ease into normal drift.
-        // 7× faster at t=0, decays per frame and settles to 1× after ~2.5s.
+        // 7× faster at t=0, decays per frame and settles to 1× after ~0.8s.
         let speedBoost = 7;
-        const BOOST_DECAY = 0.978;   // per frame; reaches 1.0 in ~150 frames (~2.5s @ 60fps)
+        const BOOST_DECAY = 0.96;    // per frame; reaches 1.0 in ~48 frames (~0.8s @ 60fps)
         const BOOST_MIN = 1.0;
 
         function frame() {
