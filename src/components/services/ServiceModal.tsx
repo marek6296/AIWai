@@ -1,7 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
-import { X, ArrowRight } from "lucide-react";
 import { useTranslation } from "@/i18n/useTranslation";
 
 interface ServiceModalProps {
@@ -51,65 +50,117 @@ export default function ServiceModal({ isOpen, onClose, service, index }: Servic
 
     const modalContent = (
         <div className="fixed inset-0 z-[9999] flex items-end md:items-center justify-center md:p-6">
-            {/* Backdrop */}
+            {/* Backdrop — deep blur, near-black */}
             <div
                 onClick={onClose}
-                className="absolute inset-0 bg-brand-indigo/25 backdrop-blur-xl transition-opacity duration-300"
+                className="absolute inset-0 bg-char/85 backdrop-blur-xl transition-opacity duration-300"
                 style={{ opacity: visible ? 1 : 0 }}
             />
 
             {/* Modal */}
             <div
-                className="relative w-full md:max-w-2xl max-h-[92vh] md:max-h-[85vh] bg-white rounded-t-3xl md:rounded-3xl shadow-[0_-20px_80px_-10px_rgba(28,31,58,0.12)] md:shadow-[0_30px_100px_-20px_rgba(28,31,58,0.15)] overflow-hidden flex flex-col border-t border-white/50 md:border transition-all duration-400"
+                className="relative w-full md:max-w-2xl max-h-[92vh] md:max-h-[85vh] rounded-t-3xl md:rounded-3xl overflow-hidden flex flex-col transition-all duration-500 ease-out"
                 style={{
                     opacity: visible ? 1 : 0,
                     transform: visible ? "translateY(0)" : "translateY(40px)",
+                    background: "linear-gradient(180deg, #0E0E14 0%, #0A0A0F 100%)",
+                    border: "1px solid rgba(201, 168, 117, 0.18)",
+                    boxShadow: "0 40px 120px -20px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255,255,255,0.03) inset",
                 }}
             >
+                {/* Subtle gold ambient glow inside the modal — top-left + bottom-right */}
+                <div aria-hidden="true" className="absolute -top-32 -left-32 w-[420px] h-[420px] rounded-full pointer-events-none"
+                    style={{ background: "radial-gradient(circle, rgba(201,168,117,0.10) 0%, transparent 65%)" }} />
+                <div aria-hidden="true" className="absolute -bottom-32 -right-32 w-[420px] h-[420px] rounded-full pointer-events-none"
+                    style={{ background: "radial-gradient(circle, rgba(201,168,117,0.06) 0%, transparent 70%)" }} />
+
+                {/* Decorative giant number watermark */}
+                <span
+                    aria-hidden="true"
+                    className="absolute -top-4 right-4 md:-top-6 md:right-8 font-display font-bold leading-none select-none pointer-events-none"
+                    style={{
+                        fontSize: "clamp(7rem, 18vw, 12rem)",
+                        background: "linear-gradient(180deg, rgba(201,168,117,0.10) 0%, rgba(201,168,117,0.0) 100%)",
+                        WebkitBackgroundClip: "text",
+                        backgroundClip: "text",
+                        color: "transparent",
+                        letterSpacing: "-0.05em",
+                    }}
+                >
+                    {String(index + 1).padStart(2, "0")}
+                </span>
+
                 {/* Drag handle — mobile only */}
-                <div className="md:hidden flex justify-center pt-4 pb-2 shrink-0">
-                    <div className="w-10 h-1 rounded-full bg-brand-indigo/10" />
+                <div className="md:hidden flex justify-center pt-4 pb-2 shrink-0 relative z-10">
+                    <div className="w-12 h-1 rounded-full bg-gold/30" />
                 </div>
 
                 {/* Header */}
-                <div className="px-8 md:px-10 pt-4 md:pt-8 pb-6 md:pb-7 border-b border-brand-indigo/[0.06] flex items-start justify-between shrink-0">
-                    <div>
-                        <span className="text-[10px] font-bold tracking-[0.3em] text-brand-sand/60 uppercase">
-                            {String(index + 1).padStart(2, "0")}
-                        </span>
-                        <h3 className="text-2xl md:text-3xl font-display font-bold text-brand-indigo tracking-tight mt-1">
+                <div className="relative z-10 px-7 md:px-10 pt-4 md:pt-9 pb-6 md:pb-7 flex items-start justify-between shrink-0">
+                    <div className="flex-1 pr-4">
+                        <div className="flex items-center gap-3 mb-3">
+                            <span className="text-[10px] font-bold tracking-[0.35em] text-gold uppercase">
+                                {String(index + 1).padStart(2, "0")}
+                            </span>
+                            <span className="h-px flex-1 max-w-[60px] bg-gradient-to-r from-gold/50 to-transparent" />
+                        </div>
+                        <h3 className="text-2xl md:text-3xl font-display font-bold text-cream tracking-tight leading-[1.15]">
                             {service.title}
                         </h3>
                     </div>
                     <button
                         onClick={onClose}
-                        className="p-2.5 hover:bg-brand-indigo/5 rounded-xl transition-colors text-brand-indigo/30 hover:text-brand-indigo mt-1"
+                        aria-label="Zavrieť"
+                        className="shrink-0 w-10 h-10 rounded-full border border-cream/15 hover:border-gold/60 hover:bg-gold/10 transition-all duration-200 flex items-center justify-center group"
                     >
-                        <X size={22} />
+                        <svg
+                            width="14"
+                            height="14"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="1.5"
+                            strokeLinecap="round"
+                            className="text-cream/50 group-hover:text-gold group-hover:rotate-90 transition-all duration-300"
+                        >
+                            <path d="M6 6L18 18M6 18L18 6" />
+                        </svg>
                     </button>
                 </div>
 
+                {/* Thin gold divider with center fade */}
+                <div aria-hidden="true" className="relative z-10 mx-7 md:mx-10 h-px bg-gradient-to-r from-transparent via-gold/30 to-transparent" />
+
                 {/* Scrollable body */}
-                <div className="flex-1 overflow-y-auto px-8 md:px-10 py-7 md:py-8 space-y-8">
+                <div className="relative z-10 flex-1 overflow-y-auto px-7 md:px-10 py-7 md:py-9 space-y-9">
                     {/* What it is */}
-                    <p className="text-brand-indigo/60 text-base md:text-lg leading-relaxed font-light">
+                    <p className="text-cream/75 text-[15px] md:text-lg leading-relaxed font-light">
                         {service.details?.whatIsIt || service.description}
                     </p>
 
                     {/* Includes */}
                     {service.details?.includes && service.details.includes.length > 0 && (
                         <div>
-                            <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-brand-indigo/30 mb-4">
-                                {t("modal.keyFeatures")}
-                            </p>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                            <div className="flex items-center gap-3 mb-5">
+                                <span className="text-[10px] font-bold uppercase tracking-[0.35em] text-gold/80">
+                                    {t("modal.keyFeatures")}
+                                </span>
+                                <span className="h-px flex-1 bg-gradient-to-r from-gold/25 to-transparent" />
+                            </div>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                                 {service.details.includes.map((item, i) => (
                                     <div
                                         key={i}
-                                        className="flex items-center gap-3 py-3 px-4 rounded-xl bg-brand-indigo/[0.025] border border-brand-indigo/[0.04] hover:border-brand-sand/30 transition-colors"
+                                        className="group relative flex items-center gap-3 py-3 pl-4 pr-4 rounded-xl bg-cream/[0.025] border border-cream/[0.08] hover:border-gold/40 hover:bg-cream/[0.045] transition-all duration-300 overflow-hidden"
                                     >
-                                        <div className="w-1.5 h-1.5 rounded-full bg-brand-sand shrink-0" />
-                                        <span className="text-brand-indigo/65 text-sm">{item}</span>
+                                        {/* Vertical gold accent — animates wider on hover */}
+                                        <span
+                                            aria-hidden="true"
+                                            className="absolute left-0 top-3 bottom-3 w-[2px] bg-gold/60 group-hover:bg-gold group-hover:top-1.5 group-hover:bottom-1.5 transition-all duration-300"
+                                        />
+                                        <span className="text-cream/80 group-hover:text-cream text-[13px] md:text-sm font-light tracking-wide transition-colors duration-200 pl-2">
+                                            {item}
+                                        </span>
                                     </div>
                                 ))}
                             </div>
@@ -118,16 +169,37 @@ export default function ServiceModal({ isOpen, onClose, service, index }: Servic
                 </div>
 
                 {/* Footer */}
-                <div className="px-8 md:px-10 py-5 md:py-6 border-t border-brand-indigo/[0.06] shrink-0">
+                <div className="relative z-10 px-7 md:px-10 py-5 md:py-6 shrink-0 border-t border-cream/[0.08]">
                     <button
                         onClick={() => {
                             onClose();
                             const element = document.getElementById("contact");
                             element?.scrollIntoView({ behavior: "smooth" });
                         }}
-                        className="w-full py-4 bg-brand-indigo text-white rounded-2xl font-bold text-xs tracking-[0.15em] uppercase hover:bg-brand-indigo/90 transition-all shadow-lg shadow-brand-indigo/10 flex items-center justify-center gap-2 group"
+                        className="relative w-full py-4 rounded-full font-bold text-xs tracking-[0.2em] uppercase transition-all duration-300 flex items-center justify-center gap-3 group overflow-hidden text-ink"
+                        style={{
+                            background: "linear-gradient(135deg, #D4B27F 0%, #B49364 55%, #8C6F3F 100%)",
+                            boxShadow: "0 10px 30px -8px rgba(140,111,63,0.5), 0 1px 0 rgba(255,255,255,0.18) inset, 0 -2px 6px rgba(0,0,0,0.25) inset",
+                        }}
                     >
-                        {t("modal.getStarted")} <ArrowRight size={15} className="group-hover:translate-x-1 transition-transform" />
+                        {/* Subtle shine sweep on hover */}
+                        <span
+                            aria-hidden="true"
+                            className="absolute inset-y-0 -left-[80%] w-1/3 skew-x-[-20deg] bg-white/20 group-hover:left-[120%] transition-all duration-700 ease-out pointer-events-none"
+                        />
+                        <span className="relative">{t("modal.getStarted")}</span>
+                        <svg
+                            width="14"
+                            height="14"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            className="relative group-hover:translate-x-1 transition-transform duration-300"
+                        >
+                            <path d="M5 12h14M13 6l6 6-6 6" />
+                        </svg>
                     </button>
                 </div>
             </div>

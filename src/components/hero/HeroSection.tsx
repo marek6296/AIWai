@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { motion } from "framer-motion";
 import MagneticButton from "@/components/ui/MagneticButton";
 import StarField from "@/components/backgrounds/StarField";
 import HexagonOverlay from "@/components/backgrounds/HexagonOverlay";
@@ -132,6 +133,27 @@ export default function HeroSection() {
                     </div>
                 </div>
             </div>
+
+            {/* vertical scroll indicator — right edge */}
+            <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 1.2 }}
+                className="hidden lg:flex absolute right-6 bottom-6 flex-col items-center gap-2 z-10"
+                aria-hidden="true"
+            >
+                <span
+                    className="font-mono uppercase text-[10px] tracking-[0.4em] text-cream/40 whitespace-nowrap"
+                    style={{ writingMode: "vertical-rl", textOrientation: "mixed" }}
+                >
+                    scroll ↓
+                </span>
+                <motion.span
+                    animate={{ scaleY: [1, 0.3, 1] }}
+                    transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
+                    className="block w-px h-10 bg-gradient-to-b from-gold to-transparent origin-top"
+                />
+            </motion.div>
 
         </section>
     );
