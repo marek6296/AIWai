@@ -21,7 +21,10 @@ const nextConfig = {
     compress: true,
 
     experimental: {
-        optimizeCss: true,
+        // optimizeCss only in production — in dev it triggers
+        //   "TypeError: Cannot read properties of undefined (reading 'call')"
+        // inside webpack runtime because critters fights with Next's chunk loader.
+        optimizeCss: process.env.NODE_ENV === 'production',
         // Only list packages actually installed — framer-motion/gsap/lenis were removed
         optimizePackageImports: ['lucide-react', '@supabase/supabase-js'],
         serverComponentsExternalPackages: ['pdf-parse', 'nodemailer', 'resend'],
@@ -33,6 +36,20 @@ const nextConfig = {
     },
 
     async headers() {
+        // In dev, don't send long-cache headers — Chrome keeps webpack chunks
+        // for a year (immutable) and then chokes on hash mismatches after edits.
+        if (process.env.NODE_ENV !== 'production') {
+            return [
+                {
+                    source: '/(.*)',
+                    headers: [
+                        { key: 'X-Content-Type-Options', value: 'nosniff' },
+                        { key: 'X-Frame-Options', value: 'DENY' },
+                        { key: 'Cache-Control', value: 'no-store' },
+                    ],
+                },
+            ];
+        }
         return [
             {
                 source: '/(.*)',

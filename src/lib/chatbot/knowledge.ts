@@ -72,28 +72,28 @@ Tieto príklady môžeš klientom citovať ako ukážku čo vieme spraviť:
 **Web pre kozmetický salón (Bratislava):**
   Firemný web + online rezervačný systém napojený na Google Kalendár.
   Klientka hovorí, že šetrí 2 hodiny denne na telefonátoch — zákazníci
-  si rezervujú sami online. Realizácia: 599 € + 200 € za rezervačný modul.
+  si rezervujú sami online. Realizácia: 399 € + 200 € za rezervačný modul.
 
 **Automatizácia pre e-shop (oblečenie, 200+ objednávok/mesiac):**
   Každá objednávka v e-shope → automatická faktúra v SuperFakture
   → email zákazníkovi s číslom sledovania → notifikácia majiteľovi do Slacku.
-  Ušetrili 15 hodín týždennej manuálnej práce. Realizácia: Make.com, 399 €.
+  Ušetrili 15 hodín týždennej manuálnej práce. Realizácia: Make.com, 279 €.
 
 **AI chatbot pre realitnú kanceláriu:**
   Bot odpovedá na 80 % otázok (dostupnosť, ceny, lokalita, podmienky),
   zachytáva kontakty záujemcov a posiela ich priamo do HubSpot CRM.
   Výsledok: 3× viac spracovaných dopytov za rovnaký čas maklérov.
-  Realizácia: Chatbot Pro, 499 € + napojenie na CRM 200 €.
+  Realizácia: Chatbot Pro, 349 € + napojenie na CRM 200 €.
 
 **Branding pre fitness štúdio:**
   Logo + brand manuál + 15 šablón pre Instagram a Facebook.
   Majiteľ teraz sám tvorí obsah s konzistentným vizuálom — bez
-  grafika na každý príspevok. Realizácia: Logo + Brand, 229 €.
+  grafika na každý príspevok. Realizácia: Logo + Brand, 159 €.
 
 **Marketing pre reštauráciu (2 mesiace):**
   Správa IG + FB, týždenné príspevky, Meta Ads s rozpočtom 200 €/mes.
   Výsledok: +40 % návštevnosti webu, 3× viac online rezervácií.
-  Realizácia: Marketing Pro + Ads, 300 €/mes.
+  Realizácia: Marketing Pro + Ads, 209 €/mes.
 
 **aiwai.news — náš vlastný projekt:**
   Plne automatizovaný AI spravodajský portál. AI sama sleduje zdroje,
@@ -107,56 +107,56 @@ Tieto príklady môžeš klientom citovať ako ukážku čo vieme spraviť:
 
 ━━ 1. LOGO & DIZAJN ━━
 
-• Logo Basic — od 99 €  (jednorazovo)
+• Logo Basic — od 69 €  (jednorazovo)
     3 návrhy loga, 2 kolá revízií,
     PNG + JPEG, svetlá + tmavá verzia,
     bez vektorových súborov, odovzdanie do 5 dní
 
-• Logo + Brand — od 229 €  (jednorazovo, POPULÁRNE)
+• Logo + Brand — od 159 €  (jednorazovo, POPULÁRNE)
     3 návrhy + 3 kolá revízií,
     vektory (SVG, AI, PDF),
     brand manuál (farby, písmo, pravidlá použitia),
     5 šablón pre sociálne siete, do 10 dní
 
-• Grafika pre sociálne siete — od 149 €  (jednorazový balíček)
+• Grafika pre sociálne siete — od 99 €  (jednorazový balíček)
     15 brandovaných šablón (feed + stories),
     profilový obrázok + cover fotka,
     highlight covers pre Instagram, do 7 dní
 
 ━━ 2. MARKETING & SOCIÁLNE SIETE ━━
 
-• Marketing Starter — od 200 €/mes
+• Marketing Starter — od 139 €/mes
     Plán príspevkov, Facebook + Instagram + Stories,
     AI foto úpravy, copywriting, správa komentárov,
     mesačný report
 
-• Marketing Pro + Ads — od 300 €/mes  (ODPORÚČAME)
+• Marketing Pro + Ads — od 209 €/mes  (ODPORÚČAME)
     Všetko zo Starter + Meta Ads kampane,
     správa reklamného rozpočtu (nie je v cene),
     týždenné reporty, mesačná konzultácia stratégie
 
 ━━ 3. WEB & E-SHOP ━━
 
-• Prezentačná stránka — od 299 €  (jednorazovo)
+• Prezentačná stránka — od 199 €  (jednorazovo)
     1–3 stránky, kontaktný formulár, mobilná verzia,
     základné SEO, do 2 týždňov
 
-• Firemný web — od 599 €  (jednorazovo, NAJPREDÁVANEJŠÍ)
+• Firemný web — od 399 €  (jednorazovo, NAJPREDÁVANEJŠÍ)
     5–10 stránok, CMS, blog, SEO, Google Analytics,
     do 3–4 týždňov
 
-• E-shop — od 999 €  (jednorazovo)
+• E-shop — od 699 €  (jednorazovo)
     Produktový katalóg, online platby, správa objednávok,
     SEO + analytika, do 4–6 týždňov
 
 ━━ 4. AI CHATBOT ━━
 
-• Chatbot Basic — od 249 €  (jednorazovo)
+• Chatbot Basic — od 169 €  (jednorazovo)
     FAQ odpovede, web embed widget,
     natrénovaný na tvojich podkladoch,
     SK + EN, do 2 týždňov
 
-• Chatbot Pro — od 499 €  (jednorazovo)
+• Chatbot Pro — od 349 €  (jednorazovo)
     Vlastná knowledge base, zachytávanie leadov do CRM,
     rezervácia stretnutí, viacjazyčnosť, do 3 týždňov
 
@@ -165,7 +165,7 @@ Tieto príklady môžeš klientom citovať ako ukážku čo vieme spraviť:
 
 ━━ 5. AUTOMATIZÁCIA ━━
 
-• Starter — od 299 €  (jednorazovo)
+• Starter — od 199 €  (jednorazovo)
     2–3 workflow, prepojenie 2–3 nástrojov,
     testovanie + odovzdanie, 2 týždne
 
@@ -193,15 +193,15 @@ Kanály pre chatbota: Web widget, WhatsApp, FB Messenger, Instagram DM,
 
   Make.com: rýchle, 1500+ konektorov, vizuálny editor
     → 9–29 €/mes platforma, vhodné do ~10 000 operácií/mes
-    → cena projektu od 299 €
+    → cena projektu od 199 €
 
   n8n (self-hosted): neobmedzené operácie, open-source, flexibilnejší
     → server ~10 €/mes alebo n8n Cloud 20 €/mes
     → vyššia počiatočná investícia (+20–40 % oproti Make)
-    → cena projektu od 399 €
+    → cena projektu od 279 €
 
   Vlastný kód: maximálna flexibilita, bez poplatkov za platformu
-    → najdrahší vývoj, od 600 €
+    → najdrahší vývoj, od 419 €
 
   Odporúčanie:
     • Do 5 jednoduchých flow → Make

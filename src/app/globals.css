@@ -106,6 +106,7 @@ body {
 
 /* ──────────────────────────────────────
    Mobile menu — CSS-only toggle (works before JS hydration)
+   Uses :has() so the checkbox can live anywhere in the tree.
    ────────────────────────────────────── */
 
 /* Hide the checkbox visually but keep it focusable for screen readers */
@@ -144,35 +145,34 @@ body {
   transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
-/* When checked (menu open) — sibling selector matches any element after the
-   checkbox in the same parent (Navbar fragment root). */
-#aiwai-menu-toggle:checked ~ .aiwai-mobile-menu {
+/* When checked (menu open) — use :has() so we don't depend on sibling order */
+html:has(#aiwai-menu-toggle:checked) .aiwai-mobile-menu {
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
 }
-#aiwai-menu-toggle:checked ~ .aiwai-mobile-menu .aiwai-menu-item {
+html:has(#aiwai-menu-toggle:checked) .aiwai-mobile-menu .aiwai-menu-item {
   opacity: 1;
   transform: translateY(0);
 }
-#aiwai-menu-toggle:checked ~ .aiwai-mobile-menu .aiwai-menu-item:nth-child(1) { transition-delay: 0.08s; }
-#aiwai-menu-toggle:checked ~ .aiwai-mobile-menu .aiwai-menu-item:nth-child(2) { transition-delay: 0.14s; }
-#aiwai-menu-toggle:checked ~ .aiwai-mobile-menu .aiwai-menu-item:nth-child(3) { transition-delay: 0.20s; }
-#aiwai-menu-toggle:checked ~ .aiwai-mobile-menu .aiwai-menu-item:nth-child(4) { transition-delay: 0.28s; }
-#aiwai-menu-toggle:checked ~ .aiwai-mobile-menu .aiwai-menu-item:nth-child(5) { transition-delay: 0.32s; }
-#aiwai-menu-toggle:checked ~ .aiwai-mobile-menu .aiwai-menu-item:nth-child(6) { transition-delay: 0.38s; }
+html:has(#aiwai-menu-toggle:checked) .aiwai-mobile-menu .aiwai-menu-item:nth-child(1) { transition-delay: 0.08s; }
+html:has(#aiwai-menu-toggle:checked) .aiwai-mobile-menu .aiwai-menu-item:nth-child(2) { transition-delay: 0.14s; }
+html:has(#aiwai-menu-toggle:checked) .aiwai-mobile-menu .aiwai-menu-item:nth-child(3) { transition-delay: 0.20s; }
+html:has(#aiwai-menu-toggle:checked) .aiwai-mobile-menu .aiwai-menu-item:nth-child(4) { transition-delay: 0.28s; }
+html:has(#aiwai-menu-toggle:checked) .aiwai-mobile-menu .aiwai-menu-item:nth-child(5) { transition-delay: 0.32s; }
+html:has(#aiwai-menu-toggle:checked) .aiwai-mobile-menu .aiwai-menu-item:nth-child(6) { transition-delay: 0.38s; }
 
-/* Icon swap on the hamburger label (label is inside nav, also after the input) */
-#aiwai-menu-toggle:checked ~ nav .aiwai-icon-burger {
+/* Icon swap on the hamburger label */
+html:has(#aiwai-menu-toggle:checked) .aiwai-icon-burger {
   opacity: 0;
   transform: rotate(90deg) scale(0.75);
 }
-#aiwai-menu-toggle:checked ~ nav .aiwai-icon-x {
+html:has(#aiwai-menu-toggle:checked) .aiwai-icon-x {
   opacity: 1;
   transform: rotate(0) scale(1);
 }
 
-/* Body scroll lock — :has() is supported on Safari 15.4+, Chrome 105+, Firefox 121+ */
+/* Body scroll lock when menu is open */
 html:has(#aiwai-menu-toggle:checked) {
   overflow: hidden;
 }

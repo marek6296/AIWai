@@ -232,7 +232,7 @@ export default function Chatbot() {
                                 <div>
                                     <h3 className="text-brand-indigo font-bold text-sm">{t("chatbot.header")}</h3>
                                     <div className="flex items-center gap-1.5">
-                                        <span className="w-2 h-2 rounded-full bg-gold shadow-[0_0_10px_rgba(201,168,117,0.8)] animate-pulse" />
+                                        <span className="w-2 h-2 rounded-full bg-gold animate-pulse" />
                                         <span className="text-[10px] text-brand-indigo/60 uppercase tracking-widest">Online</span>
                                     </div>
                                 </div>
@@ -384,7 +384,7 @@ export default function Chatbot() {
                             )}
                         </AnimatePresence>
 
-                        <div className="absolute inset-0 rounded-full bg-gold text-ink shadow-xl shadow-gold/30 overflow-hidden flex items-center justify-center">
+                        <div className="absolute inset-0 rounded-full bg-gold text-ink shadow-lg shadow-black/20 overflow-hidden flex items-center justify-center ring-1 ring-gold-deep/30">
                             <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
                             <div style={{ transform: `scaleX(${direction === 1 && !isOpen ? -1 : 1})` }}>
                                 <AnimatePresence mode="wait">
@@ -402,7 +402,7 @@ export default function Chatbot() {
                         </div>
 
                         {!isOpen && (
-                            <span className="absolute top-0 right-0 w-3.5 h-3.5 bg-gold border-2 border-white rounded-full shadow-[0_0_12px_4px_rgba(201,168,117,0.7)] z-10" />
+                            <span className="absolute top-0 right-0 w-3 h-3 bg-gold border-2 border-char rounded-full z-10" />
                         )}
                     </motion.button>
                 </div>

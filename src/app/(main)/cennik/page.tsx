@@ -1,13 +1,20 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import SectionBackground from "@/components/backgrounds/SectionBackground";
 
 export const metadata: Metadata = {
     title: "Cenník — AIWai",
     description: "Transparentné ceny bez prekvapení. Web, dizajn, AI chatbot a automatizácia — vyberte si čo potrebujete.",
 };
 
-const CheckIcon = () => (
-    <svg className="w-4 h-4 text-brand-sand flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+const CheckIcon = ({ highlight }: { highlight?: boolean }) => (
+    <svg
+        className={`w-4 h-4 flex-shrink-0 mt-0.5 ${highlight ? "text-ink" : "text-gold"}`}
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        strokeWidth={2.5}
+    >
         <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
     </svg>
 );
@@ -23,27 +30,31 @@ interface PricingCardProps {
 
 function PricingCard({ name, price, priceNote, features, highlight, badge }: PricingCardProps) {
     return (
-        <div className={`relative rounded-2xl p-7 flex flex-col gap-6 ${
+        <div className={`relative rounded-2xl p-7 flex flex-col gap-6 transition-all duration-300 ${
             highlight
-                ? "bg-brand-indigo text-white shadow-[0_20px_60px_-10px_rgba(28,31,58,0.3)]"
-                : "bg-white border border-brand-indigo/[0.08] shadow-[0_4px_30px_-5px_rgba(28,31,58,0.06)]"
+                ? "bg-gold text-ink shadow-[0_30px_70px_-20px_rgba(0,0,0,0.6)] ring-1 ring-gold-deep/40"
+                : "bg-cream/[0.03] border border-cream/10 backdrop-blur-sm hover:border-gold/30 hover:bg-cream/[0.05]"
         }`}>
             {badge && (
                 <div className="absolute -top-3 left-6">
-                    <span className="bg-brand-sand text-white text-[10px] font-bold uppercase tracking-[0.2em] px-3 py-1 rounded-full">
+                    <span className={`text-[10px] font-bold uppercase tracking-[0.2em] px-3 py-1 rounded-full ${
+                        highlight
+                            ? "bg-ink text-gold"
+                            : "bg-gold text-ink"
+                    }`}>
                         {badge}
                     </span>
                 </div>
             )}
             <div>
-                <h3 className={`text-base font-semibold uppercase tracking-[0.1em] mb-3 ${highlight ? "text-white/60" : "text-brand-indigo/50"}`}>
+                <h3 className={`text-base font-semibold uppercase tracking-[0.1em] mb-3 ${highlight ? "text-ink/70" : "text-cream/60"}`}>
                     {name}
                 </h3>
-                <div className={`text-3xl font-display font-bold ${highlight ? "text-white" : "text-brand-indigo"}`}>
+                <div className={`text-3xl font-display font-bold ${highlight ? "text-ink" : "text-cream"}`}>
                     {price}
                 </div>
                 {priceNote && (
-                    <div className={`text-xs mt-1 ${highlight ? "text-white/40" : "text-brand-indigo/30"}`}>
+                    <div className={`text-xs mt-1 ${highlight ? "text-ink/50" : "text-cream/40"}`}>
                         {priceNote}
                     </div>
                 )}
@@ -51,8 +62,8 @@ function PricingCard({ name, price, priceNote, features, highlight, badge }: Pri
             <ul className="flex flex-col gap-2.5 flex-1">
                 {features.map((f, i) => (
                     <li key={i} className="flex items-start gap-2.5">
-                        <CheckIcon />
-                        <span className={`text-sm leading-snug ${highlight ? "text-white/80" : "text-brand-indigo/60"}`}>{f}</span>
+                        <CheckIcon highlight={highlight} />
+                        <span className={`text-sm leading-snug ${highlight ? "text-ink/85" : "text-cream/70"}`}>{f}</span>
                     </li>
                 ))}
             </ul>
@@ -60,8 +71,8 @@ function PricingCard({ name, price, priceNote, features, highlight, badge }: Pri
                 href="/#contact"
                 className={`mt-2 text-center py-3 px-6 rounded-xl text-xs font-bold uppercase tracking-[0.15em] transition-all duration-200 ${
                     highlight
-                        ? "bg-brand-sand text-white hover:bg-brand-sand/90"
-                        : "bg-brand-indigo/[0.06] text-brand-indigo hover:bg-brand-indigo hover:text-white"
+                        ? "bg-ink text-gold hover:bg-char hover:text-gold-bright"
+                        : "bg-cream/[0.05] text-cream border border-cream/15 hover:bg-gold hover:text-ink hover:border-gold"
                 }`}
             >
                 Mám záujem
@@ -70,21 +81,36 @@ function PricingCard({ name, price, priceNote, features, highlight, badge }: Pri
     );
 }
 
+function SectionHeader({ index, title, description }: { index: string; title: string; description: string }) {
+    return (
+        <div className="mb-10">
+            <span className="text-[10px] uppercase tracking-[0.35em] font-bold text-gold/80">{index}</span>
+            <h2 className="text-3xl md:text-4xl font-display font-bold text-cream mt-1">{title}</h2>
+            <p className="text-cream/55 mt-2 max-w-xl font-light">{description}</p>
+        </div>
+    );
+}
+
 export default function CennikPage() {
     return (
-        <main className="min-h-screen bg-white">
+        <main className="min-h-screen bg-char relative overflow-hidden">
+            {/* Site-wide animated dark background — single instance covers all sections */}
+            <div className="absolute inset-0 pointer-events-none">
+                <SectionBackground variant="soft" topFade={false} />
+            </div>
+
             {/* DIZAJN */}
-            <section className="pt-24 pb-10 md:pt-28 md:pb-14">
+            <section className="pt-24 pb-10 md:pt-28 md:pb-14 relative z-10">
                 <div className="container mx-auto px-6">
-                    <div className="mb-10">
-                        <span className="text-[10px] uppercase tracking-[0.35em] font-bold text-brand-sand/70">01</span>
-                        <h2 className="text-3xl md:text-4xl font-display font-bold text-brand-indigo mt-1">Logo & Dizajn</h2>
-                        <p className="text-brand-indigo/40 mt-2 max-w-xl">Vizuálna identita, ktorá robí prvý dojem za vás.</p>
-                    </div>
+                    <SectionHeader
+                        index="01"
+                        title="Logo & Dizajn"
+                        description="Vizuálna identita, ktorá robí prvý dojem za vás."
+                    />
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                         <PricingCard
                             name="Logo Basic"
-                            price="od €99"
+                            price="od €69"
                             priceNote="jednorazová platba"
                             features={[
                                 "3 návrhy loga",
@@ -97,7 +123,7 @@ export default function CennikPage() {
                         />
                         <PricingCard
                             name="Logo + Brand"
-                            price="od €229"
+                            price="od €159"
                             priceNote="jednorazová platba"
                             badge="Populárne"
                             highlight
@@ -112,7 +138,7 @@ export default function CennikPage() {
                         />
                         <PricingCard
                             name="Grafika pre sociálne siete"
-                            price="od €149"
+                            price="od €99"
                             priceNote="jednorazový balíček šablón"
                             features={[
                                 "15 brandovaných šablón (feed + stories)",
@@ -128,17 +154,18 @@ export default function CennikPage() {
             </section>
 
             {/* MARKETING & SOCIÁLNE SIETE */}
-            <section className="py-16 md:py-20 bg-[#FAFAFA]">
+            <section className="py-16 md:py-20 relative z-10">
+                <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gold/15 to-transparent" />
                 <div className="container mx-auto px-6">
-                    <div className="mb-10">
-                        <span className="text-[10px] uppercase tracking-[0.35em] font-bold text-brand-sand/70">02</span>
-                        <h2 className="text-3xl md:text-4xl font-display font-bold text-brand-indigo mt-1">Marketing & Sociálne siete</h2>
-                        <p className="text-brand-indigo/40 mt-2 max-w-xl">Kompletná mesačná správa sociálnych sietí — obsah, grafika, AI foto úpravy aj reklamy.</p>
-                    </div>
+                    <SectionHeader
+                        index="02"
+                        title="Marketing & Sociálne siete"
+                        description="Kompletná mesačná správa sociálnych sietí — obsah, grafika, AI foto úpravy aj reklamy."
+                    />
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                         <PricingCard
                             name="Marketing Starter"
-                            price="od €200/mes"
+                            price="od €139/mes"
                             priceNote="mesačná správa"
                             badge="Nové"
                             features={[
@@ -152,7 +179,7 @@ export default function CennikPage() {
                         />
                         <PricingCard
                             name="Marketing Pro + Ads"
-                            price="od €300/mes"
+                            price="od €209/mes"
                             priceNote="správa + reklamy"
                             highlight
                             badge="Odporúčame"
@@ -170,17 +197,18 @@ export default function CennikPage() {
             </section>
 
             {/* WEB */}
-            <section className="py-16 md:py-20">
+            <section className="py-16 md:py-20 relative z-10">
+                <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gold/15 to-transparent" />
                 <div className="container mx-auto px-6">
-                    <div className="mb-10">
-                        <span className="text-[10px] uppercase tracking-[0.35em] font-bold text-brand-sand/70">03</span>
-                        <h2 className="text-3xl md:text-4xl font-display font-bold text-brand-indigo mt-1">Web & E-shop</h2>
-                        <p className="text-brand-indigo/40 mt-2 max-w-xl">Moderný web, ktorý načíta rýchlo a predáva.</p>
-                    </div>
+                    <SectionHeader
+                        index="03"
+                        title="Web & E-shop"
+                        description="Moderný web, ktorý načíta rýchlo a predáva."
+                    />
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                         <PricingCard
                             name="Prezentačná stránka"
-                            price="od €299"
+                            price="od €199"
                             priceNote="jednorazová platba"
                             features={[
                                 "1–3 stránky",
@@ -192,7 +220,7 @@ export default function CennikPage() {
                         />
                         <PricingCard
                             name="Firemný web"
-                            price="od €599"
+                            price="od €399"
                             priceNote="jednorazová platba"
                             badge="Najpredávanejší"
                             highlight
@@ -207,7 +235,7 @@ export default function CennikPage() {
                         />
                         <PricingCard
                             name="E-shop"
-                            price="od €999"
+                            price="od €699"
                             priceNote="jednorazová platba"
                             features={[
                                 "Produktový katalóg",
@@ -223,17 +251,18 @@ export default function CennikPage() {
             </section>
 
             {/* CHATBOT */}
-            <section className="py-16 md:py-20 bg-[#FAFAFA]">
+            <section className="py-16 md:py-20 relative z-10">
+                <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gold/15 to-transparent" />
                 <div className="container mx-auto px-6">
-                    <div className="mb-10">
-                        <span className="text-[10px] uppercase tracking-[0.35em] font-bold text-brand-sand/70">04</span>
-                        <h2 className="text-3xl md:text-4xl font-display font-bold text-brand-indigo mt-1">AI Chatbot</h2>
-                        <p className="text-brand-indigo/40 mt-2 max-w-xl">Chatbot, ktorý pozná váš biznis a odpovedá namiesto vás — 24/7.</p>
-                    </div>
+                    <SectionHeader
+                        index="04"
+                        title="AI Chatbot"
+                        description="Chatbot, ktorý pozná váš biznis a odpovedá namiesto vás — 24/7."
+                    />
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                         <PricingCard
                             name="Chatbot Basic"
-                            price="od €249"
+                            price="od €169"
                             priceNote="jednorazová platba"
                             features={[
                                 "Odpovede na časté otázky",
@@ -245,7 +274,7 @@ export default function CennikPage() {
                         />
                         <PricingCard
                             name="Chatbot Pro"
-                            price="od €499"
+                            price="od €349"
                             priceNote="jednorazová platba"
                             highlight
                             features={[
@@ -262,17 +291,18 @@ export default function CennikPage() {
             </section>
 
             {/* AUTOMATIZÁCIA */}
-            <section className="py-16 md:py-20">
+            <section className="py-16 md:py-20 relative z-10">
+                <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gold/15 to-transparent" />
                 <div className="container mx-auto px-6">
-                    <div className="mb-10">
-                        <span className="text-[10px] uppercase tracking-[0.35em] font-bold text-brand-sand/70">05</span>
-                        <h2 className="text-3xl md:text-4xl font-display font-bold text-brand-indigo mt-1">Automatizácia procesov</h2>
-                        <p className="text-brand-indigo/40 mt-2 max-w-xl">Prepojíme vaše nástroje a ušetríme vám hodiny rutinnej práce každý týždeň.</p>
-                    </div>
+                    <SectionHeader
+                        index="05"
+                        title="Automatizácia procesov"
+                        description="Prepojíme vaše nástroje a ušetríme vám hodiny rutinnej práce každý týždeň."
+                    />
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                         <PricingCard
                             name="Starter"
-                            price="od €299"
+                            price="od €199"
                             priceNote="jednorazová platba"
                             features={[
                                 "2–3 automatické workflow",
@@ -300,25 +330,25 @@ export default function CennikPage() {
             </section>
 
             {/* Note */}
-            <section className="py-12">
+            <section className="py-12 relative z-10">
                 <div className="container mx-auto px-6 max-w-3xl">
-                    <div className="rounded-2xl border border-brand-indigo/[0.06] bg-brand-indigo/[0.02] p-8 text-center">
-                        <p className="text-brand-indigo/50 text-sm leading-relaxed">
+                    <div className="rounded-2xl border border-cream/10 bg-cream/[0.03] backdrop-blur-sm p-8 text-center">
+                        <p className="text-cream/60 text-sm leading-relaxed">
                             Ceny sú orientačné a závisí od konkrétnych požiadaviek projektu.<br />
-                            <strong className="text-brand-indigo/70">Presná cena vždy vopred, písomne — pred začatím prác.</strong>
+                            <strong className="text-gold">Presná cena vždy vopred, písomne — pred začatím prác.</strong>
                         </p>
                     </div>
                 </div>
             </section>
 
             {/* CTA */}
-            <section className="py-20 md:py-28">
+            <section className="py-20 md:py-28 relative z-10">
                 <div className="container mx-auto px-6 text-center">
-                    <h2 className="text-4xl md:text-5xl font-display font-bold text-brand-indigo mb-4">Neviete čo vám sedí?</h2>
-                    <p className="text-brand-indigo/40 text-lg mb-10 font-light">Zavoláme si — 30 minút a máte jasnú cenu aj plán.</p>
+                    <h2 className="text-4xl md:text-5xl font-display font-bold text-cream mb-4">Neviete čo vám sedí?</h2>
+                    <p className="text-cream/55 text-lg mb-10 font-light">Zavoláme si — 30 minút a máte jasnú cenu aj plán.</p>
                     <Link
                         href="/#contact"
-                        className="inline-flex items-center gap-3 px-10 py-4 bg-brand-indigo text-white rounded-full text-xs font-bold uppercase tracking-[0.2em] hover:bg-brand-indigo/90 transition-all shadow-lg shadow-brand-indigo/20"
+                        className="inline-flex items-center gap-3 px-10 py-4 bg-gold text-ink rounded-full text-xs font-bold uppercase tracking-[0.2em] hover:bg-gold-bright transition-all shadow-lg shadow-black/20"
                     >
                         Kontaktujte nás
                     </Link>

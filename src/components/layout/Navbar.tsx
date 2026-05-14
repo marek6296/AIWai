@@ -82,8 +82,10 @@ export default function Navbar() {
         return () => document.removeEventListener("mousedown", handler);
     }, []);
 
-    // Home page is now dark throughout — keep navbar in dark mode regardless of scroll
-    const darkMode = isHome;
+    // Home and cennik pages are dark — navbar stays in dark mode regardless of scroll
+    const DARK_PAGES = ["/", "/cennik"];
+    const isDarkPage = DARK_PAGES.includes(pathname);
+    const darkMode = isDarkPage;
 
     const handleScroll = useCallback((e: React.MouseEvent, id: string) => {
         e.preventDefault();
@@ -97,28 +99,26 @@ export default function Navbar() {
 
     return (
         <>
-            {/*
-              CSS-only menu state — a hidden checkbox is the source of truth.
-              The hamburger <label> below toggles it natively, which means the
-              menu opens INSTANTLY on the very first paint, before any JS has
-              hydrated. React handlers attach later for enhanced behavior
-              (smooth scroll, language change, etc.) but are not required for
-              the menu to open/close.
-            */}
-            <input
-                id={MENU_TOGGLE_ID}
-                type="checkbox"
-                aria-label="Toggle mobile menu"
-            />
-
             {/* ── Main Nav — CSS entrance only ── */}
             <nav className={`nav-entrance fixed top-0 left-0 right-0 z-[100] transition-all duration-500 ${
                 scrolled
-                    ? isHome
+                    ? isDarkPage
                         ? "py-3 bg-char/80 backdrop-blur-md border-b border-cream/10 shadow-[0_1px_30px_rgba(0,0,0,0.3)]"
                         : "py-3 bg-white/85 backdrop-blur-sm border-b border-brand-indigo/[0.06] shadow-[0_1px_30px_rgba(28,31,58,0.04)]"
                     : "py-5 bg-transparent"
             }`}>
+                {/*
+                  CSS-only menu state — a hidden checkbox is the source of truth.
+                  The hamburger <label> below toggles it natively, which means the
+                  menu opens INSTANTLY on the very first paint, before any JS has
+                  hydrated. We use :has() in CSS to drive the menu drawer from
+                  this checkbox regardless of where in the DOM it lives.
+                */}
+                <input
+                    id={MENU_TOGGLE_ID}
+                    type="checkbox"
+                    aria-label="Toggle mobile menu"
+                />
                 <div className="container mx-auto flex justify-between items-center">
 
                     {/* Logo + (desktop-only) language switcher */}
@@ -134,7 +134,7 @@ export default function Navbar() {
                                 alt="AIWai"
                                 width={52}
                                 height={52}
-                                className={`w-10 h-10 md:w-12 md:h-12 object-contain ${isHome ? "" : "mix-blend-multiply"}`}
+                                className={`w-10 h-10 md:w-12 md:h-12 object-contain ${isDarkPage ? "" : "mix-blend-multiply"}`}
                                 priority
                             />
                         </Link>
@@ -204,7 +204,7 @@ export default function Navbar() {
                                 onClick={(e) => handleScroll(e, "contact")}
                                 className={`px-6 py-2.5 rounded-full text-xs font-bold tracking-[0.15em] uppercase transition-all shadow-lg ${
                                     darkMode
-                                        ? "bg-gold text-ink hover:bg-gold-bright shadow-gold/20"
+                                        ? "bg-gold text-ink hover:bg-gold-bright shadow-black/20"
                                         : "bg-brand-indigo text-white hover:bg-brand-indigo/90 shadow-brand-indigo/10 hover:shadow-brand-indigo/20"
                                 }`}
                             >
@@ -213,7 +213,11 @@ export default function Navbar() {
                         ) : (
                             <Link
                                 href="/#contact"
-                                className="px-6 py-2.5 bg-brand-indigo text-white rounded-full text-xs font-bold tracking-[0.15em] uppercase hover:bg-brand-indigo/90 transition-all shadow-lg shadow-brand-indigo/10 hover:shadow-brand-indigo/20"
+                                className={`px-6 py-2.5 rounded-full text-xs font-bold tracking-[0.15em] uppercase transition-all shadow-lg ${
+                                    darkMode
+                                        ? "bg-gold text-ink hover:bg-gold-bright shadow-black/20"
+                                        : "bg-brand-indigo text-white hover:bg-brand-indigo/90 shadow-brand-indigo/10 hover:shadow-brand-indigo/20"
+                                }`}
                             >
                                 {t("nav.contact")}
                             </Link>
