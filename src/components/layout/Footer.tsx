@@ -19,11 +19,6 @@ const SERVICE_LINKS = [
     { label: "Sociálne siete", href: "/sluzby/sprava-socialnych-sieti" },
 ];
 
-const SISTER_SITES = [
-    { label: "AIWai News", href: "https://aiwai.news", description: "AI spravodajstvo" },
-    { label: "AIWai Tools", href: "https://aiwai.tools", description: "AI nástroje" },
-];
-
 export default function Footer() {
     return (
         <footer className="bg-char relative overflow-hidden border-t border-cream/5">
@@ -81,7 +76,7 @@ export default function Footer() {
                     {/* Services + Sister sites */}
                     <div>
                         <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-gold/70 mb-5">Služby</p>
-                        <ul className="space-y-3 mb-8">
+                        <ul className="space-y-3">
                             {SERVICE_LINKS.map((link) => (
                                 <li key={link.href}>
                                     <Link
@@ -90,23 +85,6 @@ export default function Footer() {
                                     >
                                         {link.label}
                                     </Link>
-                                </li>
-                            ))}
-                        </ul>
-
-                        <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-gold/70 mb-4">AIWai ekosystém</p>
-                        <ul className="space-y-2.5">
-                            {SISTER_SITES.map((site) => (
-                                <li key={site.href}>
-                                    <a
-                                        href={site.href}
-                                        target="_blank"
-                                        rel="noopener"
-                                        className="text-cream/55 hover:text-gold transition-colors text-sm inline-flex flex-col"
-                                    >
-                                        <span>{site.label}</span>
-                                        <span className="text-cream/30 text-[11px]">{site.description}</span>
-                                    </a>
                                 </li>
                             ))}
                         </ul>
