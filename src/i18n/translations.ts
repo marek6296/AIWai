@@ -274,6 +274,11 @@ export const translations: Record<Lang, Record<string, string>> = {
         'realizacie.bottomCta.title': 'Have a project that needs a team?',
         'realizacie.bottomCta.text': 'Let\'s talk — 30 minutes and you\'ll know what and how much.',
         'realizacie.bottomCta.button': 'Contact us',
+        'realizacie.layout.grid': 'Grid',
+        'realizacie.layout.stack': 'Stack',
+        'realizacie.layout.list': 'List',
+        'realizacie.layout.swipe': 'Swipe to navigate',
+        'realizacie.layout.label': 'Layout',
     },
 
     sk: {
@@ -549,6 +554,11 @@ export const translations: Record<Lang, Record<string, string>> = {
         'realizacie.bottomCta.title': 'Máte projekt na ktorý hľadáte tím?',
         'realizacie.bottomCta.text': 'Zavoláme si — 30 minút a viete, čo a za koľko.',
         'realizacie.bottomCta.button': 'Kontaktujte nás',
+        'realizacie.layout.grid': 'Mriežka',
+        'realizacie.layout.stack': 'Stoh',
+        'realizacie.layout.list': 'Zoznam',
+        'realizacie.layout.swipe': 'Potiahnite pre navigáciu',
+        'realizacie.layout.label': 'Zobrazenie',
     },
 
     cs: {
@@ -824,5 +834,10 @@ export const translations: Record<Lang, Record<string, string>> = {
         'realizacie.bottomCta.title': 'Máte projekt, na který hledáte tým?',
         'realizacie.bottomCta.text': 'Zavoláme si — 30 minut a víte, co a za kolik.',
         'realizacie.bottomCta.button': 'Kontaktujte nás',
+        'realizacie.layout.grid': 'Mřížka',
+        'realizacie.layout.stack': 'Stoh',
+        'realizacie.layout.list': 'Seznam',
+        'realizacie.layout.swipe': 'Potáhněte pro navigaci',
+        'realizacie.layout.label': 'Zobrazení',
     },
 }

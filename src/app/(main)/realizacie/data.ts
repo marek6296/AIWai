@@ -96,14 +96,6 @@ export const REALIZACIE_GROUPS: Group[] = [
                 url: "https://data-studiodony.vercel.app",
             },
             {
-                slug: "agent-manager",
-                name: "Agent Manager",
-                category: "AI Workflow Builder",
-                description: "Vizuálny editor AI agentov a automatizovaných pracovných tokov. Drag-and-drop tvorba workflow cez React Flow.",
-                stack: ["Next.js 14", "Supabase", "React Flow"],
-                url: "https://agent-manager-aiwai.vercel.app",
-            },
-            {
                 slug: "kalendar-v8",
                 name: "Kalendár V8",
                 category: "Rezervačný systém",
