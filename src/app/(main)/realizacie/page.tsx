@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import JsonLd from "@/components/seo/JsonLd";
 import { breadcrumbSchema, SITE_URL } from "@/lib/seo/schemas";
-import RealizacieClient, { REALIZACIE_GROUPS } from "./RealizacieClient";
+import RealizacieClient from "./RealizacieClient";
+import { REALIZACIE_GROUPS } from "./data";
 
 export const metadata: Metadata = {
     title: "Realizácie — Portfólio webov, AI nástrojov a automatizácií",
