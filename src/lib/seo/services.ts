@@ -42,7 +42,7 @@ export const SERVICES: ServiceCatalogEntry[] = [
         title: "Tvorba webových stránok",
         seoTitle: "Tvorba webových stránok | Firemný web a e-shop",
         seoDescription:
-            "Tvorba moderných firemných webov a e-shopov pre malé a stredné firmy. Rýchle načítanie, mobilná verzia, SEO základ, hosting. Od €199, hotové za 2–4 týždne.",
+            "Tvorba moderných firemných webov a e-shopov pre malé a stredné firmy. Rýchle načítanie, mobilná verzia, SEO základ, hosting. Od €99, hotové za 2–4 týždne.",
         h1: "Tvorba webových stránok, ktoré privedú zákazníkov",
         tagline:
             "Firemné weby, prezentačné stránky a e-shopy postavené v Next.js — rýchle, mobilné a optimalizované pre Google.",
@@ -92,18 +92,18 @@ export const SERVICES: ServiceCatalogEntry[] = [
         pricing: [
             {
                 name: "Prezentačná stránka",
-                price: "od €199",
+                price: "od €99",
                 description: "1–3 stránky, kontaktný formulár, mobilná verzia.",
             },
             {
                 name: "Firemný web",
-                price: "od €399",
+                price: "od €199",
                 description:
                     "Viacstránkový web, blog, SEO optimalizácia, CMS pre editáciu obsahu.",
             },
             {
                 name: "E-shop",
-                price: "od €699",
+                price: "od €349",
                 description:
                     "Produkty, košík, platobná brána, integrácia s Packetou/Shoptetom.",
             },
@@ -145,7 +145,7 @@ export const SERVICES: ServiceCatalogEntry[] = [
         title: "AI chatboty pre web a zákaznícku podporu",
         seoTitle: "AI chatbot pre firmu | Zákaznícka podpora 24/7",
         seoDescription:
-            "AI chatbot trénovaný na vašej firme — odpovedá zákazníkom, zachytáva leady a rezervuje stretnutia 24/7. Integrácia s webom, CRM a Voice AI. Od €169.",
+            "AI chatbot trénovaný na vašej firme — odpovedá zákazníkom, zachytáva leady a rezervuje stretnutia 24/7. Integrácia s webom, CRM a Voice AI. Od €85.",
         h1: "AI chatbot, ktorý pozná váš biznis a predáva za vás",
         tagline:
             "Chatbot trénovaný na vašich produktoch, službách a FAQ. Odpovedá zákazníkom presne — 24 hodín denne, 7 dní v týždni.",
@@ -195,13 +195,13 @@ export const SERVICES: ServiceCatalogEntry[] = [
         pricing: [
             {
                 name: "Chatbot Basic",
-                price: "od €169",
+                price: "od €85",
                 description:
                     "Chat widget na webe, tréning na 1 dokumente (FAQ alebo cenník), email notifikácie.",
             },
             {
                 name: "Chatbot Pro",
-                price: "od €349",
+                price: "od €175",
                 description:
                     "Chat + Voice AI, tréning na viacerých dokumentoch, CRM integrácia, kalendár, admin panel.",
             },
@@ -249,7 +249,7 @@ export const SERVICES: ServiceCatalogEntry[] = [
         title: "AI automatizácia procesov (Make.com, n8n)",
         seoTitle: "Automatizácia procesov | Make.com a n8n",
         seoDescription:
-            "Automatizácia opakovaných úloh pre malé a stredné firmy. Faktúry, emaily, CRM, reporty — všetko cez Make.com alebo n8n. Šetríme 10+ hodín týždenne. Od €199.",
+            "Automatizácia opakovaných úloh pre malé a stredné firmy. Faktúry, emaily, CRM, reporty — všetko cez Make.com alebo n8n. Šetríme 10+ hodín týždenne. Od €99.",
         h1: "Prestaňte robiť ručne to, čo zvládne stroj",
         tagline:
             "Automatizujeme objednávky, faktúry, emaily a reporty cez Make.com a n8n. Stačí to nastaviť raz — beží to navždy.",
@@ -299,13 +299,13 @@ export const SERVICES: ServiceCatalogEntry[] = [
         pricing: [
             {
                 name: "Automatizácia Starter",
-                price: "od €199",
+                price: "od €99",
                 description:
                     "1 workflow (napr. nová objednávka → CRM + email + faktúra). Vrátane Make.com setupu.",
             },
             {
                 name: "Automatizácia Pro",
-                price: "od €599",
+                price: "od €299",
                 description:
                     "3–5 workflows, AI komponenty (PDF parsing, kategorizácia), dashboard.",
             },
@@ -353,7 +353,7 @@ export const SERVICES: ServiceCatalogEntry[] = [
         title: "Logo a vizuálna identita",
         seoTitle: "Logo dizajn a branding | Vizuálna identita firmy",
         seoDescription:
-            "Logo, brand guide a vizuálna identita pre malé a stredné firmy. Profesionálny dizajn, ktorý si zákazník zapamätá. Logo od €69, kompletný brand od €159.",
+            "Logo, brand guide a vizuálna identita pre malé a stredné firmy. Profesionálny dizajn, ktorý si zákazník zapamätá. Logo od €35, kompletný brand od €79.",
         h1: "Logo a vizuálna identita, ktorá si zákazníka získa",
         tagline:
             "Logo, farby, typografia a šablóny — všetko, čo potrebujete na konzistentnú firemnú identitu naprieč webom, sociálnymi sieťami a tlačou.",
@@ -402,19 +402,19 @@ export const SERVICES: ServiceCatalogEntry[] = [
         pricing: [
             {
                 name: "Logo Basic",
-                price: "od €69",
+                price: "od €35",
                 description:
                     "Logo v 3 variantoch + súbory (SVG, PNG, PDF). Hotové do 5 dní.",
             },
             {
                 name: "Logo + Brand",
-                price: "od €159",
+                price: "od €79",
                 description:
                     "Logo + brand guide + šablóny pre soc. siete + favicon. Hotové do 10 dní.",
             },
             {
                 name: "Sociálna grafika",
-                price: "od €99",
+                price: "od €49",
                 description:
                     "Set 5–10 príspevkov pre Facebook a Instagram s vašou identitou.",
             },
@@ -456,7 +456,7 @@ export const SERVICES: ServiceCatalogEntry[] = [
         title: "Správa sociálnych sietí a Meta Ads",
         seoTitle: "Správa Facebooku a Instagramu | Meta Ads kampane",
         seoDescription:
-            "Mesačná správa Facebooku, Instagramu a platených kampaní (Meta Ads). Pravidelný obsah, grafika, copywriting a reporty. Od €139/mesiac.",
+            "Mesačná správa Facebooku, Instagramu a platených kampaní (Meta Ads). Pravidelný obsah, grafika, copywriting a reporty. Od €69/mesiac.",
         h1: "Sociálne siete a reklamy, ktoré dohnajú zákazníka",
         tagline:
             "Mesačný plán obsahu, grafika, copywriting a platené kampane — všetko na jednom mieste. Vy robíte biznis, my soc. siete.",
@@ -506,13 +506,13 @@ export const SERVICES: ServiceCatalogEntry[] = [
         pricing: [
             {
                 name: "Marketing Starter",
-                price: "od €139/mes",
+                price: "od €69/mes",
                 description:
                     "8 príspevkov mesačne, grafika, captions, posting. Bez platených kampaní.",
             },
             {
                 name: "Marketing Pro + Ads",
-                price: "od €209/mes",
+                price: "od €105/mes",
                 description:
                     "16 príspevkov, kampane na Meta Ads (rozpočet zvlášť), reporty, retargeting.",
             },
