@@ -48,7 +48,7 @@ export default function RealizacieClient() {
                 </p>
                 <Link
                     href="/#contact"
-                    className="inline-flex items-center gap-3 px-8 md:px-10 py-3.5 md:py-4 bg-gold text-ink rounded-full text-xs font-bold uppercase tracking-[0.2em] hover:bg-gold-bright transition-all shadow-lg shadow-black/20"
+                    className="inline-flex items-center gap-3 px-8 md:px-10 py-3.5 md:py-4 bg-gold text-ink text-xs font-bold uppercase tracking-[0.2em] hover:bg-gold-bright transition-all shadow-lg shadow-black/20"
                 >
                     {t("realizacie.bottomCta.button")}
                 </Link>

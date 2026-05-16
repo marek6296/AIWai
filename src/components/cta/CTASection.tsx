@@ -37,7 +37,7 @@ export default function CTASection() {
                 <ScrollReveal delay={0.18}>
                     <button
                         onClick={() => scrollToPageSection("contact")}
-                        className="inline-flex items-center gap-3 px-8 md:px-10 py-4 bg-white text-brand-indigo rounded-full text-sm font-bold uppercase tracking-[0.15em] hover:bg-white/90 transition-all shadow-2xl shadow-black/10 hover:shadow-black/20 group"
+                        className="inline-flex items-center gap-3 px-8 md:px-10 py-4 bg-gold text-ink text-sm font-bold uppercase tracking-[0.15em] hover:bg-gold-bright transition-all shadow-2xl shadow-black/30 group"
                     >
                         {t("cta.button")}
                         <svg

@@ -110,7 +110,7 @@ export default function ContactSection() {
     ];
 
     return (
-        <section id="contact" className="py-20 md:py-36 bg-char relative overflow-hidden">
+        <section id="contact" className="py-20 md:py-36 bg-char relative overflow-hidden isolate">
             <SectionBackground variant="default" />
 
             <div className="container mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center relative z-10">
@@ -179,7 +179,7 @@ export default function ContactSection() {
                                 <p className="text-cream/60 text-sm max-w-xs">{errorMessage}</p>
                                 <button
                                     onClick={() => setStatus("idle")}
-                                    className="mt-6 px-5 py-2.5 bg-gold text-ink rounded-full text-sm font-medium hover:bg-gold-bright transition-colors"
+                                    className="mt-6 px-5 py-2.5 bg-gold text-ink text-sm font-medium hover:bg-gold-bright transition-colors"
                                 >
                                     {t("contact.error.retry")}
                                 </button>

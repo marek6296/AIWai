@@ -92,7 +92,7 @@ export default function ServiceModal({ isOpen, onClose, service, index }: Servic
 
                 {/* Drag handle — mobile only */}
                 <div className="md:hidden flex justify-center pt-4 pb-2 shrink-0 relative z-10">
-                    <div className="w-12 h-1 rounded-full bg-gold/30" />
+                    <div className="w-12 h-1 bg-gold/30" />
                 </div>
 
                 {/* Header */}
@@ -176,7 +176,7 @@ export default function ServiceModal({ isOpen, onClose, service, index }: Servic
                             const element = document.getElementById("contact");
                             element?.scrollIntoView({ behavior: "smooth" });
                         }}
-                        className="relative w-full py-4 rounded-full font-bold text-xs tracking-[0.2em] uppercase transition-all duration-300 flex items-center justify-center gap-3 group overflow-hidden text-ink"
+                        className="relative w-full py-4 font-bold text-xs tracking-[0.2em] uppercase transition-all duration-300 flex items-center justify-center gap-3 group overflow-hidden text-ink"
                         style={{
                             background: "linear-gradient(135deg, #D4B27F 0%, #B49364 55%, #8C6F3F 100%)",
                             boxShadow: "0 10px 30px -8px rgba(140,111,63,0.5), 0 1px 0 rgba(255,255,255,0.18) inset, 0 -2px 6px rgba(0,0,0,0.25) inset",

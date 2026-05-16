@@ -110,7 +110,7 @@ export default function NewsSection() {
                             />
                             <div className="absolute inset-0 bg-gradient-to-tr from-brand-indigo/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                             <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-4 group-hover:translate-y-0">
-                                <div className="px-8 py-3 bg-white text-brand-indigo rounded-full text-[11px] font-bold uppercase tracking-widest shadow-2xl">
+                                <div className="px-8 py-3 bg-gold text-ink text-[11px] font-bold uppercase tracking-widest shadow-2xl">
                                     {t("news.viewAll")}
                                 </div>
                             </div>

@@ -117,14 +117,14 @@ export default function ServicePage({ params }: { params: { slug: string } }) {
                 <div className="flex flex-wrap gap-4">
                     <Link
                         href="/#contact"
-                        className="inline-flex items-center gap-2 rounded-full bg-gold px-7 py-3.5 font-semibold text-char hover:bg-gold/90 transition-colors"
+                        className="inline-flex items-center gap-2 bg-gold px-7 py-3.5 font-semibold text-char hover:bg-gold/90 transition-colors"
                     >
                         Konzultácia zdarma
                         <ArrowRight className="h-4 w-4" />
                     </Link>
                     <Link
                         href="/cennik"
-                        className="inline-flex items-center gap-2 rounded-full border border-cream/30 px-7 py-3.5 font-semibold text-cream hover:border-cream/60 transition-colors"
+                        className="inline-flex items-center gap-2 border border-cream/30 px-7 py-3.5 font-semibold text-cream hover:border-cream/60 transition-colors"
                     >
                         Pozrieť cenník
                     </Link>
@@ -304,7 +304,7 @@ export default function ServicePage({ params }: { params: { slug: string } }) {
                 </p>
                 <Link
                     href="/#contact"
-                    className="inline-block rounded-full bg-gold px-8 py-4 font-semibold text-char hover:bg-gold/90 transition-colors"
+                    className="inline-block bg-gold px-8 py-4 font-semibold text-char hover:bg-gold/90 transition-colors"
                 >
                     Napíšte nám →
                 </Link>

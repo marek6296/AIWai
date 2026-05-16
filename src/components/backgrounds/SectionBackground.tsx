@@ -29,7 +29,11 @@ export default function SectionBackground({
     const showHex = variant === "default";
 
     return (
-        <>
+        <div
+            aria-hidden="true"
+            className="absolute inset-0 pointer-events-none overflow-hidden"
+            style={{ transform: "translateZ(0)", willChange: "transform" }}
+        >
             {/* Static gold vertical guide lines (matches Process / CTA sections) */}
             <div
                 aria-hidden="true"
@@ -81,6 +85,6 @@ export default function SectionBackground({
                     className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-char/80 to-transparent pointer-events-none"
                 />
             )}
-        </>
+        </div>
     );
 }

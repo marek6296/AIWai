@@ -9,64 +9,102 @@ export default function SluzbyClient() {
     const { t } = useTranslation();
 
     return (
-        <main className="min-h-screen bg-char text-cream">
-            <section className="container mx-auto px-6 pt-32 pb-16 md:pt-40 md:pb-24">
-                <nav aria-label="Breadcrumb" className="mb-8 text-sm text-cream/60">
-                    <ol className="flex gap-2">
+        <main className="relative min-h-screen bg-char text-cream overflow-hidden">
+            {/* Background decoration */}
+            <div
+                aria-hidden="true"
+                className="pointer-events-none absolute -top-40 -right-40 h-[820px] w-[820px] rounded-full"
+                style={{ background: "radial-gradient(circle, rgba(10, 22, 40, 0.75) 0%, transparent 65%)" }}
+            />
+            <div
+                aria-hidden="true"
+                className="pointer-events-none absolute -bottom-40 -left-40 h-[720px] w-[720px] rounded-full"
+                style={{ background: "radial-gradient(circle, rgba(201, 168, 117, 0.18) 0%, transparent 65%)" }}
+            />
+            <div aria-hidden="true" className="pointer-events-none absolute inset-0 gold-vlines opacity-25" />
+
+            {/* Hero */}
+            <section className="container relative z-10 mx-auto px-6 pt-32 pb-12 md:pt-40 md:pb-16">
+                <nav aria-label="Breadcrumb" className="mb-8 text-xs uppercase tracking-[0.2em] text-cream/55">
+                    <ol className="flex items-center gap-2">
                         <li>
-                            <Link href="/" className="hover:text-cream transition-colors">
+                            <Link href="/" className="hover:text-gold transition-colors">
                                 AIWai
                             </Link>
                         </li>
-                        <li aria-hidden="true">/</li>
-                        <li aria-current="page" className="text-cream">
+                        <li aria-hidden="true" className="text-cream/30">/</li>
+                        <li aria-current="page" className="text-cream/90">
                             {t("sluzbyHub.breadcrumb")}
                         </li>
                     </ol>
                 </nav>
 
-                <h1 className="font-display font-bold tracking-tight text-cream leading-[1.05] text-[2.5rem] md:text-7xl mb-6">
-                    {t("sluzbyHub.h1.line1")}
-                    <br />
-                    {t("sluzbyHub.h1.line2")}
-                </h1>
-                <p className="max-w-2xl text-lg md:text-xl text-cream/75 leading-relaxed">
-                    {t("sluzbyHub.lead")}
-                </p>
+                <div className="max-w-4xl">
+                    <h1 className="font-display font-bold tracking-tight text-cream leading-[1.05] text-[2.5rem] md:text-7xl mb-6 sluzby-fade-in">
+                        {t("sluzbyHub.h1.line1")}
+                        <br />
+                        <span className="text-gold">{t("sluzbyHub.h1.line2")}</span>
+                    </h1>
+                    <p className="max-w-2xl text-lg md:text-xl text-cream/70 leading-relaxed font-light sluzby-fade-in [animation-delay:120ms]">
+                        {t("sluzbyHub.lead")}
+                    </p>
+                </div>
             </section>
 
-            <section className="container mx-auto px-6 pb-24 md:pb-32">
-                <div className="grid gap-6 md:grid-cols-2">
+            {/* Service grid */}
+            <section className="container relative z-10 mx-auto px-6 pb-24 md:pb-32">
+                <div className="grid gap-5 md:gap-6 md:grid-cols-2">
                     {SERVICES.map((service, idx) => (
                         <Link
                             key={service.slug}
                             href={`/sluzby/${service.slug}`}
-                            className="group relative overflow-hidden rounded-2xl border border-cream/10 bg-char/50 p-8 md:p-10 transition-all hover:border-gold/40 hover:bg-char/80"
+                            className="group relative overflow-hidden border border-cream/10 bg-char-soft/60 p-7 md:p-10 transition-all duration-500 hover:border-gold/40 hover:bg-char-soft/85 hover:-translate-y-1 sluzby-fade-in"
+                            style={{ animationDelay: `${200 + idx * 80}ms` }}
                         >
-                            <div
-                                className="mb-6 text-5xl text-gold opacity-80 transition-transform group-hover:scale-110"
+                            {/* Gold corner accent on hover */}
+                            <span
                                 aria-hidden="true"
-                            >
-                                {service.glyph}
+                                className="pointer-events-none absolute -top-px -right-px h-12 w-12 origin-top-right scale-0 bg-gold transition-transform duration-500 group-hover:scale-100"
+                                style={{ clipPath: "polygon(100% 0, 0 0, 100% 100%)" }}
+                            />
+                            {/* Glow on hover */}
+                            <span
+                                aria-hidden="true"
+                                className="pointer-events-none absolute -bottom-32 -right-32 h-72 w-72 rounded-full opacity-0 transition-opacity duration-700 group-hover:opacity-100"
+                                style={{ background: "radial-gradient(circle, rgba(201,168,117,0.18) 0%, transparent 65%)" }}
+                            />
+
+                            <div className="relative flex items-start justify-between mb-7">
+                                <div
+                                    className="text-5xl text-gold opacity-90 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-[6deg]"
+                                    aria-hidden="true"
+                                >
+                                    {service.glyph}
+                                </div>
+                                <span className="text-[10px] uppercase tracking-[0.3em] font-bold text-cream/30 group-hover:text-gold/80 transition-colors">
+                                    {String(idx + 1).padStart(2, "0")} / {String(SERVICES.length).padStart(2, "0")}
+                                </span>
                             </div>
 
-                            <h2 className="font-display font-bold text-cream text-2xl md:text-3xl tracking-tight leading-tight mb-3">
+                            <h2 className="font-display font-bold text-cream text-2xl md:text-[1.75rem] tracking-tight leading-tight mb-3">
                                 {t(`services.${idx}.title`)}
                             </h2>
-                            <p className="text-cream/70 mb-6 leading-relaxed">
+                            <p className="text-cream/65 mb-7 leading-relaxed text-[15px] font-light">
                                 {t(`services.${idx}.description`)}
                             </p>
 
-                            <div className="flex items-center justify-between text-sm">
-                                <span className="text-cream/50">
-                                    {t("sluzbyHub.priceFrom")}{" "}
-                                    <span className="text-gold">
+                            <div className="flex items-center justify-between pt-5 border-t border-cream/10 text-sm">
+                                <span className="text-cream/55">
+                                    <span className="uppercase tracking-[0.15em] text-[10px] font-bold text-cream/40 mr-2">
+                                        {t("sluzbyHub.priceFrom")}
+                                    </span>
+                                    <span className="text-gold font-bold tracking-tight">
                                         {service.pricing[0]?.price ?? ""}
                                     </span>
                                 </span>
-                                <span className="flex items-center gap-2 text-cream/80 group-hover:text-gold transition-colors">
+                                <span className="flex items-center gap-2 uppercase tracking-[0.18em] text-[11px] font-bold text-cream/65 group-hover:text-gold transition-colors">
                                     {t("sluzbyHub.detail")}
-                                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                                    <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1.5" />
                                 </span>
                             </div>
                         </Link>
@@ -74,20 +112,36 @@ export default function SluzbyClient() {
                 </div>
             </section>
 
-            <section className="container mx-auto px-6 pb-24 md:pb-32 text-center">
-                <h2 className="font-display font-bold text-cream text-3xl md:text-5xl mb-4">
+            {/* Bottom CTA */}
+            <section className="container relative z-10 mx-auto px-6 pb-28 md:pb-36 text-center">
+                <h2 className="font-display font-bold text-cream text-3xl md:text-5xl leading-tight mb-5">
                     {t("sluzbyHub.bottomCta.title")}
                 </h2>
-                <p className="text-cream/70 max-w-2xl mx-auto mb-8">
+                <p className="text-cream/65 max-w-xl mx-auto mb-10 font-light leading-relaxed">
                     {t("sluzbyHub.bottomCta.text")}
                 </p>
                 <Link
                     href="/#contact"
-                    className="inline-block rounded-full bg-gold px-8 py-4 font-semibold text-char hover:bg-gold/90 transition-colors"
+                    className="inline-flex items-center gap-3 bg-gold px-8 py-4 text-xs font-bold uppercase tracking-[0.2em] text-ink hover:bg-gold-bright transition-colors shadow-lg shadow-black/30"
                 >
                     {t("sluzbyHub.bottomCta.button")}
+                    <ArrowRight className="h-4 w-4" />
                 </Link>
             </section>
+
+            <style>{`
+                @keyframes sluzbyFadeIn {
+                    from { opacity: 0; transform: translateY(20px); }
+                    to { opacity: 1; transform: translateY(0); }
+                }
+                .sluzby-fade-in {
+                    opacity: 0;
+                    animation: sluzbyFadeIn 700ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+                }
+                @media (prefers-reduced-motion: reduce) {
+                    .sluzby-fade-in { opacity: 1; animation: none; }
+                }
+            `}</style>
         </main>
     );
 }

@@ -43,7 +43,12 @@ export default function ServicesSection() {
     const [autoRotate, setAutoRotate] = useState(true);
     const [isCompact, setIsCompact] = useState(false);
     const [reducedMotion, setReducedMotion] = useState(false);
+    const [mounted, setMounted] = useState(false);
     const orbitRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
     const services = useMemo(
         () =>
@@ -118,7 +123,7 @@ export default function ServicesSection() {
     return (
         <section
             id="services"
-            className="relative overflow-hidden bg-char py-12 md:py-16"
+            className="relative overflow-hidden bg-char py-12 md:py-16 isolate"
             onClick={clearSelection}
         >
             <SectionBackground variant="default" />
@@ -150,7 +155,7 @@ export default function ServicesSection() {
                             />
                         </div>
 
-                        {services.map((service, index) => {
+                        {mounted && services.map((service, index) => {
                             const angle = ((index / services.length) * 360 + rotationAngle) % 360;
                             const radian = (angle * Math.PI) / 180;
                             const x = radius * Math.cos(radian);
@@ -276,7 +281,7 @@ export default function ServicesSection() {
                                     <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                                         <Link
                                             href={`/sluzby/${activeService.slug}`}
-                                            className="inline-flex items-center justify-center gap-2 rounded-full bg-gold px-5 py-3 text-xs font-bold uppercase tracking-[0.16em] text-ink transition-colors hover:bg-gold-bright"
+                                            className="inline-flex items-center justify-center gap-2 bg-gold px-5 py-3 text-xs font-bold uppercase tracking-[0.16em] text-ink transition-colors hover:bg-gold-bright"
                                         >
                                             {t("services.learnMore")}
                                             <ArrowRight className="h-4 w-4" />

@@ -39,7 +39,7 @@ function Hex({
         <motion.svg
             viewBox="0 0 100 100"
             className={`absolute pointer-events-none ${className}`}
-            style={{ opacity }}
+            style={{ opacity, willChange: "transform", backfaceVisibility: "hidden" }}
             animate={
                 reduced
                     ? undefined

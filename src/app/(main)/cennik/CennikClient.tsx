@@ -304,7 +304,7 @@ export default function CennikClient() {
                     <p className="text-cream/55 text-lg mb-10 font-light">{t("cennik.bottomCta.text")}</p>
                     <Link
                         href="/#contact"
-                        className="inline-flex items-center gap-3 px-10 py-4 bg-gold text-ink rounded-full text-xs font-bold uppercase tracking-[0.2em] hover:bg-gold-bright transition-all shadow-lg shadow-black/20"
+                        className="inline-flex items-center gap-3 px-10 py-4 bg-gold text-ink text-xs font-bold uppercase tracking-[0.2em] hover:bg-gold-bright transition-all shadow-lg shadow-black/20"
                     >
                         {t("cennik.bottomCta.button")}
                     </Link>
