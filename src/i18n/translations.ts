@@ -145,6 +145,12 @@ export const translations: Record<Lang, Record<string, string>> = {
         'chatbot.bubble.repeat': 'Still here if you need me!',
         'chatbot.header': 'AIWai Assistant',
         'chatbot.placeholder': 'Type your message...',
+        'chatbot.empty.title': 'Hi! I\'m your AIWai assistant. How can I help?',
+        'chatbot.suggestion.web': 'I need a new website or e-shop',
+        'chatbot.suggestion.chatbot': 'Tell me about AI chatbots',
+        'chatbot.suggestion.automation': 'What can process automation do?',
+        'chatbot.suggestion.pricing': 'What are your prices?',
+        'chatbot.error.network': 'Sorry, something went wrong. Please reach out at **marek@aiwai.app**.',
 
         // ── News Section ──
         'news.badge': 'Live Automation',
@@ -430,6 +436,12 @@ export const translations: Record<Lang, Record<string, string>> = {
         'chatbot.bubble.repeat': 'Stále som tu, ak ma potrebujete!',
         'chatbot.header': 'AIWai Asistent',
         'chatbot.placeholder': 'Napíšte správu...',
+        'chatbot.empty.title': 'Ahoj! Som AIWai asistent. Ako ti pomôžem?',
+        'chatbot.suggestion.web': 'Chcem nový web alebo e-shop',
+        'chatbot.suggestion.chatbot': 'Zaujíma ma AI chatbot pre firmu',
+        'chatbot.suggestion.automation': 'Čo dokáže automatizácia procesov?',
+        'chatbot.suggestion.pricing': 'Aké sú vaše ceny?',
+        'chatbot.error.network': 'Prepáč, nastala chyba. Napíš priamo na **marek@aiwai.app**.',
 
         // ── News Section ──
         'news.badge': 'Živá automatizácia',
@@ -715,6 +727,12 @@ export const translations: Record<Lang, Record<string, string>> = {
         'chatbot.bubble.repeat': 'Stále jsem tu, pokud mě potřebujete!',
         'chatbot.header': 'AIWai Asistent',
         'chatbot.placeholder': 'Napište zprávu...',
+        'chatbot.empty.title': 'Ahoj! Jsem AIWai asistent. Jak ti pomůžu?',
+        'chatbot.suggestion.web': 'Chci nový web nebo e-shop',
+        'chatbot.suggestion.chatbot': 'Zajímá mě AI chatbot pro firmu',
+        'chatbot.suggestion.automation': 'Co dokáže automatizace procesů?',
+        'chatbot.suggestion.pricing': 'Jaké jsou vaše ceny?',
+        'chatbot.error.network': 'Promiň, nastala chyba. Napiš přímo na **marek@aiwai.app**.',
 
         // ── News Section ──
         'news.badge': 'Živá automatizace',

@@ -16,7 +16,16 @@ const chatRequestSchema = z.object({
         content: z.string().max(8000),
     })).max(100),
     sessionId: z.string().min(1).max(128).optional(),
+    // Jazyk stránky, na ktorej user písal — z klienta (LanguageContext: sk/en/cs).
+    // Ak je dodaný, vynútime ho v systemInstruction; inak fallback na detectLanguage().
+    language: z.enum(['sk', 'en', 'cs']).optional(),
 });
+
+const LANGUAGE_NAMES: Record<string, string> = {
+    sk: 'Slovak',
+    en: 'English',
+    cs: 'Czech',
+};
 
 const CONFIG_PATH = path.join(process.cwd(), 'data', 'chatbot-config.json');
 
@@ -192,14 +201,21 @@ export async function POST(req: Request) {
         }
         const messages: ChatMessage[] = parsed.data.messages;
         const sessionId: string | undefined = parsed.data.sessionId;
+        const clientLanguage: 'sk' | 'en' | 'cs' | undefined = parsed.data.language;
 
         const config = loadConfig();
 
         if (config.general?.enabled === false) {
+            // Lokalizovaný "vypnuté" fallback podľa jazyka klienta.
+            const disabledMsg: Record<string, string> = {
+                sk: 'Chatbot je momentálne vypnutý. Napíš priamo na marek@aiwai.app alebo zavolaj +421 902 876 198.',
+                en: 'The chatbot is currently disabled. Please email marek@aiwai.app or call +421 902 876 198.',
+                cs: 'Chatbot je momentálně vypnutý. Napiš přímo na marek@aiwai.app nebo zavolej +421 902 876 198.',
+            };
             return NextResponse.json({
                 message: {
                     role: 'assistant',
-                    content: 'Chatbot je momentálne vypnutý. Napíš priamo na marek@aiwai.app alebo zavolaj +421 902 876 198.',
+                    content: disabledMsg[clientLanguage ?? 'sk'] ?? disabledMsg.sk,
                 },
             });
         }
@@ -219,9 +235,29 @@ export async function POST(req: Request) {
 
         // Inject live pricing (non-blocking — fall back to knowledge.ts prices if table missing)
         const livePricing = await getLivePricing().catch(() => '');
-        const systemInstruction = livePricing
-            ? `${livePricing}\n\n${AIWAI_SYSTEM_PROMPT}`
-            : AIWAI_SYSTEM_PROMPT;
+
+        // Jazyková direktíva — má najvyššiu prioritu. Pri prepnutí jazyka stránky musí
+        // chatbot okamžite reagovať v novom jazyku, bez ohľadu na to, v akom jazyku
+        // písal user. Bez tejto direktívy by Gemini mohol jazyk detekovať zo správy.
+        const langName = clientLanguage ? LANGUAGE_NAMES[clientLanguage] : null;
+        const langDirective = langName
+            ? `╔════════════════════════════════════════════════════════════╗
+║  CRITICAL LANGUAGE DIRECTIVE — TOP PRIORITY                ║
+╚════════════════════════════════════════════════════════════╝
+The user is browsing the website in ${langName}.
+You MUST respond EXCLUSIVELY in ${langName}, regardless of what
+language the user typed their message in. Translate ALL content
+to ${langName} including button suggestions in [NÁVRHY:...] markers.
+This rule overrides any other language guidance in this prompt.
+
+`
+            : '';
+
+        const systemInstruction = [
+            langDirective,
+            livePricing,
+            AIWAI_SYSTEM_PROMPT,
+        ].filter(Boolean).join('\n\n');
 
         const model = getGenAI().getGenerativeModel({
             model: modelName,
@@ -240,7 +276,8 @@ export async function POST(req: Request) {
         // Fire-and-forget DB persistence
         if (sessionId) {
             const userMessages = trimmed.filter((m) => m.role === 'user').map((m) => m.content);
-            const language = detectLanguage(userMessages[0] ?? '');
+            // Prednosť má jazyk stránky z klienta; ak chýba, fallback na heuristickú detekciu.
+            const language = clientLanguage ?? detectLanguage(userMessages[0] ?? '');
 
             persistConversation({
                 sessionId,

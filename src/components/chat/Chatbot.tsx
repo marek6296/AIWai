@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { motion, AnimatePresence, useMotionValue, useAnimationFrame } from "framer-motion";
 import { Send, X, Sparkles } from "lucide-react";
 import { useTranslation } from "@/i18n/useTranslation";
@@ -16,27 +16,34 @@ interface Message {
 
 /** Parse [NÁVRHY: opt1 • opt2 • opt3] from end of assistant message */
 function parseChips(raw: string): { display: string; chips: string[] } {
-    const idx = raw.lastIndexOf("[N\u00C1VRHY:");
-    if (idx === -1) return { display: raw.trim(), chips: [] };
-    const inner = raw.slice(idx + 8).replace(/\]\s*$/, "").trim();
-    const chips = inner
-        .split("\u2022")
+    // Akceptuje SK/CZ marker N\u00C1VRHY aj EN SUGGESTIONS (model vyber\u00E1 pod\u013Ea jazyka).
+    const re = /\[(?:N\u00C1VRHY|NAVRHY|SUGGESTIONS?)\s*:\s*([^\]]+)\]\s*$/i;
+    const match = raw.match(re);
+    if (!match || match.index === undefined) return { display: raw.trim(), chips: [] };
+    const chips = match[1]
+        // Hlavn\u00FD separ\u00E1tor je \u2022 ("\u2022"). Pre robustnos\u0165 aj | a ;.
+        .split(/[\u2022|;]/)
         .map((s) => s.trim())
         .filter(Boolean)
         .slice(0, 4);
-    const display = raw.slice(0, idx).trim();
+    const display = raw.slice(0, match.index).trim();
     return { display, chips };
 }
 
-const INITIAL_CHIPS = [
-    "Chcem nový web alebo e-shop",
-    "Zaujíma ma AI chatbot pre firmu",
-    "Čo dokáže automatizácia procesov?",
-    "Aké sú vaše ceny?",
-];
-
 export default function Chatbot() {
-    const { t } = useTranslation();
+    const { t, lang } = useTranslation();
+
+    // Initial quick-reply chips reagujú na aktuálny jazyk stránky (SK/EN/CZ).
+    // useMemo lebo zoznam je stabilný v rámci daného renderu, zmení sa len pri prepnutí jazyka.
+    const initialChips = useMemo(
+        () => [
+            t("chatbot.suggestion.web"),
+            t("chatbot.suggestion.chatbot"),
+            t("chatbot.suggestion.automation"),
+            t("chatbot.suggestion.pricing"),
+        ],
+        [t]
+    );
     const [isOpen, setIsOpen] = useState(false);
     const [messages, setMessages] = useState<Message[]>([]);
     const [input, setInput] = useState("");
@@ -153,7 +160,12 @@ export default function Chatbot() {
             const response = await fetch("/api/chat", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ messages: apiMessages, sessionId: sessionIdRef.current }),
+                body: JSON.stringify({
+                    messages: apiMessages,
+                    sessionId: sessionIdRef.current,
+                    // Pošli aktuálny jazyk stránky aby Gemini odpovedal v ňom (a nehádal z textu).
+                    language: lang,
+                }),
             });
 
             if (!response.ok) throw new Error("Failed to fetch");
@@ -170,10 +182,11 @@ export default function Chatbot() {
             };
             setMessages([...newMessages, assistantMsg]);
         } catch {
+            const fallback = t("chatbot.error.network");
             setMessages([...newMessages, {
                 role: "assistant",
-                content: "Prepáč, nastala chyba. Napíš priamo na marek@aiwai.app.",
-                displayContent: "Prepáč, nastala chyba. Napíš priamo na **marek@aiwai.app**.",
+                content: fallback,
+                displayContent: fallback,
                 chips: [],
             }]);
         } finally {
@@ -252,12 +265,12 @@ export default function Chatbot() {
                                 <div className="h-full flex flex-col items-center justify-center text-center gap-4">
                                     <div className="opacity-30">
                                         <PremiumIcon type="ai-agents" size={52} className="text-brand-indigo mx-auto mb-2" />
-                                        <p className="text-sm text-brand-indigo max-w-[200px]">
-                                            {t("chatbot.bubble.initial")}
+                                        <p className="text-sm text-brand-indigo max-w-[220px]">
+                                            {t("chatbot.empty.title")}
                                         </p>
                                     </div>
                                     <div className="flex flex-col gap-2 w-full max-w-[280px] mt-2">
-                                        {INITIAL_CHIPS.map((chip) => (
+                                        {initialChips.map((chip) => (
                                             <button
                                                 key={chip}
                                                 onClick={() => handleChip(chip)}
