@@ -4,17 +4,19 @@
  * CircularGallery — 3D rotujúca galéria projektov.
  *
  * Karty sú rozmiestnené po obvode kruhu okolo Y-osi (rotateY + translateZ).
- * Rotácia má dva zdroje:
+ * Rotácia má tri zdroje, ktoré sa sčítavajú do finálneho `rotation`:
  *   • scroll užívateľa (rotácia mapovaná na scrollY / scrollableHeight)
- *   • jemný auto-rotate keď scroll stojí
+ *   • jemný auto-rotate keď scroll stojí a nie je drag
+ *   • horizontálne swipe / mouse drag (s momentum decay po uvoľnení)
  *
- * Karty oproti používateľovi sú plne viditeľné, karty na druhej strane
- * sú stmavnuté (opacity klesá s uhlovou vzdialenosťou od kamery).
+ * Karty oproti kamere sú plne viditeľné. Karty s uhlom od kamery > 90°
+ * sa skryjú cez `visibility: hidden` + `pointer-events: none`, aby
+ * neprekrývali predné karty na mobile s malým radiusom.
  *
  * Mobile responsive: radius a veľkosť kariet sa prispôsobí šírke okna.
  */
 
-import { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import Image from "next/image";
 import { Lock, ExternalLink } from "lucide-react";
 
@@ -32,61 +34,98 @@ interface Props {
     items: GalleryItem[];
     /** Rýchlosť auto-rotácie v stupňoch za frame (default 0.025 ≈ pomalý drift). */
     autoRotateSpeed?: number;
-    /** Po koľkých ms od posledného scrollu sa pustí auto-rotate (default 200). */
-    scrollIdleMs?: number;
+    /** Po koľkých ms od poslednej interakcie sa pustí auto-rotate (default 250). */
+    idleResumeMs?: number;
 }
 
 /**
  * Vypočíta optimálne rozmery podľa šírky okna.
- * Mobile: malé karty + malý radius (lebo viewport je úzky).
+ * Mobile: úzke karty + radius dosť veľký, aby sa nepretkávali viditeľné karty na fronte.
  * Desktop: veľké karty + veľký radius (viac drámy).
+ *
+ * Pri 10 kartách obvod kruhu / 10 musí byť aspoň cardW + malý gap, inak sa karty
+ * v prednom oblúku prekrývajú. Pre 10 kariet to znamená:
+ *   2·π·radius / 10 >= cardW + 24
+ *   radius >= 10·(cardW + 24) / (2·π) ≈ 1.59·(cardW + 24)
  */
 function getGeometry(width: number) {
     if (width < 640) {
-        return { radius: 230, cardW: 180, cardH: 240, perspective: 1200 };
+        return { radius: 300, cardW: 160, cardH: 220, perspective: 1100 };
     }
     if (width < 1024) {
-        return { radius: 380, cardW: 240, cardH: 320, perspective: 1600 };
+        return { radius: 420, cardW: 230, cardH: 310, perspective: 1600 };
     }
-    return { radius: 560, cardW: 300, cardH: 400, perspective: 2000 };
+    return { radius: 600, cardW: 300, cardH: 400, perspective: 2000 };
+}
+
+/** Wrap zľava aj sprava — angle (0,360] s 360 = 0. */
+function modAngle(deg: number): number {
+    return ((deg % 360) + 360) % 360;
 }
 
 export default function CircularGallery({
     items,
     autoRotateSpeed = 0.025,
-    scrollIdleMs = 200,
+    idleResumeMs = 250,
 }: Props) {
+    // Jedna pravda — finálny rotation aplikovaný na 3D wrapper.
     const [rotation, setRotation] = useState(0);
-    const [isScrolling, setIsScrolling] = useState(false);
-    const [isHoverPaused, setIsHoverPaused] = useState(false);
+    // Šírka okna pre responsívny radius.
     const [windowWidth, setWindowWidth] = useState<number>(
         typeof window === "undefined" ? 1280 : window.innerWidth
     );
 
+    // Stavy interakcií — držíme cez useRef aby sa nespúšťali re-rendery v RAF loope.
+    const isScrollingRef = useRef(false);
+    const isDraggingRef = useRef(false);
+    const isHoverPausedRef = useRef(false);
     const scrollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const dragVelocityRef = useRef(0);
+    const lastScrollRotationRef = useRef(0);
     const rafRef = useRef<number | null>(null);
 
+    // Drag tracking
+    const dragStartXRef = useRef(0);
+    const dragStartYRef = useRef(0);
+    const dragLastXRef = useRef(0);
+    const dragLastTimeRef = useRef(0);
+    const dragAxisLockedRef = useRef<"x" | "y" | null>(null);
+    // Po skončení dragu krátko držíme true — onClickCapture potom anuluje klik na kartu.
+    const wasDragRef = useRef(false);
+    const wasDragTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
     // ─── Mapuj rotáciu na vertikálny scroll dokumentu ───
+    // Drag overríduje scroll-driven na chvíľu: pri scrolle si zapíšeme delta
+    // oproti predchádzajúcej scroll-rotácii a pridáme ju do `rotation`.
     useEffect(() => {
         const handleScroll = () => {
-            setIsScrolling(true);
+            if (isDraggingRef.current) return; // drag má prednosť
+            isScrollingRef.current = true;
             if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
 
             const scrollable = document.documentElement.scrollHeight - window.innerHeight;
             const progress = scrollable > 0 ? window.scrollY / scrollable : 0;
-            setRotation(progress * 360);
+            const scrollRotation = progress * 360;
+            const delta = scrollRotation - lastScrollRotationRef.current;
+            lastScrollRotationRef.current = scrollRotation;
+            setRotation((prev) => prev + delta);
 
-            scrollTimeoutRef.current = setTimeout(() => setIsScrolling(false), scrollIdleMs);
+            scrollTimeoutRef.current = setTimeout(() => {
+                isScrollingRef.current = false;
+            }, idleResumeMs);
         };
 
+        // Pri mount-e zafixuj baseline scroll, aby prvé volanie nepripočítalo skok.
+        const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+        const initialProgress = scrollable > 0 ? window.scrollY / scrollable : 0;
+        lastScrollRotationRef.current = initialProgress * 360;
+
         window.addEventListener("scroll", handleScroll, { passive: true });
-        // Inicializácia z aktuálneho scroll-u (napr. pri F5 v strede stránky).
-        handleScroll();
         return () => {
             window.removeEventListener("scroll", handleScroll);
             if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
         };
-    }, [scrollIdleMs]);
+    }, [idleResumeMs]);
 
     // ─── Sleduj šírku okna pre responsívny radius ───
     useEffect(() => {
@@ -96,10 +135,21 @@ export default function CircularGallery({
         return () => window.removeEventListener("resize", handleResize);
     }, []);
 
-    // ─── Auto-rotácia keď user nescrolluje a nehoveruje ───
+    // ─── Auto-rotácia + momentum decay v jednom RAF loope ───
     useEffect(() => {
         const tick = () => {
-            if (!isScrolling && !isHoverPaused) {
+            // Momentum z drag-u dobehne aj počas hover-pause — user to čaká.
+            if (dragVelocityRef.current !== 0 && !isDraggingRef.current) {
+                setRotation((prev) => prev + dragVelocityRef.current);
+                dragVelocityRef.current *= 0.94; // decay
+                if (Math.abs(dragVelocityRef.current) < 0.02) {
+                    dragVelocityRef.current = 0;
+                }
+            } else if (
+                !isScrollingRef.current &&
+                !isDraggingRef.current &&
+                !isHoverPausedRef.current
+            ) {
                 setRotation((prev) => prev + autoRotateSpeed);
             }
             rafRef.current = requestAnimationFrame(tick);
@@ -108,7 +158,124 @@ export default function CircularGallery({
         return () => {
             if (rafRef.current) cancelAnimationFrame(rafRef.current);
         };
-    }, [isScrolling, isHoverPaused, autoRotateSpeed]);
+    }, [autoRotateSpeed]);
+
+    // ─── Touch / mouse drag handlers ───
+    // Threshold: aby sa drag nezačal na náhodný klik na kartu.
+    const DRAG_THRESHOLD = 8;
+    // Citlivosť: koľko stupňov rotácie na 1 pixel pohybu. ~0.4° = 90° na 225 px swipe.
+    const DRAG_SENSITIVITY = 0.4;
+
+    const beginPointer = useCallback((clientX: number, clientY: number) => {
+        dragStartXRef.current = clientX;
+        dragStartYRef.current = clientY;
+        dragLastXRef.current = clientX;
+        dragLastTimeRef.current = performance.now();
+        dragAxisLockedRef.current = null;
+        // Pri začatí dragu zastavíme prípadný momentum z minulého swipe.
+        dragVelocityRef.current = 0;
+    }, []);
+
+    /**
+     * Vráti true ak sa drag začal a treba zablokovať default (scroll).
+     * Vráti false ak sa pohyb javí ako vertikálny scroll — necháme prejsť.
+     */
+    const movePointer = useCallback((clientX: number, clientY: number): boolean => {
+        const dx = clientX - dragStartXRef.current;
+        const dy = clientY - dragStartYRef.current;
+
+        // Axis lock: ak ešte nie je rozhodnuté, počkaj kým prekročíme threshold.
+        if (dragAxisLockedRef.current === null) {
+            if (Math.abs(dx) < DRAG_THRESHOLD && Math.abs(dy) < DRAG_THRESHOLD) {
+                return false;
+            }
+            dragAxisLockedRef.current = Math.abs(dx) > Math.abs(dy) ? "x" : "y";
+        }
+
+        // Pri vertikálnom geste necháme stránku scrolovať a galéria sa otočí cez scroll handler.
+        if (dragAxisLockedRef.current === "y") {
+            return false;
+        }
+
+        // Horizontálny drag — otáčame galériu.
+        isDraggingRef.current = true;
+        const stepDx = clientX - dragLastXRef.current;
+        const now = performance.now();
+        const dt = Math.max(1, now - dragLastTimeRef.current);
+        dragLastXRef.current = clientX;
+        dragLastTimeRef.current = now;
+
+        // Swipe doľava (negatívny dx) → rotácia doprava (pozitívna).
+        // Hodnota -stepDx * sensitivity dáva intuitívne "ťahám kartu so sebou".
+        const rotDelta = -stepDx * DRAG_SENSITIVITY;
+        setRotation((prev) => prev + rotDelta);
+
+        // Drž si momentum (stupne / 16 ms — približne stupne za frame pri 60 fps).
+        dragVelocityRef.current = (rotDelta / dt) * 16;
+        return true;
+    }, []);
+
+    const endPointer = useCallback(() => {
+        // Drag skončil. Momentum už máme v dragVelocityRef.
+        const wasReallyDragging = isDraggingRef.current;
+        isDraggingRef.current = false;
+        dragAxisLockedRef.current = null;
+        // Po dragu pauzni scroll-baseline reset, nech ďalší scroll handler začne čisto.
+        const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = scrollable > 0 ? window.scrollY / scrollable : 0;
+        lastScrollRotationRef.current = progress * 360;
+
+        // Ak naozaj prebehol horizontálny drag, podrž "wasDrag" flag krátko,
+        // aby sa nasledujúci klick na kartu nezarátal ako klik (= swipe by inak
+        // otvoril link).
+        if (wasReallyDragging) {
+            wasDragRef.current = true;
+            if (wasDragTimeoutRef.current) clearTimeout(wasDragTimeoutRef.current);
+            wasDragTimeoutRef.current = setTimeout(() => {
+                wasDragRef.current = false;
+            }, 200);
+        }
+    }, []);
+
+    // Touch
+    const onTouchStart = (e: React.TouchEvent) => {
+        if (e.touches.length !== 1) return;
+        const t = e.touches[0];
+        beginPointer(t.clientX, t.clientY);
+    };
+    const onTouchMove = (e: React.TouchEvent) => {
+        if (e.touches.length !== 1) return;
+        const t = e.touches[0];
+        const wantsDrag = movePointer(t.clientX, t.clientY);
+        if (wantsDrag && e.cancelable) {
+            e.preventDefault(); // blokuj scroll iba ak naozaj ťaháme horizontálne
+        }
+    };
+    const onTouchEnd = () => endPointer();
+
+    // Mouse (desktop) — drag len keď je button stlačený.
+    const isMouseDownRef = useRef(false);
+    const onMouseDown = (e: React.MouseEvent) => {
+        isMouseDownRef.current = true;
+        beginPointer(e.clientX, e.clientY);
+    };
+    useEffect(() => {
+        const handleMove = (e: MouseEvent) => {
+            if (!isMouseDownRef.current) return;
+            movePointer(e.clientX, e.clientY);
+        };
+        const handleUp = () => {
+            if (!isMouseDownRef.current) return;
+            isMouseDownRef.current = false;
+            endPointer();
+        };
+        window.addEventListener("mousemove", handleMove);
+        window.addEventListener("mouseup", handleUp);
+        return () => {
+            window.removeEventListener("mousemove", handleMove);
+            window.removeEventListener("mouseup", handleUp);
+        };
+    }, [movePointer, endPointer]);
 
     const { radius, cardW, cardH, perspective } = useMemo(
         () => getGeometry(windowWidth),
@@ -117,12 +284,37 @@ export default function CircularGallery({
 
     const anglePerItem = items.length > 0 ? 360 / items.length : 0;
 
+    // Hover pause iba na desktope — na touch zariadeniach by hover-event po tap-e zostal "stuck".
+    const isTouchDevice =
+        typeof window !== "undefined" && "ontouchstart" in window;
+
+    // Cleanup wasDrag timeout pri unmount.
+    useEffect(() => {
+        return () => {
+            if (wasDragTimeoutRef.current) clearTimeout(wasDragTimeoutRef.current);
+        };
+    }, []);
+
     return (
         <div
             className="relative w-full h-full flex items-center justify-center select-none"
-            style={{ perspective: `${perspective}px` }}
-            onMouseEnter={() => setIsHoverPaused(true)}
-            onMouseLeave={() => setIsHoverPaused(false)}
+            // touch-action: pan-y povolí vertikálny scroll; horizontálne gestá si chytáme sami
+            // cez preventDefault v onTouchMove (až keď je drag potvrdený ako horizontálny).
+            style={{ perspective: `${perspective}px`, touchAction: "pan-y" }}
+            onMouseEnter={isTouchDevice ? undefined : () => { isHoverPausedRef.current = true; }}
+            onMouseLeave={isTouchDevice ? undefined : () => { isHoverPausedRef.current = false; }}
+            onMouseDown={onMouseDown}
+            onTouchStart={onTouchStart}
+            onTouchMove={onTouchMove}
+            onTouchEnd={onTouchEnd}
+            onTouchCancel={onTouchEnd}
+            // Capture klik na karte, ak práve prebehol swipe — inak by sa otvoril odkaz.
+            onClickCapture={(e) => {
+                if (wasDragRef.current) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+            }}
         >
             <div
                 className="relative w-full h-full"
@@ -135,11 +327,15 @@ export default function CircularGallery({
                 {items.map((item, i) => {
                     const itemAngle = i * anglePerItem;
                     // Normalizovaný uhol od kamery (0° = priamo predo mnou, 180° = za mnou).
-                    const relative = (itemAngle + (rotation % 360) + 360) % 360;
+                    const relative = modAngle(itemAngle + rotation);
                     const normalized = relative > 180 ? 360 - relative : relative;
-                    // Karty za sebou stmavnuté, predné plne viditeľné.
-                    const opacity = Math.max(0.18, 1 - normalized / 180);
-                    const isFront = normalized < 30;
+
+                    // Karty so > 90° od kamery (zadná polovica kruhu) skryjeme úplne —
+                    // riešia sa tým prekryvy na mobile s malým radiusom, a aj
+                    // neviditeľné karty zbytočne nemenia layout pre screen readery.
+                    const hidden = normalized > 90;
+                    const opacity = hidden ? 0 : Math.max(0.2, 1 - normalized / 90);
+                    const isFront = normalized < 25;
 
                     return (
                         <GalleryCard
@@ -150,6 +346,7 @@ export default function CircularGallery({
                             cardW={cardW}
                             cardH={cardH}
                             opacity={opacity}
+                            hidden={hidden}
                             isFront={isFront}
                         />
                     );
@@ -168,10 +365,11 @@ interface CardProps {
     cardW: number;
     cardH: number;
     opacity: number;
+    hidden: boolean;
     isFront: boolean;
 }
 
-function GalleryCard({ item, angle, radius, cardW, cardH, opacity, isFront }: CardProps) {
+function GalleryCard({ item, angle, radius, cardW, cardH, opacity, hidden, isFront }: CardProps) {
     const isPrivate = !!item.private;
     const transform = `rotateY(${angle}deg) translateZ(${radius}px)`;
 
@@ -184,8 +382,10 @@ function GalleryCard({ item, angle, radius, cardW, cardH, opacity, isFront }: Ca
         width: `${cardW}px`,
         height: `${cardH}px`,
         opacity,
-        // Tieto transitions nesmú zasiahnuť `transform` — to riadi parent rotácia.
-        transition: "opacity 0.3s linear, box-shadow 0.4s ease",
+        // Skryté karty za kamerou: nezasahujú do hit-testingu ani sa nečítajú screen readerom.
+        visibility: hidden ? "hidden" : "visible",
+        pointerEvents: hidden ? "none" : "auto",
+        transition: "opacity 0.25s linear, box-shadow 0.4s ease",
         boxShadow: isFront
             ? "0 30px 80px -20px rgba(0,0,0,0.7), 0 0 0 1px rgba(201,168,117,0.35) inset, 0 0 40px rgba(201,168,117,0.15)"
             : "0 20px 50px -25px rgba(0,0,0,0.6), 0 0 0 1px rgba(245,237,220,0.08) inset",
@@ -197,7 +397,7 @@ function GalleryCard({ item, angle, radius, cardW, cardH, opacity, isFront }: Ca
 
     const content = (
         <>
-            {/* Obrázok — vrchné 2/3 karty */}
+            {/* Obrázok — vrchné 62% karty */}
             <div className="relative w-full" style={{ height: "62%" }}>
                 <Image
                     src={item.image}
@@ -206,7 +406,6 @@ function GalleryCard({ item, angle, radius, cardW, cardH, opacity, isFront }: Ca
                     sizes={`${cardW}px`}
                     className="object-cover object-top"
                     draggable={false}
-                    // Pre 3D rotáciu nemá zmysel priorita — server lazy-loaduje.
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-char via-char/30 to-transparent" />
 
@@ -226,15 +425,15 @@ function GalleryCard({ item, angle, radius, cardW, cardH, opacity, isFront }: Ca
                 )}
             </div>
 
-            {/* Text — spodná 1/3 karty */}
-            <div className="relative h-[38%] p-4 flex flex-col gap-1.5">
+            {/* Text — spodná 38% karty */}
+            <div className="relative h-[38%] p-3 sm:p-4 flex flex-col gap-1 sm:gap-1.5">
                 <span className="text-[9px] uppercase tracking-[0.25em] font-bold text-gold/80 truncate">
                     {item.category}
                 </span>
-                <h3 className="text-base md:text-lg font-display font-bold text-cream leading-tight truncate">
+                <h3 className="text-sm sm:text-base md:text-lg font-display font-bold text-cream leading-tight truncate">
                     {item.name}
                 </h3>
-                <p className="text-[11px] md:text-xs text-cream/55 leading-relaxed line-clamp-2 font-light">
+                <p className="text-[10px] sm:text-[11px] md:text-xs text-cream/55 leading-relaxed line-clamp-2 font-light">
                     {item.description}
                 </p>
             </div>
@@ -244,9 +443,7 @@ function GalleryCard({ item, angle, radius, cardW, cardH, opacity, isFront }: Ca
                 <div
                     aria-hidden
                     className="pointer-events-none absolute inset-0 rounded-2xl"
-                    style={{
-                        boxShadow: "0 0 24px rgba(228, 200, 150, 0.18) inset",
-                    }}
+                    style={{ boxShadow: "0 0 24px rgba(228, 200, 150, 0.18) inset" }}
                 />
             )}
         </>
@@ -260,15 +457,13 @@ function GalleryCard({ item, angle, radius, cardW, cardH, opacity, isFront }: Ca
                 style={sharedStyle}
                 aria-label={`${item.name} — private project`}
                 role="img"
+                aria-hidden={hidden}
             >
                 {content}
             </div>
         );
     }
 
-    // Klikateľné karty otvárajú projekt v novej karte. Backside karty (isFront=false)
-    // sa stále dajú klinúť, ale zámerne necháme pointer-events lebo počas auto-rotácie
-    // sa otáčajú a používateľ ich uvidí v fronte za chvíľu.
     return (
         <a
             href={item.url}
@@ -277,6 +472,8 @@ function GalleryCard({ item, angle, radius, cardW, cardH, opacity, isFront }: Ca
             className={`${cardClass} block hover:border-gold/60 transition-colors duration-300`}
             style={sharedStyle}
             aria-label={`${item.name} — open project in new tab`}
+            aria-hidden={hidden}
+            // Suppresion kliku počas swipe rieši onClickCapture na rodičovskom wrapperi.
         >
             {content}
         </a>
