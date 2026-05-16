@@ -37,23 +37,23 @@ ALTER TABLE chatbot_pricing ENABLE ROW LEVEL SECURITY;
 INSERT INTO chatbot_pricing (category, name, price_from, price_to, unit, description, sort_order) VALUES
 
 -- GRAFIKA
-('grafika',   'Logo Basic',                    99,  NULL, '€ jednorazovo', '3 návrhy loga, 2 kolá revízií, PNG+JPEG, svetlá+tmavá verzia, bez vektorov, do 5 dní', 1),
-('grafika',   'Logo + Brand',                 229,  NULL, '€ jednorazovo', '3 návrhy + 3 kolá revízií, vektory (SVG, AI, PDF), brand manuál, 5 šablón pre soc. siete, do 10 dní', 2),
-('grafika',   'Grafika pre sociálne siete',   149,  NULL, '€ jednorazovo', '15 brandovaných šablón (feed + stories), profilový obrázok + cover, highlight covers, do 7 dní', 3),
+('grafika',   'Logo Basic',                    69,  NULL, '€ jednorazovo', '3 návrhy loga, 2 kolá revízií, PNG+JPEG, svetlá+tmavá verzia, bez vektorov, do 5 dní', 1),
+('grafika',   'Logo + Brand',                 159,  NULL, '€ jednorazovo', '3 návrhy + 3 kolá revízií, vektory (SVG, AI, PDF), brand manuál, 5 šablón pre soc. siete, do 10 dní', 2),
+('grafika',   'Grafika pre sociálne siete',    99,  NULL, '€ jednorazovo', '15 brandovaných šablón (feed + stories), profilový obrázok + cover, highlight covers, do 7 dní', 3),
 
 -- MARKETING
-('marketing', 'Marketing Starter',            200,  NULL, '€/mes', 'Plán príspevkov, FB + IG + Stories, AI foto úpravy, copywriting, správa komentárov, mesačný report', 1),
-('marketing', 'Marketing Pro + Ads',          300,  NULL, '€/mes', 'Všetko zo Starter + Meta Ads kampane, správa rozpočtu (rozpočet nie je v cene), týždenné reporty', 2),
+('marketing', 'Marketing Starter',            139,  NULL, '€/mes', 'Plán príspevkov, FB + IG + Stories, AI foto úpravy, copywriting, správa komentárov, mesačný report', 1),
+('marketing', 'Marketing Pro + Ads',          209,  NULL, '€/mes', 'Všetko zo Starter + Meta Ads kampane, správa rozpočtu (rozpočet nie je v cene), týždenné reporty', 2),
 
 -- WEB
-('web',       'Prezentačná stránka',          299,  NULL, '€ jednorazovo', '1–3 stránky, kontaktný formulár, mobilná verzia, základné SEO, do 2 týždňov', 1),
-('web',       'Firemný web',                  599,  NULL, '€ jednorazovo', '5–10 stránok, CMS, blog/aktuality, SEO, Google Analytics, do 3–4 týždňov', 2),
-('web',       'E-shop',                       999,  NULL, '€ jednorazovo', 'Produktový katalóg, online platby (Stripe/PayPal/GoPay), správa objednávok, SEO, do 4–6 týždňov', 3),
+('web',       'Prezentačná stránka',          199,  NULL, '€ jednorazovo', '1–3 stránky, kontaktný formulár, mobilná verzia, základné SEO, do 2 týždňov', 1),
+('web',       'Firemný web',                  399,  NULL, '€ jednorazovo', '5–10 stránok, CMS, blog/aktuality, SEO, Google Analytics, do 3–4 týždňov', 2),
+('web',       'E-shop',                       699,  NULL, '€ jednorazovo', 'Produktový katalóg, online platby (Stripe/PayPal/GoPay), správa objednávok, SEO, do 4–6 týždňov', 3),
 
 -- CHATBOT
-('chatbot',   'Chatbot Basic',                249,  NULL, '€ jednorazovo', 'FAQ odpovede, web embed widget, natrénovaný na tvojich podkladoch, SK+EN, do 2 týždňov', 1),
-('chatbot',   'Chatbot Pro',                  499,  NULL, '€ jednorazovo', 'Vlastná knowledge base, zachytávanie leadov do CRM, rezervácia stretnutí, viacjazyčnosť, do 3 týždňov', 2),
+('chatbot',   'Chatbot Basic',                169,  NULL, '€ jednorazovo', 'FAQ odpovede, web embed widget, natrénovaný na tvojich podkladoch, SK+EN, do 2 týždňov', 1),
+('chatbot',   'Chatbot Pro',                  349,  NULL, '€ jednorazovo', 'Vlastná knowledge base, zachytávanie leadov do CRM, rezervácia stretnutí, viacjazyčnosť, do 3 týždňov', 2),
 
 -- AUTOMATIZÁCIA
-('automatizacia', 'Automatizácia Starter',    299,  NULL, '€ jednorazovo', '2–3 workflow, prepojenie 2–3 nástrojov, email alebo CRM automatizácia, 2 týždne', 1),
-('automatizacia', 'Automatizácia Pro/Enterprise', 399, NULL, 'dohodou', 'Neobmedzené workflow, komplexné integrácie, AI spracovanie dokumentov, ERP integrácie', 2);
+('automatizacia', 'Automatizácia Starter',    199,  NULL, '€ jednorazovo', '2–3 workflow, prepojenie 2–3 nástrojov, email alebo CRM automatizácia, 2 týždne', 1),
+('automatizacia', 'Automatizácia Pro/Enterprise', 599, NULL, 'dohodou', 'Neobmedzené workflow, komplexné integrácie, AI spracovanie dokumentov, ERP integrácie', 2);

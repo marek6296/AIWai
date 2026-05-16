@@ -1,14 +1,16 @@
 import { NextResponse, type NextRequest } from 'next/server'
 
-const AUTH_TOKEN = 'cb_dony_aiwai_2026_secret'
 const COOKIE_NAME = 'cb_admin_session'
 
 export async function middleware(request: NextRequest) {
     const pathname = request.nextUrl.pathname
     const token = request.cookies.get(COOKIE_NAME)?.value
-    const isAuthed = token === AUTH_TOKEN
+    // ADMIN_AUTH_TOKEN je v .env.local a vo Vercel env vars — pri novom hesle ho stačí
+    // zmeniť v env a všetky existujúce admin sessions sa invalidujú.
+    const expectedToken = process.env.ADMIN_AUTH_TOKEN
+    const isAuthed = !!expectedToken && token === expectedToken
 
-    // Protect /admin/* — simple cookie only
+    // Protect /admin/* — cookie token check
     if (pathname.startsWith('/admin')) {
         if (!isAuthed) {
             return NextResponse.redirect(new URL('/login', request.url))

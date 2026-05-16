@@ -1,11 +1,22 @@
 import { NextResponse } from 'next/server';
 import { GoogleGenerativeAI, Content } from '@google/generative-ai';
+import { z } from 'zod';
 import fs from 'fs';
 import path from 'path';
 import { AIWAI_SYSTEM_PROMPT } from '@/lib/chatbot/knowledge';
 import { extractTags, extractLead, buildInterestSummary } from '@/lib/chatbot/analyzer';
 import { getSupabaseAdmin } from '@/lib/supabase/admin';
 import { getLivePricing } from '@/lib/chatbot/pricing';
+
+// ─── Input validation ───
+// Limit jednotlivej správy aj celého buffer-u; chráni pred jumbo payloadmi a abusom.
+const chatRequestSchema = z.object({
+    messages: z.array(z.object({
+        role: z.enum(['user', 'assistant', 'system']),
+        content: z.string().max(8000),
+    })).max(100),
+    sessionId: z.string().min(1).max(128).optional(),
+});
 
 const CONFIG_PATH = path.join(process.cwd(), 'data', 'chatbot-config.json');
 
@@ -171,9 +182,16 @@ async function persistConversation(opts: {
 
 export async function POST(req: Request) {
     try {
-        const body = await req.json();
-        const messages: ChatMessage[] = body.messages ?? [];
-        const sessionId: string | undefined = body.sessionId;
+        const rawBody = await req.json().catch(() => null);
+        const parsed = chatRequestSchema.safeParse(rawBody);
+        if (!parsed.success) {
+            return NextResponse.json(
+                { error: 'Neplatný formát požiadavky' },
+                { status: 400 }
+            );
+        }
+        const messages: ChatMessage[] = parsed.data.messages;
+        const sessionId: string | undefined = parsed.data.sessionId;
 
         const config = loadConfig();
 

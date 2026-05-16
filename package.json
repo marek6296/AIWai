@@ -12,8 +12,10 @@
     "@google/generative-ai": "^0.24.1",
     "@supabase/ssr": "^0.8.0",
     "@supabase/supabase-js": "^2.97.0",
+    "@types/bcryptjs": "^2.4.6",
     "@types/nodemailer": "^8.0.0",
     "@types/pdf-parse": "^1.1.5",
+    "bcryptjs": "^3.0.3",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
     "framer-motion": "^12.38.0",
@@ -28,7 +30,8 @@
     "resend": "^6.12.0",
     "retell-client-js-sdk": "^2.0.7",
     "retell-sdk": "^5.4.0",
-    "tailwind-merge": "^3.4.1"
+    "tailwind-merge": "^3.4.1",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@types/node": "^20",

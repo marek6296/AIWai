@@ -6,12 +6,12 @@ import CennikClient from "./CennikClient";
 export const metadata: Metadata = {
     title: "Cenník — Web, AI chatbot, automatizácia, logo, marketing",
     description:
-        "Transparentné ceny: logo od €99, web od €299, e-shop od €999, chatbot od €249, automatizácia od €299, marketing od €200/mes.",
+        "Transparentné ceny: logo od €69, web od €199, e-shop od €699, chatbot od €169, automatizácia od €199, marketing od €139/mes.",
     alternates: { canonical: "/cennik" },
     openGraph: {
         title: "Cenník AIWai — Transparentné ceny bez prekvapení",
         description:
-            "Logo od €99, web od €299, e-shop od €999, AI chatbot od €249. Jasná cena pred začatím.",
+            "Logo od €69, web od €199, e-shop od €699, AI chatbot od €169. Jasná cena pred začatím.",
         url: `${SITE_URL}/cennik`,
         type: "website",
         locale: "sk_SK",
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
         card: "summary_large_image",
         title: "Cenník AIWai — Transparentné ceny",
         description:
-            "Logo od €99, web od €299, e-shop od €999, AI chatbot od €249.",
+            "Logo od €69, web od €199, e-shop od €699, AI chatbot od €169.",
         images: ["/og-image.png"],
     },
 };
@@ -40,17 +40,17 @@ const cennikOffers = {
     url: `${SITE_URL}/cennik`,
     provider: { "@id": `${SITE_URL}/#organization` },
     itemListElement: [
-        { name: "Logo Basic", price: "99", description: "Logo v 3 variantoch (SVG, PNG, PDF)." },
-        { name: "Logo + Brand", price: "229", description: "Logo + brand guide + šablóny pre soc. siete." },
-        { name: "Grafika pre sociálne siete", price: "149", description: "Set 5–10 príspevkov pre Facebook a Instagram." },
-        { name: "Prezentačná stránka", price: "299", description: "1–3 stránky, kontaktný formulár, mobilná verzia." },
-        { name: "Firemný web", price: "599", description: "Viacstránkový web, blog, SEO, CMS." },
-        { name: "E-shop", price: "999", description: "Produkty, košík, platobná brána." },
-        { name: "Chatbot Basic", price: "249", description: "Chat widget na webe, tréning na 1 dokumente." },
-        { name: "Chatbot Pro", price: "499", description: "Chat + Voice AI, CRM integrácia." },
-        { name: "Automatizácia Starter", price: "299", description: "1 workflow v Make.com." },
-        { name: "Marketing Starter", price: "200", description: "Mesačná správa soc. sietí." },
-        { name: "Marketing Pro + Ads", price: "300", description: "Mesačná správa + Meta Ads kampane." },
+        { name: "Logo Basic", price: "69", description: "Logo v 3 variantoch (SVG, PNG, PDF)." },
+        { name: "Logo + Brand", price: "159", description: "Logo + brand guide + šablóny pre soc. siete." },
+        { name: "Grafika pre sociálne siete", price: "99", description: "Set 5–10 príspevkov pre Facebook a Instagram." },
+        { name: "Prezentačná stránka", price: "199", description: "1–3 stránky, kontaktný formulár, mobilná verzia." },
+        { name: "Firemný web", price: "399", description: "Viacstránkový web, blog, SEO, CMS." },
+        { name: "E-shop", price: "699", description: "Produkty, košík, platobná brána." },
+        { name: "Chatbot Basic", price: "169", description: "Chat widget na webe, tréning na 1 dokumente." },
+        { name: "Chatbot Pro", price: "349", description: "Chat + Voice AI, CRM integrácia." },
+        { name: "Automatizácia Starter", price: "199", description: "1 workflow v Make.com." },
+        { name: "Marketing Starter", price: "139", description: "Mesačná správa soc. sietí." },
+        { name: "Marketing Pro + Ads", price: "209", description: "Mesačná správa + Meta Ads kampane." },
     ].map((offer, idx) => ({
         "@type": "Offer",
         position: idx + 1,

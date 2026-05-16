@@ -1,9 +1,12 @@
 import { NextResponse } from 'next/server'
 import fs from 'fs'
 import path from 'path'
+import { requireAdmin } from '@/lib/auth/admin'
 
 const CONFIG_PATH = path.join(process.cwd(), 'data', 'chatbot-config.json')
 const MAX_KNOWLEDGE_CHARS = 60000 // ~15k tokens safety limit
+const MAX_FILE_SIZE = 15 * 1024 * 1024 // 15 MB
+const ALLOWED_MIME = 'application/pdf'
 
 function readConfig() {
     try {
@@ -19,17 +22,28 @@ function writeConfig(data: object) {
 }
 
 export async function POST(req: Request) {
+    // 🔐 Admin-only endpoint
+    const unauthorized = requireAdmin(req)
+    if (unauthorized) return unauthorized
+
     try {
         const formData = await req.formData()
-        const file = formData.get('pdf') as File | null
+        const file = formData.get('pdf')
 
-        if (!file || file.type !== 'application/pdf') {
+        if (!file || !(file instanceof File)) {
             return NextResponse.json({ error: 'Prosím nahrajte PDF súbor' }, { status: 400 })
         }
 
-        if (file.size > 15 * 1024 * 1024) { // 15MB limit
-            return NextResponse.json({ error: 'PDF je príliš veľké (max 15MB)' }, { status: 400 })
+        if (file.type !== ALLOWED_MIME) {
+            return NextResponse.json({ error: 'Povolený je iba PDF formát' }, { status: 400 })
         }
+
+        if (file.size > MAX_FILE_SIZE) {
+            return NextResponse.json({ error: 'PDF je príliš veľké (max 15 MB)' }, { status: 400 })
+        }
+
+        // Sanitizácia názvu súboru (predchádzame path traversal / XSS v admin UI)
+        const safeName = file.name.replace(/[^\w.\-() ]+/g, '_').slice(0, 200) || 'document.pdf'
 
         const buffer = Buffer.from(await file.arrayBuffer())
 
@@ -61,7 +75,7 @@ export async function POST(req: Request) {
 
         const docEntry = {
             id: `doc_${Date.now()}`,
-            name: file.name,
+            name: safeName,
             size: file.size,
             uploadedAt: new Date().toISOString(),
             charCount: extractedText.length,
@@ -96,6 +110,7 @@ export async function POST(req: Request) {
         })
     } catch (err) {
         console.error('PDF upload error:', err)
-        return NextResponse.json({ error: `Chyba pri spracovaní: ${String(err)}` }, { status: 500 })
+        // Sanitizovaná chybová správa pre klienta — detail logujeme na server.
+        return NextResponse.json({ error: 'Chyba pri spracovaní PDF' }, { status: 500 })
     }
 }

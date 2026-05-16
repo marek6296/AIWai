@@ -1,68 +1,62 @@
 import { NextResponse } from 'next/server';
+import { z } from 'zod';
 import { supabase } from '@/lib/supabase';
-import { Resend } from 'resend';
 
-let _resend: Resend | null = null;
-function getResend() {
-    if (!_resend) _resend = new Resend(process.env.RESEND_API_KEY);
-    return _resend;
-}
+// ─── Input validation ───
+const contactSchema = z.object({
+    name: z.string().trim().min(1, 'Meno je povinné').max(150),
+    email: z.string().trim().email('Neplatný email').max(200),
+    phone: z.string().trim().max(40).optional().or(z.literal('')),
+    projectType: z.string().trim().min(1).max(120),
+    message: z.string().trim().min(1, 'Správa je povinná').max(4000),
+});
 
 export async function POST(req: Request) {
     try {
-        const body = await req.json();
-        const { name, email, phone, projectType, message } = body;
+        const rawBody = await req.json().catch(() => null);
+        const parsed = contactSchema.safeParse(rawBody);
+        if (!parsed.success) {
+            return NextResponse.json(
+                {
+                    success: false,
+                    error: 'Vyplňte prosím všetky povinné polia správne',
+                    issues: parsed.error.flatten().fieldErrors,
+                },
+                { status: 400 }
+            );
+        }
 
-        // Save to Supabase
+        const { name, email, phone, projectType, message } = parsed.data;
+
+        // Uloženie do Supabase — primárny zdroj pravdy pre Inbox.
+        // (Email cez Resend bol odstránený — všetky správy idú do admin Inboxu cez Supabase.)
         const { data, error: supabaseError } = await supabase
-            .from('contacts')
-            .insert([{ name, email, phone, project_type: projectType, message, created_at: new Date().toISOString() }])
+            .from('form_submissions')
+            .insert([{
+                name,
+                email,
+                phone: phone || null,
+                project_type: projectType,
+                message,
+                status: 'new',
+                received_at: new Date().toISOString(),
+            }])
             .select();
 
         if (supabaseError) {
-            console.error('Supabase Error:', supabaseError);
-        }
-
-        // Send email notification via Resend
-        if (!process.env.RESEND_API_KEY) {
-            console.warn('RESEND_API_KEY not set');
-            return NextResponse.json({ success: false, error: 'Email služba nie je nakonfigurovaná.' }, { status: 500 });
-        }
-
-        const { data: emailData, error: resendError } = await getResend().emails.send({
-            from: 'AIWai Formulár <formular@aiwai.app>',
-            to: 'marek@aiwai.app',
-            replyTo: `${name} <${email}>`,
-            subject: `${name} — ${projectType}`,
-            text: `Nová správa z webu aiwai.app\n\nMeno: ${name}\nEmail: ${email}\nTelefón: ${phone || '—'}\nTyp projektu: ${projectType}\nSprávа:\n${message}`,
-            html: `
-                <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:24px;border:1px solid #e5e7eb;border-radius:8px;">
-                    <h2 style="color:#111827;margin-top:0;">📩 Nová správa z webu aiwai.app</h2>
-                    <table style="width:100%;border-collapse:collapse;">
-                        <tr><td style="padding:8px 0;color:#6b7280;width:140px;vertical-align:top;">Meno:</td><td style="padding:8px 0;font-weight:600;">${name}</td></tr>
-                        <tr><td style="padding:8px 0;color:#6b7280;vertical-align:top;">Email:</td><td style="padding:8px 0;"><a href="mailto:${email}" style="color:#6366f1;">${email}</a></td></tr>
-                        <tr><td style="padding:8px 0;color:#6b7280;vertical-align:top;">Telefón:</td><td style="padding:8px 0;">${phone || '—'}</td></tr>
-                        <tr><td style="padding:8px 0;color:#6b7280;vertical-align:top;">Typ projektu:</td><td style="padding:8px 0;">${projectType}</td></tr>
-                        <tr><td style="padding:8px 0;color:#6b7280;vertical-align:top;">Správа:</td><td style="padding:8px 0;">${message.replace(/\n/g, '<br>')}</td></tr>
-                    </table>
-                    <hr style="border:none;border-top:1px solid #e5e7eb;margin:20px 0;">
-                    <p style="color:#9ca3af;font-size:12px;margin:0;">Odpovedz priamo na tento email — odpoveď pôjde klientovi na <strong>${email}</strong></p>
-                </div>
-            `,
-        });
-
-        if (resendError) {
-            console.error('Resend Error:', JSON.stringify(resendError));
+            console.error('[contact] Supabase error:', supabaseError);
             return NextResponse.json(
-                { success: false, error: `Správu sa nepodarilo odoslať: ${resendError.message ?? 'neznáma chyba'}` },
+                { success: false, error: 'Správu sa nepodarilo uložiť. Skúste znova alebo napíšte priamo na marek@aiwai.app' },
                 { status: 500 }
             );
         }
 
-        console.log('Resend OK, id:', emailData?.id);
         return NextResponse.json({ success: true, data });
     } catch (error) {
-        console.error('Contact API Error:', error);
-        return NextResponse.json({ success: false, error: 'Failed to process' }, { status: 500 });
+        console.error('[contact] error:', error);
+        return NextResponse.json(
+            { success: false, error: 'Chyba pri spracovaní požiadavky' },
+            { status: 500 }
+        );
     }
 }

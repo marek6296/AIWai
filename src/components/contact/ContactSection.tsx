@@ -60,11 +60,11 @@ export default function ContactSection() {
                 setStatus("success");
                 setFormData({ name: "", email: "", phone: "", projectType: "Company Website", message: "" });
             } else {
-                setErrorMessage(data.error ?? "Nastala neznáma chyba. Skúste znova alebo napíšte priamo na marek@aiwai.app");
+                setErrorMessage(data.error ?? t("contact.error.unknown"));
                 setStatus("error");
             }
         } catch {
-            setErrorMessage("Nepodarilo sa spojiť so serverom. Skontrolujte pripojenie a skúste znova.");
+            setErrorMessage(t("contact.error.network"));
             setStatus("error");
         }
     };
@@ -174,13 +174,13 @@ export default function ContactSection() {
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
                                     </svg>
                                 </div>
-                                <h3 className="text-xl font-display font-bold text-cream mb-2">Správa sa neodoslala</h3>
+                                <h3 className="text-xl font-display font-bold text-cream mb-2">{t("contact.error.title")}</h3>
                                 <p className="text-cream/60 text-sm max-w-xs">{errorMessage}</p>
                                 <button
                                     onClick={() => setStatus("idle")}
                                     className="mt-6 px-5 py-2.5 bg-gold text-ink rounded-full text-sm font-medium hover:bg-gold-bright transition-colors"
                                 >
-                                    Skúsiť znova
+                                    {t("contact.error.retry")}
                                 </button>
                             </div>
                         )}
@@ -216,7 +216,7 @@ export default function ContactSection() {
                         {/* Phone */}
                         <div className="relative group">
                             <label className={`absolute left-0 transition-all duration-300 pointer-events-none text-sm ${focused === "phone" || formData.phone ? "-top-6 text-gold" : "top-2.5 text-cream/40"}`}>
-                                Telefón (nepovinné)
+                                {t("contact.label.phone.optional")}
                             </label>
                             <input
                                 type="tel" value={formData.phone}
