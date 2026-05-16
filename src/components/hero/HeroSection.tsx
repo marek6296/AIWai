@@ -8,22 +8,8 @@ import HexagonOverlay from "@/components/backgrounds/HexagonOverlay";
 import GridLines from "@/components/backgrounds/GridLines";
 import GrainOverlay from "@/components/backgrounds/GrainOverlay";
 import { useTranslation } from "@/i18n/useTranslation";
-
-const smoothScrollTo = (id: string) => {
-    const el = document.getElementById(id);
-    if (!el) return;
-    const navHeight = document.querySelector("nav")?.offsetHeight ?? 80;
-    const viewportH = window.innerHeight;
-    const form = el.querySelector("form");
-    if (form) {
-        const formRect = form.getBoundingClientRect();
-        const available = viewportH - navHeight;
-        const offset = Math.max(24, (available - formRect.height) / 2);
-        window.scrollTo({ top: Math.max(0, formRect.top + window.scrollY - navHeight - offset), behavior: "smooth" });
-        return;
-    }
-    el.scrollIntoView({ behavior: "smooth", block: "start" });
-};
+import GlowHeadline from "./GlowHeadline";
+import { scrollToPageSection } from "@/lib/scrollToPageSection";
 
 export default function HeroSection() {
     const { t } = useTranslation();
@@ -81,11 +67,9 @@ export default function HeroSection() {
                 </div>
 
                 {/* Headline block */}
-                <div className="group w-full max-w-5xl md:mx-auto space-y-0 cursor-default
-                    transition-transform duration-500 ease-out hover:-translate-y-2">
+                <GlowHeadline className="w-full max-w-5xl md:mx-auto space-y-0 cursor-default">
                     <h1
-                        className="hero-line font-display font-bold tracking-tight text-cream leading-[1.05] md:whitespace-nowrap
-                            transition-transform duration-500 ease-out group-hover:scale-[1.015] origin-center"
+                        className="hero-line font-display font-bold tracking-tight text-cream leading-[1.05] md:whitespace-nowrap"
                         style={{ fontSize: "clamp(2.25rem,9.5vw,6rem)" }}
                     >
                         {t("hero.line1").split("|").map((word, i, arr) => (
@@ -109,7 +93,7 @@ export default function HeroSection() {
                         <span className="block">{t("hero.line2.light")}</span>
                         <span className="block">{t("hero.line2.gradient")}</span>
                     </div>
-                </div>
+                </GlowHeadline>
 
                 {/* Subtitle + CTA */}
                 <div className="w-full max-w-4xl md:mx-auto space-y-6 md:space-y-8 md:mt-10">
@@ -118,14 +102,14 @@ export default function HeroSection() {
                     </p>
                     <div className="hero-cta flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-4">
                         <MagneticButton
-                            onClick={() => smoothScrollTo("contact")}
+                            onClick={() => scrollToPageSection("contact")}
                             variant="gold"
                             className="whitespace-nowrap w-full sm:w-auto"
                         >
                             {t("hero.cta.start")}
                         </MagneticButton>
                         <button
-                            onClick={() => smoothScrollTo("services")}
+                            onClick={() => scrollToPageSection("services")}
                             className="px-8 py-4 md:py-3 text-sm md:text-xs font-bold uppercase tracking-[0.2em] text-cream/60 hover:text-gold transition-colors whitespace-nowrap"
                         >
                             {t("hero.cta.explore")}

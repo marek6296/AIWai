@@ -142,11 +142,12 @@ export default function ContactSection() {
                 <FadeIn delay={0.1}>
                     <form
                         onSubmit={handleSubmit}
-                        className="space-y-7 md:space-y-8 p-6 md:p-10 rounded-2xl border border-cream/10 bg-cream/[0.03] backdrop-blur-md relative shadow-[0_30px_80px_-20px_rgba(0,0,0,0.5)]"
+                        className="space-y-7 md:space-y-8 p-6 md:p-10 rounded-2xl border border-cream/10 bg-char-soft/70 relative shadow-[0_30px_80px_-20px_rgba(0,0,0,0.5)] isolate"
+                        style={{ transform: "translateZ(0)" }}
                     >
                         {/* Success overlay */}
                         {status === "success" && (
-                            <div className="absolute inset-0 bg-char/95 backdrop-blur-md z-20 flex flex-col items-center justify-center text-center p-6 rounded-2xl border border-cream/10">
+                            <div className="absolute inset-0 bg-char z-20 flex flex-col items-center justify-center text-center p-6 rounded-2xl border border-cream/10">
                                 <div className="w-14 h-14 bg-gold text-ink rounded-full flex items-center justify-center mb-4">
                                     <svg
                                         className="w-8 h-8 checkmark-draw"
@@ -168,7 +169,7 @@ export default function ContactSection() {
 
                         {/* Error overlay */}
                         {status === "error" && (
-                            <div className="absolute inset-0 bg-char/95 backdrop-blur-md z-20 flex flex-col items-center justify-center text-center p-6 rounded-2xl border border-cream/10">
+                            <div className="absolute inset-0 bg-char z-20 flex flex-col items-center justify-center text-center p-6 rounded-2xl border border-cream/10">
                                 <div className="w-14 h-14 bg-red-500/10 border border-red-500/30 text-red-400 rounded-full flex items-center justify-center mb-4">
                                     <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />

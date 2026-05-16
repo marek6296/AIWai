@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useTranslation } from "@/i18n/useTranslation";
 import type { Lang } from "@/i18n/translations";
+import { scrollToPageSection } from "@/lib/scrollToPageSection";
 
 const NAV_IDS = ["about"] as const;
 const NAV_KEYS: Record<string, string> = {
@@ -19,26 +20,6 @@ const LANGS: { code: Lang; flag: string; label: string }[] = [
 
 const MENU_TOGGLE_ID = "aiwai-menu-toggle";
 
-const scrollTo = (id: string) => {
-    const el = document.getElementById(id);
-    if (!el) return;
-    const navHeight = document.querySelector("nav")?.offsetHeight ?? 80;
-    const viewportH = window.innerHeight;
-    const form = el.querySelector("form");
-    if (form) {
-        const formRect = form.getBoundingClientRect();
-        const available = viewportH - navHeight;
-        const offset = Math.max(24, (available - formRect.height) / 2);
-        window.scrollTo({ top: Math.max(0, formRect.top + window.scrollY - navHeight - offset), behavior: "smooth" });
-        return;
-    }
-    const heading = el.querySelector("h1, h2") as HTMLElement | null;
-    const top = heading
-        ? heading.getBoundingClientRect().top + window.scrollY - navHeight - 24
-        : el.getBoundingClientRect().top + window.scrollY - navHeight;
-    window.scrollTo({ top, behavior: "smooth" });
-};
-
 /** Close the mobile menu by unchecking the toggle input — works pre/post hydration. */
 const closeMobileMenu = () => {
     const input = document.getElementById(MENU_TOGGLE_ID) as HTMLInputElement | null;
@@ -50,9 +31,16 @@ export default function Navbar() {
     const pathname = usePathname();
     const router = useRouter();
     const isHome = pathname === "/";
-    const [scrolled, setScrolled] = useState(false);
     const [langOpen, setLangOpen] = useState(false);
+    const [scrolled, setScrolled] = useState(false);
     const langRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const onScroll = () => setScrolled(window.scrollY > 50);
+        onScroll();
+        window.addEventListener("scroll", onScroll, { passive: true });
+        return () => window.removeEventListener("scroll", onScroll);
+    }, []);
 
     useEffect(() => {
         if ("scrollRestoration" in history) history.scrollRestoration = "manual";
@@ -65,10 +53,20 @@ export default function Navbar() {
     }, []);
 
     useEffect(() => {
-        const onScroll = () => setScrolled(window.scrollY > 50);
-        window.addEventListener("scroll", onScroll, { passive: true });
-        return () => window.removeEventListener("scroll", onScroll);
-    }, []);
+        if (!isHome) return;
+
+        const scrollToHash = () => {
+            const id = decodeURIComponent(window.location.hash.replace("#", ""));
+            if (!id) return;
+            [120, 450, 900, 1400].forEach((delay) => {
+                window.setTimeout(() => scrollToPageSection(id), delay);
+            });
+        };
+
+        scrollToHash();
+        window.addEventListener("hashchange", scrollToHash);
+        return () => window.removeEventListener("hashchange", scrollToHash);
+    }, [isHome]);
 
     // Close lang dropdown on outside click
     useEffect(() => {
@@ -91,7 +89,8 @@ export default function Navbar() {
         e.preventDefault();
         closeMobileMenu();
         if (isHome) {
-            setTimeout(() => scrollTo(id), 50);
+            window.history.replaceState(null, "", `#${id}`);
+            setTimeout(() => scrollToPageSection(id), 50);
         } else {
             router.push(`/#${id}`);
         }
@@ -100,12 +99,12 @@ export default function Navbar() {
     return (
         <>
             {/* ── Main Nav — CSS entrance only ── */}
-            <nav className={`nav-entrance fixed top-0 left-0 right-0 z-[100] transition-all duration-500 ${
+            <nav className={`nav-entrance fixed top-0 left-0 right-0 z-[100] py-3 transition-[background-color,backdrop-filter,border-color,box-shadow] duration-500 ${
                 scrolled
                     ? isDarkPage
-                        ? "py-3 bg-char/80 backdrop-blur-md border-b border-cream/10 shadow-[0_1px_30px_rgba(0,0,0,0.3)]"
-                        : "py-3 bg-white/85 backdrop-blur-sm border-b border-brand-indigo/[0.06] shadow-[0_1px_30px_rgba(28,31,58,0.04)]"
-                    : "py-5 bg-transparent"
+                        ? "bg-char/80 backdrop-blur-md border-b border-cream/10 shadow-[0_1px_30px_rgba(0,0,0,0.3)]"
+                        : "bg-white/85 backdrop-blur-sm border-b border-brand-indigo/[0.06] shadow-[0_1px_30px_rgba(28,31,58,0.04)]"
+                    : "bg-transparent border-b border-transparent"
             }`}>
                 {/*
                   CSS-only menu state — a hidden checkbox is the source of truth.
@@ -171,77 +170,71 @@ export default function Navbar() {
                     </div>
 
                     {/* Desktop Menu */}
-                    <div className="hidden md:flex items-center gap-1">
-                        <div className="flex items-center">
-                            {NAV_IDS.map((id) => (
-                                <a
-                                    key={id}
-                                    href={`#${id}`}
-                                    onClick={(e) => handleScroll(e, id)}
-                                    className={`relative px-5 py-2.5 text-sm uppercase tracking-[0.15em] rounded-full transition-all duration-200 cursor-pointer font-medium ${
-                                        darkMode
-                                            ? "text-cream/70 hover:text-gold hover:bg-cream/5"
-                                            : "text-brand-indigo/60 hover:text-brand-indigo hover:bg-brand-indigo/[0.04]"
-                                    }`}
-                                >
-                                    {t(NAV_KEYS[id])}
-                                </a>
-                            ))}
-                        </div>
-                        <Link
-                            href="/sluzby"
-                            className={`relative px-5 py-2.5 text-sm uppercase tracking-[0.15em] rounded-full transition-all duration-200 font-medium ${
-                                darkMode
-                                    ? "text-cream/70 hover:text-gold hover:bg-cream/5"
-                                    : "text-brand-indigo/60 hover:text-brand-indigo hover:bg-brand-indigo/[0.04]"
-                            }`}
-                        >
-                            {t("nav.services")}
-                        </Link>
-                        <Link
-                            href="/realizacie"
-                            className={`relative px-5 py-2.5 text-sm uppercase tracking-[0.15em] rounded-full transition-all duration-200 font-medium ${
-                                darkMode
-                                    ? "text-cream/70 hover:text-gold hover:bg-cream/5"
-                                    : "text-brand-indigo/60 hover:text-brand-indigo hover:bg-brand-indigo/[0.04]"
-                            }`}
-                        >
-                            {t("nav.work")}
-                        </Link>
-                        <Link
-                            href="/cennik"
-                            className={`relative px-5 py-2.5 text-sm uppercase tracking-[0.15em] rounded-full transition-all duration-200 font-medium ${
-                                darkMode
-                                    ? "text-cream/70 hover:text-gold hover:bg-cream/5"
-                                    : "text-brand-indigo/60 hover:text-brand-indigo hover:bg-brand-indigo/[0.04]"
-                            }`}
-                        >
-                            {t("nav.pricing")}
-                        </Link>
-                        <div className={`w-px h-6 mx-3 ${darkMode ? "bg-cream/15" : "bg-brand-indigo/10"}`} />
-                        {isHome ? (
-                            <button
-                                onClick={(e) => handleScroll(e, "contact")}
-                                className={`px-6 py-2.5 rounded-full text-xs font-bold tracking-[0.15em] uppercase transition-all shadow-lg ${
-                                    darkMode
-                                        ? "bg-gold text-ink hover:bg-gold-bright shadow-black/20"
-                                        : "bg-brand-indigo text-white hover:bg-brand-indigo/90 shadow-brand-indigo/10 hover:shadow-brand-indigo/20"
-                                }`}
-                            >
-                                {t("nav.contact")}
-                            </button>
-                        ) : (
-                            <Link
-                                href="/#contact"
-                                className={`px-6 py-2.5 rounded-full text-xs font-bold tracking-[0.15em] uppercase transition-all shadow-lg ${
-                                    darkMode
-                                        ? "bg-gold text-ink hover:bg-gold-bright shadow-black/20"
-                                        : "bg-brand-indigo text-white hover:bg-brand-indigo/90 shadow-brand-indigo/10 hover:shadow-brand-indigo/20"
-                                }`}
-                            >
-                                {t("nav.contact")}
-                            </Link>
-                        )}
+                    <div className="hidden md:flex items-center gap-1 lg:gap-2">
+                        {(() => {
+                            const baseTextDark = "text-cream/75 group-hover:text-ink";
+                            const baseTextLight = "text-brand-indigo/65 group-hover:text-white";
+                            const accent = darkMode ? "border-gold" : "border-brand-indigo";
+                            const accentBg = darkMode ? "bg-gold" : "bg-brand-indigo";
+                            const textCls = darkMode ? baseTextDark : baseTextLight;
+                            const itemInner = (label: string) => (
+                                <>
+                                    <span aria-hidden className={`pointer-events-none absolute inset-x-0 top-0 bottom-0 border-t-2 border-b-2 ${accent} scale-y-[1.6] opacity-0 transition-[transform,opacity] duration-300 ease-out origin-center group-hover:scale-y-100 group-hover:opacity-100`} />
+                                    <span aria-hidden className={`pointer-events-none absolute left-0 right-0 top-[2px] bottom-[2px] ${accentBg} scale-y-0 opacity-0 transition-[transform,opacity] duration-300 ease-out origin-top group-hover:scale-y-100 group-hover:opacity-100`} />
+                                    <span className={`relative z-10 block px-4 py-2 text-[13px] uppercase tracking-[0.22em] font-semibold transition-colors duration-300 ${textCls}`}>
+                                        {label}
+                                    </span>
+                                </>
+                            );
+                            const navItemClass = "relative inline-block group cursor-pointer";
+                            return (
+                                <>
+                                    {NAV_IDS.map((id) => (
+                                        <a
+                                            key={id}
+                                            href={`#${id}`}
+                                            onClick={(e) => handleScroll(e, id)}
+                                            className={navItemClass}
+                                        >
+                                            {itemInner(t(NAV_KEYS[id]))}
+                                        </a>
+                                    ))}
+                                    <Link href="/sluzby" className={navItemClass}>
+                                        {itemInner(t("nav.services"))}
+                                    </Link>
+                                    <Link href="/realizacie" className={navItemClass}>
+                                        {itemInner(t("nav.work"))}
+                                    </Link>
+                                    <Link href="/cennik" className={navItemClass}>
+                                        {itemInner(t("nav.pricing"))}
+                                    </Link>
+                                    <div className={`w-px h-6 mx-3 ${darkMode ? "bg-cream/15" : "bg-brand-indigo/10"}`} />
+                                    {isHome ? (
+                                        <button
+                                            onClick={(e) => handleScroll(e, "contact")}
+                                            className={`px-6 py-2.5 text-xs font-bold tracking-[0.15em] uppercase transition-all shadow-lg ${
+                                                darkMode
+                                                    ? "bg-gold text-ink hover:bg-gold-bright shadow-black/20"
+                                                    : "bg-brand-indigo text-white hover:bg-brand-indigo/90 shadow-brand-indigo/10 hover:shadow-brand-indigo/20"
+                                            }`}
+                                        >
+                                            {t("nav.contact")}
+                                        </button>
+                                    ) : (
+                                        <Link
+                                            href="/#contact"
+                                            className={`px-6 py-2.5 text-xs font-bold tracking-[0.15em] uppercase transition-all shadow-lg ${
+                                                darkMode
+                                                    ? "bg-gold text-ink hover:bg-gold-bright shadow-black/20"
+                                                    : "bg-brand-indigo text-white hover:bg-brand-indigo/90 shadow-brand-indigo/10 hover:shadow-brand-indigo/20"
+                                            }`}
+                                        >
+                                            {t("nav.contact")}
+                                        </Link>
+                                    )}
+                                </>
+                            );
+                        })()}
                     </div>
 
                     {/* Mobile toggle — pure HTML <label>, opens instantly without JS */}

@@ -76,10 +76,7 @@ export default function PortfolioCarousel({ items }: Props) {
             {/* Header — nadpis, popis, šípky + CTA na kontakt */}
             <div className="container mx-auto px-6 flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-10 md:mb-14">
                 <div className="max-w-2xl">
-                    <span className="text-[10px] uppercase tracking-[0.35em] font-bold text-gold/80">
-                        {t("realizacie.portfolio")} · {items.length} {t("realizacie.projectsCount")}
-                    </span>
-                    <h2 className="text-4xl md:text-5xl font-display font-bold text-cream mt-3 leading-[1.0]">
+                    <h2 className="text-4xl md:text-5xl font-display font-bold text-cream leading-[1.0]">
                         {t("realizacie.h1.line1")}{" "}
                         <span className="text-gold">{t("realizacie.h1.line2")}</span>
                     </h2>
