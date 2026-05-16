@@ -362,9 +362,10 @@ export default function Chatbot() {
             </AnimatePresence>
 
             {/* Walking bot button */}
+            <div className="fixed bottom-6 right-6 z-50 origin-bottom-right scale-50 sm:scale-100">
             <motion.div
                 style={{ x }}
-                className="fixed bottom-6 right-6 z-50 flex flex-col items-end"
+                className="flex flex-col items-end"
                 onMouseEnter={() => setIsHovered(true)}
                 onMouseLeave={() => setIsHovered(false)}
             >
@@ -445,6 +446,7 @@ export default function Chatbot() {
                     </motion.button>
                 </div>
             </motion.div>
+            </div>
         </>
     );
 }

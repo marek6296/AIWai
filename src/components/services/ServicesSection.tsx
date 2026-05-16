@@ -123,7 +123,7 @@ export default function ServicesSection() {
     return (
         <section
             id="services"
-            className="relative overflow-hidden bg-char py-12 md:py-16 isolate"
+            className="relative overflow-hidden bg-char py-6 md:py-16 isolate flex flex-col justify-center min-h-[100svh]"
             onClick={clearSelection}
         >
             <SectionBackground variant="default" />
@@ -135,7 +135,7 @@ export default function ServicesSection() {
                 <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(340px,0.95fr)]">
                     <div
                         ref={orbitRef}
-                        className="relative mx-auto flex aspect-square w-full max-w-[640px] items-center justify-center"
+                        className="relative mx-auto flex aspect-square w-full max-w-[260px] sm:max-w-[420px] lg:max-w-[640px] items-center justify-center"
                         style={{ perspective: "1000px" }}
                     >
                         <div aria-hidden="true" className="absolute h-[78%] w-[78%] rounded-full border border-cream/10" />
