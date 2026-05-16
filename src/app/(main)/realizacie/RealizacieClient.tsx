@@ -5,26 +5,24 @@ import { useMemo } from "react";
 import PortfolioCarousel, { type PortfolioItem } from "@/components/portfolio/PortfolioCarousel";
 import SectionBackground from "@/components/backgrounds/SectionBackground";
 import { useTranslation } from "@/i18n/useTranslation";
-import { REALIZACIE_GROUPS } from "./data";
+import { REALIZACIE_PROJECTS } from "./data";
 
 export default function RealizacieClient() {
     const { t } = useTranslation();
 
-    // Sploštíme všetky skupiny do jedného poľa PortfolioItem.
-    // Poradie ostáva podľa data.ts → vizuálne sú projekty zoradené ekosystém → biznis → apps → osobné.
+    // Mapujeme plochý zoznam projektov na PortfolioItem-y pre karusel.
+    // Poradie definuje data.ts → highlight (AIWai News, Morak, Zaidans, DoprAi) ide prvé.
     const items = useMemo<PortfolioItem[]>(
         () =>
-            REALIZACIE_GROUPS.flatMap((group) =>
-                group.projects.map((p) => ({
-                    slug: p.slug,
-                    name: p.name,
-                    category: p.category,
-                    description: p.description,
-                    image: `/portfolio/${p.slug}.jpg`,
-                    url: p.url,
-                    private: p.private,
-                }))
-            ),
+            REALIZACIE_PROJECTS.map((p) => ({
+                slug: p.slug,
+                name: p.name,
+                category: p.category,
+                description: p.description,
+                image: `/portfolio/${p.slug}.jpg`,
+                url: p.url,
+                private: p.private,
+            })),
         []
     );
 

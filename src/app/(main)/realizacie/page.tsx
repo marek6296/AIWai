@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import JsonLd from "@/components/seo/JsonLd";
 import { breadcrumbSchema, SITE_URL } from "@/lib/seo/schemas";
 import RealizacieClient from "./RealizacieClient";
-import { REALIZACIE_GROUPS } from "./data";
+import { REALIZACIE_PROJECTS } from "./data";
 
 export const metadata: Metadata = {
     title: "Realizácie — Portfólio webov, AI nástrojov a automatizácií",
@@ -34,7 +34,7 @@ const realizacieBreadcrumbs = breadcrumbSchema([
 ]);
 
 function buildItemListSchema() {
-    const items = REALIZACIE_GROUPS.flatMap((g) => g.projects);
+    const items = REALIZACIE_PROJECTS;
     return {
         "@context": "https://schema.org",
         "@type": "ItemList",
