@@ -289,6 +289,7 @@ export const translations: Record<Lang, Record<string, string>> = {
         'realizacie.layout.stack': 'Stack',
         'realizacie.layout.list': 'List',
         'realizacie.layout.swipe': 'Swipe to navigate',
+        'realizacie.gallery.hint': 'Scroll or wait — the gallery rotates on its own',
         'realizacie.layout.label': 'Layout',
     },
 
@@ -580,6 +581,7 @@ export const translations: Record<Lang, Record<string, string>> = {
         'realizacie.layout.stack': 'Stoh',
         'realizacie.layout.list': 'Zoznam',
         'realizacie.layout.swipe': 'Potiahnite pre navigáciu',
+        'realizacie.gallery.hint': 'Scrolluj alebo počkaj — galéria sa otáča sama',
         'realizacie.layout.label': 'Zobrazenie',
     },
 
@@ -871,6 +873,7 @@ export const translations: Record<Lang, Record<string, string>> = {
         'realizacie.layout.stack': 'Stoh',
         'realizacie.layout.list': 'Seznam',
         'realizacie.layout.swipe': 'Potáhněte pro navigaci',
+        'realizacie.gallery.hint': 'Scrolluj nebo počkej — galerie se otáčí sama',
         'realizacie.layout.label': 'Zobrazení',
     },
 }
