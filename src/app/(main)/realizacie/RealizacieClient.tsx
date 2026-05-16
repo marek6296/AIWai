@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useMemo } from "react";
-import CircularGallery, { type GalleryItem } from "@/components/portfolio/CircularGallery";
+import PortfolioCarousel, { type PortfolioItem } from "@/components/portfolio/PortfolioCarousel";
 import SectionBackground from "@/components/backgrounds/SectionBackground";
 import { useTranslation } from "@/i18n/useTranslation";
 import { REALIZACIE_GROUPS } from "./data";
@@ -10,10 +10,9 @@ import { REALIZACIE_GROUPS } from "./data";
 export default function RealizacieClient() {
     const { t } = useTranslation();
 
-    // Sploštíme všetky skupiny do jedného poľa GalleryItem-ov.
-    // Poradie ostáva podľa data.ts → vizuálne sú projekty rozmiestnené v rovnakých
-    // sekvenciách (najprv ekosystém, potom biznis, apps, personal).
-    const items = useMemo<GalleryItem[]>(
+    // Sploštíme všetky skupiny do jedného poľa PortfolioItem.
+    // Poradie ostáva podľa data.ts → vizuálne sú projekty zoradené ekosystém → biznis → apps → osobné.
+    const items = useMemo<PortfolioItem[]>(
         () =>
             REALIZACIE_GROUPS.flatMap((group) =>
                 group.projects.map((p) => ({
@@ -29,8 +28,6 @@ export default function RealizacieClient() {
         []
     );
 
-    const totalCount = items.length;
-
     return (
         <main className="relative min-h-[100dvh] bg-char overflow-hidden">
             {/* Pozadie — jemné gold radial glows + grain */}
@@ -38,47 +35,13 @@ export default function RealizacieClient() {
                 <SectionBackground variant="soft" topFade={false} />
             </div>
 
-            {/* Dramatické gold radial glow zo stredu — podčiarkuje kruhovú kompozíciu */}
-            <div
-                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[120vmin] h-[120vmin] rounded-full pointer-events-none"
-                style={{
-                    background:
-                        "radial-gradient(circle, rgba(201, 168, 117, 0.10) 0%, rgba(201, 168, 117, 0.04) 35%, transparent 65%)",
-                }}
-                aria-hidden
-            />
-
-            {/* Hero header — sticky/floating nad galériou */}
-            <section className="relative z-20 pt-28 md:pt-36 pb-6 md:pb-8 text-center px-6">
-                <span className="text-[10px] uppercase tracking-[0.35em] font-bold text-gold/80">
-                    {t("realizacie.portfolio")} · {totalCount} {t("realizacie.projectsCount")}
-                </span>
-                <h1 className="text-4xl sm:text-5xl md:text-6xl font-display font-bold text-cream mt-3 leading-[0.95]">
-                    {t("realizacie.h1.line1")}{" "}
-                    <span className="text-gold">{t("realizacie.h1.line2")}</span>
-                </h1>
-                <p className="text-cream/55 mt-4 text-sm md:text-base font-light max-w-2xl mx-auto leading-relaxed">
-                    {t("realizacie.lead")}
-                </p>
+            {/* Portfolio carousel — vlastný header (nadpis + lead + šípky + CTA) je súčasťou komponentu */}
+            <section className="relative z-10 pt-28 md:pt-36 pb-20 md:pb-28">
+                <PortfolioCarousel items={items} />
             </section>
 
-            {/* Circular gallery — fixná výška, overflow-hidden aby karty na bočných
-                pozíciách kruhu (mimo viewportu na úzkom mobile) nepretkávali stránku
-                a nezavalili scrollbar. */}
-            <section
-                className="relative z-10 w-full overflow-hidden"
-                style={{ height: "min(820px, 130vh)", maxWidth: "100vw" }}
-            >
-                <CircularGallery items={items} />
-            </section>
-
-            {/* Hint pod galériou — tlmený text vysvetľujúci interakciu */}
-            <p className="relative z-20 text-center text-[10px] sm:text-xs uppercase tracking-[0.3em] text-cream/35 pb-8 md:pb-12 px-6">
-                {t("realizacie.gallery.hint")}
-            </p>
-
-            {/* CTA na konci — ostáva, aby bol zachovaný konverzný flow */}
-            <section className="relative z-20 pb-24 md:pb-32 px-6 text-center">
+            {/* Spodný CTA — silnejší konverzný blok pre návštevníkov, ktorí prešli celý karusel */}
+            <section className="relative z-10 pb-24 md:pb-32 px-6 text-center">
                 <h2 className="text-3xl md:text-4xl font-display font-bold text-cream mb-3">
                     {t("realizacie.bottomCta.title")}
                 </h2>

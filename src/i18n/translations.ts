@@ -290,6 +290,9 @@ export const translations: Record<Lang, Record<string, string>> = {
         'realizacie.layout.list': 'List',
         'realizacie.layout.swipe': 'Swipe to navigate',
         'realizacie.gallery.hint': 'Scroll or wait — the gallery rotates on its own',
+        'realizacie.viewProject': 'View project',
+        'realizacie.arrow.prev': 'Previous projects',
+        'realizacie.arrow.next': 'Next projects',
         'realizacie.layout.label': 'Layout',
     },
 
@@ -582,6 +585,9 @@ export const translations: Record<Lang, Record<string, string>> = {
         'realizacie.layout.list': 'Zoznam',
         'realizacie.layout.swipe': 'Potiahnite pre navigáciu',
         'realizacie.gallery.hint': 'Scrolluj alebo počkaj — galéria sa otáča sama',
+        'realizacie.viewProject': 'Zobraziť',
+        'realizacie.arrow.prev': 'Predošlé projekty',
+        'realizacie.arrow.next': 'Ďalšie projekty',
         'realizacie.layout.label': 'Zobrazenie',
     },
 
@@ -874,6 +880,9 @@ export const translations: Record<Lang, Record<string, string>> = {
         'realizacie.layout.list': 'Seznam',
         'realizacie.layout.swipe': 'Potáhněte pro navigaci',
         'realizacie.gallery.hint': 'Scrolluj nebo počkej — galerie se otáčí sama',
+        'realizacie.viewProject': 'Zobrazit',
+        'realizacie.arrow.prev': 'Předchozí projekty',
+        'realizacie.arrow.next': 'Další projekty',
         'realizacie.layout.label': 'Zobrazení',
     },
 }
