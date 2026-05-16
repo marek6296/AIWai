@@ -4,10 +4,13 @@
  * CircularGallery — 3D rotujúca galéria projektov.
  *
  * Karty sú rozmiestnené po obvode kruhu okolo Y-osi (rotateY + translateZ).
- * Rotácia má tri zdroje, ktoré sa sčítavajú do finálneho `rotation`:
- *   • scroll užívateľa (rotácia mapovaná na scrollY / scrollableHeight)
- *   • jemný auto-rotate keď scroll stojí a nie je drag
+ * Rotácia má dva zdroje, ktoré sa sčítavajú do finálneho `rotation`:
  *   • horizontálne swipe / mouse drag (s momentum decay po uvoľnení)
+ *   • jemný auto-rotate keď sa neťahá a (na desktope) nie je hover
+ *
+ * Vertikálny scroll stránku neovplyvňuje rotáciu — galéria sa točí iba
+ * cez gesto alebo auto-drift. Bolo to dezorientujúce, keď sa karty
+ * otáčali len preto, že user scroloval stránku k CTA.
  *
  * Karty oproti kamere sú plne viditeľné. Karty s uhlom od kamery > 90°
  * sa skryjú cez `visibility: hidden` + `pointer-events: none`, aby
@@ -34,8 +37,6 @@ interface Props {
     items: GalleryItem[];
     /** Rýchlosť auto-rotácie v stupňoch za frame (default 0.025 ≈ pomalý drift). */
     autoRotateSpeed?: number;
-    /** Po koľkých ms od poslednej interakcie sa pustí auto-rotate (default 250). */
-    idleResumeMs?: number;
 }
 
 /**
@@ -66,7 +67,6 @@ function modAngle(deg: number): number {
 export default function CircularGallery({
     items,
     autoRotateSpeed = 0.025,
-    idleResumeMs = 250,
 }: Props) {
     // Jedna pravda — finálny rotation aplikovaný na 3D wrapper.
     const [rotation, setRotation] = useState(0);
@@ -76,12 +76,9 @@ export default function CircularGallery({
     );
 
     // Stavy interakcií — držíme cez useRef aby sa nespúšťali re-rendery v RAF loope.
-    const isScrollingRef = useRef(false);
     const isDraggingRef = useRef(false);
     const isHoverPausedRef = useRef(false);
-    const scrollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const dragVelocityRef = useRef(0);
-    const lastScrollRotationRef = useRef(0);
     const rafRef = useRef<number | null>(null);
 
     // Drag tracking
@@ -93,39 +90,6 @@ export default function CircularGallery({
     // Po skončení dragu krátko držíme true — onClickCapture potom anuluje klik na kartu.
     const wasDragRef = useRef(false);
     const wasDragTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-    // ─── Mapuj rotáciu na vertikálny scroll dokumentu ───
-    // Drag overríduje scroll-driven na chvíľu: pri scrolle si zapíšeme delta
-    // oproti predchádzajúcej scroll-rotácii a pridáme ju do `rotation`.
-    useEffect(() => {
-        const handleScroll = () => {
-            if (isDraggingRef.current) return; // drag má prednosť
-            isScrollingRef.current = true;
-            if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
-
-            const scrollable = document.documentElement.scrollHeight - window.innerHeight;
-            const progress = scrollable > 0 ? window.scrollY / scrollable : 0;
-            const scrollRotation = progress * 360;
-            const delta = scrollRotation - lastScrollRotationRef.current;
-            lastScrollRotationRef.current = scrollRotation;
-            setRotation((prev) => prev + delta);
-
-            scrollTimeoutRef.current = setTimeout(() => {
-                isScrollingRef.current = false;
-            }, idleResumeMs);
-        };
-
-        // Pri mount-e zafixuj baseline scroll, aby prvé volanie nepripočítalo skok.
-        const scrollable = document.documentElement.scrollHeight - window.innerHeight;
-        const initialProgress = scrollable > 0 ? window.scrollY / scrollable : 0;
-        lastScrollRotationRef.current = initialProgress * 360;
-
-        window.addEventListener("scroll", handleScroll, { passive: true });
-        return () => {
-            window.removeEventListener("scroll", handleScroll);
-            if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
-        };
-    }, [idleResumeMs]);
 
     // ─── Sleduj šírku okna pre responsívny radius ───
     useEffect(() => {
@@ -145,11 +109,7 @@ export default function CircularGallery({
                 if (Math.abs(dragVelocityRef.current) < 0.02) {
                     dragVelocityRef.current = 0;
                 }
-            } else if (
-                !isScrollingRef.current &&
-                !isDraggingRef.current &&
-                !isHoverPausedRef.current
-            ) {
+            } else if (!isDraggingRef.current && !isHoverPausedRef.current) {
                 setRotation((prev) => prev + autoRotateSpeed);
             }
             rafRef.current = requestAnimationFrame(tick);
@@ -192,7 +152,8 @@ export default function CircularGallery({
             dragAxisLockedRef.current = Math.abs(dx) > Math.abs(dy) ? "x" : "y";
         }
 
-        // Pri vertikálnom geste necháme stránku scrolovať a galéria sa otočí cez scroll handler.
+        // Pri vertikálnom geste necháme stránku scrolovať (galériu vertikálny scroll
+        // neovplyvňuje — zámerne, aby user mohol prejsť k spodnému CTA bez krútenia).
         if (dragAxisLockedRef.current === "y") {
             return false;
         }
@@ -205,9 +166,9 @@ export default function CircularGallery({
         dragLastXRef.current = clientX;
         dragLastTimeRef.current = now;
 
-        // Swipe doľava (negatívny dx) → rotácia doprava (pozitívna).
-        // Hodnota -stepDx * sensitivity dáva intuitívne "ťahám kartu so sebou".
-        const rotDelta = -stepDx * DRAG_SENSITIVITY;
+        // Swipe doprava (pozitívny dx) → karty idú v smere prsta doprava
+        // → rotateY rastie, pretože pravá karta sa otáča dopredu cez ľavý okraj.
+        const rotDelta = stepDx * DRAG_SENSITIVITY;
         setRotation((prev) => prev + rotDelta);
 
         // Drž si momentum (stupne / 16 ms — približne stupne za frame pri 60 fps).
@@ -220,10 +181,6 @@ export default function CircularGallery({
         const wasReallyDragging = isDraggingRef.current;
         isDraggingRef.current = false;
         dragAxisLockedRef.current = null;
-        // Po dragu pauzni scroll-baseline reset, nech ďalší scroll handler začne čisto.
-        const scrollable = document.documentElement.scrollHeight - window.innerHeight;
-        const progress = scrollable > 0 ? window.scrollY / scrollable : 0;
-        lastScrollRotationRef.current = progress * 360;
 
         // Ak naozaj prebehol horizontálny drag, podrž "wasDrag" flag krátko,
         // aby sa nasledujúci klick na kartu nezarátal ako klik (= swipe by inak
