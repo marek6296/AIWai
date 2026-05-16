@@ -9,6 +9,8 @@
  * Pôvodný `Group` rozdeľovač sme odstránili, lebo karusel groupy už nezobrazuje.
  */
 
+export type ProjectTag = "Web" | "Aplikácia" | "AI" | "Dizajn";
+
 export interface Project {
     slug: string;
     name: string;
@@ -16,6 +18,7 @@ export interface Project {
     description: string;
     stack: string[];
     url: string;
+    tag: ProjectTag;
     badgeKey?: "live" | "newest" | "internal";
     /** When true the card is showcase-only — no link, no URL shown. */
     private?: boolean;
@@ -31,6 +34,7 @@ export const REALIZACIE_PROJECTS: Project[] = [
             "Plnohodnotný AI spravodajský portál s denným tokom správ zo sveta umelej inteligencie. Vlastná redakcia, kategorizácia, archív.",
         stack: ["Next.js", "Supabase", "TypeScript"],
         url: "https://aiwai.news",
+        tag: "Web",
         badgeKey: "live",
     },
     {
@@ -41,6 +45,7 @@ export const REALIZACIE_PROJECTS: Project[] = [
             "Firemný web pre dodávateľa fotovoltiky, klimatizácií, kamerových systémov a elektroinštalácií. Vlastné SVG ikony a plynulé animácie.",
         stack: ["Next.js 14", "Framer Motion", "Tailwind"],
         url: "https://morak-chi.vercel.app",
+        tag: "Web",
         badgeKey: "newest",
     },
     {
@@ -51,6 +56,7 @@ export const REALIZACIE_PROJECTS: Project[] = [
             "Prezentačný web pre barbershop s rezerváciou termínov, galériou prác a kontaktom. Dôraz na vizuálnu identitu prevádzky.",
         stack: ["Next.js 14", "Tailwind"],
         url: "https://zaidans-barbershop.vercel.app",
+        tag: "Web",
     },
     {
         slug: "doprai",
@@ -60,6 +66,7 @@ export const REALIZACIE_PROJECTS: Project[] = [
             "Analytická platforma pre prácu s dátami — interaktívne dashboardy, importy a vizualizácie. Postavené na Supabase.",
         stack: ["Next.js 15", "Supabase"],
         url: "https://data-studiodony.vercel.app",
+        tag: "Aplikácia",
     },
 
     // ── Zvyšok AIWai produktov ───────────────────────────────────────
@@ -71,6 +78,7 @@ export const REALIZACIE_PROJECTS: Project[] = [
             "Kurátorovaný katalóg AI nástrojov a praktické návody pre n8n, Make a Zapier — recepty na automatizácie.",
         stack: ["Vue 3", "Vite", "Tailwind"],
         url: "https://aiwai.tools",
+        tag: "Web",
     },
     {
         slug: "aiwai-games",
@@ -80,6 +88,7 @@ export const REALIZACIE_PROJECTS: Project[] = [
             "Herný hub — Quiz Duel a Couple Quest. Multiplayer pre páry a kamarátov priamo v prehliadači aj v mobile.",
         stack: ["Flutter", "HTML/JS"],
         url: "https://aiwai-games.vercel.app",
+        tag: "Aplikácia",
     },
 
     // ── Ďalšie klientske weby ────────────────────────────────────────
@@ -91,6 +100,7 @@ export const REALIZACIE_PROJECTS: Project[] = [
             "Konverzný marketingový web s jasným posolstvom a štruktúrou navrhnutou pre generovanie leadov.",
         stack: ["Next.js", "Tailwind"],
         url: "https://marketing-web-phi-sage.vercel.app",
+        tag: "Web",
     },
 
     // ── Web aplikácie & dashboardy ───────────────────────────────────
@@ -102,6 +112,7 @@ export const REALIZACIE_PROJECTS: Project[] = [
             "Plnohodnotný rezervačný a kalendárový systém pre reštauráciu V8 Bistro. Správa termínov, hostí a personálu.",
         stack: ["Next.js", "Supabase"],
         url: "https://kalendar.v8bistro.cz",
+        tag: "Aplikácia",
     },
     {
         slug: "business-scraper",
@@ -111,6 +122,7 @@ export const REALIZACIE_PROJECTS: Project[] = [
             "Agent na generovanie leadov — scrapuje firmy z Google Maps, analyzuje ich weby cez Claude a generuje personalizované outreach emaily.",
         stack: ["Python", "FastAPI", "Playwright", "Claude API"],
         url: "https://lead-agent-dashboard-smoky.vercel.app",
+        tag: "AI",
         badgeKey: "internal",
         private: true,
     },
@@ -124,5 +136,6 @@ export const REALIZACIE_PROJECTS: Project[] = [
             "Online životopis s prehľadom skúseností, projektov a kontaktov. Čistý dizajn, rýchle načítanie.",
         stack: ["HTML", "CSS", "JS"],
         url: "https://marek-donoval-cv.vercel.app",
+        tag: "Web",
     },
 ];
