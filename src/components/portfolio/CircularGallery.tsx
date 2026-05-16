@@ -55,9 +55,10 @@ interface Props {
  */
 function getGeometry(width: number) {
     if (width < 640) {
-        // Mobile: karta sa MUSÍ zmestiť do viewportu vrátane textovej časti — typický
-        // mobil má 360–414 px šírku, karta 140 nechá pohodlne okraj na obe strany.
-        return { radius: 250, cardW: 140, cardH: 190, perspective: 900 };
+        // Mobile: malé telefóny majú 320 px šírku (iPhone SE 1. gen).
+        // Karta 120 nechá 100 px voľnej šírky → ~50 px margin na každú stranu.
+        // Radius 200 + hide-back-cards (>90°) drží bočné karty v rámci viewportu.
+        return { radius: 200, cardW: 120, cardH: 160, perspective: 800 };
     }
     if (width < 1024) {
         return { radius: 480, cardW: 260, cardH: 300, perspective: 1600 };
@@ -338,8 +339,15 @@ export default function CircularGallery({
 
     return (
         <div
-            className="relative w-full h-full flex items-center justify-center select-none"
-            style={{ perspective: `${perspective}px`, touchAction: "pan-y" }}
+            className="relative w-full h-full flex items-center justify-center select-none overflow-hidden"
+            // overflow:hidden + max-width:100vw zabráni tomu, aby karty na bočných
+            // pozíciách kruhu (sin(72°)·radius mimo viewportu na úzkom mobile)
+            // roztiahli horizontálne stránku.
+            style={{
+                perspective: `${perspective}px`,
+                touchAction: "pan-y",
+                maxWidth: "100vw",
+            }}
             onMouseEnter={isTouchDevice ? undefined : () => { isHoverPausedRef.current = true; }}
             onMouseLeave={isTouchDevice ? undefined : () => { isHoverPausedRef.current = false; }}
             onMouseDown={onMouseDown}

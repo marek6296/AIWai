@@ -62,12 +62,12 @@ export default function RealizacieClient() {
                 </p>
             </section>
 
-            {/* Circular gallery — vyplní zvyšok viewportu.
-                min-h zaručí, že aj keď stránka má málo obsahu, galéria má dosť priestoru
-                a scroll-driven rotácia funguje. 130vh nech je čo otáčať pri scrollovaní. */}
+            {/* Circular gallery — fixná výška, overflow-hidden aby karty na bočných
+                pozíciách kruhu (mimo viewportu na úzkom mobile) nepretkávali stránku
+                a nezavalili scrollbar. */}
             <section
-                className="relative z-10 w-full"
-                style={{ height: "min(820px, 130vh)" }}
+                className="relative z-10 w-full overflow-hidden"
+                style={{ height: "min(820px, 130vh)", maxWidth: "100vw" }}
             >
                 <CircularGallery items={items} />
             </section>
