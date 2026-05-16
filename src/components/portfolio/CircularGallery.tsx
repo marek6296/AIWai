@@ -1,22 +1,23 @@
 "use client";
 
 /**
- * CircularGallery — 3D rotujúca galéria projektov.
+ * CircularGallery — 3D rotujúca galéria projektov so snap-to-card správaním.
  *
  * Karty sú rozmiestnené po obvode kruhu okolo Y-osi (rotateY + translateZ).
- * Rotácia má dva zdroje, ktoré sa sčítavajú do finálneho `rotation`:
- *   • horizontálne swipe / mouse drag (s momentum decay po uvoľnení)
- *   • jemný auto-rotate keď sa neťahá a (na desktope) nie je hover
+ * Galéria sa NEOTÁČA voľne — vždy zastane na najbližšej karte.
  *
- * Vertikálny scroll stránku neovplyvňuje rotáciu — galéria sa točí iba
- * cez gesto alebo auto-drift. Bolo to dezorientujúce, keď sa karty
- * otáčali len preto, že user scroloval stránku k CTA.
+ * Zdroje rotácie:
+ *   • horizontálny swipe / mouse drag → po release sa snapne na najbližšiu kartu
+ *     (alebo o jednu kartu ďalej, ak swipe bol prudký — max ±2 karty momentum)
+ *   • auto-advance: každých ~4.5 s sa galéria sama posunie o jednu kartu vpred
+ *     (iba ak user práve nedrží prst, neťahá ani nemá pointer nad galériou)
  *
- * Karty oproti kamere sú plne viditeľné. Karty s uhlom od kamery > 90°
- * sa skryjú cez `visibility: hidden` + `pointer-events: none`, aby
- * neprekrývali predné karty na mobile s malým radiusom.
+ * Vertikálny page scroll rotáciu neovplyvňuje.
  *
- * Mobile responsive: radius a veľkosť kariet sa prispôsobí šírke okna.
+ * Karty s uhlom od kamery > 90° (zadná polovica) majú visibility:hidden +
+ * pointer-events:none + aria-hidden, aby neprekrývali predné na mobile.
+ *
+ * Mobile responsive: cardW/cardH/radius/perspective sa prispôsobí šírke okna.
  */
 
 import { useState, useEffect, useRef, useMemo, useCallback } from "react";
@@ -35,28 +36,29 @@ export interface GalleryItem {
 
 interface Props {
     items: GalleryItem[];
-    /** Rýchlosť auto-rotácie v stupňoch za frame (default 0.025 ≈ pomalý drift). */
-    autoRotateSpeed?: number;
+    /** Interval medzi auto-advance krokmi v ms (default 4500). */
+    autoAdvanceMs?: number;
+    /** Trvanie snap animácie v ms (default 450). */
+    snapDurationMs?: number;
 }
 
 /**
  * Vypočíta optimálne rozmery podľa šírky okna.
- * Mobile: úzke karty + radius dosť veľký, aby sa nepretkávali viditeľné karty na fronte.
- * Desktop: veľké karty + veľký radius (viac drámy).
  *
- * Pri 10 kartách obvod kruhu / 10 musí byť aspoň cardW + malý gap, inak sa karty
- * v prednom oblúku prekrývajú. Pre 10 kariet to znamená:
- *   2·π·radius / 10 >= cardW + 24
- *   radius >= 10·(cardW + 24) / (2·π) ≈ 1.59·(cardW + 24)
+ * Karty sú širšie ako vysoké, aby sa do nich zmestil contained screenshot
+ * (typicky 16:9 alebo 16:10) bez veľkého letterboxu. Image zaberá horných 55 %
+ * výšky karty, text spodných 45 %.
+ *
+ * Min radius pri 10 kartách: `(cardW + ~30) / (2·sin(π/10))` ≈ 1.62·(cardW + 30).
  */
 function getGeometry(width: number) {
     if (width < 640) {
-        return { radius: 300, cardW: 160, cardH: 220, perspective: 1100 };
+        return { radius: 340, cardW: 180, cardH: 220, perspective: 1100 };
     }
     if (width < 1024) {
-        return { radius: 420, cardW: 230, cardH: 310, perspective: 1600 };
+        return { radius: 480, cardW: 260, cardH: 300, perspective: 1600 };
     }
-    return { radius: 600, cardW: 300, cardH: 400, perspective: 2000 };
+    return { radius: 640, cardW: 340, cardH: 380, perspective: 2000 };
 }
 
 /** Wrap zľava aj sprava — angle (0,360] s 360 = 0. */
@@ -64,22 +66,31 @@ function modAngle(deg: number): number {
     return ((deg % 360) + 360) % 360;
 }
 
+/** Ease-out cubic — rýchly štart, mäkký dojazd. Štandardný pre snap karusely. */
+function easeOutCubic(t: number): number {
+    return 1 - Math.pow(1 - t, 3);
+}
+
 export default function CircularGallery({
     items,
-    autoRotateSpeed = 0.025,
+    autoAdvanceMs = 4500,
+    snapDurationMs = 450,
 }: Props) {
     // Jedna pravda — finálny rotation aplikovaný na 3D wrapper.
     const [rotation, setRotation] = useState(0);
+    const rotationRef = useRef(0);
     // Šírka okna pre responsívny radius.
     const [windowWidth, setWindowWidth] = useState<number>(
         typeof window === "undefined" ? 1280 : window.innerWidth
     );
 
-    // Stavy interakcií — držíme cez useRef aby sa nespúšťali re-rendery v RAF loope.
+    // Stavy interakcií.
     const isDraggingRef = useRef(false);
     const isHoverPausedRef = useRef(false);
+    const isAnimatingRef = useRef(false);   // počas snap tween-u
+    const snapRafRef = useRef<number | null>(null);
+    // Najnovšie deltaX / dt z drag-u — slúži ako "flick velocity" pri endPointer.
     const dragVelocityRef = useRef(0);
-    const rafRef = useRef<number | null>(null);
 
     // Drag tracking
     const dragStartXRef = useRef(0);
@@ -91,6 +102,57 @@ export default function CircularGallery({
     const wasDragRef = useRef(false);
     const wasDragTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+    const anglePerItem = items.length > 0 ? 360 / items.length : 0;
+    const anglePerItemRef = useRef(anglePerItem);
+    anglePerItemRef.current = anglePerItem;
+
+    // Helper: aktualizuje aj state aj ref naraz, aby callbacky vedeli čítať najnovšiu hodnotu.
+    const applyRotation = useCallback((next: number) => {
+        rotationRef.current = next;
+        setRotation(next);
+    }, []);
+
+    // ─── Snap tween: animuje rotation z aktuálneho na `target` s ease-out cubic ───
+    const animateTo = useCallback(
+        (target: number) => {
+            if (snapRafRef.current !== null) {
+                cancelAnimationFrame(snapRafRef.current);
+            }
+            isAnimatingRef.current = true;
+            const start = rotationRef.current;
+            const startTime = performance.now();
+
+            const step = (now: number) => {
+                const elapsed = now - startTime;
+                const t = Math.min(1, elapsed / snapDurationMs);
+                const eased = easeOutCubic(t);
+                applyRotation(start + (target - start) * eased);
+                if (t < 1) {
+                    snapRafRef.current = requestAnimationFrame(step);
+                } else {
+                    snapRafRef.current = null;
+                    isAnimatingRef.current = false;
+                }
+            };
+            snapRafRef.current = requestAnimationFrame(step);
+        },
+        [applyRotation, snapDurationMs]
+    );
+
+    /**
+     * Snap na najbližšiu kartu, prípadne o `extraSteps` posunutú v smere flick-u.
+     * Pri 10 kartách je angle 36° — round(rotation/36)*36 dá najbližší snap.
+     */
+    const snapBy = useCallback(
+        (extraSteps: number) => {
+            const step = anglePerItemRef.current;
+            if (step === 0) return;
+            const nearest = Math.round(rotationRef.current / step) * step;
+            animateTo(nearest + extraSteps * step);
+        },
+        [animateTo]
+    );
+
     // ─── Sleduj šírku okna pre responsívny radius ───
     useEffect(() => {
         const handleResize = () => setWindowWidth(window.innerWidth);
@@ -99,100 +161,110 @@ export default function CircularGallery({
         return () => window.removeEventListener("resize", handleResize);
     }, []);
 
-    // ─── Auto-rotácia + momentum decay v jednom RAF loope ───
+    // ─── Auto-advance: každých autoAdvanceMs posúvame o 1 kartu vpred ───
+    // "Vpred" v zmysle vizuálu = positive direction (cards travel right), čo zodpovedá
+    // smeru swipe doprava. Volaj snapBy(+1) keď user práve nie je aktívny.
     useEffect(() => {
-        const tick = () => {
-            // Momentum z drag-u dobehne aj počas hover-pause — user to čaká.
-            if (dragVelocityRef.current !== 0 && !isDraggingRef.current) {
-                setRotation((prev) => prev + dragVelocityRef.current);
-                dragVelocityRef.current *= 0.94; // decay
-                if (Math.abs(dragVelocityRef.current) < 0.02) {
-                    dragVelocityRef.current = 0;
-                }
-            } else if (!isDraggingRef.current && !isHoverPausedRef.current) {
-                setRotation((prev) => prev + autoRotateSpeed);
+        const interval = setInterval(() => {
+            if (
+                isDraggingRef.current ||
+                isHoverPausedRef.current ||
+                isAnimatingRef.current
+            ) {
+                return;
             }
-            rafRef.current = requestAnimationFrame(tick);
-        };
-        rafRef.current = requestAnimationFrame(tick);
-        return () => {
-            if (rafRef.current) cancelAnimationFrame(rafRef.current);
-        };
-    }, [autoRotateSpeed]);
+            snapBy(1);
+        }, autoAdvanceMs);
+        return () => clearInterval(interval);
+    }, [autoAdvanceMs, snapBy]);
 
     // ─── Touch / mouse drag handlers ───
-    // Threshold: aby sa drag nezačal na náhodný klik na kartu.
     const DRAG_THRESHOLD = 8;
-    // Citlivosť: koľko stupňov rotácie na 1 pixel pohybu. ~0.4° = 90° na 225 px swipe.
     const DRAG_SENSITIVITY = 0.4;
+    // Flick prah: ak je velocity v stupňoch/frame nad threshold, posunieme o ďalšiu kartu.
+    const FLICK_THRESHOLD_1 = 1.5;
+    const FLICK_THRESHOLD_2 = 4.5; // ešte väčší flick → max 2 karty (cap momentum)
 
     const beginPointer = useCallback((clientX: number, clientY: number) => {
+        // Ak práve beží snap animation, zastav ju — user prevezme kontrolu.
+        if (snapRafRef.current !== null) {
+            cancelAnimationFrame(snapRafRef.current);
+            snapRafRef.current = null;
+            isAnimatingRef.current = false;
+        }
         dragStartXRef.current = clientX;
         dragStartYRef.current = clientY;
         dragLastXRef.current = clientX;
         dragLastTimeRef.current = performance.now();
         dragAxisLockedRef.current = null;
-        // Pri začatí dragu zastavíme prípadný momentum z minulého swipe.
         dragVelocityRef.current = 0;
     }, []);
 
     /**
-     * Vráti true ak sa drag začal a treba zablokovať default (scroll).
-     * Vráti false ak sa pohyb javí ako vertikálny scroll — necháme prejsť.
+     * Vráti true ak prebehol horizontálny drag (treba zablokovať default touch scroll).
+     * Vráti false ak je gesto vertikálne alebo ešte nepresiahlo threshold.
      */
-    const movePointer = useCallback((clientX: number, clientY: number): boolean => {
-        const dx = clientX - dragStartXRef.current;
-        const dy = clientY - dragStartYRef.current;
+    const movePointer = useCallback(
+        (clientX: number, clientY: number): boolean => {
+            const dx = clientX - dragStartXRef.current;
+            const dy = clientY - dragStartYRef.current;
 
-        // Axis lock: ak ešte nie je rozhodnuté, počkaj kým prekročíme threshold.
-        if (dragAxisLockedRef.current === null) {
-            if (Math.abs(dx) < DRAG_THRESHOLD && Math.abs(dy) < DRAG_THRESHOLD) {
+            if (dragAxisLockedRef.current === null) {
+                if (Math.abs(dx) < DRAG_THRESHOLD && Math.abs(dy) < DRAG_THRESHOLD) {
+                    return false;
+                }
+                dragAxisLockedRef.current = Math.abs(dx) > Math.abs(dy) ? "x" : "y";
+            }
+
+            // Vertikálny scroll — necháme prejsť na default page scroll.
+            if (dragAxisLockedRef.current === "y") {
                 return false;
             }
-            dragAxisLockedRef.current = Math.abs(dx) > Math.abs(dy) ? "x" : "y";
-        }
 
-        // Pri vertikálnom geste necháme stránku scrolovať (galériu vertikálny scroll
-        // neovplyvňuje — zámerne, aby user mohol prejsť k spodnému CTA bez krútenia).
-        if (dragAxisLockedRef.current === "y") {
-            return false;
-        }
+            isDraggingRef.current = true;
+            const stepDx = clientX - dragLastXRef.current;
+            const now = performance.now();
+            const dt = Math.max(1, now - dragLastTimeRef.current);
+            dragLastXRef.current = clientX;
+            dragLastTimeRef.current = now;
 
-        // Horizontálny drag — otáčame galériu.
-        isDraggingRef.current = true;
-        const stepDx = clientX - dragLastXRef.current;
-        const now = performance.now();
-        const dt = Math.max(1, now - dragLastTimeRef.current);
-        dragLastXRef.current = clientX;
-        dragLastTimeRef.current = now;
+            // Swipe doprava (pozitívny dx) → karty idú v smere prsta doprava.
+            const rotDelta = stepDx * DRAG_SENSITIVITY;
+            applyRotation(rotationRef.current + rotDelta);
 
-        // Swipe doprava (pozitívny dx) → karty idú v smere prsta doprava
-        // → rotateY rastie, pretože pravá karta sa otáča dopredu cez ľavý okraj.
-        const rotDelta = stepDx * DRAG_SENSITIVITY;
-        setRotation((prev) => prev + rotDelta);
-
-        // Drž si momentum (stupne / 16 ms — približne stupne za frame pri 60 fps).
-        dragVelocityRef.current = (rotDelta / dt) * 16;
-        return true;
-    }, []);
+            // Flick velocity v stupňoch/frame (~16 ms).
+            dragVelocityRef.current = (rotDelta / dt) * 16;
+            return true;
+        },
+        [applyRotation]
+    );
 
     const endPointer = useCallback(() => {
-        // Drag skončil. Momentum už máme v dragVelocityRef.
         const wasReallyDragging = isDraggingRef.current;
         isDraggingRef.current = false;
         dragAxisLockedRef.current = null;
 
-        // Ak naozaj prebehol horizontálny drag, podrž "wasDrag" flag krátko,
-        // aby sa nasledujúci klick na kartu nezarátal ako klik (= swipe by inak
-        // otvoril link).
         if (wasReallyDragging) {
+            // Anuluj nasledujúci klik (swipe končiaci nad kartou by inak otvoril link).
             wasDragRef.current = true;
             if (wasDragTimeoutRef.current) clearTimeout(wasDragTimeoutRef.current);
             wasDragTimeoutRef.current = setTimeout(() => {
                 wasDragRef.current = false;
             }, 200);
+
+            // Snap na cieľ. Pri flick-u pridáme posun o 1 alebo 2 karty v smere swipe-u.
+            const vel = dragVelocityRef.current;
+            const absVel = Math.abs(vel);
+            let extra = 0;
+            if (absVel >= FLICK_THRESHOLD_2) {
+                extra = vel > 0 ? 2 : -2;
+            } else if (absVel >= FLICK_THRESHOLD_1) {
+                extra = vel > 0 ? 1 : -1;
+            }
+            snapBy(extra);
+            dragVelocityRef.current = 0;
         }
-    }, []);
+    }, [snapBy]);
 
     // Touch
     const onTouchStart = (e: React.TouchEvent) => {
@@ -205,12 +277,12 @@ export default function CircularGallery({
         const t = e.touches[0];
         const wantsDrag = movePointer(t.clientX, t.clientY);
         if (wantsDrag && e.cancelable) {
-            e.preventDefault(); // blokuj scroll iba ak naozaj ťaháme horizontálne
+            e.preventDefault();
         }
     };
     const onTouchEnd = () => endPointer();
 
-    // Mouse (desktop) — drag len keď je button stlačený.
+    // Mouse (desktop)
     const isMouseDownRef = useRef(false);
     const onMouseDown = (e: React.MouseEvent) => {
         isMouseDownRef.current = true;
@@ -234,29 +306,26 @@ export default function CircularGallery({
         };
     }, [movePointer, endPointer]);
 
+    // Cleanup pri unmount
+    useEffect(() => {
+        return () => {
+            if (wasDragTimeoutRef.current) clearTimeout(wasDragTimeoutRef.current);
+            if (snapRafRef.current !== null) cancelAnimationFrame(snapRafRef.current);
+        };
+    }, []);
+
     const { radius, cardW, cardH, perspective } = useMemo(
         () => getGeometry(windowWidth),
         [windowWidth]
     );
 
-    const anglePerItem = items.length > 0 ? 360 / items.length : 0;
-
-    // Hover pause iba na desktope — na touch zariadeniach by hover-event po tap-e zostal "stuck".
+    // Hover pause iba na desktope.
     const isTouchDevice =
         typeof window !== "undefined" && "ontouchstart" in window;
-
-    // Cleanup wasDrag timeout pri unmount.
-    useEffect(() => {
-        return () => {
-            if (wasDragTimeoutRef.current) clearTimeout(wasDragTimeoutRef.current);
-        };
-    }, []);
 
     return (
         <div
             className="relative w-full h-full flex items-center justify-center select-none"
-            // touch-action: pan-y povolí vertikálny scroll; horizontálne gestá si chytáme sami
-            // cez preventDefault v onTouchMove (až keď je drag potvrdený ako horizontálny).
             style={{ perspective: `${perspective}px`, touchAction: "pan-y" }}
             onMouseEnter={isTouchDevice ? undefined : () => { isHoverPausedRef.current = true; }}
             onMouseLeave={isTouchDevice ? undefined : () => { isHoverPausedRef.current = false; }}
@@ -265,7 +334,6 @@ export default function CircularGallery({
             onTouchMove={onTouchMove}
             onTouchEnd={onTouchEnd}
             onTouchCancel={onTouchEnd}
-            // Capture klik na karte, ak práve prebehol swipe — inak by sa otvoril odkaz.
             onClickCapture={(e) => {
                 if (wasDragRef.current) {
                     e.preventDefault();
@@ -283,15 +351,11 @@ export default function CircularGallery({
             >
                 {items.map((item, i) => {
                     const itemAngle = i * anglePerItem;
-                    // Normalizovaný uhol od kamery (0° = priamo predo mnou, 180° = za mnou).
                     const relative = modAngle(itemAngle + rotation);
                     const normalized = relative > 180 ? 360 - relative : relative;
 
-                    // Karty so > 90° od kamery (zadná polovica kruhu) skryjeme úplne —
-                    // riešia sa tým prekryvy na mobile s malým radiusom, a aj
-                    // neviditeľné karty zbytočne nemenia layout pre screen readery.
                     const hidden = normalized > 90;
-                    const opacity = hidden ? 0 : Math.max(0.2, 1 - normalized / 90);
+                    const opacity = hidden ? 0 : Math.max(0.25, 1 - normalized / 90);
                     const isFront = normalized < 25;
 
                     return (
@@ -339,7 +403,6 @@ function GalleryCard({ item, angle, radius, cardW, cardH, opacity, hidden, isFro
         width: `${cardW}px`,
         height: `${cardH}px`,
         opacity,
-        // Skryté karty za kamerou: nezasahujú do hit-testingu ani sa nečítajú screen readerom.
         visibility: hidden ? "hidden" : "visible",
         pointerEvents: hidden ? "none" : "auto",
         transition: "opacity 0.25s linear, box-shadow 0.4s ease",
@@ -354,26 +417,34 @@ function GalleryCard({ item, angle, radius, cardW, cardH, opacity, hidden, isFro
 
     const content = (
         <>
-            {/* Obrázok — vrchné 62% karty */}
-            <div className="relative w-full" style={{ height: "62%" }}>
+            {/* Obrázok — 55% výšky karty.
+                bg-char-soft slúži ako tmavé letterbox pozadie, lebo Image má object-contain
+                (zámerne, aby bolo vidno celý screenshot, nie iba orezaný horný frame). */}
+            <div
+                className="relative w-full overflow-hidden bg-char-soft"
+                style={{ height: "55%" }}
+            >
                 <Image
                     src={item.image}
                     alt={item.name}
                     fill
                     sizes={`${cardW}px`}
-                    className="object-cover object-top"
+                    className="object-contain"
                     draggable={false}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-char via-char/30 to-transparent" />
+
+                {/* Jemný gradient hore aj dole — splynie obrázok s telom karty.
+                    Slabý opacity, nech screenshot zostane čitateľný. */}
+                <div className="pointer-events-none absolute inset-x-0 bottom-0 h-8 bg-gradient-to-t from-char-soft to-transparent" />
 
                 {/* Badge v rohu */}
                 {isPrivate ? (
-                    <div className="absolute top-3 right-3 w-8 h-8 rounded-full bg-char/80 backdrop-blur-md flex items-center justify-center border border-gold/25">
+                    <div className="absolute top-2.5 right-2.5 w-8 h-8 rounded-full bg-char/85 backdrop-blur-md flex items-center justify-center border border-gold/25">
                         <Lock size={13} className="text-gold/80" />
                     </div>
                 ) : (
                     <div
-                        className={`absolute top-3 right-3 w-8 h-8 rounded-full bg-char/80 backdrop-blur-md flex items-center justify-center border border-gold/25 transition-opacity duration-300 ${
+                        className={`absolute top-2.5 right-2.5 w-8 h-8 rounded-full bg-char/85 backdrop-blur-md flex items-center justify-center border border-gold/25 transition-opacity duration-300 ${
                             isFront ? "opacity-100" : "opacity-0"
                         }`}
                     >
@@ -382,20 +453,20 @@ function GalleryCard({ item, angle, radius, cardW, cardH, opacity, hidden, isFro
                 )}
             </div>
 
-            {/* Text — spodná 38% karty */}
-            <div className="relative h-[38%] p-3 sm:p-4 flex flex-col gap-1 sm:gap-1.5">
+            {/* Text — spodných 45% karty */}
+            <div className="relative h-[45%] p-3 sm:p-4 flex flex-col gap-1 sm:gap-1.5">
                 <span className="text-[9px] uppercase tracking-[0.25em] font-bold text-gold/80 truncate">
                     {item.category}
                 </span>
                 <h3 className="text-sm sm:text-base md:text-lg font-display font-bold text-cream leading-tight truncate">
                     {item.name}
                 </h3>
-                <p className="text-[10px] sm:text-[11px] md:text-xs text-cream/55 leading-relaxed line-clamp-2 font-light">
+                <p className="text-[10px] sm:text-[11px] md:text-xs text-cream/55 leading-relaxed line-clamp-3 font-light">
                     {item.description}
                 </p>
             </div>
 
-            {/* Jemný gold glow na fronte — naznačuje že "ide klik" */}
+            {/* Jemný gold glow na fronte */}
             {isFront && !isPrivate && (
                 <div
                     aria-hidden
@@ -406,7 +477,6 @@ function GalleryCard({ item, angle, radius, cardW, cardH, opacity, hidden, isFro
         </>
     );
 
-    // Private projekty nie sú clickable.
     if (isPrivate) {
         return (
             <div
@@ -430,7 +500,6 @@ function GalleryCard({ item, angle, radius, cardW, cardH, opacity, hidden, isFro
             style={sharedStyle}
             aria-label={`${item.name} — open project in new tab`}
             aria-hidden={hidden}
-            // Suppresion kliku počas swipe rieši onClickCapture na rodičovskom wrapperi.
         >
             {content}
         </a>
