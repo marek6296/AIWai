@@ -1,16 +1,16 @@
 "use client";
 
 /**
- * CircularGallery — 3D rotujúca galéria projektov so snap-to-card správaním.
+ * CircularGallery — 3D rotujúca galéria projektov.
  *
  * Karty sú rozmiestnené po obvode kruhu okolo Y-osi (rotateY + translateZ).
- * Galéria sa NEOTÁČA voľne — vždy zastane na najbližšej karte.
  *
  * Zdroje rotácie:
- *   • horizontálny swipe / mouse drag → po release sa snapne na najbližšiu kartu
- *     (alebo o jednu kartu ďalej, ak swipe bol prudký — max ±2 karty momentum)
- *   • auto-advance: každých ~4.5 s sa galéria sama posunie o jednu kartu vpred
- *     (iba ak user práve nedrží prst, neťahá ani nemá pointer nad galériou)
+ *   • horizontálny swipe / mouse drag → po release snap presne o JEDNU kartu
+ *     v smere swipe-u (ak |dx| >= 30 px), alebo návrat na pôvodnú kartu.
+ *     Po snap-e 300 ms debounce, aby sa nedalo náhodne preskočiť viac kariet.
+ *   • plynulý auto-drift 0.012°/frame keď user nezasahuje (~7 minút na celý kruh).
+ *     Po manuálnom swipe sa drift pauzne na 5 s a potom sa rozbehne plynule ďalej.
  *
  * Vertikálny page scroll rotáciu neovplyvňuje.
  *
@@ -36,10 +36,12 @@ export interface GalleryItem {
 
 interface Props {
     items: GalleryItem[];
-    /** Interval medzi auto-advance krokmi v ms (default 4500). */
-    autoAdvanceMs?: number;
+    /** Rýchlosť plynulého auto-driftu v stupňoch za frame (default 0.012). */
+    autoDriftSpeed?: number;
     /** Trvanie snap animácie v ms (default 450). */
     snapDurationMs?: number;
+    /** Pauza auto-driftu po manuálnom swipe v ms (default 5000). */
+    autoPauseMs?: number;
 }
 
 /**
@@ -53,7 +55,9 @@ interface Props {
  */
 function getGeometry(width: number) {
     if (width < 640) {
-        return { radius: 340, cardW: 180, cardH: 220, perspective: 1100 };
+        // Mobile: karta sa MUSÍ zmestiť do viewportu vrátane textovej časti — typický
+        // mobil má 360–414 px šírku, karta 140 nechá pohodlne okraj na obe strany.
+        return { radius: 250, cardW: 140, cardH: 190, perspective: 900 };
     }
     if (width < 1024) {
         return { radius: 480, cardW: 260, cardH: 300, perspective: 1600 };
@@ -73,8 +77,9 @@ function easeOutCubic(t: number): number {
 
 export default function CircularGallery({
     items,
-    autoAdvanceMs = 4500,
+    autoDriftSpeed = 0.012,
     snapDurationMs = 450,
+    autoPauseMs = 5000,
 }: Props) {
     // Jedna pravda — finálny rotation aplikovaný na 3D wrapper.
     const [rotation, setRotation] = useState(0);
@@ -89,14 +94,16 @@ export default function CircularGallery({
     const isHoverPausedRef = useRef(false);
     const isAnimatingRef = useRef(false);   // počas snap tween-u
     const snapRafRef = useRef<number | null>(null);
-    // Najnovšie deltaX / dt z drag-u — slúži ako "flick velocity" pri endPointer.
-    const dragVelocityRef = useRef(0);
+    const driftRafRef = useRef<number | null>(null);
+    // Timestamp do akého času je auto-drift pauznutý (po manuálnom swipe).
+    const autoResumeAtRef = useRef(0);
+    // Timestamp do akého času ignorujeme nové drag-y (debounce po snap-e).
+    const swipeDebounceUntilRef = useRef(0);
 
     // Drag tracking
     const dragStartXRef = useRef(0);
     const dragStartYRef = useRef(0);
     const dragLastXRef = useRef(0);
-    const dragLastTimeRef = useRef(0);
     const dragAxisLockedRef = useRef<"x" | "y" | null>(null);
     // Po skončení dragu krátko držíme true — onClickCapture potom anuluje klik na kartu.
     const wasDragRef = useRef(false);
@@ -140,15 +147,15 @@ export default function CircularGallery({
     );
 
     /**
-     * Snap na najbližšiu kartu, prípadne o `extraSteps` posunutú v smere flick-u.
+     * Snap na najbližšiu kartu, prípadne o `offsetSteps` posunutú (pre swipe = ±1).
      * Pri 10 kartách je angle 36° — round(rotation/36)*36 dá najbližší snap.
      */
     const snapBy = useCallback(
-        (extraSteps: number) => {
+        (offsetSteps: number) => {
             const step = anglePerItemRef.current;
             if (step === 0) return;
             const nearest = Math.round(rotationRef.current / step) * step;
-            animateTo(nearest + extraSteps * step);
+            animateTo(nearest + offsetSteps * step);
         },
         [animateTo]
     );
@@ -161,31 +168,38 @@ export default function CircularGallery({
         return () => window.removeEventListener("resize", handleResize);
     }, []);
 
-    // ─── Auto-advance: každých autoAdvanceMs posúvame o 1 kartu vpred ───
-    // "Vpred" v zmysle vizuálu = positive direction (cards travel right), čo zodpovedá
-    // smeru swipe doprava. Volaj snapBy(+1) keď user práve nie je aktívny.
+    // ─── Plynulý auto-drift: RAF loop pridáva ~0.012°/frame ───
+    // Drift sa pauzne počas: drag, hover (desktop), snap animation, alebo prvých
+    // autoPauseMs ms po skončení manuálneho swipe-u (autoResumeAtRef timestamp).
     useEffect(() => {
-        const interval = setInterval(() => {
+        const tick = () => {
+            const now = performance.now();
             if (
-                isDraggingRef.current ||
-                isHoverPausedRef.current ||
-                isAnimatingRef.current
+                !isDraggingRef.current &&
+                !isHoverPausedRef.current &&
+                !isAnimatingRef.current &&
+                now >= autoResumeAtRef.current
             ) {
-                return;
+                applyRotation(rotationRef.current + autoDriftSpeed);
             }
-            snapBy(1);
-        }, autoAdvanceMs);
-        return () => clearInterval(interval);
-    }, [autoAdvanceMs, snapBy]);
+            driftRafRef.current = requestAnimationFrame(tick);
+        };
+        driftRafRef.current = requestAnimationFrame(tick);
+        return () => {
+            if (driftRafRef.current !== null) cancelAnimationFrame(driftRafRef.current);
+        };
+    }, [applyRotation, autoDriftSpeed]);
 
     // ─── Touch / mouse drag handlers ───
-    const DRAG_THRESHOLD = 8;
-    const DRAG_SENSITIVITY = 0.4;
-    // Flick prah: ak je velocity v stupňoch/frame nad threshold, posunieme o ďalšiu kartu.
-    const FLICK_THRESHOLD_1 = 1.5;
-    const FLICK_THRESHOLD_2 = 4.5; // ešte väčší flick → max 2 karty (cap momentum)
+    const AXIS_LOCK_THRESHOLD = 8;       // px — kedy sa rozhodne x vs y os
+    const DRAG_SENSITIVITY = 0.4;         // stupne rotácie na 1 px swipe
+    const SWIPE_COMMIT_THRESHOLD = 30;    // celkový px za swipe na to, aby sa rátal ako 1 karta
 
-    const beginPointer = useCallback((clientX: number, clientY: number) => {
+    const beginPointer = useCallback((clientX: number, clientY: number): boolean => {
+        // Debounce: ak je v okne 300 ms po predchádzajúcom snape, ignoruj nový drag.
+        if (performance.now() < swipeDebounceUntilRef.current) {
+            return false;
+        }
         // Ak práve beží snap animation, zastav ju — user prevezme kontrolu.
         if (snapRafRef.current !== null) {
             cancelAnimationFrame(snapRafRef.current);
@@ -195,9 +209,8 @@ export default function CircularGallery({
         dragStartXRef.current = clientX;
         dragStartYRef.current = clientY;
         dragLastXRef.current = clientX;
-        dragLastTimeRef.current = performance.now();
         dragAxisLockedRef.current = null;
-        dragVelocityRef.current = 0;
+        return true;
     }, []);
 
     /**
@@ -210,7 +223,7 @@ export default function CircularGallery({
             const dy = clientY - dragStartYRef.current;
 
             if (dragAxisLockedRef.current === null) {
-                if (Math.abs(dx) < DRAG_THRESHOLD && Math.abs(dy) < DRAG_THRESHOLD) {
+                if (Math.abs(dx) < AXIS_LOCK_THRESHOLD && Math.abs(dy) < AXIS_LOCK_THRESHOLD) {
                     return false;
                 }
                 dragAxisLockedRef.current = Math.abs(dx) > Math.abs(dy) ? "x" : "y";
@@ -223,17 +236,11 @@ export default function CircularGallery({
 
             isDraggingRef.current = true;
             const stepDx = clientX - dragLastXRef.current;
-            const now = performance.now();
-            const dt = Math.max(1, now - dragLastTimeRef.current);
             dragLastXRef.current = clientX;
-            dragLastTimeRef.current = now;
 
-            // Swipe doprava (pozitívny dx) → karty idú v smere prsta doprava.
-            const rotDelta = stepDx * DRAG_SENSITIVITY;
-            applyRotation(rotationRef.current + rotDelta);
-
-            // Flick velocity v stupňoch/frame (~16 ms).
-            dragVelocityRef.current = (rotDelta / dt) * 16;
+            // Plynulé sledovanie prsta počas dragu — vizuálny feedback.
+            // Skutočný "commit" o jednu kartu prichádza až v endPointer podľa totalDx.
+            applyRotation(rotationRef.current + stepDx * DRAG_SENSITIVITY);
             return true;
         },
         [applyRotation]
@@ -241,6 +248,7 @@ export default function CircularGallery({
 
     const endPointer = useCallback(() => {
         const wasReallyDragging = isDraggingRef.current;
+        const totalDx = dragLastXRef.current - dragStartXRef.current;
         isDraggingRef.current = false;
         dragAxisLockedRef.current = null;
 
@@ -252,41 +260,46 @@ export default function CircularGallery({
                 wasDragRef.current = false;
             }, 200);
 
-            // Snap na cieľ. Pri flick-u pridáme posun o 1 alebo 2 karty v smere swipe-u.
-            const vel = dragVelocityRef.current;
-            const absVel = Math.abs(vel);
-            let extra = 0;
-            if (absVel >= FLICK_THRESHOLD_2) {
-                extra = vel > 0 ? 2 : -2;
-            } else if (absVel >= FLICK_THRESHOLD_1) {
-                extra = vel > 0 ? 1 : -1;
+            // Vždy presne JEDNA karta. Smer podľa znamienka totalDx; ak swipe je príliš
+            // krátky (< 30 px), vrátime sa na pôvodnú kartu (no-op snap na najbližší).
+            let offset = 0;
+            if (Math.abs(totalDx) >= SWIPE_COMMIT_THRESHOLD) {
+                offset = totalDx > 0 ? 1 : -1;
             }
-            snapBy(extra);
-            dragVelocityRef.current = 0;
+            snapBy(offset);
+
+            // Pauzni auto-drift na autoPauseMs a debouncni ďalšie swipe-y na 300 ms.
+            const now = performance.now();
+            autoResumeAtRef.current = now + autoPauseMs;
+            swipeDebounceUntilRef.current = now + 300;
         }
-    }, [snapBy]);
+    }, [snapBy, autoPauseMs]);
 
     // Touch
+    const touchActiveRef = useRef(false);
     const onTouchStart = (e: React.TouchEvent) => {
         if (e.touches.length !== 1) return;
         const t = e.touches[0];
-        beginPointer(t.clientX, t.clientY);
+        touchActiveRef.current = beginPointer(t.clientX, t.clientY);
     };
     const onTouchMove = (e: React.TouchEvent) => {
-        if (e.touches.length !== 1) return;
+        if (!touchActiveRef.current || e.touches.length !== 1) return;
         const t = e.touches[0];
         const wantsDrag = movePointer(t.clientX, t.clientY);
         if (wantsDrag && e.cancelable) {
             e.preventDefault();
         }
     };
-    const onTouchEnd = () => endPointer();
+    const onTouchEnd = () => {
+        if (!touchActiveRef.current) return;
+        touchActiveRef.current = false;
+        endPointer();
+    };
 
     // Mouse (desktop)
     const isMouseDownRef = useRef(false);
     const onMouseDown = (e: React.MouseEvent) => {
-        isMouseDownRef.current = true;
-        beginPointer(e.clientX, e.clientY);
+        isMouseDownRef.current = beginPointer(e.clientX, e.clientY);
     };
     useEffect(() => {
         const handleMove = (e: MouseEvent) => {
