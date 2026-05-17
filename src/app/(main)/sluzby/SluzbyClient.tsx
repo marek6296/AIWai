@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { SERVICES } from "@/lib/seo/services";
 import { useTranslation } from "@/i18n/useTranslation";
+import { CpuArchitecture } from "@/components/ui/CpuArchitecture";
 
 export default function SluzbyClient() {
     const { t } = useTranslation();
@@ -35,8 +36,15 @@ export default function SluzbyClient() {
             </section>
 
             {/* Service grid */}
-            <section className="container relative z-10 mx-auto px-6 pb-24 md:pb-32">
-                <div className="grid gap-5 md:gap-6 md:grid-cols-2">
+            <section className="relative z-10 mx-auto px-6 pb-24 md:pb-32 container">
+                {/* Animated CPU architecture — sits behind cards */}
+                <div
+                    aria-hidden="true"
+                    className="pointer-events-none absolute inset-0 -z-10 flex items-center justify-center opacity-[0.18]"
+                >
+                    <CpuArchitecture className="w-[140%] max-w-[1400px] -translate-y-6" text="AIWAI" />
+                </div>
+                <div className="relative grid gap-5 md:gap-6 md:grid-cols-2">
                     {SERVICES.map((service, idx) => (
                         <Link
                             key={service.slug}
@@ -59,10 +67,23 @@ export default function SluzbyClient() {
 
                             <div className="relative mb-7">
                                 <div
-                                    className="text-5xl text-gold opacity-90 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-[6deg]"
                                     aria-hidden="true"
+                                    className="relative flex h-16 w-16 items-center justify-center rounded-2xl border border-gold/20 bg-gold/[0.04] transition-all duration-500 ease-out group-hover:border-gold/55 group-hover:bg-gold/10"
                                 >
-                                    {service.glyph}
+                                    {/* Soft glow that fades in on hover */}
+                                    <span
+                                        aria-hidden="true"
+                                        className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+                                        style={{
+                                            background:
+                                                "radial-gradient(circle at center, rgba(201,168,117,0.35), transparent 70%)",
+                                            filter: "blur(8px)",
+                                        }}
+                                    />
+                                    {/* Glyph — gentle lift + scale, no rotation */}
+                                    <span className="relative text-3xl leading-none text-gold transition-transform duration-500 ease-out group-hover:-translate-y-[2px] group-hover:scale-[1.08]">
+                                        {service.glyph}
+                                    </span>
                                 </div>
                             </div>
 
