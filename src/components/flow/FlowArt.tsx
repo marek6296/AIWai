@@ -47,20 +47,28 @@ export default function FlowArt({
 }: FlowArtProps) {
     const containerRef = useRef<HTMLElement>(null);
     const [reducedMotion, setReducedMotion] = useState(false);
+    const [isMobile, setIsMobile] = useState(false);
     const sectionCount = React.Children.count(children);
 
     useEffect(() => {
         const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+        const mqMobile = window.matchMedia("(max-width: 767px)");
         const update = () => setReducedMotion(mq.matches);
+        const updateMobile = () => setIsMobile(mqMobile.matches);
 
         update();
+        updateMobile();
         mq.addEventListener("change", update);
-        return () => mq.removeEventListener("change", update);
+        mqMobile.addEventListener("change", updateMobile);
+        return () => {
+            mq.removeEventListener("change", update);
+            mqMobile.removeEventListener("change", updateMobile);
+        };
     }, []);
 
     useEffect(() => {
         const container = containerRef.current;
-        if (!container || reducedMotion) return;
+        if (!container || reducedMotion || isMobile) return;
 
         gsap.registerPlugin(ScrollTrigger);
 
@@ -113,7 +121,7 @@ export default function FlowArt({
         return () => {
             ctx.revert();
         };
-    }, [sectionCount, reducedMotion]);
+    }, [sectionCount, reducedMotion, isMobile]);
 
     return (
         <main

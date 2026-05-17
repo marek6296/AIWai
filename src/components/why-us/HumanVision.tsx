@@ -15,7 +15,7 @@ export default function HumanVision() {
 
                     {/* ── Left: Artistic Human Element ── */}
                     <FadeIn className="lg:col-span-5 relative">
-                        <div className="relative aspect-[4/5] md:aspect-[3/4] max-h-[200px] md:max-h-none mx-auto md:mx-0 max-w-[180px] md:max-w-none rounded-3xl overflow-hidden shadow-[0_30px_70px_-20px_rgba(0,0,0,0.5)] ring-1 ring-gold/20">
+                        <div className="relative aspect-[4/5] md:aspect-[3/4] max-h-[480px] md:max-h-none mx-auto md:mx-0 max-w-sm md:max-w-none rounded-3xl overflow-hidden shadow-[0_30px_70px_-20px_rgba(0,0,0,0.5)] ring-1 ring-gold/20">
                             <Image
                                 src="/marek.jpg"
                                 alt="Marek AIWai"
@@ -31,7 +31,7 @@ export default function HumanVision() {
                     <FadeIn className="lg:col-span-7 flex flex-col justify-center" delay={0.1}>
                         <div className="space-y-4 md:space-y-5 text-cream/70 text-[15px] md:text-lg leading-relaxed font-light">
                             <p>{t("whyUs.philosophy.text1")}</p>
-                            <p className="hidden md:block">{t("whyUs.philosophy.text2")}</p>
+                            <p>{t("whyUs.philosophy.text2")}</p>
                         </div>
                         <div className="mt-8 md:mt-10 pt-6 md:pt-8 border-t border-cream/10">
                             <div className="font-display text-lg md:text-xl italic text-gold">
@@ -40,7 +40,7 @@ export default function HumanVision() {
                         </div>
 
                         {/* 3 Feature blocks */}
-                        <div className="hidden md:grid mt-8 md:mt-10 grid-cols-1 gap-3.5 md:gap-4 pt-6 md:pt-8 border-t border-cream/10">
+                        <div className="mt-8 md:mt-10 grid grid-cols-1 gap-3.5 md:gap-4 pt-6 md:pt-8 border-t border-cream/10">
                             {[0, 1, 2].map((i) => (
                                 <div key={i} className="flex gap-3 md:gap-4">
                                     <div className="w-1.5 h-1.5 rounded-full bg-gold/80 mt-2 md:mt-2.5 flex-shrink-0" />

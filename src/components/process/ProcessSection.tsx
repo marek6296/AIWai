@@ -41,7 +41,7 @@ export default function ProcessSection() {
     }));
 
     return (
-        <section className="py-6 md:py-28 bg-char relative overflow-hidden flex flex-col justify-center min-h-[100svh]">
+        <section className="py-16 md:py-28 bg-char relative overflow-hidden">
             {/* Static CSS grid — no framer-motion, no data URL → no hydration mismatch */}
             <div aria-hidden="true" className="absolute inset-0 pointer-events-none gold-vlines opacity-40" />
             <div aria-hidden="true" className="absolute -top-40 -right-40 w-[600px] h-[600px] rounded-full pointer-events-none" style={{ background: "radial-gradient(circle, rgba(201,168,117,0.12) 0%, transparent 65%)" }} />

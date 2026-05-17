@@ -100,12 +100,12 @@ export default function CennikClient() {
             </div>
 
             {/* Hero */}
-            <section className="pt-28 pb-6 md:pt-32 md:pb-8 relative z-10">
-                <div className="container mx-auto px-6 max-w-4xl">
-                    <h1 className="font-display font-bold text-cream text-[2.5rem] md:text-6xl lg:text-7xl tracking-tight leading-[1.05] mb-5">
+            <section className="pt-24 pb-8 md:pt-28 md:pb-10 relative z-10">
+                <div className="container mx-auto px-6 text-center">
+                    <h1 className="mx-auto mb-4 font-display font-bold text-cream text-4xl md:text-6xl tracking-tight leading-[1.05]">
                         {t("cennik.h1")}
                     </h1>
-                    <p className="text-cream/65 text-lg md:text-xl font-light leading-relaxed max-w-3xl">
+                    <p className="mx-auto max-w-2xl text-cream/65 text-base md:text-lg font-light leading-relaxed">
                         {t("cennik.lead")}
                     </p>
                 </div>

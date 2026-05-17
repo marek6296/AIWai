@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "framer-motion";
-import { ChevronLeft, ChevronRight, ExternalLink, Grid, X, ZoomIn } from "lucide-react";
+import { ChevronLeft, ChevronRight, ExternalLink, X, ZoomIn } from "lucide-react";
 import { KeyboardEvent, useEffect, useState } from "react";
 import { REALIZACIE_PROJECTS, type ProjectTag } from "@/app/(main)/realizacie/data";
 
@@ -61,7 +61,7 @@ export default function RealizacieGallery() {
 
     return (
         <section
-            className="relative w-full px-4 py-16 md:py-24"
+            className="relative w-full px-4 pb-16 md:pb-24"
             aria-labelledby="realizacie-gallery-heading"
         >
             <div className="mx-auto max-w-7xl">
@@ -71,17 +71,13 @@ export default function RealizacieGallery() {
                     transition={{ duration: 0.6 }}
                     className="mb-10 md:mb-14 text-center"
                 >
-                    <span className="inline-flex items-center gap-2 mb-5 rounded-full border border-gold/35 bg-gold/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-gold">
-                        <Grid className="h-3 w-3" />
-                        Realizácie
-                    </span>
-                    <h2
+                    <h1
                         id="realizacie-gallery-heading"
-                        className="mb-4 font-display text-4xl md:text-6xl font-bold tracking-tight text-cream"
+                        className="mx-auto mb-4 font-display text-4xl md:text-6xl font-bold tracking-tight leading-[1.05] text-cream"
                     >
                         Naše portfólio
-                    </h2>
-                    <p className="mx-auto max-w-2xl text-cream/55 text-base md:text-lg font-light leading-relaxed">
+                    </h1>
+                    <p className="mx-auto max-w-2xl text-cream/65 text-base md:text-lg font-light leading-relaxed">
                         Weby, aplikácie a AI projekty — výber z toho, čo sme postavili pre seba aj pre klientov.
                     </p>
                 </motion.div>

@@ -123,7 +123,7 @@ export default function ServicesSection() {
     return (
         <section
             id="services"
-            className="relative overflow-hidden bg-char py-6 md:py-16 isolate flex flex-col justify-center min-h-[100svh]"
+            className="relative overflow-hidden bg-char py-12 md:py-16 isolate"
             onClick={clearSelection}
         >
             <SectionBackground variant="default" />
@@ -249,11 +249,11 @@ export default function ServicesSection() {
                                     <p className="mb-5 text-sm font-light leading-relaxed text-cream/60 md:text-base">
                                         {activeService.description}
                                     </p>
-                                    <p className="hidden md:block mb-6 text-sm font-light leading-relaxed text-cream/70">
+                                    <p className="mb-6 text-sm font-light leading-relaxed text-cream/70">
                                         {activeService.details.whatIsIt}
                                     </p>
 
-                                    <div className="mb-6 hidden md:grid grid-cols-1 gap-2 sm:grid-cols-2">
+                                    <div className="mb-6 grid grid-cols-1 gap-2 sm:grid-cols-2">
                                         {activeService.details.includes.slice(0, 6).map((item) => (
                                             <div key={item} className="flex items-start gap-2.5 rounded-[8px] border border-cream/10 bg-cream/[0.035] px-3 py-2.5">
                                                 <Sparkles className="mt-0.5 h-3.5 w-3.5 shrink-0 text-gold/80" />
@@ -262,7 +262,7 @@ export default function ServicesSection() {
                                         ))}
                                     </div>
 
-                                    <div className="mb-6 hidden md:block border-t border-cream/10 pt-5">
+                                    <div className="mb-6 border-t border-cream/10 pt-5">
                                         <div className="mb-2 flex items-center justify-between text-xs text-cream/50">
                                             <span className="inline-flex items-center gap-1.5 uppercase tracking-[0.16em]">
                                                 <Zap className="h-3 w-3 text-gold" />
@@ -328,7 +328,7 @@ export default function ServicesSection() {
                                     <p className="mb-5 text-sm font-light leading-relaxed text-cream/60 md:text-base">
                                         Päť služieb. Jeden tím. Všetko, čo váš biznis potrebuje online.
                                     </p>
-                                    <p className="hidden md:block mb-6 text-sm font-light leading-relaxed text-cream/70">
+                                    <p className="mb-6 text-sm font-light leading-relaxed text-cream/70">
                                         Web, automatizácia, AI a dizajn fungujú najlepšie spolu. Preto ich navrhujeme ako jeden prepojený systém — kliknite na ktorúkoľvek službu v orbite a zobrazia sa detaily.
                                     </p>
 

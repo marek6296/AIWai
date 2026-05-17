@@ -16,7 +16,7 @@ export default function RealizacieClient() {
             </div>
 
             {/* Gallery — filter chips + grid + lightbox */}
-            <section className="relative z-10 pt-20 md:pt-28">
+            <section className="relative z-10 pt-24 pb-8 md:pt-28 md:pb-10">
                 <RealizacieGallery />
             </section>
 

@@ -24,31 +24,14 @@ export default function SluzbyClient() {
             <div aria-hidden="true" className="pointer-events-none absolute inset-0 gold-vlines opacity-25" />
 
             {/* Hero */}
-            <section className="container relative z-10 mx-auto px-6 pt-32 pb-12 md:pt-40 md:pb-16">
-                <nav aria-label="Breadcrumb" className="mb-8 text-xs uppercase tracking-[0.2em] text-cream/55">
-                    <ol className="flex items-center gap-2">
-                        <li>
-                            <Link href="/" className="hover:text-gold transition-colors">
-                                AIWai
-                            </Link>
-                        </li>
-                        <li aria-hidden="true" className="text-cream/30">/</li>
-                        <li aria-current="page" className="text-cream/90">
-                            {t("sluzbyHub.breadcrumb")}
-                        </li>
-                    </ol>
-                </nav>
-
-                <div className="max-w-4xl">
-                    <h1 className="font-display font-bold tracking-tight text-cream leading-[1.05] text-[2.5rem] md:text-7xl mb-6 sluzby-fade-in">
-                        {t("sluzbyHub.h1.line1")}
-                        <br />
-                        <span className="text-gold">{t("sluzbyHub.h1.line2")}</span>
-                    </h1>
-                    <p className="max-w-2xl text-lg md:text-xl text-cream/70 leading-relaxed font-light sluzby-fade-in [animation-delay:120ms]">
-                        {t("sluzbyHub.lead")}
-                    </p>
-                </div>
+            <section className="container relative z-10 mx-auto px-6 pt-24 pb-8 md:pt-28 md:pb-10 text-center">
+                <h1 className="mx-auto mb-4 font-display font-bold tracking-tight text-cream text-4xl md:text-6xl leading-[1.05] sluzby-fade-in">
+                    {t("sluzbyHub.h1.line1")}{" "}
+                    <span className="text-gold">{t("sluzbyHub.h1.line2")}</span>
+                </h1>
+                <p className="mx-auto max-w-2xl text-base md:text-lg text-cream/65 leading-relaxed font-light sluzby-fade-in [animation-delay:120ms]">
+                    {t("sluzbyHub.lead")}
+                </p>
             </section>
 
             {/* Service grid */}
