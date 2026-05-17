@@ -110,7 +110,7 @@ export default function ContactSection() {
     ];
 
     return (
-        <section id="contact" className="py-20 md:py-36 bg-char relative overflow-hidden isolate">
+        <section id="contact" className="py-12 md:py-36 bg-char relative overflow-hidden isolate">
             <SectionBackground variant="default" />
 
             <div className="container mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center relative z-10">

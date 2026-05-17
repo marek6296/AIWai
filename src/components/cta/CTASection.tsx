@@ -9,7 +9,7 @@ export default function CTASection() {
     const { t } = useTranslation();
 
     return (
-        <section className="flex-1 flex items-center justify-center py-20 md:py-24 bg-char relative overflow-hidden min-h-screen">
+        <section className="py-16 md:py-24 bg-char relative overflow-hidden">
             <div aria-hidden="true" className="absolute inset-0 pointer-events-none gold-vlines opacity-40" />
             <div aria-hidden="true" className="absolute top-[10%] right-[5%] w-[600px] h-[600px] rounded-full pointer-events-none" style={{ background: "radial-gradient(circle, rgba(201,168,117,0.15) 0%, transparent 65%)" }} />
             <div aria-hidden="true" className="absolute bottom-[10%] left-[5%] w-[500px] h-[500px] rounded-full pointer-events-none" style={{ background: "radial-gradient(circle, rgba(201,168,117,0.08) 0%, transparent 65%)" }} />

@@ -118,7 +118,7 @@ export default function ServicesSection() {
         closeDetail();
     };
 
-    const radius = isCompact ? 128 : 220;
+    const radius = isCompact ? 85 : 220;
 
     return (
         <section
@@ -209,7 +209,7 @@ export default function ServicesSection() {
                                             <Icon className="h-5 w-5" />
                                         </span>
                                         <span
-                                            className={`max-w-[8.5rem] text-center text-[11px] font-bold uppercase leading-tight tracking-[0.16em] transition-colors md:text-xs ${
+                                            className={`hidden md:block max-w-[8.5rem] text-center text-[11px] font-bold uppercase leading-tight tracking-[0.16em] transition-colors md:text-xs ${
                                                 isActive ? "text-gold" : "text-cream/65 group-hover:text-cream"
                                             }`}
                                         >

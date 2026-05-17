@@ -57,16 +57,13 @@ export default function SluzbyClient() {
                                 style={{ background: "radial-gradient(circle, rgba(201,168,117,0.18) 0%, transparent 65%)" }}
                             />
 
-                            <div className="relative flex items-start justify-between mb-7">
+                            <div className="relative mb-7">
                                 <div
                                     className="text-5xl text-gold opacity-90 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-[6deg]"
                                     aria-hidden="true"
                                 >
                                     {service.glyph}
                                 </div>
-                                <span className="text-[10px] uppercase tracking-[0.3em] font-bold text-cream/30 group-hover:text-gold/80 transition-colors">
-                                    {String(idx + 1).padStart(2, "0")} / {String(SERVICES.length).padStart(2, "0")}
-                                </span>
                             </div>
 
                             <h2 className="font-display font-bold text-cream text-2xl md:text-[1.75rem] tracking-tight leading-tight mb-3">
