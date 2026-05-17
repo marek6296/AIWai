@@ -21,11 +21,11 @@ export function FlowSection({ children, className, flowId, "aria-label": ariaLab
             data-flow-section
             data-flow-anchor={flowId}
             aria-label={ariaLabel}
-            className={cx("relative min-h-[100svh] w-full overflow-hidden bg-char", className)}
+            className={cx("relative md:min-h-[100svh] w-full overflow-hidden bg-char", className)}
         >
             <div
                 data-flow-inner
-                className="flow-art-container relative min-h-[100svh] w-full will-change-transform"
+                className="flow-art-container relative md:min-h-[100svh] w-full will-change-transform"
                 style={{ transformOrigin: "bottom left" }}
             >
                 {children}
