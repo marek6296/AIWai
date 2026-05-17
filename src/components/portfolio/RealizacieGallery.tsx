@@ -4,7 +4,7 @@ import Image from "next/image";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, ExternalLink, X, ZoomIn } from "lucide-react";
-import { KeyboardEvent, useEffect, useState } from "react";
+import { KeyboardEvent, useEffect, useRef, useState } from "react";
 import { REALIZACIE_PROJECTS, type ProjectTag } from "@/app/(main)/realizacie/data";
 
 const ALL_TAGS: (ProjectTag | "Všetko")[] = ["Všetko", "Web", "Aplikácia", "AI"];
@@ -14,7 +14,30 @@ export default function RealizacieGallery() {
     const [filter, setFilter] = useState<ProjectTag | "Všetko">("Všetko");
     const [mounted, setMounted] = useState(false);
 
+    // Sliding gold pill for the filter toggle (matches cennik CategoryToggle)
+    const filterBtnRefs = useRef<Record<string, HTMLButtonElement | null>>({});
+    const [pillStyle, setPillStyle] = useState<{ width: number; height: number; transform: string }>({
+        width: 0,
+        height: 0,
+        transform: "translate(0,0)",
+    });
+
     useEffect(() => { setMounted(true); }, []);
+
+    useEffect(() => {
+        const update = () => {
+            const btn = filterBtnRefs.current[filter];
+            if (!btn) return;
+            setPillStyle({
+                width: btn.offsetWidth,
+                height: btn.offsetHeight,
+                transform: `translate(${btn.offsetLeft}px, ${btn.offsetTop}px)`,
+            });
+        };
+        update();
+        window.addEventListener("resize", update);
+        return () => window.removeEventListener("resize", update);
+    }, [filter]);
 
     const filtered =
         filter === "Všetko"
@@ -82,33 +105,40 @@ export default function RealizacieGallery() {
                     </p>
                 </motion.div>
 
-                {/* Filter Buttons */}
+                {/* Filter Buttons — matches cennik CategoryToggle */}
                 <motion.div
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.2 }}
-                    className="mb-10 flex flex-wrap justify-center gap-2"
+                    className="mb-10 flex justify-center"
                     role="group"
                     aria-label="Kategórie projektov"
                 >
-                    {ALL_TAGS.map((tag) => {
-                        const active = filter === tag;
-                        return (
-                            <button
-                                key={tag}
-                                type="button"
-                                onClick={() => setFilter(tag)}
-                                aria-pressed={active}
-                                className={`rounded-full px-4 py-2 text-[11px] font-bold uppercase tracking-[0.16em] transition-all ${
-                                    active
-                                        ? "bg-gold text-ink shadow-[0_0_24px_rgba(201,168,117,0.28)]"
-                                        : "border border-cream/15 bg-cream/[0.03] text-cream/65 hover:border-gold/50 hover:text-gold"
-                                }`}
-                            >
-                                {tag}
-                            </button>
-                        );
-                    })}
+                    <div className="relative flex w-fit flex-wrap items-center justify-center gap-1 rounded-2xl border border-cream/10 bg-char-soft/60 p-1 backdrop-blur">
+                        <motion.div
+                            aria-hidden="true"
+                            className="absolute left-0 top-0 rounded-full bg-gold"
+                            style={pillStyle}
+                            transition={{ type: "spring", stiffness: 500, damping: 40 }}
+                        />
+                        {ALL_TAGS.map((tag) => {
+                            const active = filter === tag;
+                            return (
+                                <button
+                                    key={tag}
+                                    ref={(el) => { filterBtnRefs.current[tag] = el; }}
+                                    type="button"
+                                    onClick={() => setFilter(tag)}
+                                    aria-pressed={active}
+                                    className={`relative z-10 rounded-full px-4 sm:px-5 py-2 text-[11px] sm:text-xs font-bold uppercase tracking-[0.16em] transition-colors ${
+                                        active ? "text-ink" : "text-cream/60 hover:text-cream"
+                                    }`}
+                                >
+                                    {tag}
+                                </button>
+                            );
+                        })}
+                    </div>
                 </motion.div>
 
                 {/* Gallery Grid */}
