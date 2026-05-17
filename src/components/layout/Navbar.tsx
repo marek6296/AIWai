@@ -138,30 +138,52 @@ export default function Navbar() {
                             />
                         </Link>
 
-                        {/* Language switcher — desktop only */}
-                        <div className="relative hidden md:block" ref={langRef}>
+                        {/* Language switcher — desktop only, segmented */}
+                        <div className="hidden md:flex items-center" ref={langRef}>
+                            {LANGS.map((l, i) => {
+                                const isActive = l.code === lang;
+                                return (
+                                    <div key={l.code} className="flex items-center">
+                                        {i > 0 && (
+                                            <span aria-hidden className={`mx-1.5 h-3 w-px ${darkMode ? "bg-cream/15" : "bg-brand-indigo/15"}`} />
+                                        )}
+                                        <button
+                                            onClick={() => setLang(l.code)}
+                                            aria-current={isActive ? "true" : undefined}
+                                            className={`relative px-1.5 py-1 text-[11px] font-bold uppercase tracking-[0.22em] transition-all duration-300 ${
+                                                isActive
+                                                    ? darkMode ? "text-gold" : "text-brand-indigo"
+                                                    : darkMode ? "text-cream/40 hover:text-cream/80" : "text-brand-indigo/45 hover:text-brand-indigo/80"
+                                            }`}
+                                        >
+                                            {l.label}
+                                            <span
+                                                aria-hidden
+                                                className={`pointer-events-none absolute left-1 right-1 -bottom-0.5 h-px transition-transform duration-300 origin-center ${darkMode ? "bg-gold" : "bg-brand-indigo"} ${
+                                                    isActive ? "scale-x-100" : "scale-x-0"
+                                                }`}
+                                            />
+                                        </button>
+                                    </div>
+                                );
+                            })}
+                        </div>
+
+                        {/* Old dropdown — hidden, kept as fallback wrapper to maintain refs (no longer rendered) */}
+                        <div className="hidden">
                             <button
                                 onClick={() => setLangOpen(!langOpen)}
-                                className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl transition-colors ${darkMode ? "hover:bg-cream/5" : "hover:bg-brand-indigo/5"}`}
                                 aria-label="Change language"
                             >
-                                <span className="text-base">{LANGS.find((l) => l.code === lang)?.flag}</span>
-                                <svg className={`w-3 h-3 transition-transform duration-200 ${darkMode ? "text-cream/40" : "text-brand-indigo/40"} ${langOpen ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
-                                </svg>
+                                <span>{LANGS.find((l) => l.code === lang)?.flag}</span>
                             </button>
-
-                            {/* Dropdown — CSS visibility trick, no AnimatePresence */}
-                            <div className={`absolute top-full left-0 mt-1 ${darkMode ? "bg-char/95 border-cream/15" : "bg-white/95 border-brand-indigo/10"} backdrop-blur-md border rounded-xl shadow-lg overflow-hidden transition-all duration-150 ${
-                                langOpen ? "opacity-100 translate-y-0 visible pointer-events-auto" : "opacity-0 -translate-y-1 invisible pointer-events-none"
-                            }`}>
+                            <div className={langOpen ? "" : ""}>
                                 {LANGS.filter((l) => l.code !== lang).map((l) => (
                                     <button
                                         key={l.code}
                                         onClick={() => { setLang(l.code); setLangOpen(false); }}
-                                        className={`flex items-center gap-2 w-full px-3 py-2 text-sm transition-colors ${darkMode ? "hover:bg-cream/5" : "hover:bg-brand-indigo/5"}`}
                                     >
-                                        <span className="text-base">{l.flag}</span>
+                                        <span>{l.flag}</span>
                                         <span className={`text-xs font-medium uppercase ${darkMode ? "text-cream/70" : "text-brand-indigo/60"}`}>{l.label}</span>
                                     </button>
                                 ))}
