@@ -105,6 +105,13 @@ export default function FlowArt({
                 }
 
                 if (index < sections.length - 1) {
+                    // Sections that own their internal scroll-driven animation
+                    // (e.g. ProcessSection's gold timeline) cannot be pinned —
+                    // framer-motion useScroll progress freezes during a GSAP pin
+                    // and then jumps to 100% on release.
+                    const noPin = section.dataset.flowAnchor === "process";
+                    if (noPin) return;
+
                     ScrollTrigger.create({
                         trigger: section,
                         start: "bottom bottom",
