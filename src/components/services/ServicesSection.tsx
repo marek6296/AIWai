@@ -128,8 +128,8 @@ export default function ServicesSection() {
         >
             <SectionBackground variant="default" />
             <div aria-hidden="true" className="absolute inset-0 gold-vlines opacity-30" />
-            <div aria-hidden="true" className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-char to-transparent" />
-            <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-char to-transparent" />
+            <div aria-hidden="true" className="hidden md:block absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-char to-transparent" />
+            <div aria-hidden="true" className="hidden md:block absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-char to-transparent" />
 
             <div className="container relative z-10 mx-auto px-6">
                 <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(340px,0.95fr)]">

@@ -76,13 +76,13 @@ export default function SectionBackground({
             {topFade && (
                 <div
                     aria-hidden="true"
-                    className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-char/80 to-transparent pointer-events-none"
+                    className="hidden md:block absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-char/80 to-transparent pointer-events-none"
                 />
             )}
             {bottomFade && (
                 <div
                     aria-hidden="true"
-                    className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-char/80 to-transparent pointer-events-none"
+                    className="hidden md:block absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-char/80 to-transparent pointer-events-none"
                 />
             )}
         </div>
