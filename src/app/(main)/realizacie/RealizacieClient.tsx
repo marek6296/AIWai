@@ -3,6 +3,7 @@
 import Link from "next/link";
 import RealizacieGallery from "@/components/portfolio/RealizacieGallery";
 import SectionBackground from "@/components/backgrounds/SectionBackground";
+import InteractiveStarfieldLayer from "@/components/backgrounds/InteractiveStarfield";
 import { useTranslation } from "@/i18n/useTranslation";
 
 export default function RealizacieClient() {
@@ -10,10 +11,11 @@ export default function RealizacieClient() {
 
     return (
         <main className="relative min-h-[100dvh] bg-char overflow-hidden">
-            {/* Pozadie — jemné gold radial glows */}
+            {/* Pozadie — jemné gold radial glows + gold spark častice (rovnaké ako cennik) */}
             <div className="absolute inset-0 pointer-events-none">
                 <SectionBackground variant="soft" topFade={false} />
             </div>
+            <InteractiveStarfieldLayer />
 
             {/* Gallery — filter chips + grid + lightbox */}
             <section className="relative z-10 pt-24 pb-8 md:pt-28 md:pb-10">

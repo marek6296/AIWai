@@ -1,16 +1,18 @@
 "use client";
 
 import Link from "next/link";
-import { AnimatePresence, motion, useSpring } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { Check, Star } from "lucide-react";
 import React, {
     createContext,
     useContext,
     useEffect,
-    useMemo,
     useRef,
     useState,
 } from "react";
+import { InteractiveStarfield } from "@/components/backgrounds/InteractiveStarfield";
+
+type Mouse = { x: number | null; y: number | null };
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -44,100 +46,6 @@ const CategoryContext = createContext<{
 
 const MAX_SLOTS = 3;
 const CARD_MIN_HEIGHT = "min-h-[620px]";
-
-// ── Starfield ────────────────────────────────────────────────────────────────
-
-type Mouse = { x: number | null; y: number | null };
-
-function Spark({
-    mouse,
-    containerRef,
-}: {
-    mouse: Mouse;
-    containerRef: React.RefObject<HTMLDivElement>;
-}) {
-    const [initial] = useState(() => ({
-        top: `${Math.random() * 100}%`,
-        left: `${Math.random() * 100}%`,
-        size: 1 + Math.random() * 2,
-        duration: 2 + Math.random() * 3,
-        delay: Math.random() * 5,
-    }));
-
-    const springConfig = { stiffness: 100, damping: 15, mass: 0.1 };
-    const springX = useSpring(0, springConfig);
-    const springY = useSpring(0, springConfig);
-
-    useEffect(() => {
-        if (!containerRef.current || mouse.x === null || mouse.y === null) {
-            springX.set(0);
-            springY.set(0);
-            return;
-        }
-        const rect = containerRef.current.getBoundingClientRect();
-        const starX = rect.left + (parseFloat(initial.left) / 100) * rect.width;
-        const starY = rect.top + (parseFloat(initial.top) / 100) * rect.height;
-        const dx = mouse.x - starX;
-        const dy = mouse.y - starY;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        const radius = 500;
-        if (dist < radius) {
-            const force = 1 - dist / radius;
-            springX.set(dx * force * 0.45);
-            springY.set(dy * force * 0.45);
-        } else {
-            springX.set(0);
-            springY.set(0);
-        }
-    }, [mouse, initial, containerRef, springX, springY]);
-
-    return (
-        <motion.div
-            aria-hidden="true"
-            className="absolute rounded-full bg-gold"
-            style={{
-                top: initial.top,
-                left: initial.left,
-                width: initial.size,
-                height: initial.size,
-                x: springX,
-                y: springY,
-                boxShadow: "0 0 6px rgba(201,168,117,0.5)",
-                willChange: "transform",
-            }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: [0, 1, 0] }}
-            transition={{
-                duration: initial.duration,
-                repeat: Infinity,
-                delay: initial.delay,
-            }}
-        />
-    );
-}
-
-function Starfield({
-    mouse,
-    containerRef,
-    count = 80,
-}: {
-    mouse: Mouse;
-    containerRef: React.RefObject<HTMLDivElement>;
-    count?: number;
-}) {
-    const sparks = useMemo(() => Array.from({ length: count }), [count]);
-    return (
-        <div
-            aria-hidden="true"
-            className="absolute inset-0 overflow-hidden pointer-events-none"
-            style={{ transform: "translateZ(0)" }}
-        >
-            {sparks.map((_, i) => (
-                <Spark key={i} mouse={mouse} containerRef={containerRef} />
-            ))}
-        </div>
-    );
-}
 
 // ── Toggle pill ──────────────────────────────────────────────────────────────
 
@@ -375,7 +283,7 @@ export default function PricingSection({
                 onMouseLeave={() => setMouse({ x: null, y: null })}
                 className="relative w-full"
             >
-                {mounted && <Starfield mouse={mouse} containerRef={containerRef} />}
+                {mounted && <InteractiveStarfield mouse={mouse} containerRef={containerRef} />}
 
                 <div className="relative z-10 container mx-auto px-4 md:px-6 pb-20 md:pb-28">
                     <CategoryToggle categories={categories} />
