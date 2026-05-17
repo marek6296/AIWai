@@ -22,8 +22,6 @@ export default function GlowHeadline({ children, className = "" }: GlowHeadlineP
             const y = e.clientY - rect.top;
             el.style.setProperty("--x", `${x.toFixed(1)}px`);
             el.style.setProperty("--y", `${y.toFixed(1)}px`);
-            const xp = rect.width > 0 ? (x / rect.width).toFixed(3) : "0.5";
-            el.style.setProperty("--xp", xp);
         };
 
         document.addEventListener("pointermove", onMove);
@@ -38,54 +36,72 @@ export default function GlowHeadline({ children, className = "" }: GlowHeadlineP
     };
 
     const css = `
-        @property --glow-active {
-            syntax: '<number>';
-            inherits: true;
-            initial-value: 0;
-        }
-        .${scopeClass} {
-            --glow-active: 0;
-            transition: --glow-active 500ms cubic-bezier(0.22, 1, 0.36, 1);
-        }
-        .${scopeClass}:hover {
-            --glow-active: 1;
-        }
-        .${scopeClass} .hero-line {
-            --glow-c: color-mix(in srgb,
-                var(--blue) calc(var(--glow-active, 0) * 100%),
-                transparent);
-            background-image:
-                radial-gradient(var(--spot) var(--spot) at var(--x, 50%) var(--y, 50%),
-                    var(--glow-c) 0%,
-                    var(--glow-c) 12%,
-                    transparent 55%),
-                linear-gradient(#F5EDDC, #F5EDDC);
-            -webkit-background-clip: text;
-            background-clip: text;
+        .${scopeClass} { position: relative; }
+
+        /* ─── BASE LAYER: outline-only text (always visible) ─── */
+        .${scopeClass} .glowh-base .hero-line {
             color: transparent !important;
-            -webkit-text-fill-color: transparent;
+            -webkit-text-fill-color: transparent !important;
+            -webkit-text-stroke: 1px #F5EDDC;
+            paint-order: stroke fill;
         }
-        .${scopeClass} div.hero-line {
-            background-image:
-                radial-gradient(var(--spot) var(--spot) at var(--x, 50%) var(--y, 50%),
-                    var(--glow-c) 0%,
-                    var(--glow-c) 12%,
-                    transparent 55%),
-                linear-gradient(rgba(245, 237, 220, 0.55), rgba(245, 237, 220, 0.55));
+        .${scopeClass} .glowh-base div.hero-line {
+            -webkit-text-stroke-color: rgba(245, 237, 220, 0.55);
+            transition: -webkit-text-stroke-color 500ms ease-out;
         }
-        .${scopeClass} .hero-line .text-gold {
-            -webkit-text-fill-color: #C9A875;
-            color: #C9A875;
-            background-image: none;
-            -webkit-background-clip: border-box;
-            background-clip: border-box;
+        .${scopeClass}:hover .glowh-base div.hero-line {
+            -webkit-text-stroke-color: rgba(245, 237, 220, 0.85);
+        }
+        /* keep gold ▲ filled in base layer */
+        .${scopeClass} .glowh-base .hero-line .text-gold {
+            -webkit-text-fill-color: #C9A875 !important;
+            color: #C9A875 !important;
+            -webkit-text-stroke: 0;
+        }
+
+        /* ─── GLOW LAYER: duplicate outline, masked by cursor spotlight ─── */
+        .${scopeClass} .glowh-glow {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 400ms cubic-bezier(0.22, 1, 0.36, 1);
+            -webkit-mask-image: radial-gradient(
+                var(--spot) var(--spot) at var(--x, 50%) var(--y, 50%),
+                #000 0%,
+                rgba(0,0,0,0.85) 25%,
+                transparent 60%);
+            mask-image: radial-gradient(
+                var(--spot) var(--spot) at var(--x, 50%) var(--y, 50%),
+                #000 0%,
+                rgba(0,0,0,0.85) 25%,
+                transparent 60%);
+        }
+        .${scopeClass}:hover .glowh-glow { opacity: 1; }
+
+        .${scopeClass} .glowh-glow .hero-line {
+            color: transparent !important;
+            -webkit-text-fill-color: transparent !important;
+            -webkit-text-stroke: 1.4px var(--blue);
+            paint-order: stroke fill;
+            filter:
+                drop-shadow(0 0 3px rgba(201,168,117,0.9))
+                drop-shadow(0 0 10px rgba(201,168,117,0.55));
+        }
+        /* hide gold ▲ in glow layer (keeps layout, no double-render) */
+        .${scopeClass} .glowh-glow .hero-line .text-gold {
+            -webkit-text-fill-color: transparent !important;
+            color: transparent !important;
+            -webkit-text-stroke: 0 !important;
+            filter: none !important;
         }
     `;
 
     return (
         <div ref={ref} className={`relative group ${scopeClass} ${className}`} style={wrapperStyle}>
             <style dangerouslySetInnerHTML={{ __html: css }} />
-            {children}
+            <div className="glowh-base">{children}</div>
+            <div className="glowh-glow" aria-hidden="true">{children}</div>
         </div>
     );
 }
