@@ -40,9 +40,9 @@ export default function SluzbyClient() {
                 {/* Animated CPU architecture — sits behind cards */}
                 <div
                     aria-hidden="true"
-                    className="pointer-events-none absolute inset-0 -z-10 flex items-center justify-center opacity-[0.18]"
+                    className="pointer-events-none absolute inset-x-0 top-0 -z-10 flex items-start justify-center opacity-[0.20]"
                 >
-                    <CpuArchitecture className="w-[140%] max-w-[1400px] -translate-y-6" text="AIWAI" />
+                    <CpuArchitecture className="w-[140%] max-w-[1400px] -translate-y-24" text="AIWAI" />
                 </div>
                 <div className="relative grid gap-5 md:gap-6 md:grid-cols-2">
                     {SERVICES.map((service, idx) => (
