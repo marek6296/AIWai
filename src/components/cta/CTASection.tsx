@@ -9,10 +9,20 @@ export default function CTASection() {
     const { t } = useTranslation();
 
     return (
-        <section className="py-16 md:py-24 bg-char relative overflow-hidden">
-            <div aria-hidden="true" className="absolute inset-0 pointer-events-none gold-vlines opacity-40" />
-            <div aria-hidden="true" className="absolute top-[10%] right-[5%] w-[600px] h-[600px] rounded-full pointer-events-none" style={{ background: "radial-gradient(circle, rgba(201,168,117,0.15) 0%, transparent 65%)" }} />
-            <div aria-hidden="true" className="absolute bottom-[10%] left-[5%] w-[500px] h-[500px] rounded-full pointer-events-none" style={{ background: "radial-gradient(circle, rgba(201,168,117,0.08) 0%, transparent 65%)" }} />
+        <section className="bg-char relative overflow-hidden flex items-center justify-center min-h-[100svh] py-16 md:py-24">
+            <div aria-hidden="true" className="absolute inset-0 pointer-events-none gold-vlines opacity-30" />
+            {/* Single centered soft radial — no hard clipped edges */}
+            <div
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-0"
+                style={{
+                    background:
+                        "radial-gradient(ellipse 70% 60% at 50% 50%, rgba(201,168,117,0.18) 0%, rgba(201,168,117,0.06) 35%, transparent 70%)",
+                }}
+            />
+            {/* Top & bottom char fades — smooth blend into adjacent sections */}
+            <div aria-hidden="true" className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-char to-transparent pointer-events-none" />
+            <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-char to-transparent pointer-events-none" />
 
             <div className="container mx-auto px-6 relative z-10 text-center">
                 <ScrollReveal>
