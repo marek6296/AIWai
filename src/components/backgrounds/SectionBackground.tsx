@@ -34,38 +34,16 @@ export default function SectionBackground({
             className="absolute inset-0 pointer-events-none overflow-hidden"
             style={{ transform: "translateZ(0)", willChange: "transform" }}
         >
-            {/* Static gold vertical guide lines (matches Process / CTA sections) */}
-            <div
-                aria-hidden="true"
-                className="absolute inset-0 pointer-events-none gold-vlines opacity-40"
-            />
-
             {/* Rotating hexagons */}
             {showHex && <HexagonOverlay />}
 
-            {/* Radial glows */}
+            {/* Single subtle radial glow */}
             <div
                 aria-hidden="true"
-                className="absolute -top-40 -right-40 w-[640px] h-[640px] rounded-full pointer-events-none"
+                className="absolute -top-40 -right-40 w-[520px] h-[520px] rounded-full pointer-events-none"
                 style={{
                     background:
-                        "radial-gradient(circle, rgba(201,168,117,0.12) 0%, transparent 65%)",
-                }}
-            />
-            <div
-                aria-hidden="true"
-                className="absolute -bottom-40 -left-40 w-[560px] h-[560px] rounded-full pointer-events-none"
-                style={{
-                    background:
-                        "radial-gradient(circle, rgba(201,168,117,0.08) 0%, transparent 65%)",
-                }}
-            />
-            <div
-                aria-hidden="true"
-                className="absolute top-1/3 left-1/3 w-[480px] h-[480px] rounded-full pointer-events-none"
-                style={{
-                    background:
-                        "radial-gradient(circle, rgba(228,200,150,0.05) 0%, transparent 70%)",
+                        "radial-gradient(circle, rgba(201,168,117,0.035) 0%, transparent 65%)",
                 }}
             />
 

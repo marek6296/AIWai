@@ -27,9 +27,8 @@ export default function Footer() {
     return (
         <footer className="bg-char relative overflow-hidden border-t border-cream/5">
             {/* Subtle ambient glow */}
-            <div aria-hidden="true" className="absolute -top-32 left-1/2 -translate-x-1/2 w-[700px] h-[300px] rounded-full pointer-events-none"
-                style={{ background: "radial-gradient(ellipse, rgba(201,168,117,0.10) 0%, transparent 70%)" }} />
-            <div aria-hidden="true" className="absolute inset-0 pointer-events-none gold-vlines opacity-30" />
+            <div aria-hidden="true" className="absolute -top-32 left-1/2 -translate-x-1/2 w-[500px] h-[220px] rounded-full pointer-events-none"
+                style={{ background: "radial-gradient(ellipse, rgba(201,168,117,0.035) 0%, transparent 70%)" }} />
             <div className="h-px bg-gradient-to-r from-transparent via-gold/30 to-transparent" />
 
             <div className="container mx-auto px-6 py-12 md:py-20 relative z-10">

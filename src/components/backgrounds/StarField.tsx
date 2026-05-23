@@ -45,14 +45,14 @@ export default function StarField() {
         }
 
         function spawn() {
-            const count = window.innerWidth < 768 ? 70 : 160;
+            const count = window.innerWidth < 768 ? 45 : 100;
             particles = Array.from({ length: count }, () => ({
                 x: Math.random() * width,
                 y: Math.random() * height,
                 vx: (Math.random() - 0.5) * 0.25,
                 vy: (Math.random() - 0.5) * 0.25,
                 r: Math.random() < 0.08 ? 1.4 + Math.random() * 1.4 : 0.4 + Math.random() * 1.2,
-                a: 0.25 + Math.random() * 0.55,
+                a: 0.14 + Math.random() * 0.32,
                 twinkle: Math.random() * Math.PI * 2,
                 twinkleSpeed: 0.005 + Math.random() * 0.015,
             }));
@@ -171,7 +171,7 @@ export default function StarField() {
                     const dy = particles[i].y - particles[j].y;
                     const dist = Math.sqrt(dx * dx + dy * dy);
                     if (dist < 140) {
-                        const alpha = ((140 - dist) / 140) * 0.18;
+                        const alpha = ((140 - dist) / 140) * 0.10;
                         ctx!.strokeStyle = `rgba(201, 168, 117, ${alpha})`;
                         ctx!.lineWidth = 0.5;
                         ctx!.beginPath();

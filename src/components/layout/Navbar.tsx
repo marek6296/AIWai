@@ -295,13 +295,9 @@ export default function Navbar() {
             >
                 {/* Background ambience — gold glow on dark, matches site theme */}
                 <div aria-hidden="true" className="absolute inset-0 pointer-events-none overflow-hidden">
-                    <div className="absolute top-[10%] left-[10%] w-[320px] h-[320px] rounded-full"
-                        style={{ background: "radial-gradient(circle, rgba(201,168,117,0.18) 0%, transparent 65%)" }} />
-                    <div className="absolute bottom-[10%] right-[10%] w-[320px] h-[320px] rounded-full"
-                        style={{ background: "radial-gradient(circle, rgba(201,168,117,0.10) 0%, transparent 70%)" }} />
+                    <div className="absolute top-[10%] left-[10%] w-[280px] h-[280px] rounded-full"
+                        style={{ background: "radial-gradient(circle, rgba(201,168,117,0.05) 0%, transparent 65%)" }} />
                 </div>
-                <div aria-hidden="true" className="absolute inset-0 gold-vlines opacity-30 pointer-events-none" />
-
                 <div className="flex flex-col items-center gap-10 relative z-10 w-full px-12">
                     <div className="aiwai-menu-item overflow-hidden w-full flex justify-center">
                         <Link

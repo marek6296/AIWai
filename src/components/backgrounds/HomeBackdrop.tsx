@@ -23,7 +23,7 @@ export default function HomeBackdrop() {
             </div>
             <div
                 aria-hidden="true"
-                className="md:hidden absolute inset-0 opacity-60"
+                className="md:hidden absolute inset-0 opacity-35"
                 style={{
                     backgroundImage:
                         "radial-gradient(circle at 12% 18%, rgba(201,168,117,0.55) 0.5px, transparent 1.5px)," +
@@ -37,23 +37,12 @@ export default function HomeBackdrop() {
                 }}
             />
 
-            {/* Vertical gold guide lines */}
-            <div className="absolute inset-0 gold-vlines opacity-30" />
-
-            {/* Soft ambient glow — top-right */}
+            {/* Single very subtle ambient glow — top-right only */}
             <div
-                className="absolute -top-40 -right-40 w-[720px] h-[720px] rounded-full"
+                className="absolute -top-40 -right-40 w-[560px] h-[560px] rounded-full"
                 style={{
                     background:
-                        "radial-gradient(circle, rgba(201,168,117,0.10) 0%, transparent 65%)",
-                }}
-            />
-            {/* Soft ambient glow — bottom-left (neutral dark, no blue) */}
-            <div
-                className="absolute -bottom-40 -left-40 w-[640px] h-[640px] rounded-full"
-                style={{
-                    background:
-                        "radial-gradient(circle, rgba(20,18,14,0.55) 0%, transparent 70%)",
+                        "radial-gradient(circle, rgba(201,168,117,0.025) 0%, transparent 65%)",
                 }}
             />
 
