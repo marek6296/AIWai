@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import SectionBackground from "@/components/backgrounds/SectionBackground";
+import FloatingServiceIcons from "@/components/services/FloatingServiceIcons";
 import { SERVICES } from "@/lib/seo/services";
 import { SERVICE_ICONS, SERVICE_TAGS } from "@/lib/seo/serviceMeta";
 import { useTranslation } from "@/i18n/useTranslation";
@@ -21,9 +22,10 @@ export default function SluzbyClient() {
     return (
         <main className="relative min-h-screen bg-char text-cream selection:bg-gold/30 selection:text-cream">
             {/* HERO — fullscreen ───────────────────────────────────────── */}
-            <section className="relative flex min-h-screen min-h-[100svh] items-center border-b border-cream/[0.07]">
+            <section className="relative flex min-h-screen min-h-[100svh] items-center overflow-hidden border-b border-cream/[0.07]">
                 <SectionBackground variant="soft" />
-                <div className="relative mx-auto w-full max-w-7xl px-6 py-32 md:py-40">
+                <FloatingServiceIcons />
+                <div className="relative z-10 mx-auto w-full max-w-7xl px-6 py-32 md:py-40">
                     <SectionLabel>{t("sluzbyHub.breadcrumb")}</SectionLabel>
 
                     <h1 className="mt-8 max-w-[18ch] font-display font-medium tracking-[-0.035em] text-cream text-[2.75rem] sm:text-6xl lg:text-[5.25rem] leading-[0.95]">
