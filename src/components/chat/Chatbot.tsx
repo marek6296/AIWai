@@ -187,10 +187,6 @@ export default function Chatbot() {
         textareaRef.current?.blur();
     };
 
-    const openPanel = () => {
-        if (!isExpanded) setIsExpanded(true);
-    };
-
     const lastMsg = messages[messages.length - 1];
     const activeChips =
         lastMsg?.role === "assistant" && lastMsg.chips?.length

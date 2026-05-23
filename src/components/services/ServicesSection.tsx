@@ -10,11 +10,9 @@ import {
     Globe2,
     Megaphone,
     Palette,
-    Sparkles,
     Workflow,
     Zap,
 } from "lucide-react";
-import SectionBackground from "@/components/backgrounds/SectionBackground";
 import { useTranslation } from "@/i18n/useTranslation";
 
 const TAGS = ["WEB", "AI", "AI", "DIZAJN", "MARKETING"];

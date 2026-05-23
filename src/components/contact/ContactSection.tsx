@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import MagneticButton from "@/components/ui/MagneticButton";
 import TextReveal from "@/components/animations/TextReveal";
 import FadeIn from "@/components/animations/FadeIn";
-import SectionBackground from "@/components/backgrounds/SectionBackground";
 import { useTranslation } from "@/i18n/useTranslation";
 
 export default function ContactSection() {

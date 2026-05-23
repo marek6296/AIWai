@@ -180,12 +180,10 @@ function CardSlot({
     plan,
     slotIndex,
     categoryId,
-    activeHasThree,
 }: {
     plan: PricingPlan | null;
     slotIndex: number;
     categoryId: string;
-    activeHasThree: boolean;
 }) {
     return (
         <div className="relative w-full max-w-[340px] flex-shrink-0">
@@ -299,7 +297,6 @@ export default function PricingSection({
 
     const activeCategory = categories.find((c) => c.id === active) ?? categories[0];
     const plans = activeCategory?.plans ?? [];
-    const activeHasThree = plans.length >= 3;
 
     // Pad to MAX_SLOTS so layout has stable slot count; empty slots collapse via AnimatePresence
     const slots: (PricingPlan | null)[] = [
@@ -327,7 +324,6 @@ export default function PricingSection({
                                 slotIndex={i}
                                 plan={plan}
                                 categoryId={active}
-                                activeHasThree={activeHasThree}
                             />
                         ))}
                     </div>

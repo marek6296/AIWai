@@ -17,7 +17,7 @@ interface ServiceModalProps {
     } | null;
 }
 
-export default function ServiceModal({ isOpen, onClose, service, index }: ServiceModalProps) {
+export default function ServiceModal({ isOpen, onClose, service }: ServiceModalProps) {
     const { t } = useTranslation();
     const [mounted, setMounted] = useState(false);
     const [visible, setVisible] = useState(false);
