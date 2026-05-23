@@ -467,7 +467,7 @@ Po `transport.sendMail()`:
 | `ANTHROPIC_API_KEY` | `sk-ant-...` | nový alebo existing |
 | `ZOHO_SMTP_HOST` | `smtp.zoho.eu` | nový |
 | `ZOHO_SMTP_PORT` | `465` | nový |
-| `ZOHO_SMTP_USER` | `marek@aiwai.app` (TBC) | nový — Marek povie ktorú adresu |
+| `ZOHO_SMTP_USER` | `marek@aiwai.app` | nový |
 | `ZOHO_SMTP_PASS` | `<app password>` | nový — vygenerovať v Zoho |
 | `ZOHO_FROM_NAME` | `Marek Donoval` | nový |
 
@@ -514,15 +514,12 @@ Implementácia je hotová keď:
 
 ---
 
-## 11. Otvorené otázky pre Mareka
+## 11. Rozhodnutia (potvrdené 2026-05-24)
 
-Pred štartom implementácie potrebujem od teba:
-
-1. **Z akej Zoho adresy** posielať outreach? `marek@aiwai.app`? `dony@aiwai.app`?
-   Iná? Treba mať pre ňu Zoho App Password.
-2. **Anthropic API key**: máš už existujúci alebo treba vytvoriť nový?
-   (Vidím že chatbot používa Gemini, scraper má Claude — kľúč asi v scraper env.)
-3. **Migrácia DB**: chceš ALTER + CREATE TABLE spustiť ručne v Supabase UI,
-   alebo pridať do `supabase/migrations/`?
-
-Tieto odpovede nie sú blockerom spec-u — môžu prísť pred fázou execution.
+1. **Outreach adresa**: `marek@aiwai.app` (Zoho). Treba vytvoriť App Password
+   v Zoho Mail settings.
+2. **Anthropic API key**: existujúci kľúč (rovnaký ako v scraperi). Uložiť do
+   Vercel env ako `ANTHROPIC_API_KEY`.
+3. **DB migrácia**: SQL migrácia sa pridá ako súbor do `supabase/migrations/`
+   v aiwai repo (timestamped meno). Marek ju spustí cez Supabase CLI alebo
+   cez Supabase Dashboard SQL editor.
