@@ -6,6 +6,7 @@ import { StatusBadge } from "../components/StatusBadge";
 import { LeadFilters } from "./LeadFilters";
 import { ExternalLink } from "lucide-react";
 import type { Lead } from "@/lib/scraper/types";
+import { ScraperTabs } from "../components/ScraperTabs";
 
 export const dynamic = "force-dynamic";
 
@@ -39,6 +40,7 @@ export default async function LeadsPage({ searchParams }: { searchParams: SP }) 
 
     return (
         <AdminShell title="Leady" subtitle={`${total} záznamov`}>
+            <ScraperTabs />
             <LeadFilters categories={categories} cities={cities} current={searchParams} />
 
             <div className="mt-6 overflow-x-auto rounded-2xl border border-cream/[0.08] bg-cream/[0.025]">
