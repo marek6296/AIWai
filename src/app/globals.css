@@ -422,6 +422,55 @@ canvas[style*="position: fixed"] {
 ::-moz-selection { background: rgba(216, 185, 138, 0.25); color: #1C1F3A; }
 
 /* ──────────────────────────────────────
+   Mobile hero — fade-ins (Safari-safe, opacity only)
+   ──────────────────────────────────────
+   No transforms — Safari Mobile rasterizes text inside animated transforms
+   with reduced quality (blurry). Opacity-only transitions keep text crisp. */
+@keyframes mobileFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.mobile-hero-fade-in-1 { opacity: 0; animation: mobileFadeIn 0.7s ease-out 0.05s forwards; }
+.mobile-hero-fade-in-2 { opacity: 0; animation: mobileFadeIn 0.7s ease-out 0.6s  forwards; }
+.mobile-hero-fade-in-3 { opacity: 0; animation: mobileFadeIn 0.7s ease-out 1.0s  forwards; }
+
+/* ──────────────────────────────────────
+   Mobile hero — CSS-only morph (Safari-safe)
+   ──────────────────────────────────────
+   Pure opacity keyframes. No transforms, no filters, no GPU compositing —
+   keeps text crisp on iOS Safari. Five words sharing one stage, each
+   visible ~1.6s of an 8s cycle. */
+.mobile-morph-stage {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.mobile-morph-word {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  animation: mobileMorph 8s linear infinite;
+  text-rendering: geometricPrecision;
+  -webkit-font-smoothing: antialiased;
+}
+.mobile-morph-word:nth-child(1) { animation-delay: 0s; }
+.mobile-morph-word:nth-child(2) { animation-delay: 1.6s; }
+.mobile-morph-word:nth-child(3) { animation-delay: 3.2s; }
+.mobile-morph-word:nth-child(4) { animation-delay: 4.8s; }
+.mobile-morph-word:nth-child(5) { animation-delay: 6.4s; }
+@keyframes mobileMorph {
+  0%   { opacity: 0; }
+  3%   { opacity: 1; }
+  20%  { opacity: 1; }
+  23%  { opacity: 0; }
+  100% { opacity: 0; }
+}
+
+/* ──────────────────────────────────────
    Mobile Performance
    ────────────────────────────────────── */
 @media (max-width: 767px) {
