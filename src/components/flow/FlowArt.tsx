@@ -1,8 +1,4 @@
-"use client";
-
-import React, { useEffect, useRef, useState } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import React from "react";
 
 function cx(...parts: Array<string | undefined | false | null>) {
     return parts.filter(Boolean).join(" ");
@@ -21,15 +17,9 @@ export function FlowSection({ children, className, flowId, "aria-label": ariaLab
             data-flow-section
             data-flow-anchor={flowId}
             aria-label={ariaLabel}
-            className={cx("relative md:min-h-[100svh] w-full overflow-hidden bg-char", className)}
+            className={cx("relative w-full bg-char", className)}
         >
-            <div
-                data-flow-inner
-                className="flow-art-container relative md:min-h-[100svh] w-full will-change-transform"
-                style={{ transformOrigin: "bottom left" }}
-            >
-                {children}
-            </div>
+            {children}
         </section>
     );
 }
@@ -45,96 +35,8 @@ export default function FlowArt({
     className,
     "aria-label": ariaLabel = "AIWai homepage",
 }: FlowArtProps) {
-    const containerRef = useRef<HTMLElement>(null);
-    const [reducedMotion, setReducedMotion] = useState(false);
-    const [isMobile, setIsMobile] = useState(false);
-    const sectionCount = React.Children.count(children);
-
-    useEffect(() => {
-        const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-        const mqMobile = window.matchMedia("(max-width: 767px)");
-        const update = () => setReducedMotion(mq.matches);
-        const updateMobile = () => setIsMobile(mqMobile.matches);
-
-        update();
-        updateMobile();
-        mq.addEventListener("change", update);
-        mqMobile.addEventListener("change", updateMobile);
-        return () => {
-            mq.removeEventListener("change", update);
-            mqMobile.removeEventListener("change", updateMobile);
-        };
-    }, []);
-
-    useEffect(() => {
-        const container = containerRef.current;
-        if (!container || reducedMotion || isMobile) return;
-
-        gsap.registerPlugin(ScrollTrigger);
-
-        const ctx = gsap.context(() => {
-            const sections = Array.from(container.querySelectorAll<HTMLElement>("[data-flow-section]"));
-            if (sections.length === 0) return;
-
-            sections.forEach((section) => {
-                section.dataset.flowScrollTop = String(section.offsetTop);
-            });
-
-            sections.forEach((section, index) => {
-                gsap.set(section, { zIndex: index + 1 });
-
-                const inner = section.querySelector<HTMLElement>("[data-flow-inner]");
-                if (!inner) return;
-
-                if (index > 0) {
-                    gsap.set(inner, {
-                        rotation: 30,
-                        transformOrigin: "bottom left",
-                        force3D: true,
-                    });
-
-                    gsap.to(inner, {
-                        rotation: 0,
-                        ease: "none",
-                        scrollTrigger: {
-                            trigger: section,
-                            start: "top bottom",
-                            end: "top top",
-                            scrub: 0.5,
-                        },
-                    });
-                }
-
-                if (index < sections.length - 1) {
-                    // Sections that own their internal scroll-driven animation
-                    // (e.g. ProcessSection's gold timeline) cannot be pinned —
-                    // framer-motion useScroll progress freezes during a GSAP pin
-                    // and then jumps to 100% on release.
-                    const noPin = section.dataset.flowAnchor === "process";
-                    if (noPin) return;
-
-                    ScrollTrigger.create({
-                        trigger: section,
-                        start: "bottom bottom",
-                        end: "bottom top",
-                        pin: true,
-                        pinSpacing: false,
-                        anticipatePin: 1,
-                    });
-                }
-            });
-
-            ScrollTrigger.refresh();
-        }, container);
-
-        return () => {
-            ctx.revert();
-        };
-    }, [sectionCount, reducedMotion, isMobile]);
-
     return (
         <main
-            ref={containerRef}
             aria-label={ariaLabel}
             className={cx("w-full overflow-x-hidden bg-char", className)}
         >

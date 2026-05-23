@@ -96,8 +96,8 @@ export default function Navbar() {
         closeMobileMenu();
         if (!isHome) return;
         e.preventDefault();
-        // Native scroll-behavior:smooth is suppressed by GSAP ScrollTrigger pins
-        // on the homepage, so animate the scroll manually.
+        // Animate the scroll manually so the easing curve is consistent
+        // across browsers (and survives any future native scroll quirks).
         const startY = window.scrollY;
         if (startY === 0) return;
         const duration = Math.min(900, 250 + startY * 0.18);
