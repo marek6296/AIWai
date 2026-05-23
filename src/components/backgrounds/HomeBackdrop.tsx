@@ -16,8 +16,26 @@ export default function HomeBackdrop() {
             aria-hidden="true"
             className="fixed inset-0 z-0 pointer-events-none overflow-hidden bg-char"
         >
-            {/* Twinkling gold particles */}
-            <StarField />
+            {/* Twinkling gold particles — desktop only; mobile gets a
+                static star field via CSS to avoid canvas/rAF overhead. */}
+            <div className="hidden md:block absolute inset-0">
+                <StarField />
+            </div>
+            <div
+                aria-hidden="true"
+                className="md:hidden absolute inset-0 opacity-60"
+                style={{
+                    backgroundImage:
+                        "radial-gradient(circle at 12% 18%, rgba(201,168,117,0.55) 0.5px, transparent 1.5px)," +
+                        "radial-gradient(circle at 78% 30%, rgba(201,168,117,0.45) 0.5px, transparent 1.5px)," +
+                        "radial-gradient(circle at 34% 70%, rgba(201,168,117,0.40) 0.5px, transparent 1.5px)," +
+                        "radial-gradient(circle at 88% 82%, rgba(201,168,117,0.50) 0.5px, transparent 1.5px)," +
+                        "radial-gradient(circle at 55% 12%, rgba(228,200,150,0.30) 0.5px, transparent 1.5px)," +
+                        "radial-gradient(circle at 22% 55%, rgba(228,200,150,0.30) 0.5px, transparent 1.5px)",
+                    backgroundSize: "320px 320px",
+                    backgroundRepeat: "repeat",
+                }}
+            />
 
             {/* Vertical gold guide lines */}
             <div className="absolute inset-0 gold-vlines opacity-30" />
