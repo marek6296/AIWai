@@ -154,20 +154,11 @@ export default function CennikClient() {
                 <SectionBackground variant="soft" topFade={false} />
             </div>
 
-            {/* Hero */}
-            <section className="pt-24 pb-8 md:pt-28 md:pb-10 relative z-10">
-                <div className="container mx-auto px-6 text-center">
-                    <h1 className="mx-auto mb-4 font-display font-bold text-cream text-4xl md:text-6xl tracking-tight leading-[1.05]">
-                        {t("cennik.h1")}
-                    </h1>
-                    <p className="mx-auto max-w-2xl text-cream/65 text-base md:text-lg font-light leading-relaxed">
-                        {t("cennik.lead")}
-                    </p>
-                </div>
-            </section>
+            {/* Visually-hidden H1 for SEO/a11y — title removed from layout per design */}
+            <h1 className="sr-only">{t("cennik.h1")}</h1>
 
             {/* Interactive pricing — category toggle + starfield + grid */}
-            <section className="relative z-10">
+            <section className="pt-24 md:pt-28 relative z-10">
                 <PricingSection categories={categories} />
             </section>
 

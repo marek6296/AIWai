@@ -87,29 +87,12 @@ export default function RealizacieGallery() {
             className="relative w-full px-4 pb-16 md:pb-24"
             aria-labelledby="realizacie-gallery-heading"
         >
+            <h1 id="realizacie-gallery-heading" className="sr-only">
+                Naše portfólio
+            </h1>
             <div className="mx-auto max-w-7xl">
-                <motion.div
-                    initial={{ opacity: 0, y: -20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6 }}
-                    className="mb-10 md:mb-14 text-center"
-                >
-                    <h1
-                        id="realizacie-gallery-heading"
-                        className="mx-auto mb-4 font-display text-4xl md:text-6xl font-bold tracking-tight leading-[1.05] text-cream"
-                    >
-                        Naše portfólio
-                    </h1>
-                    <p className="mx-auto max-w-2xl text-cream/65 text-base md:text-lg font-light leading-relaxed">
-                        Weby, aplikácie a AI projekty — výber z toho, čo sme postavili pre seba aj pre klientov.
-                    </p>
-                </motion.div>
-
                 {/* Filter Buttons — matches cennik CategoryToggle */}
-                <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.2 }}
+                <div
                     className="mb-10 flex justify-center"
                     role="group"
                     aria-label="Kategórie projektov"
@@ -139,7 +122,7 @@ export default function RealizacieGallery() {
                             );
                         })}
                     </div>
-                </motion.div>
+                </div>
 
                 {/* Gallery Grid */}
                 <motion.div
