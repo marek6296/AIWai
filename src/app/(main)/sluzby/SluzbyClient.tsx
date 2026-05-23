@@ -39,14 +39,6 @@ export default function SluzbyClient() {
                     </p>
                 </div>
 
-                {/* scroll cue */}
-                <div
-                    aria-hidden="true"
-                    className="pointer-events-none absolute inset-x-0 bottom-8 md:bottom-10 flex flex-col items-center gap-3 font-mono text-[10px] uppercase tracking-[0.32em] text-cream/35"
-                >
-                    <span>Scroll</span>
-                    <span className="h-10 w-px bg-gradient-to-b from-gold/70 to-transparent" />
-                </div>
             </section>
 
             {/* SERVICES — fullscreen chapter sections ───────────────────── */}

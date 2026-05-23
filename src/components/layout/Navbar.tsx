@@ -144,7 +144,7 @@ export default function Navbar() {
                             aria-label="AIWai"
                         >
                             <Image
-                                src="/logo.png"
+                                src="/logo-v2.png"
                                 alt="AIWai"
                                 width={52}
                                 height={52}

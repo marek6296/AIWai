@@ -31,20 +31,20 @@ export default function HeroSection() {
             {/* Background lives at page level (HomeBackdrop). */}
 
             {/* ── Content ── */}
-            <div className="relative z-10 container mx-auto px-6 text-center
-                flex flex-col justify-center gap-10
-                min-h-[100dvh] pt-24 pb-36
-                md:h-auto md:justify-center md:items-center md:gap-0 md:py-32 md:pb-32">
+            <div className="relative z-10 container mx-auto px-5 text-center
+                flex flex-col justify-center gap-7
+                min-h-[100dvh] pt-20 pb-24
+                md:px-6 md:h-auto md:justify-center md:items-center md:gap-0 md:py-32 md:pb-32">
 
                 {/* Mobile logo — only shown above headline on small screens */}
                 <div className="hero-logo md:hidden flex justify-center">
                     <Image
-                        src="/logo.png"
+                        src="/logo-v2.png"
                         alt="AIWai"
                         width={160}
                         height={160}
                         priority
-                        className="w-32 h-32 sm:w-36 sm:h-36 object-contain drop-shadow-[0_6px_22px_rgba(201,168,117,0.3)]"
+                        className="w-28 h-28 sm:w-36 sm:h-36 object-contain drop-shadow-[0_6px_22px_rgba(201,168,117,0.3)]"
                     />
                 </div>
 
@@ -60,14 +60,14 @@ export default function HeroSection() {
                         texts={MORPH_WORDS}
                         morphTime={1.1}
                         cooldownTime={0.7}
-                        className="h-[clamp(3.5rem,11vw,7rem)] w-full"
-                        textClassName="font-display font-bold tracking-tight text-cream leading-none text-[clamp(2.5rem,9.5vw,6rem)]"
+                        className="h-[clamp(3rem,11vw,7rem)] w-full"
+                        textClassName="font-display font-bold tracking-tight text-cream leading-none text-[clamp(1.85rem,8.5vw,6rem)]"
                     />
                 </motion.div>
 
                 {/* Subtitle + CTA */}
-                <div className="w-full max-w-4xl md:mx-auto space-y-6 md:space-y-8 md:mt-10">
-                    <div className="hero-sub mx-auto max-w-md md:max-w-none md:whitespace-nowrap">
+                <div className="w-full max-w-4xl md:mx-auto space-y-5 md:space-y-8 md:mt-10">
+                    <div className="hero-sub mx-auto max-w-[22rem] md:max-w-none md:whitespace-nowrap">
                         <TypewriterEffect
                             speed={0.04}
                             startDelayMs={1600}
@@ -75,7 +75,7 @@ export default function HeroSection() {
                                 text: word,
                                 className: HIGHLIGHT_WORDS.has(word) ? "text-gold" : "text-cream/70",
                             }))}
-                            className="text-[15px] md:text-xl font-light leading-relaxed text-center"
+                            className="text-[14px] md:text-xl font-light leading-relaxed text-center"
                             cursorClassName="h-4 md:h-5 w-[2px]"
                         />
                     </div>
@@ -85,7 +85,7 @@ export default function HeroSection() {
                                 initial={{ opacity: 0, y: 16, filter: "blur(6px)" }}
                                 animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                                 transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-                                className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-4"
+                                className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 w-full sm:w-auto"
                             >
                                 <MagneticButton
                                     onClick={() => scrollToPageSection("contact")}
@@ -96,7 +96,7 @@ export default function HeroSection() {
                                 </MagneticButton>
                                 <button
                                     onClick={() => scrollToPageSection("services")}
-                                    className="px-8 py-4 md:py-3 text-sm md:text-xs font-bold uppercase tracking-[0.2em] text-cream/60 hover:text-gold transition-colors whitespace-nowrap"
+                                    className="px-8 py-3.5 md:py-3 text-[13px] md:text-xs font-bold uppercase tracking-[0.2em] text-cream/60 hover:text-gold transition-colors whitespace-nowrap"
                                 >
                                     {t("hero.cta.explore")}
                                 </button>

@@ -38,7 +38,7 @@ export default function Footer() {
                     <div>
                         <div className="flex items-center gap-3 mb-4">
                             <Image
-                                src="/logo.png"
+                                src="/logo-v2.png"
                                 alt="AIWai Logo"
                                 width={40}
                                 height={40}

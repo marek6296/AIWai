@@ -34,6 +34,36 @@ const SERVICE_SLUGS = [
     "sprava-socialnych-sieti",
 ];
 
+// 3 highlight stats per service — fixed count keeps every panel symmetric.
+// [label (small caps), value (display)]
+const SERVICE_STATS: Array<Array<[string, string]>> = [
+    [
+        ["Dodanie", "3–6 tých."],
+        ["Mobile", "100%"],
+        ["PageSpeed", "90+"],
+    ],
+    [
+        ["Prevádzka", "24 / 7"],
+        ["Jazyky", "SK + EN"],
+        ["Integrácia", "CRM"],
+    ],
+    [
+        ["Platformy", "Make · n8n"],
+        ["Vývoj", "Bez kódu"],
+        ["Sync", "Realtime"],
+    ],
+    [
+        ["Výstupy", "Logo + brand"],
+        ["Formáty", "Print · web"],
+        ["Manuál", "PDF"],
+    ],
+    [
+        ["Obsah", "Mesačný"],
+        ["Reklamy", "Meta Ads"],
+        ["Reporty", "Mesačné"],
+    ],
+];
+
 export default function ServicesSection() {
     const { t } = useTranslation();
     const [activeIndex, setActiveIndex] = useState(0);
@@ -60,6 +90,7 @@ export default function ServicesSection() {
                 icon: SERVICE_ICONS[i],
                 energy: SERVICE_ENERGY[i],
                 relatedIds: SERVICE_RELATIONS[i],
+                stats: SERVICE_STATS[i],
                 details: {
                     whatIsIt: t(`services.${i}.whatIsIt`),
                     includes: t(`services.${i}.includes`).split("|"),
@@ -117,7 +148,7 @@ export default function ServicesSection() {
         closeDetail();
     };
 
-    const radius = isCompact ? 85 : 220;
+    const radius = isCompact ? 108 : 220;
 
     return (
         <section
@@ -129,22 +160,22 @@ export default function ServicesSection() {
                 <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(340px,0.95fr)]">
                     <div
                         ref={orbitRef}
-                        className="relative mx-auto flex aspect-square w-full max-w-[260px] sm:max-w-[420px] lg:max-w-[640px] items-center justify-center"
+                        className="relative mx-auto flex aspect-square w-full max-w-[300px] sm:max-w-[420px] lg:max-w-[640px] items-center justify-center"
                         style={{ perspective: "1000px" }}
                     >
                         <div aria-hidden="true" className="absolute h-[78%] w-[78%] rounded-full border border-cream/10" />
                         <div aria-hidden="true" className="absolute h-[56%] w-[56%] rounded-full border border-gold/10" />
                         <div aria-hidden="true" className="absolute h-[92%] w-[92%] rounded-full border border-cream/[0.04]" />
 
-                        <div className="absolute z-20 flex h-28 w-28 items-center justify-center rounded-full border border-gold/35 bg-char/85 shadow-[0_0_80px_rgba(201,168,117,0.18)] md:h-36 md:w-36">
+                        <div className="absolute z-20 flex h-24 w-24 items-center justify-center rounded-full border border-gold/35 bg-char/85 shadow-[0_0_80px_rgba(201,168,117,0.18)] md:h-36 md:w-36">
                             <div className="absolute h-[calc(100%+18px)] w-[calc(100%+18px)] rounded-full border border-gold/15" />
                             <div className="absolute h-[calc(100%+42px)] w-[calc(100%+42px)] rounded-full border border-cream/10" />
                             <Image
-                                src="/logo.png"
+                                src="/logo-v2.png"
                                 alt="AIWai"
                                 width={112}
                                 height={112}
-                                className="h-20 w-20 object-contain drop-shadow-[0_10px_30px_rgba(201,168,117,0.25)] md:h-24 md:w-24"
+                                className="h-16 w-16 object-contain drop-shadow-[0_10px_30px_rgba(201,168,117,0.25)] md:h-24 md:w-24"
                                 priority
                             />
                         </div>
@@ -217,7 +248,7 @@ export default function ServicesSection() {
 
                     <motion.div layout transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }} className="relative">
                         <div className="pointer-events-none absolute -inset-px rounded-[14px] bg-[radial-gradient(120%_120%_at_0%_0%,rgba(201,168,117,0.18),transparent_55%),radial-gradient(120%_120%_at_100%_100%,rgba(201,168,117,0.08),transparent_60%)] opacity-90" />
-                        <div className="relative overflow-hidden rounded-[14px] bg-char/70 p-5 shadow-[0_30px_90px_-40px_rgba(0,0,0,0.9),inset_0_1px_0_rgba(255,255,255,0.04)] backdrop-blur-sm ring-1 ring-cream/[0.04] md:p-7">
+                        <div className="relative flex flex-col overflow-hidden rounded-[14px] bg-char/70 p-5 shadow-[0_30px_90px_-40px_rgba(0,0,0,0.9),inset_0_1px_0_rgba(255,255,255,0.04)] backdrop-blur-sm ring-1 ring-cream/[0.04] md:p-7 min-h-[28rem] md:min-h-[38rem]">
                             <div aria-hidden="true" className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gold/70 to-transparent" />
                             <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-cream/8 to-transparent" />
 
@@ -228,109 +259,131 @@ export default function ServicesSection() {
                                     animate={{ opacity: 1, y: 0 }}
                                     exit={{ opacity: 0, y: -8 }}
                                     transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                                    className="flex flex-1 flex-col"
                                 >
                                     {expanded ? (
                                         <>
-                                            <div className="mb-5 flex items-start justify-between gap-4">
-                                                <h3 className="font-display text-2xl font-bold tracking-tight text-cream md:text-4xl">
+                                            {/* Top group — title + copy + pills (variable content) */}
+                                            <div className="mb-6 flex items-start justify-between gap-4">
+                                                <h3 className="font-display text-3xl font-bold tracking-tight text-cream md:text-5xl">
                                                     {activeService.title}
                                                 </h3>
-                                                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-gold/30 bg-gold/10 text-gold">
-                                                    <ActiveIcon className="h-5 w-5" />
+                                                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-gold/30 bg-gold/10 text-gold">
+                                                    <ActiveIcon className="h-6 w-6" />
                                                 </div>
                                             </div>
 
-                                            <p className="mb-5 text-sm font-light leading-relaxed text-cream/60 md:text-base">
+                                            <p className="mb-5 text-base font-light leading-relaxed text-cream/70 md:text-lg">
                                                 {activeService.description}
                                             </p>
-                                            <p className="mb-6 text-sm font-light leading-relaxed text-cream/70">
+                                            <p className="mb-6 text-sm font-light leading-relaxed text-cream/65 md:text-base">
                                                 {activeService.details.whatIsIt}
                                             </p>
 
-                                            <div className="mb-6 flex flex-wrap gap-2">
+                                            <div className="mb-6 grid grid-cols-1 gap-2.5 sm:grid-cols-2">
                                                 {activeService.details.includes.slice(0, 6).map((item) => (
                                                     <motion.span
                                                         key={item}
                                                         whileHover={{ y: -2 }}
                                                         transition={{ type: "spring", stiffness: 400, damping: 24 }}
-                                                        className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full border border-cream/[0.08] bg-gradient-to-b from-cream/[0.05] to-cream/[0.01] px-3.5 py-2"
+                                                        className="group relative inline-flex items-center gap-3 overflow-hidden rounded-lg border border-cream/[0.08] bg-gradient-to-b from-cream/[0.05] to-cream/[0.01] px-3.5 py-2.5"
                                                     >
-                                                        <span aria-hidden="true" className="pointer-events-none absolute inset-0 rounded-full bg-[radial-gradient(80%_120%_at_50%_0%,rgba(201,168,117,0.18),transparent_70%)] opacity-0 transition-opacity group-hover:opacity-100" />
+                                                        <span aria-hidden="true" className="pointer-events-none absolute inset-0 rounded-lg bg-[radial-gradient(120%_120%_at_0%_0%,rgba(201,168,117,0.16),transparent_60%)] opacity-0 transition-opacity group-hover:opacity-100" />
                                                         <span aria-hidden="true" className="relative h-1.5 w-1.5 shrink-0 rounded-full bg-gold/80 shadow-[0_0_8px_rgba(201,168,117,0.5)]" />
-                                                        <span className="relative text-xs font-medium leading-none text-cream/80">{item}</span>
+                                                        <span className="relative text-[13px] font-medium leading-tight text-cream/85">{item}</span>
                                                     </motion.span>
                                                 ))}
                                             </div>
 
-                                            <div className="mb-6 border-t border-cream/[0.06] pt-5">
-                                                <div className="mb-2 flex items-center justify-between text-xs text-cream/50">
-                                                    <span className="inline-flex items-center gap-1.5 uppercase tracking-[0.16em]">
-                                                        <Zap className="h-3 w-3 text-gold" />
-                                                        Dopad
-                                                    </span>
-                                                    <span className="font-mono text-gold">{activeService.energy}%</span>
-                                                </div>
-                                                <div className="h-1.5 overflow-hidden rounded-full bg-cream/10">
-                                                    <motion.div
-                                                        className="h-full rounded-full bg-gradient-to-r from-gold-deep via-gold to-cream"
-                                                        initial={{ width: 0 }}
-                                                        animate={{ width: `${activeService.energy}%` }}
-                                                        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-                                                    />
-                                                </div>
-                                            </div>
-
-                                            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                                                <Link
-                                                    href={`/sluzby/${activeService.slug}`}
-                                                    className="inline-flex items-center justify-center gap-2 bg-gold px-5 py-3 text-xs font-bold uppercase tracking-[0.16em] text-ink transition-colors hover:bg-gold-bright"
-                                                >
-                                                    {t("services.learnMore")}
-                                                    <ArrowRight className="h-4 w-4" />
-                                                </Link>
-
-                                                <div className="flex flex-wrap gap-2">
-                                                    {activeService.relatedIds.map((relatedId) => (
-                                                        <button
-                                                            key={relatedId}
-                                                            type="button"
-                                                            onClick={(event) => {
-                                                                event.stopPropagation();
-                                                                selectService(relatedId);
-                                                            }}
-                                                            className="rounded-full border border-cream/[0.08] px-3 py-2 text-[10px] font-bold uppercase tracking-[0.16em] text-cream/55 transition-colors hover:border-gold/50 hover:text-gold"
+                                            {/* Bottom group — pinned via mt-auto so stats + impact + CTA
+                                                land at the same position across all services. */}
+                                            <div className="mt-auto">
+                                                {/* 3-stat highlight row (always 3 items → identical layout) */}
+                                                <div className="mb-6 grid grid-cols-3 gap-1.5 md:gap-2.5">
+                                                    {activeService.stats.map(([label, value]) => (
+                                                        <div
+                                                            key={label}
+                                                            className="relative overflow-hidden rounded-lg border border-cream/[0.07] bg-gradient-to-b from-cream/[0.04] to-cream/[0.01] px-2 py-2.5 md:px-3 md:py-3"
                                                         >
-                                                            {services[relatedId].tag}
-                                                        </button>
+                                                            <div className="font-mono text-[8px] uppercase tracking-[0.14em] text-cream/45 md:text-[9px] md:tracking-[0.18em]">
+                                                                {label}
+                                                            </div>
+                                                            <div className="mt-1 truncate font-display text-[13px] font-semibold text-cream/95 md:text-[15px]">
+                                                                {value}
+                                                            </div>
+                                                        </div>
                                                     ))}
+                                                </div>
+                                                <div className="border-t border-cream/[0.06] pt-5">
+                                                    <div className="mb-2 flex items-center justify-between text-xs text-cream/50">
+                                                        <span className="inline-flex items-center gap-1.5 uppercase tracking-[0.16em]">
+                                                            <Zap className="h-3 w-3 text-gold" />
+                                                            Dopad
+                                                        </span>
+                                                        <span className="font-mono text-gold">{activeService.energy}%</span>
+                                                    </div>
+                                                    <div className="h-1.5 overflow-hidden rounded-full bg-cream/10">
+                                                        <motion.div
+                                                            className="h-full rounded-full bg-gradient-to-r from-gold-deep via-gold to-cream"
+                                                            initial={{ width: 0 }}
+                                                            animate={{ width: `${activeService.energy}%` }}
+                                                            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                                                        />
+                                                    </div>
+                                                </div>
+
+                                                <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                                                    <Link
+                                                        href={`/sluzby/${activeService.slug}`}
+                                                        className="inline-flex items-center justify-center gap-2 bg-gold px-5 py-3 text-xs font-bold uppercase tracking-[0.16em] text-ink transition-colors hover:bg-gold-bright"
+                                                    >
+                                                        {t("services.learnMore")}
+                                                        <ArrowRight className="h-4 w-4" />
+                                                    </Link>
+
+                                                    <div className="flex flex-wrap gap-2">
+                                                        {activeService.relatedIds.map((relatedId) => (
+                                                            <button
+                                                                key={relatedId}
+                                                                type="button"
+                                                                onClick={(event) => {
+                                                                    event.stopPropagation();
+                                                                    selectService(relatedId);
+                                                                }}
+                                                                className="rounded-full border border-cream/[0.08] px-3 py-2 text-[10px] font-bold uppercase tracking-[0.16em] text-cream/55 transition-colors hover:border-gold/50 hover:text-gold"
+                                                            >
+                                                                {services[relatedId].tag}
+                                                            </button>
+                                                        ))}
+                                                    </div>
                                                 </div>
                                             </div>
                                         </>
                                     ) : (
                                         <>
-                                            <div className="mb-5 flex items-start justify-between gap-4">
-                                                <h3 className="font-display text-2xl font-bold tracking-tight text-cream md:text-4xl">
+                                            <div className="mb-6 flex items-start justify-between gap-4">
+                                                <h3 className="font-display text-3xl font-bold tracking-tight text-cream md:text-5xl">
                                                     AIWai
                                                 </h3>
-                                                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-gold/30 bg-char/60">
+                                                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-gold/30 bg-char/60">
                                                     <Image
-                                                        src="/logo.png"
+                                                        src="/logo-v2.png"
                                                         alt="AIWai"
-                                                        width={40}
-                                                        height={40}
-                                                        className="h-8 w-8 object-contain"
+                                                        width={48}
+                                                        height={48}
+                                                        className="h-10 w-10 object-contain"
                                                     />
                                                 </div>
                                             </div>
 
-                                            <p className="mb-5 text-sm font-light leading-relaxed text-cream/60 md:text-base">
+                                            <p className="mb-5 text-base font-light leading-relaxed text-cream/70 md:text-lg">
                                                 Päť služieb. Jeden tím. Všetko, čo váš biznis potrebuje online.
                                             </p>
-                                            <p className="mb-6 text-sm font-light leading-relaxed text-cream/70">
-                                                Web, automatizácia, AI a dizajn fungujú najlepšie spolu. Preto ich navrhujeme ako jeden prepojený systém — kliknite na ktorúkoľvek službu v orbite a zobrazia sa detaily.
+                                            <p className="mb-7 text-sm font-light leading-relaxed text-cream/65 md:text-base">
+                                                Web, automatizácia, AI a dizajn fungujú najlepšie spolu. Preto ich navrhujeme ako jeden prepojený systém — kliknite na ktorúkoľvek službu v orbite alebo na kartu nižšie a zobrazia sa detaily.
                                             </p>
 
-                                            <div className="mb-6 flex flex-wrap gap-2">
+                                            <div className="mb-7 grid grid-cols-1 gap-3 sm:grid-cols-2">
                                                 {services.map((service) => {
                                                     const Icon = service.icon;
                                                     return (
@@ -341,21 +394,36 @@ export default function ServicesSection() {
                                                                 event.stopPropagation();
                                                                 selectService(service.id);
                                                             }}
-                                                            whileHover={{ y: -2 }}
-                                                            whileTap={{ scale: 0.97 }}
+                                                            whileHover={{ y: -3 }}
+                                                            whileTap={{ scale: 0.98 }}
                                                             transition={{ type: "spring", stiffness: 400, damping: 24 }}
-                                                            className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full border border-cream/[0.08] bg-gradient-to-b from-cream/[0.05] to-cream/[0.01] px-3.5 py-2 text-left transition-colors hover:border-gold/40"
+                                                            className="group relative flex items-center gap-3 overflow-hidden rounded-xl border border-cream/[0.08] bg-gradient-to-b from-cream/[0.05] to-cream/[0.01] px-4 py-3.5 text-left transition-colors hover:border-gold/40"
                                                         >
-                                                            <span aria-hidden="true" className="pointer-events-none absolute inset-0 rounded-full bg-[radial-gradient(80%_120%_at_50%_0%,rgba(201,168,117,0.18),transparent_70%)] opacity-0 transition-opacity group-hover:opacity-100" />
-                                                            <span className="relative flex h-6 w-6 items-center justify-center rounded-full bg-gold/12 text-gold ring-1 ring-gold/25 transition-colors group-hover:bg-gold/20">
-                                                                <Icon className="h-3.5 w-3.5" />
+                                                            <span aria-hidden="true" className="pointer-events-none absolute inset-0 rounded-xl bg-[radial-gradient(120%_120%_at_0%_0%,rgba(201,168,117,0.16),transparent_60%)] opacity-0 transition-opacity group-hover:opacity-100" />
+                                                            <span className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gold/12 text-gold ring-1 ring-gold/25 transition-colors group-hover:bg-gold/20">
+                                                                <Icon className="h-5 w-5" />
                                                             </span>
-                                                            <span className="relative text-xs font-medium leading-none text-cream/80 transition-colors group-hover:text-cream">
-                                                                {service.title}
+                                                            <span className="relative flex min-w-0 flex-col gap-0.5">
+                                                                <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-cream/40 transition-colors group-hover:text-gold/70">
+                                                                    {service.tag}
+                                                                </span>
+                                                                <span className="text-sm font-semibold leading-tight text-cream/90 transition-colors group-hover:text-cream">
+                                                                    {service.title}
+                                                                </span>
                                                             </span>
                                                         </motion.button>
                                                     );
                                                 })}
+                                            </div>
+
+                                            <div className="mt-auto flex items-center justify-between border-t border-cream/[0.06] pt-5">
+                                                <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.18em] text-cream/45">
+                                                    <Zap className="h-3 w-3 text-gold" />
+                                                    Päť služieb, jeden systém
+                                                </div>
+                                                <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-cream/45">
+                                                    Vyberte službu →
+                                                </span>
                                             </div>
                                         </>
                                     )}
