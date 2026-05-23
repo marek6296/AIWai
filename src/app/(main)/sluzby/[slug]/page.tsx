@@ -45,19 +45,10 @@ export async function generateMetadata({
     };
 }
 
-function SectionLabel({
-    index,
-    children,
-}: {
-    index: number;
-    children: React.ReactNode;
-}) {
+function SectionLabel({ children }: { children: React.ReactNode }) {
     return (
-        <div className="flex items-baseline gap-3 font-mono text-[11px] uppercase tracking-[0.22em] text-cream/40">
-            <span className="tabular-nums text-gold">
-                {String(index).padStart(2, "0")}
-            </span>
-            <span className="h-px w-6 bg-cream/20" aria-hidden />
+        <div className="flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.22em] text-cream/40">
+            <span className="h-px w-8 bg-gold/70" aria-hidden />
             <span>{children}</span>
         </div>
     );
@@ -67,7 +58,6 @@ export default function ServicePage({ params }: { params: { slug: string } }) {
     const service = getService(params.slug);
     if (!service) notFound();
 
-    const serviceIndex = SERVICES.findIndex((s) => s.slug === service.slug);
     const related = SERVICES.filter((s) => s.slug !== service.slug).slice(0, 3);
 
     const breadcrumbs = breadcrumbSchema([
@@ -132,15 +122,7 @@ export default function ServicePage({ params }: { params: { slug: string } }) {
 
                     <div className="grid grid-cols-12 gap-x-6 gap-y-10">
                         <div className="col-span-12 md:col-span-3 md:pt-4">
-                            <div className="flex items-baseline gap-3 font-mono text-[11px] uppercase tracking-[0.22em] text-cream/40">
-                                <span className="tabular-nums text-gold">
-                                    {String(serviceIndex + 1).padStart(2, "0")}
-                                </span>
-                                <span className="h-px w-6 bg-cream/20" aria-hidden />
-                                <span>
-                                    /{String(SERVICES.length).padStart(2, "0")} Služba
-                                </span>
-                            </div>
+                            <SectionLabel>Služba</SectionLabel>
                         </div>
 
                         <div className="col-span-12 md:col-span-9">
@@ -179,7 +161,7 @@ export default function ServicePage({ params }: { params: { slug: string } }) {
                 <div className="container mx-auto px-6 py-20 md:py-28">
                     <div className="grid grid-cols-12 gap-x-6 gap-y-10">
                         <div className="col-span-12 md:col-span-3 md:pt-3">
-                            <SectionLabel index={1}>Prečo to robíme</SectionLabel>
+                            <SectionLabel>Prečo to robíme</SectionLabel>
                         </div>
                         <div className="col-span-12 md:col-span-9 max-w-[58ch]">
                             <div className="space-y-7 text-[17px] md:text-[18px] text-cream/75 leading-[1.7] font-light">
@@ -206,7 +188,7 @@ export default function ServicePage({ params }: { params: { slug: string } }) {
                 <div className="container mx-auto px-6 py-20 md:py-28">
                     <div className="grid grid-cols-12 gap-x-6 gap-y-10">
                         <div className="col-span-12 md:col-span-3 md:pt-3">
-                            <SectionLabel index={2}>Čo dostanete</SectionLabel>
+                            <SectionLabel>Čo dostanete</SectionLabel>
                             <h2 className="mt-5 font-display font-medium tracking-[-0.025em] text-cream text-2xl md:text-[2rem] leading-[1.1] max-w-[14ch]">
                                 Konkrétny rozsah, žiadne sľuby.
                             </h2>
@@ -215,11 +197,12 @@ export default function ServicePage({ params }: { params: { slug: string } }) {
                             {service.deliverables.map((item, i) => (
                                 <li
                                     key={i}
-                                    className="flex items-baseline gap-6 border-t border-cream/[0.07] py-4 first:border-t-0 md:py-5"
+                                    className="flex items-baseline gap-5 border-t border-cream/[0.07] py-4 first:border-t-0 md:py-5"
                                 >
-                                    <span className="font-mono text-[11px] tabular-nums tracking-widest text-cream/35 pt-1">
-                                        {String(i + 1).padStart(2, "0")}
-                                    </span>
+                                    <span
+                                        aria-hidden="true"
+                                        className="mt-[10px] inline-block h-[5px] w-[5px] flex-none rounded-full bg-gold/80"
+                                    />
                                     <span className="text-[16px] md:text-[17px] text-cream/85 leading-[1.5]">
                                         {item}
                                     </span>
@@ -235,7 +218,7 @@ export default function ServicePage({ params }: { params: { slug: string } }) {
                 <div className="container mx-auto px-6 py-20 md:py-28">
                     <div className="grid grid-cols-12 gap-x-6 gap-y-10">
                         <div className="col-span-12 md:col-span-3 md:pt-3">
-                            <SectionLabel index={3}>Pre koho</SectionLabel>
+                            <SectionLabel>Pre koho</SectionLabel>
                         </div>
                         <div className="col-span-12 md:col-span-9">
                             <ul className="grid gap-x-10 gap-y-3 md:grid-cols-2 max-w-[64ch]">
@@ -262,7 +245,7 @@ export default function ServicePage({ params }: { params: { slug: string } }) {
                 <div className="container mx-auto px-6 py-20 md:py-28">
                     <div className="grid grid-cols-12 gap-x-6 gap-y-10">
                         <div className="col-span-12 md:col-span-3 md:pt-3">
-                            <SectionLabel index={4}>Ako pracujeme</SectionLabel>
+                            <SectionLabel>Ako pracujeme</SectionLabel>
                             <p className="mt-5 max-w-[28ch] text-[14px] text-cream/55 leading-[1.6]">
                                 Štyri kroky, žiadne zbytočné meetingy.
                             </p>
@@ -273,10 +256,7 @@ export default function ServicePage({ params }: { params: { slug: string } }) {
                                     key={i}
                                     className="grid grid-cols-12 gap-x-6 border-t border-cream/[0.07] py-6 md:py-8 first:border-t-0"
                                 >
-                                    <span className="col-span-2 md:col-span-1 font-mono text-[11px] tabular-nums tracking-widest text-gold pt-1">
-                                        {String(i + 1).padStart(2, "0")}
-                                    </span>
-                                    <h3 className="col-span-10 md:col-span-4 font-display font-medium text-cream text-lg md:text-xl tracking-[-0.015em] leading-[1.3]">
+                                    <h3 className="col-span-12 md:col-span-5 font-display font-medium text-cream text-lg md:text-xl tracking-[-0.015em] leading-[1.3]">
                                         {step.title}
                                     </h3>
                                     <p className="col-span-12 md:col-span-7 mt-2 md:mt-0 text-[15px] text-cream/60 leading-[1.65] max-w-[48ch]">
@@ -294,7 +274,7 @@ export default function ServicePage({ params }: { params: { slug: string } }) {
                 <div className="container mx-auto px-6 py-20 md:py-28">
                     <div className="grid grid-cols-12 gap-x-6 gap-y-12">
                         <div className="col-span-12 md:col-span-3 md:pt-3">
-                            <SectionLabel index={5}>Cenník</SectionLabel>
+                            <SectionLabel>Cenník</SectionLabel>
                             <p className="mt-5 max-w-[28ch] text-[14px] text-cream/55 leading-[1.6]">
                                 Orientačné ceny. Fixnú dostanete po hovore.
                             </p>
@@ -303,10 +283,7 @@ export default function ServicePage({ params }: { params: { slug: string } }) {
                             <div className="grid gap-x-10 gap-y-12 md:grid-cols-3 border-t border-cream/[0.07] pt-10">
                                 {service.pricing.map((tier, i) => (
                                     <div key={i} className="relative">
-                                        <span className="absolute -top-10 left-0 font-mono text-[11px] tabular-nums tracking-widest text-cream/35">
-                                            {String(i + 1).padStart(2, "0")}
-                                        </span>
-                                        <h3 className="font-display font-medium text-cream text-lg tracking-[-0.015em] mb-3">
+                                        <h3 className="font-mono text-[11px] uppercase tracking-[0.22em] text-cream/55 mb-4">
                                             {tier.name}
                                         </h3>
                                         <div className="font-display font-medium text-cream text-[2.25rem] md:text-[2.5rem] tracking-[-0.03em] leading-none mb-5">
@@ -333,7 +310,7 @@ export default function ServicePage({ params }: { params: { slug: string } }) {
                 <div className="container mx-auto px-6 py-20 md:py-28">
                     <div className="grid grid-cols-12 gap-x-6 gap-y-10">
                         <div className="col-span-12 md:col-span-3 md:pt-3">
-                            <SectionLabel index={6}>Otázky</SectionLabel>
+                            <SectionLabel>Otázky</SectionLabel>
                             <h2 className="mt-5 font-display font-medium tracking-[-0.025em] text-cream text-2xl md:text-[2rem] leading-[1.1] max-w-[14ch]">
                                 Časté otázky.
                             </h2>
@@ -347,14 +324,9 @@ export default function ServicePage({ params }: { params: { slug: string } }) {
                                     >
                                         <details className="group">
                                             <summary className="flex cursor-pointer items-start justify-between gap-6 py-6 md:py-7 list-none [&::-webkit-details-marker]:hidden">
-                                                <div className="flex items-baseline gap-6">
-                                                    <span className="font-mono text-[11px] tabular-nums tracking-widest text-cream/35">
-                                                        {String(i + 1).padStart(2, "0")}
-                                                    </span>
-                                                    <span className="font-display font-medium text-cream text-lg md:text-xl tracking-[-0.015em] leading-[1.35]">
-                                                        {item.q}
-                                                    </span>
-                                                </div>
+                                                <span className="font-display font-medium text-cream text-lg md:text-xl tracking-[-0.015em] leading-[1.35]">
+                                                    {item.q}
+                                                </span>
                                                 <span
                                                     aria-hidden="true"
                                                     className="mt-2 flex-none text-cream/40 font-mono text-lg leading-none transition-transform duration-300 group-open:rotate-45"
@@ -362,7 +334,7 @@ export default function ServicePage({ params }: { params: { slug: string } }) {
                                                     +
                                                 </span>
                                             </summary>
-                                            <div className="pl-0 md:pl-[3.25rem] pb-7 max-w-[60ch]">
+                                            <div className="pb-7 max-w-[60ch]">
                                                 <p className="text-[15px] md:text-[16px] text-cream/65 leading-[1.7]">
                                                     {item.a}
                                                 </p>
@@ -381,10 +353,10 @@ export default function ServicePage({ params }: { params: { slug: string } }) {
                 <div className="container mx-auto px-6 py-20 md:py-28">
                     <div className="grid grid-cols-12 gap-x-6 gap-y-10">
                         <div className="col-span-12 md:col-span-3 md:pt-3">
-                            <SectionLabel index={7}>Ďalšie</SectionLabel>
+                            <SectionLabel>Ďalšie</SectionLabel>
                         </div>
                         <ul className="col-span-12 md:col-span-9 -mt-4">
-                            {related.map((s, i) => (
+                            {related.map((s) => (
                                 <li
                                     key={s.slug}
                                     className="border-t border-cream/[0.07] first:border-t-0"
@@ -393,14 +365,9 @@ export default function ServicePage({ params }: { params: { slug: string } }) {
                                         href={`/sluzby/${s.slug}`}
                                         className="group flex items-baseline justify-between gap-6 py-6 md:py-7"
                                     >
-                                        <div className="flex items-baseline gap-6">
-                                            <span className="font-mono text-[11px] tabular-nums tracking-widest text-cream/35 group-hover:text-gold transition-colors">
-                                                {String(i + 1).padStart(2, "0")}
-                                            </span>
-                                            <span className="font-display font-medium text-cream text-xl md:text-2xl tracking-[-0.02em] leading-[1.2] group-hover:translate-x-1.5 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]">
-                                                {s.title}
-                                            </span>
-                                        </div>
+                                        <span className="font-display font-medium text-cream text-xl md:text-2xl tracking-[-0.02em] leading-[1.2] group-hover:translate-x-1.5 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]">
+                                            {s.title}
+                                        </span>
                                         <span
                                             aria-hidden="true"
                                             className="relative inline-flex h-px w-10 bg-cream/25 group-hover:w-16 group-hover:bg-gold transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]"
@@ -419,7 +386,7 @@ export default function ServicePage({ params }: { params: { slug: string } }) {
             <section className="container mx-auto px-6 py-28 md:py-40">
                 <div className="grid grid-cols-12 gap-x-6">
                     <div className="col-span-12 md:col-span-3 md:pt-3">
-                        <SectionLabel index={8}>Kontakt</SectionLabel>
+                        <SectionLabel>Kontakt</SectionLabel>
                     </div>
                     <div className="col-span-12 md:col-span-9">
                         <h2 className="font-display font-medium tracking-[-0.035em] text-cream text-4xl md:text-6xl lg:text-[4.5rem] leading-[0.98] max-w-[16ch]">

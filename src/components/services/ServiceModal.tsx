@@ -74,22 +74,6 @@ export default function ServiceModal({ isOpen, onClose, service, index }: Servic
                 <div aria-hidden="true" className="absolute -bottom-32 -right-32 w-[420px] h-[420px] rounded-full pointer-events-none"
                     style={{ background: "radial-gradient(circle, rgba(201,168,117,0.06) 0%, transparent 70%)" }} />
 
-                {/* Decorative giant number watermark */}
-                <span
-                    aria-hidden="true"
-                    className="absolute -top-4 right-4 md:-top-6 md:right-8 font-display font-bold leading-none select-none pointer-events-none"
-                    style={{
-                        fontSize: "clamp(7rem, 18vw, 12rem)",
-                        background: "linear-gradient(180deg, rgba(201,168,117,0.10) 0%, rgba(201,168,117,0.0) 100%)",
-                        WebkitBackgroundClip: "text",
-                        backgroundClip: "text",
-                        color: "transparent",
-                        letterSpacing: "-0.05em",
-                    }}
-                >
-                    {String(index + 1).padStart(2, "0")}
-                </span>
-
                 {/* Drag handle — mobile only */}
                 <div className="md:hidden flex justify-center pt-4 pb-2 shrink-0 relative z-10">
                     <div className="w-12 h-1 bg-gold/30" />
@@ -98,11 +82,11 @@ export default function ServiceModal({ isOpen, onClose, service, index }: Servic
                 {/* Header */}
                 <div className="relative z-10 px-7 md:px-10 pt-4 md:pt-9 pb-6 md:pb-7 flex items-start justify-between shrink-0">
                     <div className="flex-1 pr-4">
-                        <div className="flex items-center gap-3 mb-3">
+                        <div className="mb-3 flex items-center gap-3">
+                            <span className="h-px w-10 bg-gold/70" />
                             <span className="text-[10px] font-bold tracking-[0.35em] text-gold uppercase">
-                                {String(index + 1).padStart(2, "0")}
+                                {service.tag}
                             </span>
-                            <span className="h-px flex-1 max-w-[60px] bg-gradient-to-r from-gold/50 to-transparent" />
                         </div>
                         <h3 className="text-2xl md:text-3xl font-display font-bold text-cream tracking-tight leading-[1.15]">
                             {service.title}

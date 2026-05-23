@@ -6,7 +6,6 @@ import { useTranslation } from "@/i18n/useTranslation";
 
 export default function SluzbyClient() {
     const { t } = useTranslation();
-    const count = SERVICES.length;
 
     return (
         <main className="relative min-h-screen bg-char text-cream selection:bg-gold/30 selection:text-cream">
@@ -15,11 +14,8 @@ export default function SluzbyClient() {
                 <div className="container mx-auto px-6 pt-32 pb-20 md:pt-44 md:pb-28">
                     <div className="grid grid-cols-12 gap-x-6 gap-y-10">
                         <div className="col-span-12 md:col-span-3 md:pt-3">
-                            <div className="flex items-baseline gap-3 font-mono text-[11px] uppercase tracking-[0.22em] text-cream/40">
-                                <span className="tabular-nums text-gold">
-                                    {String(count).padStart(2, "0")}
-                                </span>
-                                <span className="h-px w-6 bg-cream/20" aria-hidden />
+                            <div className="flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.22em] text-cream/40">
+                                <span className="h-px w-8 bg-gold/70" aria-hidden />
                                 <span>{t("sluzbyHub.breadcrumb")}</span>
                             </div>
                         </div>
@@ -53,11 +49,7 @@ export default function SluzbyClient() {
                                 className="group grid grid-cols-12 items-baseline gap-x-6 gap-y-3 py-10 md:py-12 transition-colors duration-300"
                                 aria-label={`${t(`services.${idx}.title`)} — detail`}
                             >
-                                <span className="col-span-2 md:col-span-1 font-mono text-[11px] tabular-nums tracking-widest text-cream/40 group-hover:text-gold transition-colors duration-300">
-                                    {String(idx + 1).padStart(2, "0")}
-                                </span>
-
-                                <h2 className="col-span-10 md:col-span-5 font-display font-medium tracking-[-0.02em] text-cream text-[1.75rem] md:text-4xl leading-[1.05] group-hover:translate-x-1.5 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]">
+                                <h2 className="col-span-12 md:col-span-6 font-display font-medium tracking-[-0.02em] text-cream text-[1.75rem] md:text-4xl leading-[1.05] group-hover:translate-x-1.5 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]">
                                     {t(`services.${idx}.title`)}
                                 </h2>
 
@@ -93,9 +85,8 @@ export default function SluzbyClient() {
             <section className="container mx-auto px-6 py-28 md:py-40">
                 <div className="grid grid-cols-12 gap-x-6">
                     <div className="col-span-12 md:col-span-3 md:pt-3">
-                        <div className="flex items-baseline gap-3 font-mono text-[11px] uppercase tracking-[0.22em] text-cream/40">
-                            <span className="tabular-nums text-gold">06</span>
-                            <span className="h-px w-6 bg-cream/20" aria-hidden />
+                        <div className="flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.22em] text-cream/40">
+                            <span className="h-px w-8 bg-gold/70" aria-hidden />
                             <span>Kontakt</span>
                         </div>
                     </div>

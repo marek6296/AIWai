@@ -233,9 +233,6 @@ export default function ServicesSection() {
                                                 <span className="rounded-full border border-gold/35 bg-gold/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-gold">
                                                     {activeService.tag}
                                                 </span>
-                                                <span className="rounded-full border border-cream/15 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-cream/45">
-                                                    {String(activeIndex + 1).padStart(2, "0")}
-                                                </span>
                                             </div>
                                             <h3 className="font-display text-2xl font-bold tracking-tight text-cream md:text-4xl">
                                                 {activeService.title}
