@@ -7,10 +7,6 @@ import { useTranslation } from "@/i18n/useTranslation";
 import type { Lang } from "@/i18n/translations";
 import { scrollToPageSection } from "@/lib/scrollToPageSection";
 
-const NAV_IDS = ["about"] as const;
-const NAV_KEYS: Record<string, string> = {
-    about: "nav.about",
-};
 
 const LANGS: { code: Lang; flag: string; label: string }[] = [
     { code: "en", flag: "🇬🇧", label: "EN" },
@@ -96,6 +92,25 @@ export default function Navbar() {
         }
     }, [isHome, router]);
 
+    const handleHomeClick = useCallback((e: React.MouseEvent) => {
+        closeMobileMenu();
+        if (!isHome) return;
+        e.preventDefault();
+        // Native scroll-behavior:smooth is suppressed by GSAP ScrollTrigger pins
+        // on the homepage, so animate the scroll manually.
+        const startY = window.scrollY;
+        if (startY === 0) return;
+        const duration = Math.min(900, 250 + startY * 0.18);
+        const startTime = performance.now();
+        const easeOut = (t: number) => 1 - Math.pow(1 - t, 3);
+        const step = (now: number) => {
+            const t = Math.min(1, (now - startTime) / duration);
+            window.scrollTo(0, startY * (1 - easeOut(t)));
+            if (t < 1) requestAnimationFrame(step);
+        };
+        requestAnimationFrame(step);
+    }, [isHome]);
+
     return (
         <>
             {/* ── Main Nav — CSS entrance only ── */}
@@ -124,7 +139,7 @@ export default function Navbar() {
                     <div className="flex items-center gap-3 z-[110]">
                         <Link
                             href="/"
-                            onClick={(e) => { if (isHome) { e.preventDefault(); closeMobileMenu(); window.scrollTo({ top: 0, behavior: "smooth" }); } else { closeMobileMenu(); } }}
+                            onClick={handleHomeClick}
                             className="flex relative items-center"
                             aria-label="AIWai"
                         >
@@ -211,16 +226,13 @@ export default function Navbar() {
                             const navItemClass = "relative inline-block group cursor-pointer";
                             return (
                                 <>
-                                    {NAV_IDS.map((id) => (
-                                        <a
-                                            key={id}
-                                            href={`#${id}`}
-                                            onClick={(e) => handleScroll(e, id)}
-                                            className={navItemClass}
-                                        >
-                                            {itemInner(t(NAV_KEYS[id]))}
-                                        </a>
-                                    ))}
+                                    <Link
+                                        href="/"
+                                        onClick={handleHomeClick}
+                                        className={navItemClass}
+                                    >
+                                        {itemInner(t("nav.home"))}
+                                    </Link>
                                     <Link href="/sluzby" className={navItemClass}>
                                         {itemInner(t("nav.services"))}
                                     </Link>
@@ -291,17 +303,15 @@ export default function Navbar() {
                 <div aria-hidden="true" className="absolute inset-0 gold-vlines opacity-30 pointer-events-none" />
 
                 <div className="flex flex-col items-center gap-10 relative z-10 w-full px-12">
-                    {NAV_IDS.map((id) => (
-                        <div key={id} className="aiwai-menu-item overflow-hidden w-full flex justify-center">
-                            <a
-                                href={`#${id}`}
-                                onClick={(e) => handleScroll(e, id)}
-                                className="text-5xl font-display font-bold tracking-tighter text-cream hover:text-gold transition-colors cursor-pointer"
-                            >
-                                {t(NAV_KEYS[id])}
-                            </a>
-                        </div>
-                    ))}
+                    <div className="aiwai-menu-item overflow-hidden w-full flex justify-center">
+                        <Link
+                            href="/"
+                            onClick={handleHomeClick}
+                            className="text-5xl font-display font-bold tracking-tighter text-cream hover:text-gold transition-colors cursor-pointer"
+                        >
+                            {t("nav.home")}
+                        </Link>
+                    </div>
 
                     <div className="aiwai-menu-item overflow-hidden w-full flex justify-center">
                         <Link
