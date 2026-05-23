@@ -4,6 +4,7 @@ import { StatCard, Panel } from "@/app/admin/components/AdminPanels";
 import { Radar, Mail, ClipboardCheck, Send, Plus } from "lucide-react";
 import { scraperDb } from "@/lib/scraper/supabase-server";
 import { StatusBadge } from "./components/StatusBadge";
+import type { Job } from "@/lib/scraper/types";
 
 export const dynamic = "force-dynamic";
 
@@ -53,7 +54,7 @@ export default async function ScraperDashboard() {
             <div className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <Panel title="Posledné joby">
                     <div className="divide-y divide-cream/[0.06]">
-                        {(jobsRes.data ?? []).map((j: any) => (
+                        {((jobsRes.data ?? []) as Job[]).map((j) => (
                             <Link
                                 key={j.id}
                                 href={`/admin/scraper/jobs/${j.id}`}

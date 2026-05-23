@@ -5,6 +5,7 @@ import { ScoreChip } from "../components/ScoreChip";
 import { StatusBadge } from "../components/StatusBadge";
 import { LeadFilters } from "./LeadFilters";
 import { ExternalLink } from "lucide-react";
+import type { Lead } from "@/lib/scraper/types";
 
 export const dynamic = "force-dynamic";
 
@@ -30,8 +31,8 @@ export default async function LeadsPage({ searchParams }: { searchParams: SP }) 
 
     const { data: catRows } = await db.from("leads").select("category").not("category", "is", null).limit(500);
     const { data: cityRows } = await db.from("leads").select("city").not("city", "is", null).limit(500);
-    const categories = Array.from(new Set((catRows ?? []).map((r: any) => r.category).filter(Boolean))).sort() as string[];
-    const cities = Array.from(new Set((cityRows ?? []).map((r: any) => r.city).filter(Boolean))).sort() as string[];
+    const categories = Array.from(new Set((catRows ?? []).map((r: { category: string | null }) => r.category).filter(Boolean))).sort() as string[];
+    const cities = Array.from(new Set((cityRows ?? []).map((r: { city: string | null }) => r.city).filter(Boolean))).sort() as string[];
 
     const total = count ?? 0;
     const pages = Math.ceil(total / PAGE_SIZE);
@@ -55,7 +56,7 @@ export default async function LeadsPage({ searchParams }: { searchParams: SP }) 
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-cream/[0.04]">
-                        {(leads ?? []).map((l: any) => (
+                        {((leads ?? []) as Lead[]).map((l) => (
                             <tr key={l.id} className="hover:bg-cream/[0.02]">
                                 <td className="p-3 text-cream">{l.name}</td>
                                 <td className="p-3 text-cream/70">{l.city || "—"}</td>
