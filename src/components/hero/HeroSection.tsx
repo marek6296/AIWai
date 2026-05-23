@@ -43,15 +43,17 @@ export default function HeroSection() {
                 min-h-[100dvh] pt-24 pb-28
                 md:px-6 md:h-auto md:justify-center md:items-center md:gap-0 md:py-32 md:pb-32">
 
-                {/* Mobile logo — only shown above headline on small screens */}
+                {/* Mobile logo — only shown above headline on small screens.
+                    Kept large here too as a fallback in case HomeRouter ever
+                    serves this section to a phone instead of MobileHero. */}
                 <div className="hero-logo md:hidden flex justify-center">
                     <Image
                         src="/logo-v2.png"
                         alt="AIWai"
-                        width={160}
-                        height={160}
+                        width={420}
+                        height={420}
                         priority
-                        className="w-24 h-24 sm:w-32 sm:h-32 object-contain drop-shadow-[0_6px_22px_rgba(201,168,117,0.3)]"
+                        className="w-72 h-72 sm:w-80 sm:h-80 object-contain drop-shadow-[0_14px_40px_rgba(201,168,117,0.45)]"
                     />
                 </div>
 
