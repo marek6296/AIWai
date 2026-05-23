@@ -1,8 +1,16 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, Outfit } from "next/font/google";
 import "./globals.css";
 import JsonLd from "@/components/seo/JsonLd";
 import { organizationSchema, websiteSchema, localBusinessSchema } from "@/lib/seo/schemas";
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  // viewport-fit=cover enables env(safe-area-inset-*) on notched iOS devices
+  viewportFit: "cover",
+  themeColor: "#050508",
+};
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
 const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit", display: "swap" });

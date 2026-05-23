@@ -85,7 +85,19 @@ export function InteractiveStarfield({
     containerRef: React.RefObject<HTMLDivElement>;
     count?: number;
 }) {
-    const sparks = useMemo(() => Array.from({ length: count }), [count]);
+    // Cut spark count on mobile — 80 infinite opacity animations =
+    // measurable battery drain + iOS Safari jank during scroll.
+    const [effectiveCount, setEffectiveCount] = useState(count);
+    useEffect(() => {
+        const apply = () => {
+            const isMobile = window.innerWidth < 768;
+            setEffectiveCount(isMobile ? Math.min(count, 30) : count);
+        };
+        apply();
+        window.addEventListener("resize", apply);
+        return () => window.removeEventListener("resize", apply);
+    }, [count]);
+    const sparks = useMemo(() => Array.from({ length: effectiveCount }), [effectiveCount]);
     return (
         <div
             aria-hidden="true"

@@ -120,13 +120,16 @@ export default function ServicesSection() {
 
     useEffect(() => {
         if (!autoRotate || reducedMotion) return;
+        // Disable continuous rotation on mobile — kills battery + iOS Safari
+        // jank during scroll. Static orbit looks intentional.
+        if (isCompact) return;
 
         const timer = window.setInterval(() => {
             setRotationAngle((prev) => Number(((prev + 0.25) % 360).toFixed(3)));
         }, 50);
 
         return () => window.clearInterval(timer);
-    }, [autoRotate, reducedMotion]);
+    }, [autoRotate, reducedMotion, isCompact]);
 
     const selectService = (index: number) => {
         const total = services.length;
@@ -148,19 +151,19 @@ export default function ServicesSection() {
         closeDetail();
     };
 
-    const radius = isCompact ? 108 : 220;
+    const radius = isCompact ? 100 : 220;
 
     return (
         <section
             id="services"
-            className="relative overflow-hidden py-12 md:py-16 isolate"
+            className="relative overflow-hidden py-14 md:py-16 isolate"
             onClick={clearSelection}
         >
-            <div className="container relative z-10 mx-auto px-6">
-                <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(340px,0.95fr)]">
+            <div className="container relative z-10 mx-auto px-5 md:px-6">
+                <div className="grid items-center gap-10 md:gap-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(340px,0.95fr)]">
                     <div
                         ref={orbitRef}
-                        className="relative mx-auto flex aspect-square w-full max-w-[300px] sm:max-w-[420px] lg:max-w-[640px] items-center justify-center"
+                        className="relative mx-auto flex aspect-square w-full max-w-[260px] sm:max-w-[420px] lg:max-w-[640px] items-center justify-center"
                         style={{ perspective: "1000px" }}
                     >
                         <div aria-hidden="true" className="absolute h-[78%] w-[78%] rounded-full border border-cream/10" />
@@ -223,15 +226,15 @@ export default function ServicesSection() {
                                             }}
                                         />
                                         <span
-                                            className={`relative flex h-12 w-12 items-center justify-center rounded-full border-2 transition-all duration-300 md:h-14 md:w-14 ${
+                                            className={`relative flex h-[52px] w-[52px] items-center justify-center rounded-full border-2 transition-all duration-300 md:h-14 md:w-14 ${
                                                 isActive
-                                                    ? "scale-125 border-gold bg-gold text-ink shadow-[0_0_35px_rgba(201,168,117,0.42)]"
+                                                    ? "scale-110 md:scale-125 border-gold bg-gold text-ink shadow-[0_0_35px_rgba(201,168,117,0.42)]"
                                                     : isRelated
                                                       ? "border-gold/80 bg-gold/20 text-gold"
-                                                      : "border-cream/25 bg-char text-cream/80 group-hover:border-gold/70 group-hover:text-gold"
+                                                      : "border-cream/25 bg-char text-cream/80 group-hover:border-gold/70 group-hover:text-gold active:border-gold/70 active:text-gold"
                                             }`}
                                         >
-                                            <Icon className="h-5 w-5" />
+                                            <Icon className="h-[22px] w-[22px] md:h-5 md:w-5" />
                                         </span>
                                         <span
                                             className={`hidden md:block max-w-[8.5rem] text-center text-[11px] font-bold uppercase leading-tight tracking-[0.16em] transition-colors md:text-xs ${
@@ -248,7 +251,7 @@ export default function ServicesSection() {
 
                     <motion.div layout transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }} className="relative">
                         <div className="pointer-events-none absolute -inset-px rounded-[14px] bg-[radial-gradient(120%_120%_at_0%_0%,rgba(201,168,117,0.18),transparent_55%),radial-gradient(120%_120%_at_100%_100%,rgba(201,168,117,0.08),transparent_60%)] opacity-90" />
-                        <div className="relative flex flex-col overflow-hidden rounded-[14px] bg-char/70 p-5 shadow-[0_30px_90px_-40px_rgba(0,0,0,0.9),inset_0_1px_0_rgba(255,255,255,0.04)] backdrop-blur-sm ring-1 ring-cream/[0.04] md:p-7 min-h-[28rem] md:min-h-[38rem]">
+                        <div className="relative flex flex-col overflow-hidden rounded-[14px] bg-char/70 p-5 shadow-[0_30px_90px_-40px_rgba(0,0,0,0.9),inset_0_1px_0_rgba(255,255,255,0.04)] backdrop-blur-sm ring-1 ring-cream/[0.04] md:p-7 min-h-[24rem] md:min-h-[38rem]">
                             <div aria-hidden="true" className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gold/70 to-transparent" />
                             <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-cream/8 to-transparent" />
 

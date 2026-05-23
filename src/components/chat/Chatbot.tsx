@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Send, X, Plus, ArrowUpRight, ExternalLink, Mail, Phone, Sparkles } from "lucide-react";
+import { Send, X, Plus, ArrowUpRight, ExternalLink, Mail, Phone } from "lucide-react";
 import ReactMarkdown, { type Components } from "react-markdown";
 import Link from "next/link";
 import { useTranslation } from "@/i18n/useTranslation";
@@ -204,16 +204,10 @@ export default function Chatbot() {
     const dockRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        try {
-            let id = localStorage.getItem("aiwai_chat_session");
-            if (!id) {
-                id = `sess_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
-                localStorage.setItem("aiwai_chat_session", id);
-            }
-            sessionIdRef.current = id;
-        } catch {
-            sessionIdRef.current = `sess_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
-        }
+        // Fresh session ID on every mount → refresh = clean conversation,
+        // both in UI (messages state starts empty) and in admin Supabase logs
+        // (each page-load creates a new chatbot_conversations row).
+        sessionIdRef.current = `sess_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
     }, []);
 
     useEffect(() => {
@@ -225,7 +219,12 @@ export default function Chatbot() {
     }, [input]);
 
     useEffect(() => {
-        messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+        // Small delay so the new message has time to mount and start its
+        // entrance animation before we scroll to it — feels less abrupt.
+        const id = requestAnimationFrame(() => {
+            messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+        });
+        return () => cancelAnimationFrame(id);
     }, [messages, isLoading]);
 
     useEffect(() => {
@@ -329,9 +328,18 @@ export default function Chatbot() {
         }
     };
 
+    const [selectedChip, setSelectedChip] = useState<string | null>(null);
+
     const handleChip = (chip: string) => {
         const clean = chip.replace(/^[^\wÀ-ɏ]+/, "").trim();
-        sendMessage(clean);
+        // Visual cue before send — the chip flashes "selected" and other
+        // chips fade out, then the message slides in with the standard
+        // entrance animation we already wire up for user messages.
+        setSelectedChip(chip);
+        setTimeout(() => {
+            sendMessage(clean);
+            setSelectedChip(null);
+        }, 220);
     };
 
     const closePanel = () => {
@@ -351,38 +359,44 @@ export default function Chatbot() {
 
     return (
         <motion.div
-            initial={{ opacity: 0, y: 28, scale: 0.96, filter: "blur(8px)" }}
-            animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
+            initial={{ opacity: 0, y: 28, scale: 0.96 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
             transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
             className="pointer-events-none fixed inset-x-0 bottom-3 z-50 flex justify-center px-3 md:bottom-5"
+            style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
         >
             <div
                 ref={dockRef}
-                className={`pointer-events-auto w-full transition-[max-width] duration-[850ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                    isWideStable ? "max-w-[760px]" : "max-w-[320px]"
+                className={`pointer-events-auto w-full font-display transition-[max-width] duration-[850ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                    isWideStable ? "max-w-[760px]" : "max-w-[380px] md:max-w-[320px]"
                 }`}
             >
                 <AnimatePresence>
                     {isExpanded && (
                         <motion.div
                             key="chat-panel"
-                            initial={{ opacity: 0, y: 18, height: 0, scale: 0.98 }}
-                            animate={{ opacity: 1, y: 0, height: "auto", scale: 1 }}
-                            exit={{ opacity: 0, y: 14, height: 0, scale: 0.98 }}
-                            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-                            className="mb-2 overflow-hidden origin-bottom"
+                            initial={{ opacity: 0, y: 14, scaleY: 0.85, scaleX: 0.97 }}
+                            animate={{ opacity: 1, y: 0, scaleY: 1, scaleX: 1 }}
+                            exit={{ opacity: 0, y: 10, scaleY: 0.9, scaleX: 0.98 }}
+                            transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
+                            className="mb-2 overflow-hidden origin-bottom will-change-transform"
+                            style={{ transformOrigin: "bottom center" }}
                         >
                             <div className="relative overflow-hidden rounded-[18px] border border-cream/[0.08] bg-char/95 backdrop-blur-3xl shadow-[0_40px_100px_-20px_rgba(0,0,0,0.95)] ring-1 ring-gold/[0.08]">
                                 <div aria-hidden="true" className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gold/40 to-transparent" />
 
                                 <div className="flex items-center justify-between gap-3 border-b border-cream/[0.06] bg-char px-4 py-3">
                                     <div className="flex items-center gap-2.5">
-                                        <span className="relative flex h-2 w-2">
-                                            <span className="absolute inset-0 animate-ping rounded-full bg-gold/60" />
-                                            <span className="relative h-2 w-2 rounded-full bg-gold shadow-[0_0_8px_rgba(201,168,117,0.7)]" />
-                                        </span>
-                                        <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-cream/80">AIWai Asistent</span>
-                                        <span className="hidden text-[10px] text-cream/40 sm:inline">· odpovedá za pár sekúnd</span>
+                                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                                        <img
+                                            src="/logo-v2.png"
+                                            alt="AIWai"
+                                            width={28}
+                                            height={28}
+                                            className="h-5 w-auto select-none object-contain"
+                                            draggable={false}
+                                        />
+                                        <span className="text-[13px] font-semibold tracking-tight text-cream/90">Assistant</span>
                                     </div>
                                     <button
                                         type="button"
@@ -406,18 +420,45 @@ export default function Chatbot() {
                                                 </p>
                                             </div>
                                             <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-                                                {initialChips.map((chip) => {
+                                                {initialChips.map((chip, i) => {
                                                     const clean = chip.replace(/^[^\wÀ-ɏ]+\s*/, "").trim();
+                                                    const isSelected = selectedChip === chip;
+                                                    const isOther = selectedChip !== null && !isSelected;
                                                     return (
-                                                        <button
+                                                        <motion.button
                                                             key={chip}
                                                             type="button"
                                                             onClick={() => handleChip(chip)}
-                                                            className="group relative overflow-hidden rounded-xl border border-cream/[0.07] bg-cream/[0.02] px-3.5 py-3 text-left text-sm leading-snug text-cream/80 transition-all hover:-translate-y-0.5 hover:border-gold/35 hover:bg-gold/[0.04] hover:text-cream"
+                                                            disabled={selectedChip !== null}
+                                                            initial={{ opacity: 0, y: 8 }}
+                                                            animate={{
+                                                                opacity: isOther ? 0.15 : 1,
+                                                                y: 0,
+                                                                scale: isSelected ? 1.04 : 1,
+                                                            }}
+                                                            transition={{
+                                                                duration: isSelected || isOther ? 0.2 : 0.45,
+                                                                delay: selectedChip ? 0 : i * 0.06,
+                                                                ease: [0.22, 1, 0.36, 1],
+                                                            }}
+                                                            whileHover={
+                                                                selectedChip ? undefined : { y: -2, scale: 1.01 }
+                                                            }
+                                                            whileTap={{ scale: 0.97 }}
+                                                            className={`group relative overflow-hidden rounded-xl border px-3.5 py-3 text-left text-sm leading-snug transition-colors ${
+                                                                isSelected
+                                                                    ? "border-gold/60 bg-gold/[0.12] text-cream shadow-[0_0_24px_-6px_rgba(201,168,117,0.45)]"
+                                                                    : "border-cream/[0.07] bg-cream/[0.02] text-cream/80 hover:border-gold/35 hover:bg-gold/[0.04] hover:text-cream"
+                                                            }`}
                                                         >
-                                                            <span aria-hidden="true" className="pointer-events-none absolute inset-0 rounded-xl bg-[radial-gradient(120%_120%_at_0%_0%,rgba(201,168,117,0.10),transparent_60%)] opacity-0 transition-opacity group-hover:opacity-100" />
+                                                            <span
+                                                                aria-hidden="true"
+                                                                className={`pointer-events-none absolute inset-0 rounded-xl bg-[radial-gradient(120%_120%_at_0%_0%,rgba(201,168,117,0.18),transparent_60%)] transition-opacity ${
+                                                                    isSelected ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+                                                                }`}
+                                                            />
                                                             <span className="relative">{clean}</span>
-                                                        </button>
+                                                        </motion.button>
                                                     );
                                                 })}
                                             </div>
@@ -425,98 +466,252 @@ export default function Chatbot() {
                                     ) : (
                                         <>
                                             <ul className="space-y-4">
-                                                {messages.map((msg, idx) => (
-                                                    <li
-                                                        key={idx}
-                                                        className={`flex gap-2.5 ${msg.role === "user" ? "justify-end" : "justify-start"}`}
-                                                    >
-                                                        {msg.role === "assistant" && (
-                                                            <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-gold/35 bg-gradient-to-b from-gold/[0.15] to-gold/[0.04] text-[10px] font-bold tracking-tight text-gold">
-                                                                A
-                                                            </div>
-                                                        )}
-                                                        <div
-                                                            className={`max-w-[85%] rounded-2xl text-[14px] leading-relaxed ${
-                                                                msg.role === "user"
-                                                                    ? "border border-gold/25 bg-gold/12 px-4 py-2.5 text-cream"
-                                                                    : "border border-cream/[0.07] bg-cream/[0.025] px-4 py-3 text-cream/90 shadow-[0_8px_24px_-12px_rgba(0,0,0,0.6)]"
-                                                            }`}
-                                                        >
-                                                            {msg.role === "assistant" ? (
-                                                                <div className="space-y-3">
-                                                                    {(msg.segments ?? [{ type: "md" as const, text: msg.displayContent ?? msg.content }]).map((seg, sidx) => {
-                                                                        if (seg.type === "md") {
-                                                                            return (
-                                                                                <div key={sidx} className="text-[14px]">
-                                                                                    <ReactMarkdown components={MD_COMPONENTS}>{seg.text}</ReactMarkdown>
-                                                                                </div>
-                                                                            );
-                                                                        }
-                                                                        return null;
-                                                                    })}
+                                                <AnimatePresence initial={false}>
+                                                    {messages.map((msg, idx) => {
+                                                        const isUser = msg.role === "user";
+                                                        return (
+                                                            <motion.li
+                                                                key={idx}
+                                                                layout="position"
+                                                                initial={{
+                                                                    opacity: 0,
+                                                                    y: 14,
+                                                                    x: isUser ? 18 : -18,
+                                                                    scale: 0.96,
+                                                                }}
+                                                                animate={{
+                                                                    opacity: 1,
+                                                                    y: 0,
+                                                                    x: 0,
+                                                                    scale: 1,
+                                                                }}
+                                                                style={{ willChange: "transform, opacity" }}
+                                                                transition={{
+                                                                    type: "spring",
+                                                                    damping: 26,
+                                                                    stiffness: 280,
+                                                                    mass: 0.7,
+                                                                }}
+                                                                className={`flex gap-2.5 ${isUser ? "justify-end" : "justify-start"}`}
+                                                            >
+                                                                {!isUser && (
+                                                                    <motion.div
+                                                                        initial={{ scale: 0, rotate: -45, opacity: 0 }}
+                                                                        animate={{ scale: 1, rotate: 0, opacity: 1 }}
+                                                                        transition={{
+                                                                            type: "spring",
+                                                                            damping: 14,
+                                                                            stiffness: 320,
+                                                                            delay: 0.05,
+                                                                        }}
+                                                                        className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-gold/35 bg-gradient-to-b from-gold/[0.15] to-gold/[0.04]"
+                                                                    >
+                                                                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                                                                        <img
+                                                                            src="/logo-v2.png"
+                                                                            alt="AIWai"
+                                                                            width={20}
+                                                                            height={20}
+                                                                            className="h-4 w-auto object-contain select-none"
+                                                                            draggable={false}
+                                                                        />
+                                                                    </motion.div>
+                                                                )}
+                                                                <div
+                                                                    className={`max-w-[85%] rounded-2xl text-[14px] leading-relaxed ${
+                                                                        isUser
+                                                                            ? "border border-gold/25 bg-gold/12 px-4 py-2.5 text-cream"
+                                                                            : "border border-cream/[0.07] bg-cream/[0.025] px-4 py-3 text-cream/90 shadow-[0_8px_24px_-12px_rgba(0,0,0,0.6)]"
+                                                                    }`}
+                                                                >
+                                                                    {!isUser ? (
+                                                                        <div className="space-y-3">
+                                                                            {(msg.segments ?? [
+                                                                                {
+                                                                                    type: "md" as const,
+                                                                                    text: msg.displayContent ?? msg.content,
+                                                                                },
+                                                                            ]).map((seg, sidx) => {
+                                                                                if (seg.type === "md") {
+                                                                                    return (
+                                                                                        <motion.div
+                                                                                            key={sidx}
+                                                                                            initial={{ opacity: 0, y: 6 }}
+                                                                                            animate={{ opacity: 1, y: 0 }}
+                                                                                            transition={{
+                                                                                                duration: 0.5,
+                                                                                                ease: [0.22, 1, 0.36, 1],
+                                                                                                delay: 0.1 + sidx * 0.05,
+                                                                                            }}
+                                                                                            className="text-[14px]"
+                                                                                        >
+                                                                                            <ReactMarkdown components={MD_COMPONENTS}>
+                                                                                                {seg.text}
+                                                                                            </ReactMarkdown>
+                                                                                        </motion.div>
+                                                                                    );
+                                                                                }
+                                                                                return null;
+                                                                            })}
 
-                                                                    {/* Render all ACTION buttons together at the end of the bubble */}
-                                                                    {msg.segments?.some((s) => s.type === "action") && (
-                                                                        <div className="mt-1 flex flex-col gap-2 border-t border-cream/[0.06] pt-3">
-                                                                            {msg.segments
-                                                                                .filter((s): s is Extract<Segment, { type: "action" }> => s.type === "action")
-                                                                                .map((seg, aidx) => (
-                                                                                    <ActionButton
-                                                                                        key={aidx}
-                                                                                        label={seg.label}
-                                                                                        target={seg.target}
-                                                                                        onQuery={(q) => sendMessage(q)}
-                                                                                        onClose={closePanel}
-                                                                                    />
-                                                                                ))}
+                                                                            {msg.segments?.some((s) => s.type === "action") && (
+                                                                                <motion.div
+                                                                                    initial={{ opacity: 0, y: 8 }}
+                                                                                    animate={{ opacity: 1, y: 0 }}
+                                                                                    transition={{
+                                                                                        duration: 0.5,
+                                                                                        delay: 0.25,
+                                                                                        ease: [0.22, 1, 0.36, 1],
+                                                                                    }}
+                                                                                    className="mt-1 flex flex-col gap-2 border-t border-cream/[0.06] pt-3"
+                                                                                >
+                                                                                    {msg.segments
+                                                                                        .filter(
+                                                                                            (s): s is Extract<Segment, { type: "action" }> =>
+                                                                                                s.type === "action",
+                                                                                        )
+                                                                                        .map((seg, aidx) => (
+                                                                                            <motion.div
+                                                                                                key={aidx}
+                                                                                                initial={{ opacity: 0, x: -6 }}
+                                                                                                animate={{ opacity: 1, x: 0 }}
+                                                                                                transition={{
+                                                                                                    duration: 0.4,
+                                                                                                    delay: 0.3 + aidx * 0.06,
+                                                                                                    ease: [0.22, 1, 0.36, 1],
+                                                                                                }}
+                                                                                            >
+                                                                                                <ActionButton
+                                                                                                    label={seg.label}
+                                                                                                    target={seg.target}
+                                                                                                    onQuery={(q) => sendMessage(q)}
+                                                                                                    onClose={closePanel}
+                                                                                                />
+                                                                                            </motion.div>
+                                                                                        ))}
+                                                                                </motion.div>
+                                                                            )}
                                                                         </div>
+                                                                    ) : (
+                                                                        <p>{msg.displayContent ?? msg.content}</p>
                                                                     )}
                                                                 </div>
-                                                            ) : (
-                                                                <p>{msg.displayContent ?? msg.content}</p>
-                                                            )}
-                                                        </div>
-                                                    </li>
-                                                ))}
+                                                            </motion.li>
+                                                        );
+                                                    })}
 
-                                                {isLoading && (
-                                                    <li className="flex justify-start gap-2.5">
-                                                        <div className="relative mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-gold/30 bg-gradient-to-br from-gold/25 via-gold/10 to-transparent shadow-[0_4px_14px_-4px_rgba(201,168,117,0.55),inset_0_1px_0_rgba(255,255,255,0.10)] ring-1 ring-inset ring-gold/15">
-                                                            <span aria-hidden="true" className="pointer-events-none absolute inset-0 rounded-full bg-[radial-gradient(120%_120%_at_30%_15%,rgba(228,200,150,0.45),transparent_55%)]" />
-                                                            <Sparkles className="relative h-3.5 w-3.5 text-gold drop-shadow-[0_0_6px_rgba(228,200,150,0.55)]" strokeWidth={1.6} />
-                                                        </div>
-                                                        <div className="flex items-center gap-1.5 rounded-2xl border border-cream/[0.07] bg-cream/[0.025] px-4 py-3">
-                                                            {[0, 1, 2].map((i) => (
-                                                                <motion.span
-                                                                    key={i}
-                                                                    animate={{ opacity: [0.25, 1, 0.25], y: [0, -2, 0] }}
-                                                                    transition={{ duration: 1.2, repeat: Infinity, delay: i * 0.18, ease: "easeInOut" }}
-                                                                    className="block h-1.5 w-1.5 rounded-full bg-gold"
+                                                    {isLoading && (
+                                                        <motion.li
+                                                            key="loading"
+                                                            layout="position"
+                                                            initial={{ opacity: 0, y: 8, scale: 0.96 }}
+                                                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                                                            exit={{ opacity: 0, scale: 0.92, transition: { duration: 0.2 } }}
+                                                            transition={{
+                                                                type: "spring",
+                                                                damping: 26,
+                                                                stiffness: 280,
+                                                            }}
+                                                            className="flex justify-start gap-2.5"
+                                                        >
+                                                            <div className="relative mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-gold/30 bg-gradient-to-br from-gold/25 via-gold/10 to-transparent shadow-[0_4px_14px_-4px_rgba(201,168,117,0.55),inset_0_1px_0_rgba(255,255,255,0.10)] ring-1 ring-inset ring-gold/15">
+                                                                <span
+                                                                    aria-hidden="true"
+                                                                    className="pointer-events-none absolute inset-0 rounded-full bg-[radial-gradient(120%_120%_at_30%_15%,rgba(228,200,150,0.45),transparent_55%)]"
                                                                 />
-                                                            ))}
-                                                        </div>
-                                                    </li>
-                                                )}
+                                                                <motion.span
+                                                                    animate={{ scale: [1, 1.08, 1] }}
+                                                                    transition={{
+                                                                        duration: 1.8,
+                                                                        repeat: Infinity,
+                                                                        ease: "easeInOut",
+                                                                    }}
+                                                                    className="relative"
+                                                                >
+                                                                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                                                                    <img
+                                                                        src="/logo-v2.png"
+                                                                        alt="AIWai"
+                                                                        width={20}
+                                                                        height={20}
+                                                                        className="h-4 w-auto object-contain select-none drop-shadow-[0_0_6px_rgba(228,200,150,0.45)]"
+                                                                        draggable={false}
+                                                                    />
+                                                                </motion.span>
+                                                            </div>
+                                                            <div className="flex items-center gap-1.5 rounded-2xl border border-cream/[0.07] bg-cream/[0.025] px-4 py-3">
+                                                                {[0, 1, 2].map((i) => (
+                                                                    <motion.span
+                                                                        key={i}
+                                                                        animate={{
+                                                                            opacity: [0.25, 1, 0.25],
+                                                                            y: [0, -3, 0],
+                                                                            scale: [1, 1.15, 1],
+                                                                        }}
+                                                                        transition={{
+                                                                            duration: 1.2,
+                                                                            repeat: Infinity,
+                                                                            delay: i * 0.18,
+                                                                            ease: "easeInOut",
+                                                                        }}
+                                                                        className="block h-1.5 w-1.5 rounded-full bg-gold"
+                                                                    />
+                                                                ))}
+                                                            </div>
+                                                        </motion.li>
+                                                    )}
+                                                </AnimatePresence>
                                             </ul>
                                             <div ref={messagesEndRef} />
                                         </>
                                     )}
                                 </div>
 
-                                {messages.length > 0 && activeChips.length > 0 && !isLoading && (
-                                    <div className="flex flex-wrap gap-2 border-t border-cream/[0.06] bg-char px-4 py-3">
-                                        {activeChips.map((chip) => (
-                                            <button
-                                                key={chip}
-                                                type="button"
-                                                onClick={() => handleChip(chip)}
-                                                className="group inline-flex items-center rounded-full border border-cream/[0.08] bg-cream/[0.03] px-3 py-1.5 text-xs text-cream/75 transition-colors hover:border-gold/40 hover:bg-gold/[0.06] hover:text-cream"
-                                            >
-                                                {chip}
-                                            </button>
-                                        ))}
-                                    </div>
-                                )}
+                                <AnimatePresence>
+                                    {messages.length > 0 && activeChips.length > 0 && !isLoading && (
+                                        <motion.div
+                                            key={`chips-${messages.length}`}
+                                            initial={{ opacity: 0, y: 6 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            exit={{ opacity: 0, y: -4, transition: { duration: 0.18 } }}
+                                            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                                            className="flex flex-wrap gap-2 border-t border-cream/[0.06] bg-char px-4 py-3"
+                                        >
+                                            {activeChips.map((chip, i) => {
+                                                const isSelected = selectedChip === chip;
+                                                const isOther = selectedChip !== null && !isSelected;
+                                                return (
+                                                    <motion.button
+                                                        key={chip}
+                                                        type="button"
+                                                        onClick={() => handleChip(chip)}
+                                                        disabled={selectedChip !== null}
+                                                        initial={{ opacity: 0, y: 6, scale: 0.94 }}
+                                                        animate={{
+                                                            opacity: isOther ? 0.15 : 1,
+                                                            y: 0,
+                                                            scale: isSelected ? 1.06 : 1,
+                                                        }}
+                                                        transition={{
+                                                            duration: isSelected || isOther ? 0.18 : 0.35,
+                                                            delay: selectedChip ? 0 : i * 0.05,
+                                                            ease: [0.22, 1, 0.36, 1],
+                                                        }}
+                                                        whileHover={selectedChip ? undefined : { y: -1 }}
+                                                        whileTap={{ scale: 0.95 }}
+                                                        className={`group inline-flex items-center rounded-full border px-3 py-1.5 text-xs transition-colors ${
+                                                            isSelected
+                                                                ? "border-gold/60 bg-gold/[0.14] text-cream shadow-[0_0_18px_-4px_rgba(201,168,117,0.5)]"
+                                                                : "border-cream/[0.08] bg-cream/[0.03] text-cream/75 hover:border-gold/40 hover:bg-gold/[0.06] hover:text-cream"
+                                                        }`}
+                                                    >
+                                                        {chip}
+                                                    </motion.button>
+                                                );
+                                            })}
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
                             </div>
                         </motion.div>
                     )}
@@ -551,7 +746,7 @@ export default function Chatbot() {
                         placeholder={t("chatbot.bubble.initial")}
                         rows={1}
                         aria-label="Napíšte správu"
-                        className="flex-1 resize-none self-center bg-transparent px-1 py-2 text-sm leading-snug text-cream placeholder:text-cream/40 outline-none ring-0 focus:outline-none focus:ring-0 focus-visible:outline-none truncate [scrollbar-width:thin]"
+                        className="flex-1 resize-none self-center bg-transparent px-1 py-2 text-base md:text-sm leading-snug text-cream placeholder:text-cream/40 outline-none ring-0 focus:outline-none focus:ring-0 focus-visible:outline-none truncate [scrollbar-width:thin]"
                     />
 
                     <button

@@ -51,6 +51,11 @@ export default function FlowLines() {
         let rafId = 0;
         let running = true;
         let timePhase = 0;
+        // Mobile: animate briefly then freeze on a static end-state painting.
+        // Avoids continuous rAF battery drain + iOS Safari scroll jank.
+        const MOBILE_INTRO_FRAMES = 200;
+        let mobileFrozen = false;
+        let totalFrames = 0;
 
         function resize() {
             if (!canvas) return;
@@ -127,16 +132,19 @@ export default function FlowLines() {
             return (p.head - i + p.cap) % p.cap;
         }
 
+        const isMobile = window.innerWidth < 768;
+
         function spawn() {
-            const count = window.innerWidth < 768 ? 14 : 26;
+            // Mobile gets a slightly richer composition since the animation
+            // freezes after ~3s — more streaks = denser final painting.
+            const count = isMobile ? 20 : 26;
             particles = Array.from({ length: count }, () => makeParticle());
         }
 
         const BOOST_START = 4;
-        const BOOST_FRAMES = 130;
+        const BOOST_FRAMES = isMobile ? 90 : 130;
         let boostFrame = 0;
 
-        const isMobile = window.innerWidth < 768;
         const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
         const isSafariMobile = isMobile && isSafari;
 
@@ -157,23 +165,8 @@ export default function FlowLines() {
             window.addEventListener("scroll", onScroll, { passive: true });
         }
 
-        let safariScrollTimeout: ReturnType<typeof setTimeout> | null = null;
-        function onSafariScrollPause() {
-            if (running) {
-                running = false;
-                cancelAnimationFrame(rafId);
-            }
-            if (safariScrollTimeout) clearTimeout(safariScrollTimeout);
-            safariScrollTimeout = setTimeout(() => {
-                if (!running && !reduced && document.visibilityState !== "hidden") {
-                    running = true;
-                    frame();
-                }
-            }, 150);
-        }
-        if (isSafariMobile) {
-            window.addEventListener("scroll", onSafariScrollPause, { passive: true });
-        }
+        // Safari mobile scroll-pause workaround removed: on mobile the
+        // animation freezes after ~3s anyway, so scroll jank is bounded.
 
         // Pre-quantized alpha lookup per (count, segIdx) is not worth caching
         // because count varies per particle; instead we compute u once per segment
@@ -232,6 +225,14 @@ export default function FlowLines() {
 
         function frame() {
             if (!running) return;
+            // Mobile freeze: after intro, stop the loop and leave the final
+            // composition painted on the canvas. No more rAF, no battery drain.
+            if (isMobile && totalFrames >= MOBILE_INTRO_FRAMES) {
+                mobileFrozen = true;
+                running = false;
+                return;
+            }
+            totalFrames++;
             ctx!.clearRect(0, 0, width, height);
 
             let introBoost: number;
@@ -288,6 +289,9 @@ export default function FlowLines() {
         }
 
         function onVisibility() {
+            // Once mobile freezes, never resume animation — canvas keeps its
+            // final painted state on its own.
+            if (mobileFrozen) return;
             if (document.visibilityState === "hidden") {
                 running = false;
                 cancelAnimationFrame(rafId);
@@ -299,6 +303,13 @@ export default function FlowLines() {
 
         let lastWidth = window.innerWidth;
         function onResize() {
+            // After the mobile freeze, don't re-run the simulation on every
+            // resize event (iOS fires these on scroll due to URL bar). Just
+            // resize the canvas — the final paint is gone anyway, accept it.
+            if (mobileFrozen) {
+                resize();
+                return;
+            }
             resize();
             if (isSafariMobile) {
                 const newWidth = window.innerWidth;
@@ -350,10 +361,8 @@ export default function FlowLines() {
         return () => {
             running = false;
             cancelAnimationFrame(rafId);
-            if (safariScrollTimeout) clearTimeout(safariScrollTimeout);
             window.removeEventListener("resize", onResize);
             if (!isMobile) window.removeEventListener("scroll", onScroll);
-            if (isSafariMobile) window.removeEventListener("scroll", onSafariScrollPause);
             document.removeEventListener("visibilitychange", onVisibility);
         };
     }, []);

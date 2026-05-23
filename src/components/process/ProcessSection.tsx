@@ -111,15 +111,15 @@ export default function ProcessSection() {
     }));
 
     return (
-        <section className="relative py-20 md:py-32 overflow-hidden isolate">
-            <div className="container relative z-10 mx-auto px-6">
+        <section className="relative py-16 md:py-32 overflow-hidden isolate">
+            <div className="container relative z-10 mx-auto px-5 md:px-6">
                 {/* Heading — editorial header with rule */}
                 <motion.div
                     initial={{ opacity: 0, y: 16 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, amount: 0.5 }}
                     transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-                    className="text-center mb-16 md:mb-24"
+                    className="text-center mb-12 md:mb-24"
                 >
                     <div className="mb-6 flex items-center justify-center gap-3">
                         <span aria-hidden="true" className="h-px w-10 bg-gradient-to-r from-transparent to-gold/60" />
@@ -128,7 +128,7 @@ export default function ProcessSection() {
                         </span>
                         <span aria-hidden="true" className="h-px w-10 bg-gradient-to-l from-transparent to-gold/60" />
                     </div>
-                    <h2 className="font-display text-4xl md:text-6xl font-bold tracking-tight text-cream leading-[1.05]">
+                    <h2 className="font-display text-[2.25rem] sm:text-4xl md:text-6xl font-bold tracking-tight text-cream leading-[1.05]">
                         {t("process.heading")}
                     </h2>
                     <p className="mt-5 max-w-xl mx-auto text-cream/55 text-base md:text-lg font-light leading-relaxed">

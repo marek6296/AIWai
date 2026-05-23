@@ -9,7 +9,7 @@ export default function CTASection() {
     const { t } = useTranslation();
 
     return (
-        <section className="relative overflow-hidden flex items-center justify-center min-h-[100svh] py-16 md:py-24">
+        <section className="relative overflow-hidden flex items-center justify-center min-h-[80svh] md:min-h-[100svh] py-16 md:py-24">
             {/* Soft local accent — additive on top of HomeBackdrop */}
             <div
                 aria-hidden="true"
@@ -20,16 +20,16 @@ export default function CTASection() {
                 }}
             />
 
-            <div className="container mx-auto px-6 relative z-10 text-center">
+            <div className="container mx-auto px-5 md:px-6 relative z-10 text-center">
                 <ScrollReveal>
-                    <p className="text-gold/80 uppercase tracking-[0.2em] text-xs font-bold mb-4 md:mb-6">
+                    <p className="text-gold/80 uppercase tracking-[0.2em] text-[11px] md:text-xs font-bold mb-4 md:mb-6">
                         {t("cta.label")}
                     </p>
                 </ScrollReveal>
 
                 <TextReveal
                     as="h2"
-                    className="text-[2.25rem] md:text-6xl lg:text-7xl font-display font-bold text-white tracking-tight mb-6 md:mb-8 leading-[1.1]"
+                    className="text-[2.1rem] sm:text-[2.5rem] md:text-6xl lg:text-7xl font-display font-bold text-white tracking-tight mb-5 md:mb-8 leading-[1.1]"
                 >
                     {t("cta.heading")}
                 </TextReveal>
@@ -43,7 +43,7 @@ export default function CTASection() {
                 <ScrollReveal delay={0.18}>
                     <button
                         onClick={() => scrollToPageSection("contact")}
-                        className="inline-flex items-center gap-3 px-8 md:px-10 py-4 bg-gold text-ink text-sm font-bold uppercase tracking-[0.15em] hover:bg-gold-bright transition-all shadow-2xl shadow-black/30 group"
+                        className="inline-flex items-center gap-3 px-7 sm:px-8 md:px-10 py-4 bg-gold text-ink text-[13px] sm:text-sm font-bold uppercase tracking-[0.15em] hover:bg-gold-bright active:bg-gold-bright transition-all shadow-2xl shadow-black/30 group"
                     >
                         {t("cta.button")}
                         <svg

@@ -44,12 +44,14 @@ function FloatingIcon({
     mouseX,
     mouseY,
     enableRepel,
+    enableFloat,
 }: {
     cfg: IconConfig;
     index: number;
     mouseX: React.MutableRefObject<number>;
     mouseY: React.MutableRefObject<number>;
     enableRepel: boolean;
+    enableFloat: boolean;
 }) {
     const ref = React.useRef<HTMLDivElement>(null);
     const x = useMotionValue(0);
@@ -104,23 +106,31 @@ function FloatingIcon({
         >
             <motion.div
                 className={`relative flex items-center justify-center ${SIZE_BADGE[size]} rounded-2xl border border-cream/10 bg-char-soft/60 backdrop-blur-sm shadow-[0_20px_50px_-20px_rgba(0,0,0,0.7)] ring-1 ring-inset ring-cream/[0.04]`}
-                animate={{
-                    y: [0, -10, 0, 10, 0],
-                    x: [0, 7, 0, -7, 0],
-                    rotate: [0, 4, 0, -4, 0],
-                }}
-                transition={{
-                    duration: 6 + (cfg.id % 4) * 1.3,
-                    repeat: Infinity,
-                    repeatType: "mirror",
-                    ease: "easeInOut",
-                    delay: cfg.id * 0.15,
-                }}
+                animate={
+                    enableFloat
+                        ? {
+                              y: [0, -10, 0, 10, 0],
+                              x: [0, 7, 0, -7, 0],
+                              rotate: [0, 4, 0, -4, 0],
+                          }
+                        : undefined
+                }
+                transition={
+                    enableFloat
+                        ? {
+                              duration: 6 + (cfg.id % 4) * 1.3,
+                              repeat: Infinity,
+                              repeatType: "mirror",
+                              ease: "easeInOut",
+                              delay: cfg.id * 0.15,
+                          }
+                        : undefined
+                }
             >
-                {/* subtle gold inner glow */}
+                {/* subtle inner highlight */}
                 <span
                     aria-hidden
-                    className="pointer-events-none absolute inset-0 rounded-2xl bg-[radial-gradient(120%_120%_at_30%_15%,rgba(228,200,150,0.18),transparent_60%)]"
+                    className="pointer-events-none absolute inset-0 rounded-2xl bg-[radial-gradient(120%_120%_at_30%_15%,rgba(255,255,255,0.06),transparent_60%)]"
                 />
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
@@ -129,7 +139,7 @@ function FloatingIcon({
                     width={32}
                     height={32}
                     draggable={false}
-                    className={`relative ${SIZE_LOGO[size]} object-contain select-none drop-shadow-[0_0_8px_rgba(228,200,150,0.35)]`}
+                    className={`relative ${SIZE_LOGO[size]} object-contain select-none`}
                 />
             </motion.div>
         </motion.div>
@@ -140,10 +150,14 @@ export default function FloatingServiceIcons() {
     const mouseX = React.useRef(0);
     const mouseY = React.useRef(0);
     const [enableRepel, setEnableRepel] = React.useState(false);
+    const [enableFloat, setEnableFloat] = React.useState(false);
 
     React.useEffect(() => {
         const isTouch =
             window.matchMedia("(hover: none)").matches || window.innerWidth < 768;
+        const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        // Float animation: skip on touch/mobile (battery) and on reduced-motion.
+        setEnableFloat(!isTouch && !reduced);
         if (isTouch) return;
         setEnableRepel(true);
 
@@ -168,6 +182,7 @@ export default function FloatingServiceIcons() {
                     mouseX={mouseX}
                     mouseY={mouseY}
                     enableRepel={enableRepel}
+                    enableFloat={enableFloat}
                 />
             ))}
         </div>

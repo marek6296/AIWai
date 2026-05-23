@@ -109,14 +109,14 @@ export default function ContactSection() {
     ];
 
     return (
-        <section id="contact" className="py-12 md:py-36 relative overflow-hidden isolate">
-            <div className="container mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center relative z-10">
+        <section id="contact" className="py-16 md:py-36 relative overflow-hidden isolate">
+            <div className="container mx-auto px-5 md:px-6 grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-20 items-center relative z-10">
 
                 {/* Text */}
                 <FadeIn>
                     <TextReveal
                         as="h2"
-                        className="text-[2.5rem] md:text-7xl font-display font-bold text-cream mb-6 md:mb-8 tracking-tight leading-[1.05]"
+                        className="text-[2rem] sm:text-[2.5rem] md:text-7xl font-display font-bold text-cream mb-5 md:mb-8 tracking-tight leading-[1.05]"
                     >
                         {t("contact.heading")}
                     </TextReveal>
@@ -193,7 +193,7 @@ export default function ContactSection() {
                                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                                 onFocus={() => setFocused("name")}
                                 onBlur={(e) => !e.target.value && setFocused(null)}
-                                className="w-full bg-transparent border-b border-cream/15 py-2.5 text-cream outline-none focus:border-gold/60 transition-all"
+                                className="w-full bg-transparent border-b border-cream/15 py-2.5 text-cream text-base outline-none focus:border-gold/60 transition-all"
                             />
                         </div>
 
@@ -207,7 +207,7 @@ export default function ContactSection() {
                                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                                 onFocus={() => setFocused("email")}
                                 onBlur={(e) => !e.target.value && setFocused(null)}
-                                className="w-full bg-transparent border-b border-cream/15 py-2.5 text-cream outline-none focus:border-gold/60 transition-all"
+                                className="w-full bg-transparent border-b border-cream/15 py-2.5 text-cream text-base outline-none focus:border-gold/60 transition-all"
                             />
                         </div>
 
@@ -221,7 +221,7 @@ export default function ContactSection() {
                                 onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                                 onFocus={() => setFocused("phone")}
                                 onBlur={(e) => !e.target.value && setFocused(null)}
-                                className="w-full bg-transparent border-b border-cream/15 py-2.5 text-cream outline-none focus:border-gold/60 transition-all"
+                                className="w-full bg-transparent border-b border-cream/15 py-2.5 text-cream text-base outline-none focus:border-gold/60 transition-all"
                             />
                         </div>
 
@@ -231,7 +231,7 @@ export default function ContactSection() {
                             <select
                                 value={formData.projectType}
                                 onChange={(e) => setFormData({ ...formData, projectType: e.target.value })}
-                                className="w-full bg-transparent border-b border-cream/15 py-2.5 text-cream outline-none focus:border-gold/60 transition-all appearance-none cursor-pointer [&>option]:bg-char [&>option]:text-cream [&>optgroup]:bg-char [&>optgroup]:text-gold"
+                                className="w-full bg-transparent border-b border-cream/15 py-2.5 text-cream text-base outline-none focus:border-gold/60 transition-all appearance-none cursor-pointer [&>option]:bg-char [&>option]:text-cream [&>optgroup]:bg-char [&>optgroup]:text-gold"
                             >
                                 {projectGroups.map((g) => (
                                     <optgroup key={g.group} label={g.group}>
@@ -254,12 +254,17 @@ export default function ContactSection() {
                                 onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                                 onFocus={() => setFocused("message")}
                                 onBlur={(e) => !e.target.value && setFocused(null)}
-                                className="w-full bg-transparent border-b border-cream/15 py-2.5 text-cream outline-none focus:border-gold/60 transition-all resize-none"
+                                className="w-full bg-transparent border-b border-cream/15 py-2.5 text-cream text-base outline-none focus:border-gold/60 transition-all resize-none leading-relaxed"
                             />
                         </div>
 
-                        <div className="pt-4 flex justify-end">
-                            <MagneticButton type="submit" variant="gold" disabled={status === "sending"}>
+                        <div className="pt-4 flex justify-stretch sm:justify-end">
+                            <MagneticButton
+                                type="submit"
+                                variant="gold"
+                                disabled={status === "sending"}
+                                className="w-full sm:w-auto"
+                            >
                                 {status === "sending" ? t("contact.sending") : t("contact.button")}
                             </MagneticButton>
                         </div>
