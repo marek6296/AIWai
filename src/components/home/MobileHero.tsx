@@ -30,10 +30,10 @@ export default function MobileHero() {
                     <Image
                         src="/logo-v2.png"
                         alt="AIWai"
-                        width={144}
-                        height={144}
+                        width={260}
+                        height={260}
                         priority
-                        className="h-24 w-24 object-contain drop-shadow-[0_6px_22px_rgba(201,168,117,0.3)]"
+                        className="h-44 w-44 object-contain drop-shadow-[0_10px_32px_rgba(201,168,117,0.38)]"
                     />
                 </div>
 
