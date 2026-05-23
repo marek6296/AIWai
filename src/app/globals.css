@@ -437,9 +437,10 @@ canvas[style*="position: fixed"] {
 /* ──────────────────────────────────────
    Mobile hero — CSS-only morph (Safari-safe)
    ──────────────────────────────────────
-   Pure opacity keyframes. No transforms, no filters, no GPU compositing —
-   keeps text crisp on iOS Safari. Five words sharing one stage, each
-   visible ~1.6s of an 8s cycle. */
+   clip-path sweep + opacity, no transforms. Each word wipes in from
+   left-to-right, holds, then wipes out left-to-right (same direction —
+   like a curtain pulling across). Safari renders this without text
+   rasterization blur because there's no transform / no filter. */
 .mobile-morph-stage {
   position: relative;
   display: flex;
@@ -453,7 +454,9 @@ canvas[style*="position: fixed"] {
   align-items: center;
   justify-content: center;
   opacity: 0;
-  animation: mobileMorph 8s linear infinite;
+  clip-path: inset(0% 100% 0% 0%);
+  -webkit-clip-path: inset(0% 100% 0% 0%);
+  animation: mobileMorph 8s cubic-bezier(0.22, 1, 0.36, 1) infinite;
   text-rendering: geometricPrecision;
   -webkit-font-smoothing: antialiased;
 }
@@ -463,11 +466,18 @@ canvas[style*="position: fixed"] {
 .mobile-morph-word:nth-child(4) { animation-delay: 4.8s; }
 .mobile-morph-word:nth-child(5) { animation-delay: 6.4s; }
 @keyframes mobileMorph {
-  0%   { opacity: 0; }
-  3%   { opacity: 1; }
-  20%  { opacity: 1; }
-  23%  { opacity: 0; }
-  100% { opacity: 0; }
+  /* invisible, clipped from right (nothing painted) */
+  0%   { opacity: 0; clip-path: inset(0% 100% 0% 0%); -webkit-clip-path: inset(0% 100% 0% 0%); }
+  /* fade up while the wipe reveals left → right */
+  2%   { opacity: 1; }
+  10%  { opacity: 1; clip-path: inset(0% 0% 0% 0%);   -webkit-clip-path: inset(0% 0% 0% 0%);   }
+  /* hold the fully-revealed word */
+  18%  { opacity: 1; clip-path: inset(0% 0% 0% 0%);   -webkit-clip-path: inset(0% 0% 0% 0%);   }
+  /* wipe out (continues the same direction — collapses from left) */
+  24%  { opacity: 1; clip-path: inset(0% 0% 0% 100%); -webkit-clip-path: inset(0% 0% 0% 100%); }
+  /* hidden until next cycle */
+  25%  { opacity: 0; clip-path: inset(0% 0% 0% 100%); -webkit-clip-path: inset(0% 0% 0% 100%); }
+  100% { opacity: 0; clip-path: inset(0% 0% 0% 100%); -webkit-clip-path: inset(0% 0% 0% 100%); }
 }
 
 /* ──────────────────────────────────────

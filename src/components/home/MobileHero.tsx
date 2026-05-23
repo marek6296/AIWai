@@ -24,38 +24,41 @@ export default function MobileHero() {
 
     return (
         <section className="relative min-h-[100dvh] w-full overflow-hidden">
-            <div className="relative z-10 mx-auto flex min-h-[100dvh] max-w-md flex-col items-center justify-center gap-5 sm:gap-6 px-6 pt-20 pb-24 text-center">
-                {/* Logo */}
-                <div className="mobile-hero-fade-in-1 flex justify-center">
-                    <Image
-                        src="/logo-v2.png"
-                        alt="AIWai"
-                        width={420}
-                        height={420}
-                        priority
-                        className="h-72 w-72 sm:h-80 sm:w-80 object-contain drop-shadow-[0_14px_40px_rgba(201,168,117,0.45)]"
-                    />
-                </div>
+            <div className="relative z-10 mx-auto flex min-h-[100dvh] max-w-md flex-col items-center justify-center gap-6 px-6 pt-20 pb-24 text-center">
+                {/* Logo + morph cluster — tight inner gap so the words sit
+                    close under the logo, then larger gap to subtitle / CTAs. */}
+                <div className="flex w-full flex-col items-center gap-2">
+                    <div className="mobile-hero-fade-in-1 flex justify-center">
+                        <Image
+                            src="/logo-v2.png"
+                            alt="AIWai"
+                            width={360}
+                            height={360}
+                            priority
+                            className="h-56 w-56 sm:h-64 sm:w-64 object-contain drop-shadow-[0_12px_36px_rgba(201,168,117,0.42)]"
+                        />
+                    </div>
 
-                {/* Headline — CSS-only morph cycle */}
-                <div
-                    className="mobile-morph-stage w-full"
-                    style={{ height: "clamp(3.25rem, 12.5vw, 5rem)" }}
-                    aria-label={MORPH_WORDS.join(", ")}
-                >
-                    {MORPH_WORDS.map((word) => (
-                        <span
-                            key={word}
-                            className="mobile-morph-word font-display font-bold tracking-tight text-cream"
-                            style={{
-                                fontSize: "clamp(2rem, 9.2vw, 3.25rem)",
-                                lineHeight: 1,
-                                whiteSpace: "nowrap",
-                            }}
-                        >
-                            {word}
-                        </span>
-                    ))}
+                    {/* Headline — CSS-only morph cycle with clip-path sweep */}
+                    <div
+                        className="mobile-morph-stage w-full"
+                        style={{ height: "clamp(3.25rem, 12.5vw, 5rem)" }}
+                        aria-label={MORPH_WORDS.join(", ")}
+                    >
+                        {MORPH_WORDS.map((word) => (
+                            <span
+                                key={word}
+                                className="mobile-morph-word font-display font-bold tracking-tight text-cream"
+                                style={{
+                                    fontSize: "clamp(2rem, 9.2vw, 3.25rem)",
+                                    lineHeight: 1,
+                                    whiteSpace: "nowrap",
+                                }}
+                            >
+                                {word}
+                            </span>
+                        ))}
+                    </div>
                 </div>
 
                 {/* Subtitle — static, fades in once */}
