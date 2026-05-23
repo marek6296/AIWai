@@ -1,28 +1,24 @@
 "use client";
 
 import { useState, useRef, useEffect, useMemo } from "react";
-import { motion, AnimatePresence, useMotionValue, useAnimationFrame } from "framer-motion";
-import { Send, X, Sparkles } from "lucide-react";
-import { useTranslation } from "@/i18n/useTranslation";
-import PremiumIcon from "@/components/ui/PremiumIcon";
+import { motion, AnimatePresence } from "framer-motion";
+import { Send, X, Plus } from "lucide-react";
 import ReactMarkdown from "react-markdown";
+import { useTranslation } from "@/i18n/useTranslation";
 
 interface Message {
     role: "user" | "assistant" | "system";
-    content: string;       // raw content including [NÁVRHY:...] if present
-    chips?: string[];      // parsed suggestions stripped from content
-    displayContent?: string; // content with [NÁVRHY:...] removed
+    content: string;
+    chips?: string[];
+    displayContent?: string;
 }
 
-/** Parse [NÁVRHY: opt1 • opt2 • opt3] from end of assistant message */
 function parseChips(raw: string): { display: string; chips: string[] } {
-    // Akceptuje SK/CZ marker N\u00C1VRHY aj EN SUGGESTIONS (model vyber\u00E1 pod\u013Ea jazyka).
-    const re = /\[(?:N\u00C1VRHY|NAVRHY|SUGGESTIONS?)\s*:\s*([^\]]+)\]\s*$/i;
+    const re = /\[(?:NÁVRHY|NAVRHY|SUGGESTIONS?)\s*:\s*([^\]]+)\]\s*$/i;
     const match = raw.match(re);
     if (!match || match.index === undefined) return { display: raw.trim(), chips: [] };
     const chips = match[1]
-        // Hlavn\u00FD separ\u00E1tor je \u2022 ("\u2022"). Pre robustnos\u0165 aj | a ;.
-        .split(/[\u2022|;]/)
+        .split(/[•|;]/)
         .map((s) => s.trim())
         .filter(Boolean)
         .slice(0, 4);
@@ -33,8 +29,6 @@ function parseChips(raw: string): { display: string; chips: string[] } {
 export default function Chatbot() {
     const { t, lang } = useTranslation();
 
-    // Initial quick-reply chips reagujú na aktuálny jazyk stránky (SK/EN/CZ).
-    // useMemo lebo zoznam je stabilný v rámci daného renderu, zmení sa len pri prepnutí jazyka.
     const initialChips = useMemo(
         () => [
             t("chatbot.suggestion.web"),
@@ -42,16 +36,28 @@ export default function Chatbot() {
             t("chatbot.suggestion.automation"),
             t("chatbot.suggestion.pricing"),
         ],
-        [t]
+        [t],
     );
-    const [isOpen, setIsOpen] = useState(false);
+
     const [messages, setMessages] = useState<Message[]>([]);
     const [input, setInput] = useState("");
     const [isLoading, setIsLoading] = useState(false);
-    const messagesEndRef = useRef<HTMLDivElement>(null);
+    const [isExpanded, setIsExpanded] = useState(false);
+    const [isFocused, setIsFocused] = useState(false);
+    const [reveal, setReveal] = useState(false);
+    const [isWideStable, setIsWideStable] = useState(false);
+    const [beamActive, setBeamActive] = useState(false);
 
-    // Session ID — persisted in localStorage
+    useEffect(() => {
+        const id = setTimeout(() => setReveal(true), 5300);
+        return () => clearTimeout(id);
+    }, []);
+
+    const textareaRef = useRef<HTMLTextAreaElement>(null);
+    const messagesEndRef = useRef<HTMLDivElement>(null);
     const sessionIdRef = useRef<string>("");
+    const dockRef = useRef<HTMLDivElement>(null);
+
     useEffect(() => {
         try {
             let id = localStorage.getItem("aiwai_chat_session");
@@ -65,83 +71,54 @@ export default function Chatbot() {
         }
     }, []);
 
-    // Walking state
-    const [isHovered, setIsHovered] = useState(false);
-    const [windowWidth, setWindowWidth] = useState(0);
-    const [direction, setDirection] = useState<-1 | 1>(-1);
-    const [alignment, setAlignment] = useState<"left" | "right">("right");
-    const [showBubble, setShowBubble] = useState(false);
-    const [bubbleMessage, setBubbleMessage] = useState("");
-    const [isInitialLoad, setIsInitialLoad] = useState(true);
-    const lastBubbleTime = useRef(0);
-    const x = useMotionValue(0);
-    const speed = 0.8;
-
-    const scrollToBottom = () => {
-        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-    };
-
-    useEffect(() => { scrollToBottom(); }, [messages]);
-
     useEffect(() => {
-        setWindowWidth(window.innerWidth);
-        const handleResize = () => setWindowWidth(window.innerWidth);
-        window.addEventListener("resize", handleResize);
-        return () => window.removeEventListener("resize", handleResize);
-    }, []);
-
-    useEffect(() => {
-        if (showBubble) {
-            const timer = setTimeout(() => setShowBubble(false), 5000);
-            return () => clearTimeout(timer);
+        if (textareaRef.current) {
+            textareaRef.current.style.height = "auto";
+            const max = 120;
+            textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, max)}px`;
         }
-    }, [showBubble]);
+    }, [input]);
 
     useEffect(() => {
-        const timer = setTimeout(() => {
-            setBubbleMessage(t("chatbot.bubble.initial"));
-            setShowBubble(true);
-            setIsInitialLoad(false);
-            lastBubbleTime.current = Date.now();
-        }, 3000);
-        return () => clearTimeout(timer);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+    }, [messages, isLoading]);
 
-    useAnimationFrame(() => {
-        if (isOpen || isHovered || windowWidth === 0 || showBubble || isInitialLoad) return;
-        const currentX = x.get();
-        const leftLimit = -(windowWidth - 100);
-        const rightLimit = 0;
-        if (direction === -1) {
-            if (currentX > leftLimit) { x.set(currentX - speed); }
-            else { setDirection(1); }
+    useEffect(() => {
+        const wide = isExpanded || isFocused || input.trim().length > 0;
+        if (wide) {
+            setIsWideStable(true);
         } else {
-            if (currentX < rightLimit) { x.set(currentX + speed); }
-            else {
-                setDirection(-1);
-                const now = Date.now();
-                if (now - lastBubbleTime.current > 10000) {
-                    setBubbleMessage(t("chatbot.bubble.repeat"));
-                    setShowBubble(true);
-                    lastBubbleTime.current = now;
-                }
+            const id = setTimeout(() => setIsWideStable(false), 650);
+            return () => clearTimeout(id);
+        }
+    }, [isExpanded, isFocused, input]);
+
+    useEffect(() => {
+        if (!reveal) return;
+        if (isExpanded) {
+            setBeamActive(false);
+            return;
+        }
+        const id = setTimeout(() => setBeamActive(true), 900);
+        return () => clearTimeout(id);
+    }, [reveal, isExpanded]);
+
+    useEffect(() => {
+        if (!isExpanded) return;
+        const onPointerDown = (event: MouseEvent | TouchEvent) => {
+            const target = event.target as Node | null;
+            if (target && dockRef.current && !dockRef.current.contains(target)) {
+                setIsExpanded(false);
+                textareaRef.current?.blur();
             }
-        }
-    });
-
-    const handleToggle = () => {
-        if (!isOpen) {
-            const currentX = x.get();
-            const rightEdgePosition = windowWidth - 24 + currentX;
-            const spaceOnLeft = rightEdgePosition;
-            const spaceOnRight = windowWidth - (rightEdgePosition - 56);
-            setAlignment(spaceOnRight > spaceOnLeft ? "left" : "right");
-        } else {
-            setIsHovered(false);
-        }
-        setIsOpen(!isOpen);
-    };
+        };
+        document.addEventListener("mousedown", onPointerDown);
+        document.addEventListener("touchstart", onPointerDown);
+        return () => {
+            document.removeEventListener("mousedown", onPointerDown);
+            document.removeEventListener("touchstart", onPointerDown);
+        };
+    }, [isExpanded]);
 
     const sendMessage = async (text: string) => {
         if (!text.trim() || isLoading) return;
@@ -152,8 +129,8 @@ export default function Chatbot() {
         setMessages(newMessages);
         setInput("");
         setIsLoading(true);
+        if (!isExpanded) setIsExpanded(true);
 
-        // Build clean messages array for API (content only, no chips metadata)
         const apiMessages = newMessages.map((m) => ({ role: m.role, content: m.content }));
 
         try {
@@ -163,7 +140,6 @@ export default function Chatbot() {
                 body: JSON.stringify({
                     messages: apiMessages,
                     sessionId: sessionIdRef.current,
-                    // Pošli aktuálny jazyk stránky aby Gemini odpovedal v ňom (a nehádal z textu).
                     language: lang,
                 }),
             });
@@ -174,279 +150,231 @@ export default function Chatbot() {
             const rawContent: string = data.message?.content ?? "";
             const { display, chips } = parseChips(rawContent);
 
-            const assistantMsg: Message = {
-                role: "assistant",
-                content: rawContent,
-                displayContent: display,
-                chips,
-            };
-            setMessages([...newMessages, assistantMsg]);
+            setMessages([
+                ...newMessages,
+                { role: "assistant", content: rawContent, displayContent: display, chips },
+            ]);
         } catch {
             const fallback = t("chatbot.error.network");
-            setMessages([...newMessages, {
-                role: "assistant",
-                content: fallback,
-                displayContent: fallback,
-                chips: [],
-            }]);
+            setMessages([
+                ...newMessages,
+                { role: "assistant", content: fallback, displayContent: fallback, chips: [] },
+            ]);
         } finally {
             setIsLoading(false);
         }
     };
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        await sendMessage(input);
+        sendMessage(input);
+    };
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+        if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            sendMessage(input);
+        }
     };
 
     const handleChip = (chip: string) => {
-        // Strip leading emoji and whitespace from initial chips like "💡 Chcem web"
-        const clean = chip.replace(/^[^\w\u00C0-\u024F]+/, "").trim();
+        const clean = chip.replace(/^[^\wÀ-ɏ]+/, "").trim();
         sendMessage(clean);
     };
 
-    const isWalking = !isOpen && !isHovered && !showBubble && !isInitialLoad;
+    const closePanel = () => {
+        setIsExpanded(false);
+        textareaRef.current?.blur();
+    };
 
-    // Last message chips (to show after latest assistant response)
+    const openPanel = () => {
+        if (!isExpanded) setIsExpanded(true);
+    };
+
     const lastMsg = messages[messages.length - 1];
     const activeChips =
         lastMsg?.role === "assistant" && lastMsg.chips?.length
             ? lastMsg.chips
-            : [];
+            : messages.length === 0
+              ? initialChips
+              : [];
 
-    // Leg animations
-    const leftLegVariants = {
-        walking: { rotate: [-20, 20, -20], transition: { repeat: Infinity, duration: 1 } },
-        idle: { rotate: 0 },
-    };
-    const rightLegVariants = {
-        walking: { rotate: [20, -20, 20], transition: { repeat: Infinity, duration: 1 } },
-        idle: { rotate: 0 },
-    };
+    if (!reveal) return null;
 
     return (
-        <>
-            <AnimatePresence>
-                {isOpen && (
-                    <motion.div
-                        style={windowWidth < 640 ? {} : { x: alignment === "left" ? x.get() + 344 : x }}
-                        initial={{ opacity: 0, y: 20, scale: 0.95 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: 20, scale: 0.95 }}
-                        transition={{ duration: 0.2 }}
-                        className={`fixed bottom-[calc(1.5rem+80px)] left-2 right-2 mx-auto sm:left-auto sm:right-6 sm:mx-0 ${alignment === "left" ? "sm:origin-bottom-left" : "sm:origin-bottom-right"} w-auto sm:w-[400px] max-w-[400px] h-[min(520px,calc(100dvh-130px))] sm:h-[520px] sm:max-h-none bg-white sm:bg-white/80 sm:backdrop-blur-xl border border-brand-indigo/10 rounded-2xl shadow-2xl overflow-hidden flex flex-col z-[60]`}
-                    >
-                        {/* Header */}
-                        <div className="p-4 bg-brand-indigo/5 border-b border-brand-indigo/5 flex justify-between items-center">
-                            <div className="flex items-center gap-3">
-                                <div className="w-8 h-8 rounded-full bg-gold flex items-center justify-center p-1">
-                                    <PremiumIcon type="ai-agents" size={24} className="text-ink" />
-                                </div>
-                                <div>
-                                    <h3 className="text-brand-indigo font-bold text-sm">{t("chatbot.header")}</h3>
-                                    <div className="flex items-center gap-1.5">
-                                        <span className="w-2 h-2 rounded-full bg-gold animate-pulse" />
-                                        <span className="text-[10px] text-brand-indigo/60 uppercase tracking-widest">Online</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <button
-                                onClick={() => { setIsOpen(false); setIsHovered(false); }}
-                                className="text-brand-indigo/40 hover:text-brand-indigo transition-colors"
-                            >
-                                <X size={20} />
-                            </button>
-                        </div>
+        <motion.div
+            initial={{ opacity: 0, y: 28, scale: 0.96, filter: "blur(8px)" }}
+            animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
+            transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+            className="pointer-events-none fixed inset-x-0 bottom-3 z-50 flex justify-center px-3 md:bottom-5"
+        >
+            <div
+                ref={dockRef}
+                className={`pointer-events-auto w-full transition-[max-width] duration-[850ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                    isWideStable ? "max-w-[680px]" : "max-w-[320px]"
+                }`}
+            >
+                <AnimatePresence>
+                    {isExpanded && (
+                        <motion.div
+                            key="chat-panel"
+                            initial={{ opacity: 0, y: 18, height: 0, scale: 0.98 }}
+                            animate={{ opacity: 1, y: 0, height: "auto", scale: 1 }}
+                            exit={{ opacity: 0, y: 14, height: 0, scale: 0.98 }}
+                            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                            className="mb-2 overflow-hidden origin-bottom"
+                        >
+                            <div className="relative overflow-hidden rounded-[18px] border border-cream/[0.08] bg-char/95 backdrop-blur-3xl shadow-[0_40px_100px_-20px_rgba(0,0,0,0.95)] ring-1 ring-gold/[0.08]">
+                                <div aria-hidden="true" className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gold/40 to-transparent" />
 
-                        {/* Messages */}
-                        <div className="flex-1 overflow-y-auto p-4 space-y-3 scrollbar-thin scrollbar-thumb-brand-indigo/10 scrollbar-track-transparent">
-                            {/* Empty state with initial chips */}
-                            {messages.length === 0 && (
-                                <div className="h-full flex flex-col items-center justify-center text-center gap-4">
-                                    <div className="opacity-30">
-                                        <PremiumIcon type="ai-agents" size={52} className="text-brand-indigo mx-auto mb-2" />
-                                        <p className="text-sm text-brand-indigo max-w-[220px]">
-                                            {t("chatbot.empty.title")}
-                                        </p>
-                                    </div>
-                                    <div className="flex flex-col gap-2 w-full max-w-[280px] mt-2">
-                                        {initialChips.map((chip) => (
+                                <div className="flex items-center justify-between gap-3 border-b border-cream/[0.06] bg-char px-4 py-3">
+                                    <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-cream/70">AIWai · AI</span>
+                                    <button
+                                        type="button"
+                                        onClick={closePanel}
+                                        aria-label="Zavrieť"
+                                        className="flex h-7 w-7 items-center justify-center rounded-full text-cream/50 transition-colors hover:bg-cream/[0.06] hover:text-cream"
+                                    >
+                                        <X className="h-3.5 w-3.5" />
+                                    </button>
+                                </div>
+
+                                <div className="relative max-h-[52vh] overflow-y-auto bg-char px-4 py-5 [scrollbar-width:thin]">
+                                    {messages.length === 0 ? (
+                                        <div className="flex flex-col gap-5 py-4">
+                                            <div className="space-y-1.5 text-center">
+                                                <h3 className="font-display text-xl font-bold tracking-tight text-cream md:text-2xl">
+                                                    Ako vám môžeme pomôcť?
+                                                </h3>
+                                                <p className="text-xs text-cream/55">
+                                                    Vyberte si otázku alebo napíšte vlastnú.
+                                                </p>
+                                            </div>
+                                            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                                                {initialChips.map((chip) => {
+                                                    const clean = chip.replace(/^[^\wÀ-ɏ]+\s*/, "").trim();
+                                                    return (
+                                                        <button
+                                                            key={chip}
+                                                            type="button"
+                                                            onClick={() => handleChip(chip)}
+                                                            className="group relative overflow-hidden rounded-xl border border-cream/[0.07] bg-cream/[0.02] px-3.5 py-3 text-left text-sm leading-snug text-cream/80 transition-all hover:-translate-y-0.5 hover:border-gold/35 hover:bg-gold/[0.04] hover:text-cream"
+                                                        >
+                                                            <span aria-hidden="true" className="pointer-events-none absolute inset-0 rounded-xl bg-[radial-gradient(120%_120%_at_0%_0%,rgba(201,168,117,0.10),transparent_60%)] opacity-0 transition-opacity group-hover:opacity-100" />
+                                                            <span className="relative">{clean}</span>
+                                                        </button>
+                                                    );
+                                                })}
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <>
+                                            <ul className="space-y-3">
+                                                {messages.map((msg, idx) => (
+                                                    <li
+                                                        key={idx}
+                                                        className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
+                                                    >
+                                                        <div
+                                                            className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${
+                                                                msg.role === "user"
+                                                                    ? "border border-gold/25 bg-gold/12 text-cream"
+                                                                    : "border border-cream/[0.06] bg-cream/[0.03] text-cream/85"
+                                                            }`}
+                                                        >
+                                                            {msg.role === "assistant" ? (
+                                                                <div className="prose prose-invert prose-sm max-w-none prose-p:my-1 prose-p:leading-relaxed prose-a:text-gold prose-strong:text-cream">
+                                                                    <ReactMarkdown>{msg.displayContent ?? msg.content}</ReactMarkdown>
+                                                                </div>
+                                                            ) : (
+                                                                <p>{msg.displayContent ?? msg.content}</p>
+                                                            )}
+                                                        </div>
+                                                    </li>
+                                                ))}
+
+                                                {isLoading && (
+                                                    <li className="flex justify-start">
+                                                        <div className="flex items-center gap-1.5 rounded-2xl border border-cream/[0.06] bg-cream/[0.03] px-4 py-3">
+                                                            {[0, 1, 2].map((i) => (
+                                                                <motion.span
+                                                                    key={i}
+                                                                    animate={{ opacity: [0.25, 1, 0.25], y: [0, -2, 0] }}
+                                                                    transition={{ duration: 1.2, repeat: Infinity, delay: i * 0.18, ease: "easeInOut" }}
+                                                                    className="block h-1.5 w-1.5 rounded-full bg-gold"
+                                                                />
+                                                            ))}
+                                                        </div>
+                                                    </li>
+                                                )}
+                                            </ul>
+                                            <div ref={messagesEndRef} />
+                                        </>
+                                    )}
+                                </div>
+
+                                {messages.length > 0 && activeChips.length > 0 && !isLoading && (
+                                    <div className="flex flex-wrap gap-2 border-t border-cream/[0.06] bg-char px-4 py-3">
+                                        {activeChips.map((chip) => (
                                             <button
                                                 key={chip}
+                                                type="button"
                                                 onClick={() => handleChip(chip)}
-                                                className="px-4 py-2.5 bg-white border border-brand-indigo/15 rounded-xl text-xs font-medium text-brand-indigo/80 hover:bg-brand-indigo hover:text-white hover:border-brand-indigo transition-all duration-200 text-left"
+                                                className="group inline-flex items-center rounded-full border border-cream/[0.08] bg-cream/[0.03] px-3 py-1.5 text-xs text-cream/75 transition-colors hover:border-gold/40 hover:bg-gold/[0.06] hover:text-cream"
                                             >
                                                 {chip}
                                             </button>
                                         ))}
                                     </div>
-                                </div>
-                            )}
-
-                            {messages.map((message, index) => (
-                                <div key={index} className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}>
-                                    <div
-                                        className={`max-w-[82%] p-3 rounded-2xl text-sm ${
-                                            message.role === "user"
-                                                ? "bg-gold text-ink rounded-tr-sm"
-                                                : "bg-brand-offwhite text-brand-indigo border border-brand-indigo/5 rounded-tl-sm"
-                                        }`}
-                                    >
-                                        {message.role === "assistant" ? (
-                                            <div className="prose prose-sm prose-neutral max-w-none prose-p:my-1 prose-ul:my-1 prose-li:my-0 prose-strong:text-brand-indigo prose-strong:font-semibold">
-                                                <ReactMarkdown>
-                                                    {message.displayContent ?? message.content}
-                                                </ReactMarkdown>
-                                            </div>
-                                        ) : (
-                                            message.content
-                                        )}
-                                    </div>
-                                </div>
-                            ))}
-
-                            {isLoading && (
-                                <div className="flex justify-start">
-                                    <div className="bg-brand-offwhite px-4 py-3 rounded-2xl rounded-tl-sm border border-brand-indigo/5 flex gap-1">
-                                        <span className="w-1.5 h-1.5 bg-brand-indigo/40 rounded-full animate-bounce [animation-delay:-0.3s]" />
-                                        <span className="w-1.5 h-1.5 bg-brand-indigo/40 rounded-full animate-bounce [animation-delay:-0.15s]" />
-                                        <span className="w-1.5 h-1.5 bg-brand-indigo/40 rounded-full animate-bounce" />
-                                    </div>
-                                </div>
-                            )}
-
-                            {/* Quick reply chips after assistant response */}
-                            {!isLoading && activeChips.length > 0 && (
-                                <div className="flex flex-col gap-1.5 pt-1">
-                                    {activeChips.map((chip) => (
-                                        <button
-                                            key={chip}
-                                            onClick={() => handleChip(chip)}
-                                            className="px-4 py-2.5 bg-white border border-brand-indigo/15 rounded-xl text-xs font-medium text-brand-indigo/80 hover:bg-brand-indigo hover:text-white hover:border-brand-indigo transition-all duration-200 text-left"
-                                        >
-                                            {chip}
-                                        </button>
-                                    ))}
-                                </div>
-                            )}
-
-                            <div ref={messagesEndRef} />
-                        </div>
-
-                        {/* Input */}
-                        <form onSubmit={handleSubmit} className="p-4 bg-white border-t border-brand-indigo/5">
-                            <div className="relative flex items-center">
-                                <input
-                                    type="text"
-                                    value={input}
-                                    onChange={(e) => setInput(e.target.value)}
-                                    placeholder={t("chatbot.placeholder")}
-                                    className="w-full bg-brand-offwhite border border-brand-indigo/10 rounded-full py-3 pl-4 pr-12 text-brand-indigo placeholder:text-brand-indigo/40 focus:outline-none focus:border-brand-indigo/30 transition-colors"
-                                    style={{ fontSize: "16px" }}
-                                />
-                                <button
-                                    type="submit"
-                                    disabled={isLoading || !input.trim()}
-                                    className="absolute right-2 p-2 bg-gold text-ink rounded-full hover:bg-gold-bright disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                                >
-                                    {isLoading ? (
-                                        <Sparkles size={16} className="animate-spin" />
-                                    ) : (
-                                        <Send size={16} />
-                                    )}
-                                </button>
+                                )}
                             </div>
-                        </form>
-                    </motion.div>
-                )}
-            </AnimatePresence>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
 
-            {/* Walking bot button */}
-            <div className="fixed bottom-6 right-6 z-50 origin-bottom-right scale-50 sm:scale-100">
-            <motion.div
-                style={{ x }}
-                className="flex flex-col items-end"
-                onMouseEnter={() => setIsHovered(true)}
-                onMouseLeave={() => setIsHovered(false)}
-            >
-                <div className="relative">
-                    <div className="absolute bottom-1 left-1/2 -translate-x-1/2 flex gap-4 z-40"
-                        style={{ transform: `translateX(-50%) scaleX(${direction === -1 ? 1 : -1})` }}
+                <div className={`relative rounded-full chat-beam-border ${beamActive ? "beam-active" : ""}`}>
+                    <form
+                        onSubmit={handleSubmit}
+                        className="relative flex items-end gap-2 rounded-full bg-char/95 backdrop-blur-2xl px-3 py-2 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.95)]"
                     >
-                        <motion.div
-                            className="w-2.5 h-5 rounded-b-full origin-top"
-                            style={{ background: "linear-gradient(180deg, #A88B5C 0%, #8C6F3F 100%)" }}
-                            variants={leftLegVariants}
-                            animate={isWalking ? "walking" : "idle"}
-                        />
-                        <motion.div
-                            className="w-2.5 h-5 rounded-b-full origin-top"
-                            style={{ background: "linear-gradient(180deg, #A88B5C 0%, #8C6F3F 100%)" }}
-                            variants={rightLegVariants}
-                            animate={isWalking ? "walking" : "idle"}
-                        />
-                    </div>
+                        <span aria-hidden="true" className="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-gold/35 to-transparent" />
 
-                    <motion.button
-                        onClick={handleToggle}
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        animate={{ y: isWalking ? [0, -3, 0] : 0 }}
-                        transition={{ y: { repeat: Infinity, duration: 0.5, ease: "easeInOut" } }}
-                        className="w-14 h-14 relative group z-50 mb-3"
+                    <button
+                        type="button"
+                        onClick={() => textareaRef.current?.focus()}
+                        aria-label="Rozšíriť"
+                        className="flex shrink-0 items-center justify-center self-end p-2 text-cream/55 transition-colors hover:text-gold"
                     >
-                        <AnimatePresence>
-                            {showBubble && !isOpen && (
-                                <motion.div
-                                    initial={{ opacity: 0, y: 10, scale: 0.8 }}
-                                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                                    exit={{ opacity: 0, y: 10, scale: 0.8 }}
-                                    className="absolute bottom-full right-0 mb-3 w-48 bg-char/95 backdrop-blur-md text-cream p-3 rounded-xl rounded-br-none shadow-xl shadow-black/40 text-xs font-medium border border-gold/25 z-50 pointer-events-none"
-                                >
-                                    {bubbleMessage}
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
+                        <Plus className="h-5 w-5" strokeWidth={1.6} />
+                    </button>
 
-                        {/* Polished bronze button — gradient + subtle inner highlight + thin gold ring,
-                            looks like a luxury watch bezel rather than a flat glowing gold disc. */}
-                        <div
-                            className="absolute inset-0 rounded-full text-ink overflow-hidden flex items-center justify-center"
-                            style={{
-                                background: "linear-gradient(135deg, #D4B27F 0%, #B49364 55%, #8C6F3F 100%)",
-                                boxShadow:
-                                    "0 6px 16px rgba(0,0,0,0.45), 0 1px 0 rgba(255,255,255,0.18) inset, 0 -2px 6px rgba(0,0,0,0.25) inset, 0 0 0 1px rgba(140,111,63,0.55)",
-                            }}
-                        >
-                            <div className="absolute inset-0 bg-white/15 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
-                            <div style={{ transform: `scaleX(${direction === 1 && !isOpen ? -1 : 1})` }}>
-                                <AnimatePresence mode="wait">
-                                    {isOpen ? (
-                                        <motion.div key="close" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }}>
-                                            <X size={24} />
-                                        </motion.div>
-                                    ) : (
-                                        <motion.div key="open" initial={{ scale: 0.5, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.5, opacity: 0 }}>
-                                            <PremiumIcon type="ai-agents" size={36} className="text-ink/80" />
-                                        </motion.div>
-                                    )}
-                                </AnimatePresence>
-                            </div>
-                        </div>
+                    <textarea
+                        ref={textareaRef}
+                        value={input}
+                        onChange={(e) => setInput(e.target.value)}
+                        onKeyDown={handleKeyDown}
+                        onFocus={() => {
+                            setIsFocused(true);
+                            setTimeout(() => setIsExpanded(true), 750);
+                        }}
+                        onBlur={() => setIsFocused(false)}
+                        placeholder={t("chatbot.bubble.initial")}
+                        rows={1}
+                        aria-label="Napíšte správu"
+                        className="flex-1 resize-none self-center bg-transparent px-1 py-2 text-sm leading-snug text-cream placeholder:text-cream/40 outline-none ring-0 focus:outline-none focus:ring-0 focus-visible:outline-none truncate [scrollbar-width:thin]"
+                    />
 
-                        {!isOpen && (
-                            <span
-                                className="absolute top-0.5 right-0.5 w-2.5 h-2.5 rounded-full z-10"
-                                style={{
-                                    background: "#C9A875",
-                                    boxShadow: "0 0 0 2px #0A0A0F, 0 0 0 3px rgba(201,168,117,0.35)",
-                                }}
-                            />
-                        )}
-                    </motion.button>
+                    <button
+                        type="submit"
+                        disabled={!input.trim() || isLoading}
+                        aria-label="Odoslať"
+                        className="flex h-9 w-9 shrink-0 items-center justify-center self-end rounded-full bg-gold text-ink transition-all hover:bg-gold-bright disabled:cursor-not-allowed disabled:bg-cream/10 disabled:text-cream/30"
+                    >
+                        <Send className="h-3.5 w-3.5" />
+                    </button>
+                    </form>
                 </div>
-            </motion.div>
             </div>
-        </>
+        </motion.div>
     );
 }

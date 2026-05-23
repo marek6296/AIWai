@@ -13,7 +13,6 @@ export default function Footer() {
         { label: t("footer.nav.services"), href: "/sluzby" },
         { label: t("footer.nav.work"), href: "/realizacie" },
         { label: t("footer.nav.pricing"), href: "/cennik" },
-        { label: t("footer.nav.about"), href: "/#about" },
         { label: t("footer.nav.contact"), href: "/#contact" },
     ];
 

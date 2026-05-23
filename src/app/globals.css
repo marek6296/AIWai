@@ -94,6 +94,41 @@ body {
 }
 
 /* ──────────────────────────────────────
+   Chat dock — rotating gradient border beam (fadeable)
+   ────────────────────────────────────── */
+@property --beam-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+@property --beam-intensity {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 0;
+}
+.chat-beam-border {
+  background:
+    linear-gradient(#0A0A0F, #0A0A0F) padding-box,
+    conic-gradient(
+      from var(--beam-angle),
+      rgba(228, 200, 150, 0)   0%,
+      rgba(228, 200, 150, 0)   72%,
+      rgba(228, 200, 150, calc(0.95 * var(--beam-intensity))) 82%,
+      rgba(228, 200, 150, 0)   92%,
+      rgba(228, 200, 150, 0) 100%
+    ) border-box;
+  border: 1.5px solid transparent;
+  animation: chat-beam-spin 5s linear infinite;
+  transition: --beam-intensity 0.7s ease;
+}
+.chat-beam-border.beam-active {
+  --beam-intensity: 1;
+}
+@keyframes chat-beam-spin {
+  to { --beam-angle: 360deg; }
+}
+
+/* ──────────────────────────────────────
    Navbar CSS Entrance
    ────────────────────────────────────── */
 @keyframes navReveal {

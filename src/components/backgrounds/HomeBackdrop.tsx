@@ -48,12 +48,12 @@ export default function HomeBackdrop() {
                         "radial-gradient(circle, rgba(201,168,117,0.10) 0%, transparent 65%)",
                 }}
             />
-            {/* Soft ambient glow — bottom-left */}
+            {/* Soft ambient glow — bottom-left (neutral dark, no blue) */}
             <div
                 className="absolute -bottom-40 -left-40 w-[640px] h-[640px] rounded-full"
                 style={{
                     background:
-                        "radial-gradient(circle, rgba(10,22,40,0.55) 0%, transparent 70%)",
+                        "radial-gradient(circle, rgba(20,18,14,0.55) 0%, transparent 70%)",
                 }}
             />
 

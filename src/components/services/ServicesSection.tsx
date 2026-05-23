@@ -3,6 +3,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { AnimatePresence, motion } from "framer-motion";
 import {
     ArrowRight,
     Bot,
@@ -216,137 +217,154 @@ export default function ServicesSection() {
                         })}
                     </div>
 
-                    <div className="relative">
-                        <div className="relative overflow-hidden rounded-[8px] border border-cream/12 bg-char/80 p-5 shadow-[0_30px_90px_-40px_rgba(0,0,0,0.9)] md:p-7">
+                    <motion.div layout transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }} className="relative">
+                        <div className="pointer-events-none absolute -inset-px rounded-[14px] bg-[radial-gradient(120%_120%_at_0%_0%,rgba(201,168,117,0.18),transparent_55%),radial-gradient(120%_120%_at_100%_100%,rgba(201,168,117,0.08),transparent_60%)] opacity-90" />
+                        <div className="relative overflow-hidden rounded-[14px] bg-char/70 p-5 shadow-[0_30px_90px_-40px_rgba(0,0,0,0.9),inset_0_1px_0_rgba(255,255,255,0.04)] backdrop-blur-sm ring-1 ring-cream/[0.04] md:p-7">
                             <div aria-hidden="true" className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gold/70 to-transparent" />
+                            <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-cream/8 to-transparent" />
 
-                            {expanded ? (
-                                <>
-                                    <div className="mb-5 flex items-start justify-between gap-4">
-                                        <div>
-                                            <div className="mb-3 flex flex-wrap items-center gap-2">
-                                                <span className="rounded-full border border-gold/35 bg-gold/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-gold">
-                                                    {activeService.tag}
-                                                </span>
+                            <AnimatePresence mode="wait" initial={false}>
+                                <motion.div
+                                    key={expanded ? `service-${activeIndex}` : "default"}
+                                    initial={{ opacity: 0, y: 8 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: -8 }}
+                                    transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                                >
+                                    {expanded ? (
+                                        <>
+                                            <div className="mb-5 flex items-start justify-between gap-4">
+                                                <h3 className="font-display text-2xl font-bold tracking-tight text-cream md:text-4xl">
+                                                    {activeService.title}
+                                                </h3>
+                                                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-gold/30 bg-gold/10 text-gold">
+                                                    <ActiveIcon className="h-5 w-5" />
+                                                </div>
                                             </div>
-                                            <h3 className="font-display text-2xl font-bold tracking-tight text-cream md:text-4xl">
-                                                {activeService.title}
-                                            </h3>
-                                        </div>
-                                        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-gold/30 bg-gold/10 text-gold">
-                                            <ActiveIcon className="h-5 w-5" />
-                                        </div>
-                                    </div>
 
-                                    <p className="mb-5 text-sm font-light leading-relaxed text-cream/60 md:text-base">
-                                        {activeService.description}
-                                    </p>
-                                    <p className="mb-6 text-sm font-light leading-relaxed text-cream/70">
-                                        {activeService.details.whatIsIt}
-                                    </p>
+                                            <p className="mb-5 text-sm font-light leading-relaxed text-cream/60 md:text-base">
+                                                {activeService.description}
+                                            </p>
+                                            <p className="mb-6 text-sm font-light leading-relaxed text-cream/70">
+                                                {activeService.details.whatIsIt}
+                                            </p>
 
-                                    <div className="mb-6 grid grid-cols-1 gap-2 sm:grid-cols-2">
-                                        {activeService.details.includes.slice(0, 6).map((item) => (
-                                            <div key={item} className="flex items-start gap-2.5 rounded-[8px] border border-cream/10 bg-cream/[0.035] px-3 py-2.5">
-                                                <Sparkles className="mt-0.5 h-3.5 w-3.5 shrink-0 text-gold/80" />
-                                                <span className="text-xs leading-relaxed text-cream/70">{item}</span>
+                                            <div className="mb-6 flex flex-wrap gap-2">
+                                                {activeService.details.includes.slice(0, 6).map((item) => (
+                                                    <motion.span
+                                                        key={item}
+                                                        whileHover={{ y: -2 }}
+                                                        transition={{ type: "spring", stiffness: 400, damping: 24 }}
+                                                        className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full border border-cream/[0.08] bg-gradient-to-b from-cream/[0.05] to-cream/[0.01] px-3.5 py-2"
+                                                    >
+                                                        <span aria-hidden="true" className="pointer-events-none absolute inset-0 rounded-full bg-[radial-gradient(80%_120%_at_50%_0%,rgba(201,168,117,0.18),transparent_70%)] opacity-0 transition-opacity group-hover:opacity-100" />
+                                                        <span aria-hidden="true" className="relative h-1.5 w-1.5 shrink-0 rounded-full bg-gold/80 shadow-[0_0_8px_rgba(201,168,117,0.5)]" />
+                                                        <span className="relative text-xs font-medium leading-none text-cream/80">{item}</span>
+                                                    </motion.span>
+                                                ))}
                                             </div>
-                                        ))}
-                                    </div>
 
-                                    <div className="mb-6 border-t border-cream/10 pt-5">
-                                        <div className="mb-2 flex items-center justify-between text-xs text-cream/50">
-                                            <span className="inline-flex items-center gap-1.5 uppercase tracking-[0.16em]">
-                                                <Zap className="h-3 w-3 text-gold" />
-                                                Dopad
-                                            </span>
-                                            <span className="font-mono text-gold">{activeService.energy}%</span>
-                                        </div>
-                                        <div className="h-1.5 overflow-hidden rounded-full bg-cream/10">
-                                            <div
-                                                className="h-full rounded-full bg-gradient-to-r from-gold-deep via-gold to-cream"
-                                                style={{ width: `${activeService.energy}%` }}
-                                            />
-                                        </div>
-                                    </div>
+                                            <div className="mb-6 border-t border-cream/[0.06] pt-5">
+                                                <div className="mb-2 flex items-center justify-between text-xs text-cream/50">
+                                                    <span className="inline-flex items-center gap-1.5 uppercase tracking-[0.16em]">
+                                                        <Zap className="h-3 w-3 text-gold" />
+                                                        Dopad
+                                                    </span>
+                                                    <span className="font-mono text-gold">{activeService.energy}%</span>
+                                                </div>
+                                                <div className="h-1.5 overflow-hidden rounded-full bg-cream/10">
+                                                    <motion.div
+                                                        className="h-full rounded-full bg-gradient-to-r from-gold-deep via-gold to-cream"
+                                                        initial={{ width: 0 }}
+                                                        animate={{ width: `${activeService.energy}%` }}
+                                                        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                                                    />
+                                                </div>
+                                            </div>
 
-                                    <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                                        <Link
-                                            href={`/sluzby/${activeService.slug}`}
-                                            className="inline-flex items-center justify-center gap-2 bg-gold px-5 py-3 text-xs font-bold uppercase tracking-[0.16em] text-ink transition-colors hover:bg-gold-bright"
-                                        >
-                                            {t("services.learnMore")}
-                                            <ArrowRight className="h-4 w-4" />
-                                        </Link>
-
-                                        <div className="flex flex-wrap gap-2">
-                                            {activeService.relatedIds.map((relatedId) => (
-                                                <button
-                                                    key={relatedId}
-                                                    type="button"
-                                                    onClick={(event) => {
-                                                        event.stopPropagation();
-                                                        selectService(relatedId);
-                                                    }}
-                                                    className="rounded-full border border-cream/15 px-3 py-2 text-[10px] font-bold uppercase tracking-[0.16em] text-cream/55 transition-colors hover:border-gold/50 hover:text-gold"
+                                            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                                                <Link
+                                                    href={`/sluzby/${activeService.slug}`}
+                                                    className="inline-flex items-center justify-center gap-2 bg-gold px-5 py-3 text-xs font-bold uppercase tracking-[0.16em] text-ink transition-colors hover:bg-gold-bright"
                                                 >
-                                                    {services[relatedId].tag}
-                                                </button>
-                                            ))}
-                                        </div>
-                                    </div>
-                                </>
-                            ) : (
-                                <>
-                                    <div className="mb-5 flex items-start justify-between gap-4">
-                                        <div>
-                                            <div className="mb-3 flex flex-wrap items-center gap-2">
-                                                <span className="rounded-full border border-gold/35 bg-gold/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-gold">
-                                                    EKOSYSTÉM
-                                                </span>
-                                                <span className="rounded-full border border-cream/15 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-cream/45">
-                                                    AIWAI
-                                                </span>
+                                                    {t("services.learnMore")}
+                                                    <ArrowRight className="h-4 w-4" />
+                                                </Link>
+
+                                                <div className="flex flex-wrap gap-2">
+                                                    {activeService.relatedIds.map((relatedId) => (
+                                                        <button
+                                                            key={relatedId}
+                                                            type="button"
+                                                            onClick={(event) => {
+                                                                event.stopPropagation();
+                                                                selectService(relatedId);
+                                                            }}
+                                                            className="rounded-full border border-cream/[0.08] px-3 py-2 text-[10px] font-bold uppercase tracking-[0.16em] text-cream/55 transition-colors hover:border-gold/50 hover:text-gold"
+                                                        >
+                                                            {services[relatedId].tag}
+                                                        </button>
+                                                    ))}
+                                                </div>
                                             </div>
-                                            <h3 className="font-display text-2xl font-bold tracking-tight text-cream md:text-4xl">
-                                                AIWai
-                                            </h3>
-                                        </div>
-                                        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-gold/30 bg-gold/10 text-gold">
-                                            <Sparkles className="h-5 w-5" />
-                                        </div>
-                                    </div>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <div className="mb-5 flex items-start justify-between gap-4">
+                                                <h3 className="font-display text-2xl font-bold tracking-tight text-cream md:text-4xl">
+                                                    AIWai
+                                                </h3>
+                                                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-gold/30 bg-char/60">
+                                                    <Image
+                                                        src="/logo.png"
+                                                        alt="AIWai"
+                                                        width={40}
+                                                        height={40}
+                                                        className="h-8 w-8 object-contain"
+                                                    />
+                                                </div>
+                                            </div>
 
-                                    <p className="mb-5 text-sm font-light leading-relaxed text-cream/60 md:text-base">
-                                        Päť služieb. Jeden tím. Všetko, čo váš biznis potrebuje online.
-                                    </p>
-                                    <p className="mb-6 text-sm font-light leading-relaxed text-cream/70">
-                                        Web, automatizácia, AI a dizajn fungujú najlepšie spolu. Preto ich navrhujeme ako jeden prepojený systém — kliknite na ktorúkoľvek službu v orbite a zobrazia sa detaily.
-                                    </p>
+                                            <p className="mb-5 text-sm font-light leading-relaxed text-cream/60 md:text-base">
+                                                Päť služieb. Jeden tím. Všetko, čo váš biznis potrebuje online.
+                                            </p>
+                                            <p className="mb-6 text-sm font-light leading-relaxed text-cream/70">
+                                                Web, automatizácia, AI a dizajn fungujú najlepšie spolu. Preto ich navrhujeme ako jeden prepojený systém — kliknite na ktorúkoľvek službu v orbite a zobrazia sa detaily.
+                                            </p>
 
-                                    <div className="mb-6 grid grid-cols-1 gap-2 sm:grid-cols-2">
-                                        {services.map((service) => {
-                                            const Icon = service.icon;
-                                            return (
-                                                <button
-                                                    key={service.id}
-                                                    type="button"
-                                                    onClick={(event) => {
-                                                        event.stopPropagation();
-                                                        selectService(service.id);
-                                                    }}
-                                                    className="flex items-start gap-2.5 rounded-[8px] border border-cream/10 bg-cream/[0.035] px-3 py-2.5 text-left transition-colors hover:border-gold/40 hover:bg-gold/[0.06]"
-                                                >
-                                                    <Icon className="mt-0.5 h-3.5 w-3.5 shrink-0 text-gold/80" />
-                                                    <span className="text-xs leading-relaxed text-cream/70">{service.title}</span>
-                                                </button>
-                                            );
-                                        })}
-                                    </div>
-                                </>
-                            )}
+                                            <div className="mb-6 flex flex-wrap gap-2">
+                                                {services.map((service) => {
+                                                    const Icon = service.icon;
+                                                    return (
+                                                        <motion.button
+                                                            key={service.id}
+                                                            type="button"
+                                                            onClick={(event) => {
+                                                                event.stopPropagation();
+                                                                selectService(service.id);
+                                                            }}
+                                                            whileHover={{ y: -2 }}
+                                                            whileTap={{ scale: 0.97 }}
+                                                            transition={{ type: "spring", stiffness: 400, damping: 24 }}
+                                                            className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full border border-cream/[0.08] bg-gradient-to-b from-cream/[0.05] to-cream/[0.01] px-3.5 py-2 text-left transition-colors hover:border-gold/40"
+                                                        >
+                                                            <span aria-hidden="true" className="pointer-events-none absolute inset-0 rounded-full bg-[radial-gradient(80%_120%_at_50%_0%,rgba(201,168,117,0.18),transparent_70%)] opacity-0 transition-opacity group-hover:opacity-100" />
+                                                            <span className="relative flex h-6 w-6 items-center justify-center rounded-full bg-gold/12 text-gold ring-1 ring-gold/25 transition-colors group-hover:bg-gold/20">
+                                                                <Icon className="h-3.5 w-3.5" />
+                                                            </span>
+                                                            <span className="relative text-xs font-medium leading-none text-cream/80 transition-colors group-hover:text-cream">
+                                                                {service.title}
+                                                            </span>
+                                                        </motion.button>
+                                                    );
+                                                })}
+                                            </div>
+                                        </>
+                                    )}
+                                </motion.div>
+                            </AnimatePresence>
                         </div>
-                    </div>
+                    </motion.div>
                 </div>
             </div>
         </section>

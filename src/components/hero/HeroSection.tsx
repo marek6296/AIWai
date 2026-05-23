@@ -2,13 +2,29 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 import MagneticButton from "@/components/ui/MagneticButton";
 import { useTranslation } from "@/i18n/useTranslation";
-import GlowHeadline from "./GlowHeadline";
 import { scrollToPageSection } from "@/lib/scrollToPageSection";
+import { TypewriterEffect } from "@/components/ui/TypewriterEffect";
+import { GooeyText } from "@/components/ui/GooeyText";
+
+const MORPH_WORDS = ["WEB", "DESIGN", "AI", "MARKETING", "AUTOMATIZÁCIA"];
+
+const HIGHLIGHT_WORDS = new Set([
+    "Web,", "Dizajn,", "AI", "chatboty,", "Marketing", "Automatizácia",
+    "design,", "chatbots,", "automation", "automatizace",
+    "AI", "chatboti,", "Automatizácia",
+]);
 
 export default function HeroSection() {
     const { t } = useTranslation();
+    const [ctaReady, setCtaReady] = useState(false);
+
+    useEffect(() => {
+        const id = setTimeout(() => setCtaReady(true), 3500);
+        return () => clearTimeout(id);
+    }, []);
 
     return (
         <section className="relative min-h-[100dvh] w-full overflow-hidden">
@@ -32,78 +48,63 @@ export default function HeroSection() {
                     />
                 </div>
 
-                {/* Headline block */}
-                <GlowHeadline className="w-full max-w-5xl md:mx-auto space-y-0 cursor-default">
-                    <h1
-                        className="hero-line font-display font-bold tracking-tight text-cream leading-[1.05] md:whitespace-nowrap"
-                        style={{ fontSize: "clamp(2.25rem,9.5vw,6rem)" }}
-                    >
-                        {t("hero.line1").split("|").map((word, i, arr) => (
-                            <span key={i}>
-                                {word}
-                                {i < arr.length - 1 && (
-                                    <span
-                                        className="inline-block text-gold align-middle"
-                                        style={{ fontSize: "0.45em", verticalAlign: "middle", position: "relative", top: "-0.05em", margin: "0 0.3em" }}
-                                    >▲</span>
-                                )}
-                            </span>
-                        ))}
-                    </h1>
-                    <div
-                        className="hero-line font-display font-bold tracking-tight leading-[1.05]
-                            text-cream/40 group-hover:text-cream/75
-                            transition-[color,opacity] duration-500 ease-out"
-                        style={{ fontSize: "clamp(2.25rem,9.5vw,6rem)" }}
-                    >
-                        <span className="block">{t("hero.line2.light")}</span>
-                        <span className="block">{t("hero.line2.gradient")}</span>
-                    </div>
-                </GlowHeadline>
+                {/* Headline — gooey morph through services */}
+                <motion.div
+                    initial={{ opacity: 0, y: 24, filter: "blur(10px)" }}
+                    animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                    transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+                    style={{ opacity: 0 }}
+                    className="w-full max-w-5xl md:mx-auto"
+                >
+                    <GooeyText
+                        texts={MORPH_WORDS}
+                        morphTime={1.1}
+                        cooldownTime={0.7}
+                        className="h-[clamp(3.5rem,11vw,7rem)] w-full"
+                        textClassName="font-display font-bold tracking-tight text-cream leading-none text-[clamp(2.5rem,9.5vw,6rem)]"
+                    />
+                </motion.div>
 
                 {/* Subtitle + CTA */}
                 <div className="w-full max-w-4xl md:mx-auto space-y-6 md:space-y-8 md:mt-10">
-                    <p className="hero-sub text-[15px] md:text-xl text-cream/65 mx-auto leading-relaxed font-light max-w-md md:max-w-none md:whitespace-nowrap">
-                        {t("hero.subtitle")}
-                    </p>
-                    <div className="hero-cta flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-4">
-                        <MagneticButton
-                            onClick={() => scrollToPageSection("contact")}
-                            variant="gold"
-                            className="whitespace-nowrap w-full sm:w-auto"
-                        >
-                            {t("hero.cta.start")}
-                        </MagneticButton>
-                        <button
-                            onClick={() => scrollToPageSection("services")}
-                            className="px-8 py-4 md:py-3 text-sm md:text-xs font-bold uppercase tracking-[0.2em] text-cream/60 hover:text-gold transition-colors whitespace-nowrap"
-                        >
-                            {t("hero.cta.explore")}
-                        </button>
+                    <div className="hero-sub mx-auto max-w-md md:max-w-none md:whitespace-nowrap">
+                        <TypewriterEffect
+                            speed={0.04}
+                            startDelayMs={1600}
+                            words={t("hero.subtitle").split(" ").map((word) => ({
+                                text: word,
+                                className: HIGHLIGHT_WORDS.has(word) ? "text-gold" : "text-cream/70",
+                            }))}
+                            className="text-[15px] md:text-xl font-light leading-relaxed text-center"
+                            cursorClassName="h-4 md:h-5 w-[2px]"
+                        />
+                    </div>
+                    <div className="hero-cta min-h-[56px] flex items-center justify-center">
+                        {ctaReady && (
+                            <motion.div
+                                initial={{ opacity: 0, y: 16, filter: "blur(6px)" }}
+                                animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                                transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+                                className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-4"
+                            >
+                                <MagneticButton
+                                    onClick={() => scrollToPageSection("contact")}
+                                    variant="gold"
+                                    className="whitespace-nowrap w-full sm:w-auto"
+                                >
+                                    {t("hero.cta.start")}
+                                </MagneticButton>
+                                <button
+                                    onClick={() => scrollToPageSection("services")}
+                                    className="px-8 py-4 md:py-3 text-sm md:text-xs font-bold uppercase tracking-[0.2em] text-cream/60 hover:text-gold transition-colors whitespace-nowrap"
+                                >
+                                    {t("hero.cta.explore")}
+                                </button>
+                            </motion.div>
+                        )}
                     </div>
                 </div>
             </div>
-
-            {/* vertical scroll indicator — right edge */}
-            <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 1.2 }}
-                className="hidden lg:flex absolute right-6 bottom-6 flex-col items-center gap-2 z-10"
-                aria-hidden="true"
-            >
-                <span
-                    className="font-mono uppercase text-[10px] tracking-[0.4em] text-cream/40 whitespace-nowrap"
-                    style={{ writingMode: "vertical-rl", textOrientation: "mixed" }}
-                >
-                    scroll ↓
-                </span>
-                <motion.span
-                    animate={{ scaleY: [1, 0.3, 1] }}
-                    transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
-                    className="block w-px h-10 bg-gradient-to-b from-gold to-transparent origin-top"
-                />
-            </motion.div>
 
         </section>
     );
