@@ -53,9 +53,10 @@ export default function FlowLines() {
         let timePhase = 0;
         // Mobile: animate briefly then freeze on a static end-state painting.
         // Avoids continuous rAF battery drain + iOS Safari scroll jank.
-        const MOBILE_INTRO_FRAMES = 200;
+        const MOBILE_INTRO_FRAMES = 140;
         let mobileFrozen = false;
         let totalFrames = 0;
+        let startTimer: ReturnType<typeof setTimeout> | null = null;
 
         function resize() {
             if (!canvas) return;
@@ -324,35 +325,51 @@ export default function FlowLines() {
 
         resize();
         spawn();
-        if (!reduced) {
-            // Warm-up: advance the field so initial render already shows curves
-            for (let k = 0; k < 30; k++) {
-                timePhase += 0.002;
+
+        function startAnimation() {
+            if (!reduced) {
+                // Desktop warm-up: synchronously advance the field so initial
+                // render already shows curves. Skipped on mobile because this
+                // synchronous loop competes with hero paint on the main thread.
+                if (!isMobile) {
+                    for (let k = 0; k < 30; k++) {
+                        timePhase += 0.002;
+                        for (const p of particles) {
+                            const angle = flowAngle(p.x, p.y, timePhase);
+                            p.x += Math.cos(angle) * p.speed;
+                            p.y += Math.sin(angle) * p.speed;
+                            pushTrail(p, p.x, p.y);
+                        }
+                    }
+                }
+                frame();
+            } else {
+                ctx!.clearRect(0, 0, width, height);
+                for (let k = 0; k < 25; k++) {
+                    timePhase += 0.002;
+                    for (const p of particles) {
+                        const angle = flowAngle(p.x, p.y, timePhase);
+                        p.x += Math.cos(angle) * p.speed;
+                        p.y += Math.sin(angle) * p.speed;
+                        pushTrail(p, p.x, p.y);
+                    }
+                }
+                ctx!.lineCap = "round";
+                ctx!.lineJoin = "round";
                 for (const p of particles) {
-                    const angle = flowAngle(p.x, p.y, timePhase);
-                    p.x += Math.cos(angle) * p.speed;
-                    p.y += Math.sin(angle) * p.speed;
-                    pushTrail(p, p.x, p.y);
+                    ctx!.lineWidth = p.width;
+                    drawTrail(p);
                 }
             }
-            frame();
+        }
+
+        // On mobile, yield to the browser so the hero content paints first.
+        // 80ms is the typical iOS Safari paint window — animation kicks in
+        // right after the user sees the headline.
+        if (isMobile) {
+            startTimer = setTimeout(startAnimation, 80);
         } else {
-            ctx.clearRect(0, 0, width, height);
-            for (let k = 0; k < 25; k++) {
-                timePhase += 0.002;
-                for (const p of particles) {
-                    const angle = flowAngle(p.x, p.y, timePhase);
-                    p.x += Math.cos(angle) * p.speed;
-                    p.y += Math.sin(angle) * p.speed;
-                    pushTrail(p, p.x, p.y);
-                }
-            }
-            ctx.lineCap = "round";
-            ctx.lineJoin = "round";
-            for (const p of particles) {
-                ctx.lineWidth = p.width;
-                drawTrail(p);
-            }
+            startAnimation();
         }
 
         window.addEventListener("resize", onResize);
@@ -361,6 +378,7 @@ export default function FlowLines() {
         return () => {
             running = false;
             cancelAnimationFrame(rafId);
+            if (startTimer) clearTimeout(startTimer);
             window.removeEventListener("resize", onResize);
             if (!isMobile) window.removeEventListener("scroll", onScroll);
             document.removeEventListener("visibilitychange", onVisibility);

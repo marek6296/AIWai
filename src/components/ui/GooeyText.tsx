@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 interface GooeyTextProps {
@@ -11,7 +12,50 @@ interface GooeyTextProps {
     textClassName?: string;
 }
 
-export function GooeyText({
+/**
+ * Mobile variant — drops the SVG threshold filter and CSS blur (both stutter
+ * badly on iOS Safari). Renders a clean opacity crossfade between texts.
+ * Visually different but actually smooth on phones.
+ */
+function MobileGooeyText({
+    texts,
+    morphTime = 1,
+    cooldownTime = 0.25,
+    className,
+    textClassName,
+}: GooeyTextProps) {
+    const [idx, setIdx] = React.useState(0);
+
+    React.useEffect(() => {
+        const cycleMs = Math.max(900, (morphTime + cooldownTime) * 1000);
+        const id = window.setInterval(() => {
+            setIdx((v) => (v + 1) % texts.length);
+        }, cycleMs);
+        return () => window.clearInterval(id);
+    }, [texts.length, morphTime, cooldownTime]);
+
+    return (
+        <div className={cn("relative flex items-center justify-center", className)}>
+            <AnimatePresence mode="wait" initial={false}>
+                <motion.span
+                    key={idx}
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -6 }}
+                    transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+                    className={cn(
+                        "select-none whitespace-nowrap text-center",
+                        textClassName,
+                    )}
+                >
+                    {texts[idx]}
+                </motion.span>
+            </AnimatePresence>
+        </div>
+    );
+}
+
+function DesktopGooeyText({
     texts,
     morphTime = 1,
     cooldownTime = 0.25,
@@ -130,4 +174,36 @@ export function GooeyText({
             </div>
         </div>
     );
+}
+
+export function GooeyText(props: GooeyTextProps) {
+    // Picking a variant is a one-time decision per mount — no resize listener
+    // needed since rotating a phone won't usefully switch effect modes.
+    const [isTouch, setIsTouch] = React.useState<boolean | null>(null);
+
+    React.useEffect(() => {
+        const touch =
+            window.matchMedia("(hover: none)").matches ||
+            window.innerWidth < 768;
+        setIsTouch(touch);
+    }, []);
+
+    // SSR + first paint: render the desktop variant by default (no flash on
+    // PC) but with the text already visible so mobile is never blank.
+    if (isTouch === null) {
+        return (
+            <div className={cn("relative flex items-center justify-center", props.className)}>
+                <span
+                    className={cn(
+                        "select-none whitespace-nowrap text-center",
+                        props.textClassName,
+                    )}
+                >
+                    {props.texts[0]}
+                </span>
+            </div>
+        );
+    }
+
+    return isTouch ? <MobileGooeyText {...props} /> : <DesktopGooeyText {...props} />;
 }

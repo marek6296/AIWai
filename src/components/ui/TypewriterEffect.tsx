@@ -6,21 +6,60 @@ import { useEffect, useState } from "react";
 
 type Word = { text: string; className?: string };
 
-export const TypewriterEffect = ({
-    words,
-    className,
-    cursorClassName,
-    speed = 0.03,
-    cursorLingerMs = 1600,
-    startDelayMs = 0,
-}: {
+interface TypewriterEffectProps {
     words: Word[];
     className?: string;
     cursorClassName?: string;
     speed?: number;
     cursorLingerMs?: number;
     startDelayMs?: number;
-}) => {
+}
+
+/**
+ * Mobile variant — sidesteps the 60+ per-character framer-motion spans that
+ * stutter on iOS Safari. Renders the full text immediately with a single
+ * opacity fade-in. No cursor blink (continuous opacity animation is exactly
+ * the kind of thing that drains battery on phones).
+ */
+function MobileTypewriter({
+    words,
+    className,
+    startDelayMs = 0,
+}: TypewriterEffectProps) {
+    const [shown, setShown] = useState(false);
+
+    useEffect(() => {
+        const id = setTimeout(() => setShown(true), startDelayMs);
+        return () => clearTimeout(id);
+    }, [startDelayMs]);
+
+    return (
+        <div className={cn("text-center", className)}>
+            <motion.span
+                initial={{ opacity: 0, y: 6 }}
+                animate={shown ? { opacity: 1, y: 0 } : { opacity: 0, y: 6 }}
+                transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                className="inline-block"
+            >
+                {words.map((word, idx) => (
+                    <span key={`word-${idx}`} className={cn(word.className)}>
+                        {word.text}
+                        {idx < words.length - 1 ? " " : ""}
+                    </span>
+                ))}
+            </motion.span>
+        </div>
+    );
+}
+
+function DesktopTypewriter({
+    words,
+    className,
+    cursorClassName,
+    speed = 0.03,
+    cursorLingerMs = 1600,
+    startDelayMs = 0,
+}: TypewriterEffectProps) {
     const wordsArray = words.map((word) => ({ ...word, text: word.text.split("") }));
     const totalChars = wordsArray.reduce((sum, w) => sum + w.text.length, 0);
     const [scope, animate] = useAnimate();
@@ -73,6 +112,30 @@ export const TypewriterEffect = ({
             />
         </div>
     );
+}
+
+export const TypewriterEffect = (props: TypewriterEffectProps) => {
+    const [isTouch, setIsTouch] = useState<boolean | null>(null);
+
+    useEffect(() => {
+        const touch =
+            window.matchMedia("(hover: none)").matches ||
+            window.innerWidth < 768;
+        setIsTouch(touch);
+    }, []);
+
+    // First-paint placeholder keeps layout stable, no flash on either variant
+    if (isTouch === null) {
+        return (
+            <div className={cn("text-center opacity-0", props.className)} aria-hidden="true">
+                <span>
+                    {props.words.map((w) => w.text).join(" ")}
+                </span>
+            </div>
+        );
+    }
+
+    return isTouch ? <MobileTypewriter {...props} /> : <DesktopTypewriter {...props} />;
 };
 
 export const TypewriterEffectSmooth = ({
@@ -107,7 +170,7 @@ export const TypewriterEffectSmooth = ({
                                     {char}
                                 </span>
                             ))}
-                            {idx < wordsArray.length - 1 ? " " : ""}
+                            {idx < wordsArray.length - 1 ? " " : ""}
                         </span>
                     ))}
                 </div>

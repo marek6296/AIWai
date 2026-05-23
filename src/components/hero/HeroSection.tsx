@@ -20,9 +20,16 @@ const HIGHLIGHT_WORDS = new Set([
 export default function HeroSection() {
     const { t } = useTranslation();
     const [ctaReady, setCtaReady] = useState(false);
+    const [isTouch, setIsTouch] = useState(false);
 
     useEffect(() => {
-        const id = setTimeout(() => setCtaReady(true), 3500);
+        const touch =
+            window.matchMedia("(hover: none)").matches ||
+            window.innerWidth < 768;
+        setIsTouch(touch);
+        // On mobile, GooeyText and TypewriterEffect render instantly — no need
+        // to wait 3.5s before the CTA shows up. 1.4s feels intentional, not lazy.
+        const id = setTimeout(() => setCtaReady(true), touch ? 1400 : 3500);
         return () => clearTimeout(id);
     }, []);
 
@@ -48,11 +55,12 @@ export default function HeroSection() {
                     />
                 </div>
 
-                {/* Headline — gooey morph through services */}
+                {/* Headline — gooey morph through services. Skip the blur
+                    filter transition on touch devices: GPU-heavy on iOS. */}
                 <motion.div
-                    initial={{ opacity: 0, y: 24, filter: "blur(10px)" }}
-                    animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                    transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+                    initial={isTouch ? { opacity: 0, y: 16 } : { opacity: 0, y: 24, filter: "blur(10px)" }}
+                    animate={isTouch ? { opacity: 1, y: 0 } : { opacity: 1, y: 0, filter: "blur(0px)" }}
+                    transition={{ duration: isTouch ? 0.7 : 1.1, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
                     style={{ opacity: 0 }}
                     className="w-full max-w-5xl md:mx-auto"
                 >
@@ -70,7 +78,7 @@ export default function HeroSection() {
                     <div className="hero-sub mx-auto max-w-[20rem] sm:max-w-[24rem] md:max-w-none md:whitespace-nowrap">
                         <TypewriterEffect
                             speed={0.04}
-                            startDelayMs={1600}
+                            startDelayMs={isTouch ? 700 : 1600}
                             words={t("hero.subtitle").split(" ").map((word) => ({
                                 text: word,
                                 className: HIGHLIGHT_WORDS.has(word) ? "text-gold" : "text-cream/70",
@@ -82,9 +90,9 @@ export default function HeroSection() {
                     <div className="hero-cta min-h-[56px] flex items-center justify-center">
                         {ctaReady && (
                             <motion.div
-                                initial={{ opacity: 0, y: 16, filter: "blur(6px)" }}
-                                animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                                transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+                                initial={isTouch ? { opacity: 0, y: 12 } : { opacity: 0, y: 16, filter: "blur(6px)" }}
+                                animate={isTouch ? { opacity: 1, y: 0 } : { opacity: 1, y: 0, filter: "blur(0px)" }}
+                                transition={{ duration: isTouch ? 0.55 : 0.9, ease: [0.16, 1, 0.3, 1] }}
                                 className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 w-full sm:w-auto px-2 sm:px-0"
                             >
                                 <MagneticButton
