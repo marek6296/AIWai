@@ -6,10 +6,18 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, ExternalLink, X, ZoomIn } from "lucide-react";
 import { KeyboardEvent, useEffect, useRef, useState } from "react";
 import { REALIZACIE_PROJECTS, type ProjectTag } from "@/app/(main)/realizacie/data";
+import { useTranslation } from "@/i18n/useTranslation";
 
 const ALL_TAGS: (ProjectTag | "Všetko")[] = ["Všetko", "Web", "Aplikácia", "AI"];
+const TAG_LABEL_KEY: Record<string, string> = {
+    "Všetko": "realizacie.filter.all",
+    "Web": "realizacie.filter.web",
+    "Aplikácia": "realizacie.filter.app",
+    "AI": "realizacie.filter.ai",
+};
 
 export default function RealizacieGallery() {
+    const { t } = useTranslation();
     const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
     const [filter, setFilter] = useState<ProjectTag | "Všetko">("Všetko");
     const [mounted, setMounted] = useState(false);
@@ -88,14 +96,14 @@ export default function RealizacieGallery() {
             aria-labelledby="realizacie-gallery-heading"
         >
             <h1 id="realizacie-gallery-heading" className="sr-only">
-                Naše portfólio
+                {t("realizacie.portfolio")}
             </h1>
             <div className="mx-auto max-w-7xl">
                 {/* Filter Buttons — matches cennik CategoryToggle */}
                 <div
                     className="mb-10 flex justify-center"
                     role="group"
-                    aria-label="Kategórie projektov"
+                    aria-label={t("realizacie.aria.categories")}
                 >
                     <div className="relative flex w-fit flex-wrap items-center justify-center gap-1 rounded-2xl border border-cream/10 bg-char-soft/60 p-1 backdrop-blur">
                         <motion.div
@@ -117,7 +125,7 @@ export default function RealizacieGallery() {
                                         active ? "text-ink" : "text-cream/60 hover:text-cream"
                                     }`}
                                 >
-                                    {tag}
+                                    {t(TAG_LABEL_KEY[tag])}
                                 </button>
                             );
                         })}
@@ -148,7 +156,7 @@ export default function RealizacieGallery() {
                                     onKeyDown={(e) => handleCardKeyDown(e, project.slug)}
                                     role="button"
                                     tabIndex={0}
-                                    aria-label={`Zobraziť detail projektu ${project.name}`}
+                                    aria-label={`${t("realizacie.aria.viewDetail")} ${project.name}`}
                                 >
                                     <div className="relative aspect-[4/3] overflow-hidden">
                                         <Image
@@ -226,7 +234,7 @@ export default function RealizacieGallery() {
                                     <button
                                         type="button"
                                         onClick={() => setSelectedSlug(null)}
-                                        aria-label="Zavrieť"
+                                        aria-label={t("realizacie.modal.close")}
                                         className="absolute top-3 right-3 z-30 flex h-10 w-10 items-center justify-center rounded-full border border-cream/20 bg-char/90 text-cream/85 backdrop-blur transition-colors hover:border-gold/60 hover:text-gold"
                                     >
                                         <X className="h-5 w-5" />
@@ -236,7 +244,7 @@ export default function RealizacieGallery() {
                                     <button
                                         type="button"
                                         onClick={(e) => { e.stopPropagation(); handlePrev(); }}
-                                        aria-label="Predchádzajúci projekt"
+                                        aria-label={t("realizacie.modal.prev")}
                                         className="absolute left-3 md:left-5 top-1/2 z-30 -translate-y-1/2 flex h-11 w-11 items-center justify-center rounded-full border border-cream/15 bg-char/80 text-cream/80 backdrop-blur transition-colors hover:border-gold/60 hover:text-gold"
                                     >
                                         <ChevronLeft className="h-6 w-6" />
@@ -246,7 +254,7 @@ export default function RealizacieGallery() {
                                     <button
                                         type="button"
                                         onClick={(e) => { e.stopPropagation(); handleNext(); }}
-                                        aria-label="Ďalší projekt"
+                                        aria-label={t("realizacie.modal.next")}
                                         className="absolute right-3 md:right-5 top-1/2 z-30 -translate-y-1/2 flex h-11 w-11 items-center justify-center rounded-full border border-cream/15 bg-char/80 text-cream/80 backdrop-blur transition-colors hover:border-gold/60 hover:text-gold"
                                     >
                                         <ChevronRight className="h-6 w-6" />
@@ -306,7 +314,7 @@ export default function RealizacieGallery() {
                                                     rel="noopener noreferrer"
                                                     className="mt-auto inline-flex w-fit items-center gap-2 rounded-full bg-gold px-5 py-3 text-xs font-bold uppercase tracking-[0.16em] text-ink transition-colors hover:bg-gold-bright"
                                                 >
-                                                    Pozrieť projekt
+                                                    {t("realizacie.viewProject")}
                                                     <ExternalLink className="h-4 w-4" />
                                                 </a>
                                             )}

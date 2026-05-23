@@ -37,7 +37,7 @@ export default function SluzbyClient() {
             </section>
 
             {/* SERVICE LIST ─────────────────────────────────────────────── */}
-            <section aria-label="Zoznam služieb" className="border-b border-cream/[0.07]">
+            <section aria-label={t("nav.services")} className="border-b border-cream/[0.07]">
                 <ul className="container mx-auto px-6">
                     {SERVICES.map((service, idx) => (
                         <li
@@ -87,7 +87,7 @@ export default function SluzbyClient() {
                     <div className="col-span-12 md:col-span-3 md:pt-3">
                         <div className="flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.22em] text-cream/40">
                             <span className="h-px w-8 bg-gold/70" aria-hidden />
-                            <span>Kontakt</span>
+                            <span>{t("nav.contact")}</span>
                         </div>
                     </div>
 
