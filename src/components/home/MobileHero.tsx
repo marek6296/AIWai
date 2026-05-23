@@ -24,16 +24,16 @@ export default function MobileHero() {
 
     return (
         <section className="relative min-h-[100dvh] w-full overflow-hidden">
-            <div className="relative z-10 mx-auto flex min-h-[100dvh] max-w-md flex-col items-center justify-center gap-7 px-6 pt-24 pb-28 text-center">
+            <div className="relative z-10 mx-auto flex min-h-[100dvh] max-w-md flex-col items-center justify-center gap-5 sm:gap-6 px-6 pt-20 pb-24 text-center">
                 {/* Logo */}
                 <div className="mobile-hero-fade-in-1 flex justify-center">
                     <Image
                         src="/logo-v2.png"
                         alt="AIWai"
-                        width={260}
-                        height={260}
+                        width={420}
+                        height={420}
                         priority
-                        className="h-44 w-44 object-contain drop-shadow-[0_10px_32px_rgba(201,168,117,0.38)]"
+                        className="h-72 w-72 sm:h-80 sm:w-80 object-contain drop-shadow-[0_14px_40px_rgba(201,168,117,0.45)]"
                     />
                 </div>
 
