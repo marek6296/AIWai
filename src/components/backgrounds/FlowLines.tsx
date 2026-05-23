@@ -58,7 +58,7 @@ export default function FlowLines() {
             return a * Math.PI * 0.55;
         }
 
-        function makeParticle(_unused: boolean): Particle {
+        function makeParticle(): Particle {
             // Always spawn inside the viewport with margin so the flow field
             // can carry the particle in any direction without it disappearing.
             const margin = 60;
@@ -100,7 +100,7 @@ export default function FlowLines() {
 
         function spawn() {
             const count = window.innerWidth < 768 ? 36 : 70;
-            particles = Array.from({ length: count }, () => makeParticle(true));
+            particles = Array.from({ length: count }, () => makeParticle());
         }
 
         const BOOST_START = 4;
@@ -218,7 +218,7 @@ export default function FlowLines() {
                         oldest.y < -60 ||
                         oldest.y > height + 60);
                 if (outOfView || p.life > p.maxLife) {
-                    particles[i] = makeParticle(false);
+                    particles[i] = makeParticle();
                     continue;
                 }
 
