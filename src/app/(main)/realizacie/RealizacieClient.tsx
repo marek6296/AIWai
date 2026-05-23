@@ -1,42 +1,55 @@
 "use client";
 
 import Link from "next/link";
-import RealizacieGallery from "@/components/portfolio/RealizacieGallery";
+import { useState } from "react";
 import SectionBackground from "@/components/backgrounds/SectionBackground";
-import InteractiveStarfieldLayer from "@/components/backgrounds/InteractiveStarfield";
+import RealizacieHeroParallax from "@/components/portfolio/RealizacieHeroParallax";
+import ProjectLightbox from "@/components/portfolio/ProjectLightbox";
+import { REALIZACIE_PROJECTS } from "./data";
 import { useTranslation } from "@/i18n/useTranslation";
 
 export default function RealizacieClient() {
     const { t } = useTranslation();
+    const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
 
     return (
         <main className="relative min-h-[100dvh] bg-char overflow-hidden">
-            {/* Pozadie — jemné gold radial glows + gold spark častice (rovnaké ako cennik) */}
-            <div className="absolute inset-0 pointer-events-none">
+            <div className="pointer-events-none absolute inset-0">
                 <SectionBackground variant="soft" topFade={false} />
             </div>
-            <InteractiveStarfieldLayer />
 
-            {/* Gallery — filter chips + grid + lightbox */}
-            <section className="relative z-10 pt-24 pb-8 md:pt-28 md:pb-10">
-                <RealizacieGallery />
-            </section>
+            <div className="relative z-10">
+                <RealizacieHeroParallax
+                    projects={REALIZACIE_PROJECTS}
+                    onSelect={setSelectedSlug}
+                />
 
-            {/* Spodný CTA */}
-            <section className="relative z-10 pb-24 md:pb-32 px-6 text-center">
-                <h2 className="text-3xl md:text-4xl font-display font-bold text-cream mb-3">
-                    {t("realizacie.bottomCta.title")}
-                </h2>
-                <p className="text-cream/55 text-base mb-8 font-light max-w-xl mx-auto">
-                    {t("realizacie.bottomCta.text")}
-                </p>
-                <Link
-                    href="/#contact"
-                    className="inline-flex items-center gap-3 px-8 md:px-10 py-3.5 md:py-4 bg-gold text-ink text-xs font-bold uppercase tracking-[0.2em] hover:bg-gold-bright transition-all shadow-lg shadow-black/20"
-                >
-                    {t("realizacie.bottomCta.button")}
-                </Link>
-            </section>
+                {/* Bottom CTA */}
+                <section className="border-t border-cream/[0.07] px-6 py-24 md:py-32 text-center">
+                    <h2 className="mb-4 font-display text-3xl md:text-5xl font-medium tracking-[-0.03em] text-cream max-w-[18ch] mx-auto leading-[1.02]">
+                        {t("realizacie.bottomCta.title")}
+                    </h2>
+                    <p className="mx-auto mb-10 max-w-[52ch] text-[15px] text-cream/60 leading-[1.7]">
+                        {t("realizacie.bottomCta.text")}
+                    </p>
+                    <Link
+                        href="/#contact"
+                        className="group inline-flex items-center gap-4 border-b border-gold/60 pb-2 text-[13px] font-mono uppercase tracking-[0.22em] text-cream hover:text-gold hover:border-gold transition-colors"
+                    >
+                        <span>{t("realizacie.bottomCta.button")}</span>
+                        <span
+                            aria-hidden
+                            className="inline-block h-px w-8 bg-gold/70 group-hover:w-12 group-hover:bg-gold transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]"
+                        />
+                    </Link>
+                </section>
+            </div>
+
+            <ProjectLightbox
+                projects={REALIZACIE_PROJECTS}
+                selectedSlug={selectedSlug}
+                onChange={setSelectedSlug}
+            />
         </main>
     );
 }

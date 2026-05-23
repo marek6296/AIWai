@@ -260,6 +260,7 @@ export const translations: Record<Lang, Record<string, string>> = {
         'sluzbyHub.bottomCta.button': 'Free consultation →',
 
         // ── Sluzby Detail page (/sluzby/[slug]) ──
+        'sluzbyDetail.back': 'Back to services',
         'sluzbyDetail.label.service': 'Service',
         'sluzbyDetail.cta.consult': 'Free consultation',
         'sluzbyDetail.cta.pricing': 'View pricing',
@@ -586,6 +587,7 @@ export const translations: Record<Lang, Record<string, string>> = {
         'sluzbyHub.bottomCta.button': 'Konzultácia zdarma →',
 
         // ── Sluzby Detail page (/sluzby/[slug]) ──
+        'sluzbyDetail.back': 'Späť na služby',
         'sluzbyDetail.label.service': 'Služba',
         'sluzbyDetail.cta.consult': 'Konzultácia zdarma',
         'sluzbyDetail.cta.pricing': 'Pozrieť cenník',
@@ -912,6 +914,7 @@ export const translations: Record<Lang, Record<string, string>> = {
         'sluzbyHub.bottomCta.button': 'Konzultace zdarma →',
 
         // ── Sluzby Detail page (/sluzby/[slug]) ──
+        'sluzbyDetail.back': 'Zpět na služby',
         'sluzbyDetail.label.service': 'Služba',
         'sluzbyDetail.cta.consult': 'Konzultace zdarma',
         'sluzbyDetail.cta.pricing': 'Zobrazit ceník',

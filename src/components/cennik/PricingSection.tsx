@@ -12,6 +12,42 @@ import React, {
 } from "react";
 import { InteractiveStarfield } from "@/components/backgrounds/InteractiveStarfield";
 
+// ── BorderTrail — animated gold glow orbiting the card border ──────────────
+// Adapted from the user's Aceternity-style snippet. A large soft gold orb
+// follows the rounded rectangle path via CSS `offsetPath`. The wrapper uses
+// the mask-clip + mask-composite:intersect trick: the inner padding-box mask
+// (transparent) cancels the orb inside the card, leaving only the border
+// ring visible. Result: a glow that sweeps along the card edge.
+//
+// Uses native CSS animation (not framer-motion) so it starts immediately
+// on render — independent of AnimatePresence/layout settling.
+
+function BorderTrail({
+    size = 100,
+    duration = 5,
+}: {
+    size?: number;
+    duration?: number;
+}) {
+    return (
+        <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 rounded-[inherit] border border-transparent [mask-clip:padding-box,border-box] [mask-composite:intersect] [mask-image:linear-gradient(transparent,transparent),linear-gradient(#000,#000)]"
+        >
+            <div
+                className="absolute aspect-square bg-gold"
+                style={{
+                    width: size,
+                    offsetPath: `rect(0 auto auto 0 round ${size}px)`,
+                    boxShadow:
+                        "0px 0px 60px 30px rgba(201,168,117,0.55), 0 0 100px 60px rgba(10,10,15,0.55), 0 0 140px 90px rgba(10,10,15,0.55)",
+                    animation: `border-trail-orbit ${duration}s linear infinite`,
+                }}
+            />
+        </div>
+    );
+}
+
 type Mouse = { x: number | null; y: number | null };
 
 // ── Types ────────────────────────────────────────────────────────────────────
@@ -45,7 +81,7 @@ const CategoryContext = createContext<{
 }>({ active: "", setActive: () => { } });
 
 const MAX_SLOTS = 3;
-const CARD_MIN_HEIGHT = "min-h-[620px]";
+const CARD_MIN_HEIGHT = "min-h-[460px]";
 
 // ── Toggle pill ──────────────────────────────────────────────────────────────
 
@@ -160,7 +196,7 @@ function CardSlot({
                         initial={{ opacity: 0, y: 24, scale: 0.96 }}
                         animate={{
                             opacity: 1,
-                            y: plan.isPopular && activeHasThree ? -16 : 0,
+                            y: 0,
                             scale: 1,
                         }}
                         exit={{ opacity: 0, y: -16, scale: 0.96 }}
@@ -171,73 +207,69 @@ function CardSlot({
                             delay: slotIndex * 0.06,
                         }}
                         layout
-                        className={`relative flex h-full w-full flex-col rounded-2xl p-7 backdrop-blur-sm ${CARD_MIN_HEIGHT} ${
-                            plan.isPopular
-                                ? "bg-gold text-ink shadow-[0_40px_100px_-30px_rgba(201,168,117,0.55)] ring-1 ring-gold-deep/40"
-                                : "border border-cream/10 bg-char-soft/40 text-cream"
-                        }`}
+                        className={`relative flex h-full w-full flex-col overflow-hidden rounded-2xl border border-cream/10 bg-char-soft/40 px-6 pt-14 pb-6 text-cream backdrop-blur-sm ${CARD_MIN_HEIGHT}`}
                     >
+                        {plan.isPopular && <BorderTrail size={100} duration={5} />}
+
                         {plan.isPopular && (
-                            <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                                <div className="flex items-center gap-1.5 rounded-full bg-ink px-4 py-1.5 shadow-md">
-                                    <Star className="h-3.5 w-3.5 fill-gold text-gold" />
-                                    <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-gold">
-                                        {plan.badge ?? "Najobľúbenejšie"}
-                                    </span>
-                                </div>
+                            <div className="absolute top-3 right-3 z-20 inline-flex items-center gap-1.5 rounded-md border border-cream/15 bg-char/85 px-2 py-0.5 backdrop-blur">
+                                <Star className="h-3 w-3 fill-gold text-gold" />
+                                <span className="text-[10px] font-semibold text-cream/85">
+                                    {plan.badge ?? "Populárne"}
+                                </span>
                             </div>
                         )}
 
                         {!plan.isPopular && plan.badge && (
-                            <div className="absolute -top-3 left-6">
-                                <span className="rounded-full bg-gold px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-ink">
+                            <div className="absolute top-3 right-3 z-20">
+                                <span className="rounded-md bg-gold px-2 py-0.5 text-[10px] font-semibold text-ink">
                                     {plan.badge}
                                 </span>
                             </div>
                         )}
 
-                        <div className="flex flex-1 flex-col text-center">
-                            <h3 className={`font-display text-xl font-bold tracking-tight ${plan.isPopular ? "text-ink" : "text-cream"}`}>
+                        <div className="relative z-10 flex flex-1 flex-col text-center">
+                            <h3 className="font-display text-xl font-bold tracking-tight text-cream">
                                 {plan.name}
                             </h3>
 
                             {plan.description && (
-                                <p className={`mt-2 text-sm font-light ${plan.isPopular ? "text-ink/70" : "text-cream/55"}`}>
+                                <p className="mt-2 text-sm font-light text-cream/55">
                                     {plan.description}
                                 </p>
                             )}
 
-                            <div className="mt-6 flex items-baseline justify-center font-display text-4xl md:text-5xl font-bold tracking-tight">
-                                <FlipPrice value={plan.price} isPopular={plan.isPopular} />
+                            <div className="mt-4 flex items-baseline justify-center font-display text-[2rem] md:text-[2.5rem] font-bold tracking-tight leading-none">
+                                <FlipPrice value={plan.price} isPopular={false} />
                             </div>
 
                             {plan.priceNote && (
-                                <p className={`mt-2 text-xs ${plan.isPopular ? "text-ink/55" : "text-cream/45"}`}>
+                                <p className="mt-1.5 text-[11px] text-cream/45">
                                     {plan.priceNote}
                                 </p>
                             )}
 
-                            <ul role="list" className="mt-8 flex flex-col gap-3 text-left text-sm">
+                            <ul role="list" className="mt-5 flex flex-col gap-2 text-left text-[13px]">
                                 {plan.features.map((feature) => (
-                                    <li key={feature} className="flex items-start gap-3">
+                                    <li key={feature} className="flex items-start gap-2.5">
                                         <Check
-                                            className={`mt-0.5 h-4 w-4 flex-none ${plan.isPopular ? "text-ink" : "text-gold"}`}
+                                            className="mt-0.5 h-3.5 w-3.5 flex-none text-gold"
                                             strokeWidth={2.5}
                                             aria-hidden="true"
                                         />
-                                        <span className={`leading-snug ${plan.isPopular ? "text-ink/85" : "text-cream/70"}`}>
+                                        <span className="leading-snug text-cream/70">
                                             {feature}
                                         </span>
                                     </li>
                                 ))}
                             </ul>
 
-                            <div className="mt-auto pt-8">
+                            <div className="mt-auto pt-5">
                                 <Link
                                     href={`/?service=${encodeURIComponent(plan.serviceValue)}#contact`}
-                                    className={`inline-flex w-full items-center justify-center rounded-xl px-6 py-3 text-xs font-bold uppercase tracking-[0.16em] transition-colors ${
+                                    className={`inline-flex w-full items-center justify-center rounded-xl px-5 py-2.5 text-[11px] font-bold uppercase tracking-[0.16em] transition-colors ${
                                         plan.isPopular
-                                            ? "bg-ink text-gold hover:bg-char hover:text-gold-bright"
+                                            ? "bg-gold text-ink hover:bg-gold-bright"
                                             : "border border-cream/15 bg-cream/[0.04] text-cream hover:border-gold hover:bg-gold hover:text-ink"
                                     }`}
                                 >
