@@ -21,10 +21,10 @@ export async function GET(req: NextRequest) {
     const q = url.searchParams.get("q");
 
     const db = scraperDb();
-    let qb = db.from("leads").select("*", { count: "exact" }).order("created_at", { ascending: false });
+    let qb = db.from("leads").select("*", { count: "exact" }).order("scraped_at", { ascending: false });
 
     if (category) qb = qb.eq("category", category);
-    if (city) qb = qb.eq("city", city);
+    if (city) qb = qb.eq("location", city);
     if (jobId) qb = qb.eq("job_id", jobId);
     if (hasEmail === "1") qb = qb.not("email", "is", null);
     if (hasEmail === "0") qb = qb.is("email", null);

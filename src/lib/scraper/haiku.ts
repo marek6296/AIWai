@@ -32,7 +32,7 @@ export async function generateOutreachEmail(lead: Lead): Promise<OutreachEmail> 
     const userPrompt = `Firma: ${lead.name}
 Web: ${lead.website || "—"}
 Kategória: ${lead.category || "—"}
-Mesto: ${lead.city || "—"}
+Mesto: ${lead.location || "—"}
 
 Audit:
 - Silné stránky: ${lead.audit_report.strengths.join("; ")}

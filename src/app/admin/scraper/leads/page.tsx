@@ -17,9 +17,9 @@ export default async function LeadsPage({ searchParams }: { searchParams: SP }) 
     const page = Math.max(0, parseInt(searchParams.page || "0", 10));
     const db = scraperDb();
 
-    let q = db.from("leads").select("*", { count: "exact" }).order("created_at", { ascending: false });
+    let q = db.from("leads").select("*", { count: "exact" }).order("scraped_at", { ascending: false });
     if (searchParams.category) q = q.eq("category", searchParams.category);
-    if (searchParams.city) q = q.eq("city", searchParams.city);
+    if (searchParams.city) q = q.eq("location", searchParams.city);
     if (searchParams.job_id) q = q.eq("job_id", searchParams.job_id);
     if (searchParams.has_email === "1") q = q.not("email", "is", null);
     if (searchParams.has_audit === "1") q = q.eq("audit_status", "done");
@@ -30,9 +30,9 @@ export default async function LeadsPage({ searchParams }: { searchParams: SP }) 
     const { data: leads, count } = await q;
 
     const { data: catRows } = await db.from("leads").select("category").not("category", "is", null).limit(500);
-    const { data: cityRows } = await db.from("leads").select("city").not("city", "is", null).limit(500);
+    const { data: cityRows } = await db.from("leads").select("location").not("location", "is", null).limit(500);
     const categories = Array.from(new Set((catRows ?? []).map((r: { category: string | null }) => r.category).filter(Boolean))).sort() as string[];
-    const cities = Array.from(new Set((cityRows ?? []).map((r: { city: string | null }) => r.city).filter(Boolean))).sort() as string[];
+    const cities = Array.from(new Set((cityRows ?? []).map((r: { location: string | null }) => r.location).filter(Boolean))).sort() as string[];
 
     const total = count ?? 0;
     const pages = Math.ceil(total / PAGE_SIZE);
@@ -59,7 +59,7 @@ export default async function LeadsPage({ searchParams }: { searchParams: SP }) 
                         {((leads ?? []) as Lead[]).map((l) => (
                             <tr key={l.id} className="hover:bg-cream/[0.02]">
                                 <td className="p-3 text-cream">{l.name}</td>
-                                <td className="p-3 text-cream/70">{l.city || "—"}</td>
+                                <td className="p-3 text-cream/70">{l.location || "—"}</td>
                                 <td className="p-3 text-cream/70">{l.category || "—"}</td>
                                 <td className="p-3">
                                     {l.website ? (

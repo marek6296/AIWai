@@ -19,20 +19,23 @@ export type AuditStatus = "pending" | "done" | "failed" | "skipped";
 export type EmailStatus = null | "sent" | "failed" | "bounced";
 
 export type Lead = {
-    id: string;
+    id: number;
     name: string;
-    city: string | null;
+    location: string | null;
     category: string | null;
     website: string | null;
     email: string | null;
-    google_maps_url: string | null;
+    address: string | null;
+    phone: string | null;
+    rating: string | null;
+    maps_url: string | null;
     audit_report: AuditReport | null;
     audit_status: AuditStatus;
     outreach_email: OutreachEmail | null;
     email_sent_at: string | null;
     email_status: EmailStatus;
     job_id: string | null;
-    created_at: string;
+    scraped_at: string;
 };
 
 export type JobStatus = "queued" | "running" | "done" | "failed" | "cancelled";
@@ -59,7 +62,7 @@ export type Job = {
 
 export type OutreachLogEntry = {
     id: string;
-    lead_id: string;
+    lead_id: number;
     sent_at: string;
     to_email: string;
     subject: string;

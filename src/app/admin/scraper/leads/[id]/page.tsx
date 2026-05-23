@@ -15,10 +15,10 @@ export default async function LeadDetail({ params }: { params: { id: string } })
     const { data: log } = await db.from("outreach_log").select("*").eq("lead_id", params.id).order("sent_at", { ascending: false });
 
     const l = lead as Lead;
-    const mapsQuery = encodeURIComponent(`${l.name} ${l.city || ""}`);
+    const mapsQuery = encodeURIComponent(`${l.name} ${l.location || ""}`);
 
     return (
-        <AdminShell title={l.name} subtitle={`${l.city || "—"} · ${l.category || "—"}`}>
+        <AdminShell title={l.name} subtitle={`${l.location || "—"} · ${l.category || "—"}`}>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div className="space-y-6">
                     <div className="rounded-2xl border border-cream/[0.08] bg-cream/[0.025] p-6 space-y-3">
