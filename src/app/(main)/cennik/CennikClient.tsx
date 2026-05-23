@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import HomeBackdrop from "@/components/backgrounds/HomeBackdrop";
+import AdaptiveBackdrop from "@/components/backgrounds/AdaptiveBackdrop";
 import PricingSection, { type PricingCategory } from "@/components/cennik/PricingSection";
 import { useTranslation } from "@/i18n/useTranslation";
 
@@ -150,7 +150,7 @@ export default function CennikClient() {
 
     return (
         <main className="min-h-screen bg-char relative overflow-hidden">
-            <HomeBackdrop />
+            <AdaptiveBackdrop />
 
             {/* Visually-hidden H1 for SEO/a11y — title removed from layout per design */}
             <h1 className="sr-only">{t("cennik.h1")}</h1>
