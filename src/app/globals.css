@@ -454,30 +454,33 @@ canvas[style*="position: fixed"] {
   align-items: center;
   justify-content: center;
   opacity: 0;
-  clip-path: inset(0% 100% 0% 0%);
-  -webkit-clip-path: inset(0% 100% 0% 0%);
-  animation: mobileMorph 8s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+  /* Starting pose: letters spaced out, clipped from the right.
+     Safari respects the -webkit-clip-path alias so iOS still wipes. */
+  letter-spacing: 0.18em;
+  clip-path: inset(0 100% 0 0);
+  -webkit-clip-path: inset(0 100% 0 0);
+  animation: mobileMorph 12s cubic-bezier(0.4, 0, 0.2, 1) infinite;
   text-rendering: geometricPrecision;
   -webkit-font-smoothing: antialiased;
 }
-.mobile-morph-word:nth-child(1) { animation-delay: 0s; }
-.mobile-morph-word:nth-child(2) { animation-delay: 1.6s; }
-.mobile-morph-word:nth-child(3) { animation-delay: 3.2s; }
-.mobile-morph-word:nth-child(4) { animation-delay: 4.8s; }
-.mobile-morph-word:nth-child(5) { animation-delay: 6.4s; }
+/* 12s cycle / 5 words = 2.4s slot apiece (1s reveal + 0.8s hold + 0.6s exit). */
+.mobile-morph-word:nth-child(1) { animation-delay: 0s;   }
+.mobile-morph-word:nth-child(2) { animation-delay: 2.4s; }
+.mobile-morph-word:nth-child(3) { animation-delay: 4.8s; }
+.mobile-morph-word:nth-child(4) { animation-delay: 7.2s; }
+.mobile-morph-word:nth-child(5) { animation-delay: 9.6s; }
 @keyframes mobileMorph {
-  /* invisible, clipped from right (nothing painted) */
-  0%   { opacity: 0; clip-path: inset(0% 100% 0% 0%); -webkit-clip-path: inset(0% 100% 0% 0%); }
-  /* fade up while the wipe reveals left → right */
-  2%   { opacity: 1; }
-  10%  { opacity: 1; clip-path: inset(0% 0% 0% 0%);   -webkit-clip-path: inset(0% 0% 0% 0%);   }
-  /* hold the fully-revealed word */
-  18%  { opacity: 1; clip-path: inset(0% 0% 0% 0%);   -webkit-clip-path: inset(0% 0% 0% 0%);   }
-  /* wipe out (continues the same direction — collapses from left) */
-  24%  { opacity: 1; clip-path: inset(0% 0% 0% 100%); -webkit-clip-path: inset(0% 0% 0% 100%); }
-  /* hidden until next cycle */
-  25%  { opacity: 0; clip-path: inset(0% 0% 0% 100%); -webkit-clip-path: inset(0% 0% 0% 100%); }
-  100% { opacity: 0; clip-path: inset(0% 0% 0% 100%); -webkit-clip-path: inset(0% 0% 0% 100%); }
+  /* Enter: clip wipes left → right, letters tighten from 0.18em to -0.025em */
+  0%  { opacity: 0; letter-spacing:  0.18em;  clip-path: inset(0 100% 0 0);   -webkit-clip-path: inset(0 100% 0 0);   }
+  3%  { opacity: 1; }
+  9%  { opacity: 1; letter-spacing: -0.025em; clip-path: inset(0 0 0 0);      -webkit-clip-path: inset(0 0 0 0);      }
+  /* Hold fully revealed */
+  15% { opacity: 1; letter-spacing: -0.025em; clip-path: inset(0 0 0 0);      -webkit-clip-path: inset(0 0 0 0);      }
+  /* Exit: clip collapses left → right, letters tighten further */
+  20% { opacity: 0; letter-spacing: -0.08em;  clip-path: inset(0 0 0 100%);   -webkit-clip-path: inset(0 0 0 100%);   }
+  /* Reset to entry pose so the next iteration animates in cleanly. */
+  21% { opacity: 0; letter-spacing:  0.18em;  clip-path: inset(0 100% 0 0);   -webkit-clip-path: inset(0 100% 0 0);   }
+  100%{ opacity: 0; letter-spacing:  0.18em;  clip-path: inset(0 100% 0 0);   -webkit-clip-path: inset(0 100% 0 0);   }
 }
 
 /* ──────────────────────────────────────
