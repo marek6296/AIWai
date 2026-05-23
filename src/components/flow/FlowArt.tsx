@@ -90,6 +90,7 @@ export default function FlowArt({
                     gsap.set(inner, {
                         rotation: 30,
                         transformOrigin: "bottom left",
+                        force3D: true,
                     });
 
                     gsap.to(inner, {
@@ -98,8 +99,8 @@ export default function FlowArt({
                         scrollTrigger: {
                             trigger: section,
                             start: "top bottom",
-                            end: "top 25%",
-                            scrub: true,
+                            end: "top top",
+                            scrub: 0.5,
                         },
                     });
                 }
@@ -118,6 +119,7 @@ export default function FlowArt({
                         end: "bottom top",
                         pin: true,
                         pinSpacing: false,
+                        anticipatePin: 1,
                     });
                 }
             });

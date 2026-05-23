@@ -58,8 +58,8 @@
 
 html {
   background: #FFFFFF;
-  /* Smooth scroll for anchor links */
-  scroll-behavior: smooth;
+  /* Note: scroll-behavior: smooth conflicts with GSAP ScrollTrigger pinning
+     (causes section snap jump). Use JS scrollTo({behavior:'smooth'}) for anchors. */
 }
 
 body {
