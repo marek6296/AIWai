@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useTranslation } from "@/i18n/useTranslation";
 import type { ServiceCatalogEntry } from "@/lib/seo/services";
+import { SERVICE_ICONS, SERVICE_TAGS } from "@/lib/seo/serviceMeta";
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
     return (
@@ -21,41 +22,33 @@ export default function ServicePageContent({
     related: ServiceCatalogEntry[];
 }) {
     const { t } = useTranslation();
+    const tag = SERVICE_TAGS[service.slug] ?? "";
 
     return (
         <>
             {/* HERO ─────────────────────────────────────────────────────── */}
             <section className="border-b border-cream/[0.07]">
                 <div className="container mx-auto px-6 pt-32 pb-20 md:pt-44 md:pb-28">
-                    <nav
-                        aria-label="Breadcrumb"
-                        className="mb-16 font-mono text-[11px] uppercase tracking-[0.22em] text-cream/40"
-                    >
-                        <ol className="flex flex-wrap items-center gap-3">
-                            <li>
-                                <Link href="/" className="hover:text-cream transition-colors">
-                                    AIWai
-                                </Link>
-                            </li>
-                            <li aria-hidden="true" className="text-cream/25">/</li>
-                            <li>
-                                <Link
-                                    href="/sluzby"
-                                    className="hover:text-cream transition-colors"
-                                >
-                                    {t("nav.services")}
-                                </Link>
-                            </li>
-                            <li aria-hidden="true" className="text-cream/25">/</li>
-                            <li aria-current="page" className="text-cream/85">
-                                {service.title}
-                            </li>
-                        </ol>
-                    </nav>
-
                     <div className="grid grid-cols-12 gap-x-6 gap-y-10">
                         <div className="col-span-12 md:col-span-3 md:pt-4">
-                            <SectionLabel>{t("sluzbyDetail.label.service")}</SectionLabel>
+                            <Link
+                                href="/sluzby"
+                                className="group inline-flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.22em] text-cream/55 transition-colors hover:text-gold"
+                            >
+                                <span
+                                    aria-hidden="true"
+                                    className="relative inline-flex h-px w-10 bg-cream/30 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:w-14 group-hover:bg-gold"
+                                >
+                                    <span className="absolute left-0 -top-[3px] h-[7px] w-[7px] -rotate-45 border-l border-b border-cream/40 transition-colors duration-500 group-hover:border-gold" />
+                                </span>
+                                <span>{t("sluzbyDetail.back")}</span>
+                            </Link>
+                            {tag && (
+                                <div className="mt-7 inline-flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.22em] text-cream/40">
+                                    <span aria-hidden className="h-px w-6 bg-cream/20" />
+                                    <span>{tag}</span>
+                                </div>
+                            )}
                         </div>
 
                         <div className="col-span-12 md:col-span-9">
@@ -291,27 +284,45 @@ export default function ServicePageContent({
                             <SectionLabel>{t("sluzbyDetail.label.related")}</SectionLabel>
                         </div>
                         <ul className="col-span-12 md:col-span-9 -mt-4">
-                            {related.map((s) => (
-                                <li
-                                    key={s.slug}
-                                    className="border-t border-cream/[0.07] first:border-t-0"
-                                >
-                                    <Link
-                                        href={`/sluzby/${s.slug}`}
-                                        className="group flex items-baseline justify-between gap-6 py-6 md:py-7"
+                            {related.map((s) => {
+                                const RelIcon = SERVICE_ICONS[s.slug];
+                                const relTag = SERVICE_TAGS[s.slug] ?? "";
+                                return (
+                                    <li
+                                        key={s.slug}
+                                        className="border-t border-cream/[0.07] first:border-t-0"
                                     >
-                                        <span className="font-display font-medium text-cream text-xl md:text-2xl tracking-[-0.02em] leading-[1.2] group-hover:translate-x-1.5 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]">
-                                            {s.title}
-                                        </span>
-                                        <span
-                                            aria-hidden="true"
-                                            className="relative inline-flex h-px w-10 bg-cream/25 group-hover:w-16 group-hover:bg-gold transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]"
+                                        <Link
+                                            href={`/sluzby/${s.slug}`}
+                                            className="group flex items-center justify-between gap-6 py-6 md:py-7"
                                         >
-                                            <span className="absolute right-0 -top-[3px] h-[7px] w-[7px] rotate-45 border-t border-r border-cream/40 group-hover:border-gold transition-colors duration-500" />
-                                        </span>
-                                    </Link>
-                                </li>
-                            ))}
+                                            <div className="flex items-center gap-5 min-w-0">
+                                                {RelIcon && (
+                                                    <span className="inline-flex h-10 w-10 flex-none items-center justify-center rounded-full border border-cream/12 text-cream/60 transition-colors duration-300 group-hover:border-gold/45 group-hover:text-gold">
+                                                        <RelIcon className="h-4 w-4" strokeWidth={1.5} aria-hidden />
+                                                    </span>
+                                                )}
+                                                <div className="flex flex-col gap-1 min-w-0">
+                                                    {relTag && (
+                                                        <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-cream/40">
+                                                            {relTag}
+                                                        </span>
+                                                    )}
+                                                    <span className="font-display font-medium text-cream text-xl md:text-2xl tracking-[-0.02em] leading-[1.2] truncate transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-1">
+                                                        {s.title}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <span
+                                                aria-hidden="true"
+                                                className="relative inline-flex h-px w-10 flex-none bg-cream/25 group-hover:w-16 group-hover:bg-gold transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]"
+                                            >
+                                                <span className="absolute right-0 -top-[3px] h-[7px] w-[7px] rotate-45 border-t border-r border-cream/40 group-hover:border-gold transition-colors duration-500" />
+                                            </span>
+                                        </Link>
+                                    </li>
+                                );
+                            })}
                         </ul>
                     </div>
                 </div>

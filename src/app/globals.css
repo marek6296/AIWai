@@ -376,6 +376,12 @@ canvas[style*="position: fixed"] {
   100% { transform: translateZ(0) translateX(100%); }
 }
 
+/* Border-trail orbit — animates a glow dot along the parent's offset-path. */
+@keyframes border-trail-orbit {
+  0%   { offset-distance: 0%; }
+  100% { offset-distance: 100%; }
+}
+
 
 /* Admin page CSS animations (replaces framer-motion) */
 @keyframes adminCardReveal {
