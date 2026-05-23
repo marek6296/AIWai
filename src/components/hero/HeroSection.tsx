@@ -3,10 +3,6 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import MagneticButton from "@/components/ui/MagneticButton";
-import StarField from "@/components/backgrounds/StarField";
-import HexagonOverlay from "@/components/backgrounds/HexagonOverlay";
-import GridLines from "@/components/backgrounds/GridLines";
-import GrainOverlay from "@/components/backgrounds/GrainOverlay";
 import { useTranslation } from "@/i18n/useTranslation";
 import GlowHeadline from "./GlowHeadline";
 import { scrollToPageSection } from "@/lib/scrollToPageSection";
@@ -15,38 +11,8 @@ export default function HeroSection() {
     const { t } = useTranslation();
 
     return (
-        <section className="relative min-h-[100dvh] w-full overflow-hidden bg-char">
-            {/* ── Background stack (from AIWai-redesign) ── */}
-            <StarField />
-            <HexagonOverlay />
-            <GridLines />
-            <GrainOverlay />
-
-            {/* Dramatic radial glows */}
-            <div
-                className="absolute -bottom-40 -left-40 w-[720px] h-[720px] rounded-full pointer-events-none"
-                style={{
-                    background:
-                        "radial-gradient(circle, rgba(201, 168, 117, 0.22) 0%, transparent 65%)",
-                }}
-            />
-            <div
-                className="absolute -top-40 -right-40 w-[820px] h-[820px] rounded-full pointer-events-none"
-                style={{
-                    background:
-                        "radial-gradient(circle, rgba(10, 22, 40, 0.75) 0%, transparent 65%)",
-                }}
-            />
-            <div
-                className="absolute top-1/3 left-1/4 w-[520px] h-[520px] rounded-full pointer-events-none"
-                style={{
-                    background:
-                        "radial-gradient(circle, rgba(228, 200, 150, 0.06) 0%, transparent 70%)",
-                }}
-            />
-
-            {/* Top fade — softens area behind navbar */}
-            <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-char/80 to-transparent pointer-events-none z-[3]" />
+        <section className="relative min-h-[100dvh] w-full overflow-hidden">
+            {/* Background lives at page level (HomeBackdrop). */}
 
             {/* ── Content ── */}
             <div className="relative z-10 container mx-auto px-6 text-center

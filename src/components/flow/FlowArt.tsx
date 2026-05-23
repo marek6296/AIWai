@@ -17,7 +17,7 @@ export function FlowSection({ children, className, flowId, "aria-label": ariaLab
             data-flow-section
             data-flow-anchor={flowId}
             aria-label={ariaLabel}
-            className={cx("relative w-full bg-char", className)}
+            className={cx("relative w-full", className)}
         >
             {children}
         </section>
@@ -38,7 +38,7 @@ export default function FlowArt({
     return (
         <main
             aria-label={ariaLabel}
-            className={cx("w-full overflow-x-hidden bg-char", className)}
+            className={cx("relative w-full overflow-x-hidden", className)}
         >
             {children}
         </main>

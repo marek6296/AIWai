@@ -9,20 +9,16 @@ export default function CTASection() {
     const { t } = useTranslation();
 
     return (
-        <section className="bg-char relative overflow-hidden flex items-center justify-center min-h-[100svh] py-16 md:py-24">
-            <div aria-hidden="true" className="absolute inset-0 pointer-events-none gold-vlines opacity-30" />
-            {/* Single centered soft radial — no hard clipped edges */}
+        <section className="relative overflow-hidden flex items-center justify-center min-h-[100svh] py-16 md:py-24">
+            {/* Soft local accent — additive on top of HomeBackdrop */}
             <div
                 aria-hidden="true"
                 className="pointer-events-none absolute inset-0"
                 style={{
                     background:
-                        "radial-gradient(ellipse 70% 60% at 50% 50%, rgba(201,168,117,0.18) 0%, rgba(201,168,117,0.06) 35%, transparent 70%)",
+                        "radial-gradient(ellipse 70% 60% at 50% 50%, rgba(201,168,117,0.10) 0%, transparent 65%)",
                 }}
             />
-            {/* Top & bottom char fades — smooth blend into adjacent sections */}
-            <div aria-hidden="true" className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-char to-transparent pointer-events-none" />
-            <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-char to-transparent pointer-events-none" />
 
             <div className="container mx-auto px-6 relative z-10 text-center">
                 <ScrollReveal>

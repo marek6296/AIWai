@@ -111,20 +111,7 @@ export default function ProcessSection() {
     }));
 
     return (
-        <section className="relative bg-char py-20 md:py-32 overflow-hidden isolate">
-            {/* Atmospheric layers */}
-            <div aria-hidden="true" className="absolute inset-0 pointer-events-none gold-vlines opacity-25" />
-            <div
-                aria-hidden="true"
-                className="absolute -top-40 left-1/2 -translate-x-1/2 w-[820px] h-[420px] rounded-full pointer-events-none"
-                style={{ background: "radial-gradient(ellipse, rgba(201,168,117,0.10) 0%, transparent 70%)" }}
-            />
-            <div
-                aria-hidden="true"
-                className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[640px] h-[320px] rounded-full pointer-events-none"
-                style={{ background: "radial-gradient(ellipse, rgba(201,168,117,0.06) 0%, transparent 70%)" }}
-            />
-
+        <section className="relative py-20 md:py-32 overflow-hidden isolate">
             <div className="container relative z-10 mx-auto px-6">
                 {/* Heading — editorial header with rule */}
                 <motion.div

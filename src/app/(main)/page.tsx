@@ -6,10 +6,12 @@ import WhyUsSection from "@/components/why-us/WhyUsSection";
 import CTASection from "@/components/cta/CTASection";
 import ContactSection from "@/components/contact/ContactSection";
 import ToolsSlider from "@/components/tools/ToolsSlider";
+import HomeBackdrop from "@/components/backgrounds/HomeBackdrop";
 
 export default function Home() {
     return (
-        <div className="bg-char">
+        <div className="relative bg-char">
+            <HomeBackdrop />
             <FlowArt className="min-h-screen">
                 <FlowSection flowId="top" aria-label="AIWai hero">
                     <HeroSection />
