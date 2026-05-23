@@ -10,6 +10,7 @@ interface ServiceModalProps {
     service: {
         title: string;
         description: string;
+        tag?: string;
         details?: {
             whatIsIt: string;
             includes: string[];
