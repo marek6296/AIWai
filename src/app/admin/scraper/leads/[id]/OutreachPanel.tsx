@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { Sparkles, Send, RefreshCw, Check, Loader2 } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { Sparkles, Send, RefreshCw, Check, Loader2, Eye, Code } from "lucide-react";
 import type { Lead, OutreachEmail, OutreachLogEntry } from "@/lib/scraper/types";
 import { StatusBadge } from "../../components/StatusBadge";
 
@@ -16,6 +16,9 @@ export function OutreachPanel({ lead, outreachLog }: { lead: Lead; outreachLog: 
     const [sending, setSending] = useState(false);
     const [err, setErr] = useState<string | null>(null);
     const [msg, setMsg] = useState<string | null>(null);
+    const [view, setView] = useState<"edit" | "preview">("edit");
+    const [previewHtml, setPreviewHtml] = useState<string>("");
+    const previewTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     async function generate() {
         setErr(null); setMsg(null); setGenerating(true);
@@ -26,13 +29,32 @@ export function OutreachPanel({ lead, outreachLog }: { lead: Lead; outreachLog: 
             setOutreach(data.outreach_email);
             setSubject(data.outreach_email.subject);
             setBody(data.outreach_email.body);
-            setMsg("Email vygenerovaný.");
+            if (data.html) setPreviewHtml(data.html);
+            setMsg("Email vygenerovaný (s čerstvým auditom webu).");
         } catch (e) {
             setErr(e instanceof Error ? e.message : String(e));
         } finally {
             setGenerating(false);
         }
     }
+
+    // Debounced live preview: keď editujeme subject/body, načítaj HTML preview po 600ms
+    useEffect(() => {
+        if (!outreach || view !== "preview") return;
+        if (previewTimer.current) clearTimeout(previewTimer.current);
+        previewTimer.current = setTimeout(async () => {
+            if (!subject.trim() || !body.trim()) return;
+            try {
+                const r = await fetch(`/api/admin/scraper/leads/${lead.id}/email-preview`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ subject, body }),
+                });
+                if (r.ok) setPreviewHtml(await r.text());
+            } catch { /* silent */ }
+        }, 600);
+        return () => { if (previewTimer.current) clearTimeout(previewTimer.current); };
+    }, [subject, body, outreach, view, lead.id]);
 
     async function send() {
         if (!lead.email) { setErr("Lead nemá email."); return; }
@@ -96,23 +118,63 @@ export function OutreachPanel({ lead, outreachLog }: { lead: Lead; outreachLog: 
 
                 {outreach && (
                     <>
-                        <label className="block">
-                            <span className="mb-1 block font-mono text-[10px] uppercase tracking-[0.22em] text-cream/40">Subject</span>
-                            <input
-                                value={subject}
-                                onChange={(e) => setSubject(e.target.value)}
-                                className="w-full rounded-md bg-cream/[0.04] border border-cream/15 px-3 py-2 text-cream focus:border-gold/60 focus:outline-none"
-                            />
-                        </label>
-                        <label className="block">
-                            <span className="mb-1 block font-mono text-[10px] uppercase tracking-[0.22em] text-cream/40">Body</span>
-                            <textarea
-                                value={body}
-                                onChange={(e) => setBody(e.target.value)}
-                                rows={14}
-                                className="w-full rounded-md bg-cream/[0.04] border border-cream/15 px-3 py-2 text-cream font-mono text-sm focus:border-gold/60 focus:outline-none"
-                            />
-                        </label>
+                        <div className="inline-flex rounded-lg border border-cream/[0.08] bg-cream/[0.025] p-1">
+                            <button
+                                type="button"
+                                onClick={() => setView("edit")}
+                                className={`inline-flex items-center gap-1.5 rounded-md px-3 py-1 text-xs transition ${view === "edit" ? "bg-gold/15 text-gold border border-gold/40" : "text-cream/55 hover:text-cream"}`}
+                            >
+                                <Code size={12} /> Editor
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => setView("preview")}
+                                className={`inline-flex items-center gap-1.5 rounded-md px-3 py-1 text-xs transition ${view === "preview" ? "bg-gold/15 text-gold border border-gold/40" : "text-cream/55 hover:text-cream"}`}
+                            >
+                                <Eye size={12} /> Náhľad emailu
+                            </button>
+                        </div>
+
+                        {view === "edit" ? (
+                            <>
+                                <label className="block">
+                                    <span className="mb-1 block font-mono text-[10px] uppercase tracking-[0.22em] text-cream/40">Subject</span>
+                                    <input
+                                        value={subject}
+                                        onChange={(e) => setSubject(e.target.value)}
+                                        className="w-full rounded-md bg-cream/[0.04] border border-cream/15 px-3 py-2 text-cream focus:border-gold/60 focus:outline-none"
+                                    />
+                                </label>
+                                <label className="block">
+                                    <span className="mb-1 block font-mono text-[10px] uppercase tracking-[0.22em] text-cream/40">Body</span>
+                                    <textarea
+                                        value={body}
+                                        onChange={(e) => setBody(e.target.value)}
+                                        rows={14}
+                                        className="w-full rounded-md bg-cream/[0.04] border border-cream/15 px-3 py-2 text-cream font-mono text-sm focus:border-gold/60 focus:outline-none"
+                                    />
+                                </label>
+                            </>
+                        ) : (
+                            <div className="space-y-2">
+                                <div className="rounded-md border border-cream/[0.08] bg-char-soft/40 px-3 py-2">
+                                    <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-cream/40 mb-1">Predmet</div>
+                                    <div className="text-cream text-sm font-medium">{subject}</div>
+                                </div>
+                                <div className="rounded-md border border-cream/[0.08] bg-white overflow-hidden">
+                                    {previewHtml ? (
+                                        <iframe
+                                            title="Email preview"
+                                            srcDoc={previewHtml}
+                                            className="w-full h-[600px] border-0"
+                                            sandbox=""
+                                        />
+                                    ) : (
+                                        <div className="p-8 text-center text-sm text-stone-500">Načítavam náhľad…</div>
+                                    )}
+                                </div>
+                            </div>
+                        )}
 
                         <div className="flex flex-wrap gap-2">
                             <button onClick={send} disabled={sending} className="inline-flex items-center gap-2 rounded-lg border border-gold/50 bg-gold/20 px-4 py-2 text-gold hover:bg-gold/30 disabled:opacity-40">
