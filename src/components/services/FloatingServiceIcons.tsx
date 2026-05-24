@@ -172,7 +172,7 @@ export default function FloatingServiceIcons() {
     return (
         <div
             aria-hidden="true"
-            className="pointer-events-none absolute inset-0 z-[1] overflow-hidden"
+            className="hidden lg:block pointer-events-none absolute inset-0 z-[1] overflow-hidden"
         >
             {ICONS.map((cfg, i) => (
                 <FloatingIcon
