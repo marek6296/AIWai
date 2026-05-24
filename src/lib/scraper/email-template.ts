@@ -15,7 +15,6 @@ export function wrapEmailHtml(body: string, subject: string): string {
                 const lines = p.split(/\n/).map((l) => l.trim()).filter(Boolean);
                 return `<p style="margin:32px 0 0;color:#a89868;font-size:14px;line-height:1.7;">${lines
                     .map((l, i) => {
-                        // Podporujeme aj markdown link [text](url)
                         const mdLink = l.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
                         if (mdLink) {
                             return `<a href="${escapeAttr(mdLink[2])}" style="color:#C9A875;text-decoration:none;border-bottom:1px solid rgba(201,168,117,0.4);">${escapeHtml(mdLink[1])}</a>`;
@@ -28,6 +27,11 @@ export function wrapEmailHtml(body: string, subject: string): string {
                         return `${escapeHtml(l)}<br>`;
                     })
                     .join("")}</p>`;
+            }
+            // Bullet list — riadky začínajúce "- "
+            if (/^-\s/m.test(p) && p.split(/\n/).every((l) => /^-\s/.test(l.trim()) || !l.trim())) {
+                const items = p.split(/\n/).map((l) => l.trim().replace(/^-\s*/, "")).filter(Boolean);
+                return `<ul style="margin:0 0 20px;padding:0;list-style:none;">${items.map(renderBullet).join("")}</ul>`;
             }
             return `<p style="margin:0 0 20px;color:#f5edda;font-size:15.5px;line-height:1.7;">${renderInline(p)}</p>`;
         })
@@ -106,11 +110,22 @@ export function wrapEmailHtml(body: string, subject: string): string {
 }
 
 function renderInline(p: string): string {
-    // Najprv escape, potom prelož markdown [text](url) na <a>
+    // Najprv escape, potom prelož markdown
     let out = escapeHtml(p).replace(/\n/g, "<br>");
+    // [text](url) → <a>
     out = out.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_, text, url) =>
         `<a href="${escapeAttr(url)}" style="color:#C9A875;text-decoration:none;border-bottom:1px solid rgba(201,168,117,0.4);">${text}</a>`);
+    // **bold** → <strong>
+    out = out.replace(/\*\*([^*]+)\*\*/g, (_, text) =>
+        `<strong style="color:#f5edda;font-weight:600;">${text}</strong>`);
     return out;
+}
+
+function renderBullet(text: string): string {
+    return `<li style="margin:0 0 10px;padding:0 0 0 22px;position:relative;color:#f5edda;font-size:15px;line-height:1.6;list-style:none;">
+  <span style="position:absolute;left:0;top:9px;display:inline-block;width:6px;height:6px;border-radius:50%;background:#C9A875;"></span>
+  ${renderInline(text)}
+</li>`;
 }
 
 function escapeHtml(s: string): string {

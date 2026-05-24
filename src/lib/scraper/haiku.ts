@@ -39,11 +39,19 @@ Píšeš krátky, **formálny** outreach email firme na základe auditu jej webu
    Aj keď audit tieto témy spomína, **úplne ich vynechaj**.
    Namiesto toho spomeň iné vylepšenia: dizajn, štruktúru, rýchlosť, SEO, mobil, branding, CTA, dôveryhodnosť (cez certifikáty/portfólio, nie cez recenzie), AI chatbot, online objednávky, automatizácie.
 
-4. SERVICE OFFER (1-2 vety): Predstav AIWai. Spomeň LEN služby relevantné pre identifikované slabiny:
-   - moderný web redesign / UI/UX vylepšenia
-   - AI chatbot / AI automatizácie
-   - branding / performance / SEO
-   Príklad: "V AIWai sa venujeme tvorbe moderných webov, AI chatbotov a automatizáciám pre slovenské firmy."
+4. SERVICE OFFER + ČO ROBÍME (formátovaný blok):
+   Krátka úvodná veta (1 veta) a potom **vždy** ponúkni tieto 4 oblasti AIWai ako bullet list (každý riadok začni "- "):
+
+   "V AIWai pomáhame slovenským firmám zlepšiť ich digitálnu prezentáciu — robíme:
+
+   - **Webové stránky** — moderné weby a e-shopy na mieru
+   - **Grafiku a branding** — logo, vizuálna identita, sociálne siete
+   - **AI chatboty** — automatické odpovede na webe alebo Messengeri
+   - **AI automatizácie procesov** — šetria čas pri komunikácii, objednávkach a administratíve
+
+   Z toho čo sme videli na vašom webe by sme začali s {1-2 oblasti relevantné pre slabiny}."
+
+   ➡ Použi presne tento formát (úvod, prázdny riadok, 4 bullety s "- " a **bold** prvými 2-3 slovami, prázdny riadok, jedna nasledujúca veta čo doporučujeme).
 
 5. VALUE + PRICING (1 veta):
    ✅ "Pracujeme s najlepšími cenami na trhu pre podobné riešenia."
@@ -62,7 +70,7 @@ AIWai
 
 GLOBÁLNE PRAVIDLÁ:
 - **Formálny vykací tón** (Vy/Vám/Vás), žiadne "ty"
-- Max 180 slov v body
+- Max 240 slov v body (vrátane bullet listu so službami)
 - Profesionálna slovenčina so správnou diakritikou
 - Žiadne emojis, žiadny marketing hype, žiadny corporate jargon
 - Žiadne AI-sounding frázy ("optimalizovať konverzný funnel", "synergie", "win-win", "leverage")
@@ -76,7 +84,12 @@ SUBJECT: Max 60 znakov, vecný (žiadne "Spolupráca"/"Ponuka").
 
 VÝSTUP: výlučne JSON v tvare
 {"subject": "...", "body": "..."}
-Medzi odsekmi v body používaj \\n\\n. Žiadny markdown okrem podpisového [www.aiwai.app](https://www.aiwai.app). Žiadne \`\`\`json\`\`\` bloky, žiadny iný text.`;
+Medzi odsekmi v body používaj \\n\\n.
+Povolený markdown v body:
+  - bullet listy začínajúce "- " (jeden bullet per riadok, prázdny riadok pred listom a po liste)
+  - **bold** pomocou dvojitých hviezdičiek (len v bulletoch pre názov služby)
+  - [text](url) hyperlinks (len v podpise pre www.aiwai.app)
+Žiadne \`\`\`json\`\`\` bloky, žiadny iný markdown (žiadne #, *, _, >).`;
 
 /** Odfiltruje zakázané témy (fotky/vizuály, recenzie/testimonials) pred odoslaním do email promptu. */
 const FORBIDDEN_RE = /\b(fotk|fotograf|vizu[aá]l|obrázk|foto|sn[ií]m|picture|photo|images?|gallery|galéri|recenz|review|testimonial|hodnoten[ií]|referenc[ií])/i;
@@ -126,7 +139,7 @@ Napíš outreach email presne podľa 7-sekciovej šablóny. Vyber 1-3 najrelevan
             { role: "user", content: userPrompt },
         ],
         temperature: 0.7,
-        max_tokens: 800,
+        max_tokens: 1200,
         response_format: { type: "json_object" },
     });
 
