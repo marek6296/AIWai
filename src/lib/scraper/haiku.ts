@@ -1,14 +1,18 @@
-// Generuje SK outreach email cez Claude Haiku 4.5.
-// 1. Re-audit webu (fetch + nový Haiku audit) — vždy aktuálne dáta
-// 2. Combine starý + nový audit
-// 3. Generuje email podľa striktnej AIWai šablóny (7 sekcií, max 180 slov)
+// Generuje SK outreach email cez OpenAI GPT (model gpt-4o). Re-audit zostáva Claude Haiku 4.5.
+// Workflow:
+// 1. Re-audit webu (fetch + Claude Haiku audit) — vždy aktuálne dáta
+// 2. Combine starý + nový audit (deduplikácia)
+// 3. GPT napíše email podľa striktnej AIWai šablóny
+//
+// Súbor sa stále volá `haiku.ts` lebo `audit.ts` import a `route.ts` import nezmenené, len model
+// pre GENERÁCIU emailu = OpenAI. Audit (`audit.ts`) používa Claude Haiku.
 
 import "server-only";
-import Anthropic from "@anthropic-ai/sdk";
+import OpenAI from "openai";
 import type { Lead, OutreachEmail, AuditReport } from "./types";
 import { reAudit, combineAudits } from "./audit";
 
-const MODEL = "claude-haiku-4-5";
+const EMAIL_MODEL = "gpt-4o";
 
 const SYSTEM_PROMPT = `Si Marek Donoval z AIWai — slovenská digitálna agentúra (web, dizajn, AI chatboty, automatizácia).
 Píšeš krátky, **formálny** outreach email firme na základe auditu jej webu.
@@ -20,19 +24,19 @@ Píšeš krátky, **formálny** outreach email firme na základe auditu jej webu
 2. WEBSITE REVIEW INTRO (1 veta): zmieň že ste si pozreli ich web.
    ✅ "pozreli sme si váš web a chceme sa s vami podeliť o pár postrehov."
    ✅ "po krátkom audite vášho webu by sme vám radi ponúkli niekoľko poznámok."
-   ✅ "po prezretí vašej webovej stránky sme si pripravili krátku spätnú väzbu."
    ⚠ NIKDY nepíš "všimli sme si 3 veci" / "identifikovali sme 5 bodov" — žiadne čísla, len plynulý text.
 
 3. ČO JE DOBRÉ + ČO BY SA DALO VYLEPŠIŤ (2-4 vety, plynulý text bez bullet bodov):
    - Najprv stručne vyzdvihni 1-2 pozitíva (z auditu strengths)
    - Potom prirodzene prejdi do toho, čo by sa dalo posunúť ďalej (z weaknesses)
    - Píš ako keby si rozprával s majiteľom firmy, nie ako zoznam
-   - **ZAKÁZANÉ formulácie:** "všimli sme si X vecí", "identifikovali sme N bodov", "našli sme tri problémy", "dve veci by sme zlepšili", akékoľvek POČÍTANIE pozorovaní. Píš plynulo bez "po prvé / po druhé".
+   - **ZAKÁZANÉ formulácie:** "všimli sme si X vecí", "identifikovali sme N bodov", "našli sme tri problémy", "dve veci by sme zlepšili", akékoľvek POČÍTANIE. Žiadne "po prvé / po druhé".
    ✅ "Stránka má jasnú štruktúru a kontakt je rýchlo k dispozícii. Zaujalo nás, že by sa dala ešte vyladiť mobilná verzia, a vizuálne by web mohol pôsobiť o niečo modernejšie — typografia a niektoré sekcie majú rezervu."
-   ✅ "Štruktúra menu je prehľadná a informácie o donáške sú jasne dostupné. Web by mohol pôsobiť modernejšie, prospela by mu vizuálna prezentácia jedál a tiež jednoduchšia cesta k objednávke pre zákazníka."
-   ❌ "Všimli sme si 3 veci: 1. web je zastaraný..."
-   ❌ "Po prvé, chýbajú fotky. Po druhé..."
-   ❌ "Všimli sme si však dve veci, ktoré by mohli pomôcť..."
+
+🚫 **NIKDY NESPOMÍNAJ FOTKY / FOTOGRAFIE / VIZUÁLY / OBRÁZKY / FOTO / SNÍMKY / PICTURES / PHOTOS:**
+   - Mnoho firiem už fotografie má a nás by sme vyzerali nepripravení.
+   - Aj keď audit hovorí "chýbajú fotografie", **vynechaj túto poznámku úplne**.
+   - Namiesto fotiek spomeň iné vylepšenia (dizajn, štruktúru, rýchlosť, SEO, mobil, branding, CTA, dôveryhodnosť, AI chatbot).
 
 4. SERVICE OFFER (1-2 vety): Predstav AIWai. Spomeň LEN služby relevantné pre identifikované slabiny:
    - moderný web redesign / UI/UX vylepšenia
@@ -59,105 +63,104 @@ GLOBÁLNE PRAVIDLÁ:
 - **Formálny vykací tón** (Vy/Vám/Vás), žiadne "ty"
 - Max 180 slov v body
 - Profesionálna slovenčina so správnou diakritikou
-- Žiadne emojis, žiadne marketing hype, žiadny corporate jargon
-- Žiadne AI-sounding frázy ("optimalizovať konverzný funnel", "synergie", "win-win")
-- Žiadne čísla "3 veci", "5 bodov" — text musí plynúť
+- Žiadne emojis, žiadny marketing hype, žiadny corporate jargon
+- Žiadne AI-sounding frázy ("optimalizovať konverzný funnel", "synergie", "win-win", "leverage")
 - Krátke odseky (3-5 odsekov medzi pozdravom a podpisom)
 - Znieť ako vážny digital agency founder
 
-SUBJECT: Max 60 znakov, vecný.
+SUBJECT: Max 60 znakov, vecný (žiadne "Spolupráca"/"Ponuka").
    ✅ "Pár postrehov k webu {firma}"
    ✅ "Krátka spätná väzba k vášmu webu"
    ✅ "Návrh vylepšení pre {firma}"
 
 VÝSTUP: výlučne JSON v tvare
 {"subject": "...", "body": "..."}
-Medzi odsekmi v body používaj \\n\\n (dve newlines). Žiadny markdown okrem podpisového [www.aiwai.app](https://www.aiwai.app). Žiadne \`\`\`json\`\`\` bloky, žiadny iný text.`;
+Medzi odsekmi v body používaj \\n\\n. Žiadny markdown okrem podpisového [www.aiwai.app](https://www.aiwai.app). Žiadne \`\`\`json\`\`\` bloky, žiadny iný text.`;
+
+/** Odfiltruje weaknesses týkajúce sa fotiek/vizuálov pred odoslaním do email promptu. */
+function stripPhotoMentions(items: string[]): string[] {
+    const re = /\b(fotk|fotograf|vizu[aá]l|obrázk|foto|sn[ií]m|picture|photo|images?|gallery|galéri)/i;
+    return items.filter((s) => !re.test(s));
+}
 
 export async function generateOutreachEmail(lead: Lead): Promise<OutreachEmail> {
-    const apiKey = process.env.ANTHROPIC_API_KEY;
-    if (!apiKey) throw new Error("ANTHROPIC_API_KEY not configured");
+    const apiKey = process.env.OPENAI_API_KEY;
+    if (!apiKey) throw new Error("OPENAI_API_KEY not configured");
     if (!lead.email) throw new Error("Lead has no email address");
+    if (!lead.audit_report) throw new Error("Žiadny audit — nedá sa vygenerovať email");
 
-    // ── 1. Re-audit (čerstvé dáta) — ak má web ──
-    let fresh: AuditReport | null = null;
-    if (lead.website) {
-        fresh = await reAudit(lead.name, lead.website);
-    }
+    const audit = lead.audit_report;
 
-    // ── 2. Combine starý + nový audit ──
-    const combined = combineAudits(lead.audit_report, fresh);
+    // Odfiltruj poznámky o fotkách aby ich GPT nemal kde vidieť
+    const cleanWeaknesses = stripPhotoMentions(audit.weaknesses);
+    const cleanStrengths = stripPhotoMentions(audit.strengths);
+    const cleanOpportunity = /fotk|fotograf|vizu[aá]l|obrázk|foto|sn[ií]m|picture|photo/i.test(audit.opportunity || "")
+        ? "" // ak je opportunity len o fotkách, vynecháme ju
+        : audit.opportunity;
 
-    if (!combined) {
-        throw new Error("Žiadny audit (ani starý ani nový) — nedá sa vygenerovať email");
-    }
-
-    // ── 3. Generuj email podľa striktnej šablóny ──
-    const client = new Anthropic({ apiKey });
+    const client = new OpenAI({ apiKey });
 
     const userPrompt = `Firma: ${lead.name}
 Web: ${lead.website || "—"}
 Kategória: ${lead.category || "—"}
 Mesto: ${lead.location || "—"}
 
-AUDIT (kombinovaný z pôvodného + čerstvého):
+AUDIT WEBU:
 SILNÉ STRÁNKY:
-${combined.strengths.map((s) => "- " + s).join("\n") || "  (žiadne)"}
+${cleanStrengths.map((s) => "- " + s).join("\n") || "  (žiadne)"}
 
 SLABINY / PRIESTOR NA ZLEPŠENIE:
-${combined.weaknesses.map((s) => "- " + s).join("\n") || "  (žiadne)"}
+${cleanWeaknesses.map((s) => "- " + s).join("\n") || "  (žiadne)"}
 
-NAJVÄČŠIA PRÍLEŽITOSŤ:
-${combined.opportunity || "—"}
+${cleanOpportunity ? `PRÍLEŽITOSŤ:\n${cleanOpportunity}\n` : ""}
+SCORE: ${audit.score}/10
 
-SCORE: ${combined.score}/10
+Napíš outreach email presne podľa 7-sekciovej šablóny. Vyber 1-3 najrelevantnejšie slabiny (BEZ fotiek/vizuálov) ako plynulé pozorovania v sekcii 3. Ponúk LEN služby relevantné pre tieto slabiny v sekcii 4.`;
 
-Napíš outreach email presne podľa 7-sekciovej šablóny. Vyber 1-3 najrelevantnejšie slabiny ako špecifické pozorovania (sekcia 3). Ponúk LEN služby relevantné pre konkrétne identifikované slabiny (sekcia 4).`;
-
-    const response = await client.messages.create({
-        model: MODEL,
-        max_tokens: 1200,
-        system: SYSTEM_PROMPT,
-        messages: [{ role: "user", content: userPrompt }],
+    const response = await client.chat.completions.create({
+        model: EMAIL_MODEL,
+        messages: [
+            { role: "system", content: SYSTEM_PROMPT },
+            { role: "user", content: userPrompt },
+        ],
+        temperature: 0.7,
+        max_tokens: 800,
+        response_format: { type: "json_object" },
     });
 
-    const text = response.content
-        .filter((b): b is Anthropic.TextBlock => b.type === "text")
-        .map((b) => b.text)
-        .join("");
-
-    const cleaned = text.trim().replace(/^```(?:json)?/i, "").replace(/```$/, "").trim();
-
+    const text = response.choices[0]?.message?.content || "";
     let parsed: { subject?: string; body?: string };
     try {
-        parsed = JSON.parse(cleaned);
+        parsed = JSON.parse(text);
     } catch {
-        throw new Error(`Haiku returned non-JSON: ${text.slice(0, 200)}`);
+        throw new Error(`GPT returned non-JSON: ${text.slice(0, 200)}`);
     }
     if (!parsed.subject || !parsed.body) {
-        throw new Error(`Haiku response missing subject or body: ${text.slice(0, 200)}`);
+        throw new Error(`GPT response missing subject or body: ${text.slice(0, 200)}`);
     }
 
     return {
         subject: parsed.subject.trim(),
         body: parsed.body.trim(),
-        model: MODEL,
+        model: EMAIL_MODEL,
         generated_at: new Date().toISOString(),
     };
 }
 
-/** Vracia aj combined audit aby UI mohlo prípadne ukázať diff. */
+/** Re-audit (Claude Haiku) + email (GPT). Vracia oboje. */
 export async function generateOutreachEmailWithAudit(lead: Lead): Promise<{
     email: OutreachEmail;
     audit: AuditReport | null;
 }> {
-    const apiKey = process.env.ANTHROPIC_API_KEY;
-    if (!apiKey) throw new Error("ANTHROPIC_API_KEY not configured");
     if (!lead.email) throw new Error("Lead has no email address");
 
     let fresh: AuditReport | null = null;
     if (lead.website) fresh = await reAudit(lead.name, lead.website);
     const combined = combineAudits(lead.audit_report, fresh);
+
+    if (!combined) {
+        throw new Error("Žiadny audit (ani starý ani nový) — nedá sa vygenerovať email");
+    }
 
     const email = await generateOutreachEmail({ ...lead, audit_report: combined });
     return { email, audit: combined };
