@@ -2,7 +2,7 @@ import Link from "next/link";
 import AdminShell from "@/app/admin/components/AdminShell";
 import { scraperDb } from "@/lib/scraper/supabase-server";
 import { ScoreChip } from "../components/ScoreChip";
-import { StatusBadge } from "../components/StatusBadge";
+import { MailStatusChip } from "../components/MailStatusChip";
 import { LeadFilters } from "./LeadFilters";
 import { ExternalLink } from "lucide-react";
 import type { Lead } from "@/lib/scraper/types";
@@ -72,7 +72,7 @@ export default async function LeadsPage({ searchParams }: { searchParams: SP }) 
                                 </td>
                                 <td className="p-3 text-cream/70 font-mono text-xs">{l.email || "—"}</td>
                                 <td className="p-3"><ScoreChip score={l.audit_report?.score} /></td>
-                                <td className="p-3"><StatusBadge status={l.email_status} /></td>
+                                <td className="p-3"><MailStatusChip outreach={l.outreach_email} status={l.email_status} /></td>
                                 <td className="p-3">
                                     <Link href={`/admin/scraper/leads/${l.id}`} className="text-gold/80 hover:text-gold text-xs">Detail →</Link>
                                 </td>

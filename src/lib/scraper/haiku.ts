@@ -106,9 +106,9 @@ SUBJECT: Max 60 znakov, vecný (žiadne "Spolupráca"/"Ponuka").
    ✅ "Krátka spätná väzba k vášmu webu"
    ✅ "Návrh vylepšení pre {firma}"
 
-VÝSTUP: výlučne JSON v tvare
+VÝSTUP: výlučne JSON objekt v tvare
 {"subject": "...", "body": "..."}
-Medzi odsekmi v body používaj \\n\\n.
+Body je obyčajný viacriadkový text — medzi odsekmi nechaj **prázdny riadok** (newline znak, NIE literálny text "\\n").
 Povolený markdown v body:
   - bullet listy začínajúce "- " (jeden bullet per riadok, prázdny riadok pred listom a po liste)
   - **bold** pomocou dvojitých hviezdičiek (len v bulletoch pre názov služby)
@@ -188,9 +188,15 @@ Napíš outreach email presne podľa šablóny. Vyber 1-3 najrelevantnejšie bod
         throw new Error(`GPT response missing subject or body: ${text.slice(0, 200)}`);
     }
 
+    // Normalize: ak GPT vráti literálne "\\n" namiesto \n znakov, prelož ich
+    const bodyText = parsed.body
+        .replace(/\\n/g, "\n")
+        .replace(/\r\n/g, "\n")
+        .trim();
+
     return {
         subject: parsed.subject.trim(),
-        body: parsed.body.trim(),
+        body: bodyText,
         model: EMAIL_MODEL,
         generated_at: new Date().toISOString(),
     };

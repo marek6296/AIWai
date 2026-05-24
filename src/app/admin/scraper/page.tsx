@@ -5,6 +5,7 @@ import { Radar, Mail, ClipboardCheck, Send, Plus, ExternalLink, ChevronRight } f
 import { scraperDb } from "@/lib/scraper/supabase-server";
 import { StatusBadge } from "./components/StatusBadge";
 import { ScoreChip } from "./components/ScoreChip";
+import { MailStatusChip } from "./components/MailStatusChip";
 import { ScraperTabs } from "./components/ScraperTabs";
 import type { Job, Lead } from "@/lib/scraper/types";
 
@@ -107,7 +108,7 @@ export default async function ScraperDashboard() {
                                     </td>
                                     <td className="p-3 text-cream/70 font-mono text-xs">{l.email || "—"}</td>
                                     <td className="p-3"><ScoreChip score={l.audit_report?.score} /></td>
-                                    <td className="p-3"><StatusBadge status={l.email_status} /></td>
+                                    <td className="p-3"><MailStatusChip outreach={l.outreach_email} status={l.email_status} /></td>
                                     <td className="p-3">
                                         <Link href={`/admin/scraper/leads/${l.id}`} className="text-gold/80 hover:text-gold text-xs whitespace-nowrap">
                                             Detail →

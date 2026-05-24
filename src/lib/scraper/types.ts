@@ -15,7 +15,7 @@ export type OutreachEmail = {
     generated_at: string;
 };
 
-export type AuditStatus = "pending" | "done" | "failed" | "skipped";
+export type AuditStatus = "pending" | "done" | "failed" | "skipped" | "no_website";
 export type EmailStatus = null | "sent" | "failed" | "bounced";
 
 export type Lead = {
