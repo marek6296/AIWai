@@ -61,8 +61,8 @@ export function wrapEmailHtml(body: string, subject: string): string {
                     <img src="https://aiwai.app/logo-v2.png" alt="AIWai" width="96" height="42" style="display:block;border:0;height:auto;max-width:100%;object-fit:contain;">
                   </a>
                 </td>
-                <td valign="middle" align="right" style="vertical-align:middle;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:10px;letter-spacing:0.28em;text-transform:uppercase;color:#a89868;">
-                  Digitálna agentúra
+                <td valign="middle" align="right" style="vertical-align:middle;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:12px;font-style:italic;color:#a89868;line-height:1.4;max-width:240px;">
+                  Vy riešite biznis,<br>my riešime všetko digitálne.
                 </td>
               </tr>
             </table>

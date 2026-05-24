@@ -33,10 +33,11 @@ Píšeš krátky, **formálny** outreach email firme na základe auditu jej webu
    - **ZAKÁZANÉ formulácie:** "všimli sme si X vecí", "identifikovali sme N bodov", "našli sme tri problémy", "dve veci by sme zlepšili", akékoľvek POČÍTANIE. Žiadne "po prvé / po druhé".
    ✅ "Stránka má jasnú štruktúru a kontakt je rýchlo k dispozícii. Zaujalo nás, že by sa dala ešte vyladiť mobilná verzia, a vizuálne by web mohol pôsobiť o niečo modernejšie — typografia a niektoré sekcie majú rezervu."
 
-🚫 **NIKDY NESPOMÍNAJ FOTKY / FOTOGRAFIE / VIZUÁLY / OBRÁZKY / FOTO / SNÍMKY / PICTURES / PHOTOS:**
-   - Mnoho firiem už fotografie má a nás by sme vyzerali nepripravení.
-   - Aj keď audit hovorí "chýbajú fotografie", **vynechaj túto poznámku úplne**.
-   - Namiesto fotiek spomeň iné vylepšenia (dizajn, štruktúru, rýchlosť, SEO, mobil, branding, CTA, dôveryhodnosť, AI chatbot).
+🚫 **ZAKÁZANÉ TÉMY — NIKDY ich nespomínaj v emaile:**
+   - FOTKY / fotografie / vizuály / obrázky / foto / snímky / galérie / pictures / photos
+   - RECENZIE / testimonials / hodnotenia zákazníkov / referenčné citáty / reviews
+   Aj keď audit tieto témy spomína, **úplne ich vynechaj**.
+   Namiesto toho spomeň iné vylepšenia: dizajn, štruktúru, rýchlosť, SEO, mobil, branding, CTA, dôveryhodnosť (cez certifikáty/portfólio, nie cez recenzie), AI chatbot, online objednávky, automatizácie.
 
 4. SERVICE OFFER (1-2 vety): Predstav AIWai. Spomeň LEN služby relevantné pre identifikované slabiny:
    - moderný web redesign / UI/UX vylepšenia
@@ -77,10 +78,11 @@ VÝSTUP: výlučne JSON v tvare
 {"subject": "...", "body": "..."}
 Medzi odsekmi v body používaj \\n\\n. Žiadny markdown okrem podpisového [www.aiwai.app](https://www.aiwai.app). Žiadne \`\`\`json\`\`\` bloky, žiadny iný text.`;
 
-/** Odfiltruje weaknesses týkajúce sa fotiek/vizuálov pred odoslaním do email promptu. */
-function stripPhotoMentions(items: string[]): string[] {
-    const re = /\b(fotk|fotograf|vizu[aá]l|obrázk|foto|sn[ií]m|picture|photo|images?|gallery|galéri)/i;
-    return items.filter((s) => !re.test(s));
+/** Odfiltruje zakázané témy (fotky/vizuály, recenzie/testimonials) pred odoslaním do email promptu. */
+const FORBIDDEN_RE = /\b(fotk|fotograf|vizu[aá]l|obrázk|foto|sn[ií]m|picture|photo|images?|gallery|galéri|recenz|review|testimonial|hodnoten[ií]|referenc[ií])/i;
+
+function stripForbiddenMentions(items: string[]): string[] {
+    return items.filter((s) => !FORBIDDEN_RE.test(s));
 }
 
 export async function generateOutreachEmail(lead: Lead): Promise<OutreachEmail> {
@@ -91,11 +93,11 @@ export async function generateOutreachEmail(lead: Lead): Promise<OutreachEmail> 
 
     const audit = lead.audit_report;
 
-    // Odfiltruj poznámky o fotkách aby ich GPT nemal kde vidieť
-    const cleanWeaknesses = stripPhotoMentions(audit.weaknesses);
-    const cleanStrengths = stripPhotoMentions(audit.strengths);
-    const cleanOpportunity = /fotk|fotograf|vizu[aá]l|obrázk|foto|sn[ií]m|picture|photo/i.test(audit.opportunity || "")
-        ? "" // ak je opportunity len o fotkách, vynecháme ju
+    // Odfiltruj zakázané témy (fotky, recenzie) aby ich GPT nemal kde vidieť
+    const cleanWeaknesses = stripForbiddenMentions(audit.weaknesses);
+    const cleanStrengths = stripForbiddenMentions(audit.strengths);
+    const cleanOpportunity = FORBIDDEN_RE.test(audit.opportunity || "")
+        ? "" // ak je opportunity o zakázaných témach, vynecháme ju
         : audit.opportunity;
 
     const client = new OpenAI({ apiKey });
@@ -115,7 +117,7 @@ ${cleanWeaknesses.map((s) => "- " + s).join("\n") || "  (žiadne)"}
 ${cleanOpportunity ? `PRÍLEŽITOSŤ:\n${cleanOpportunity}\n` : ""}
 SCORE: ${audit.score}/10
 
-Napíš outreach email presne podľa 7-sekciovej šablóny. Vyber 1-3 najrelevantnejšie slabiny (BEZ fotiek/vizuálov) ako plynulé pozorovania v sekcii 3. Ponúk LEN služby relevantné pre tieto slabiny v sekcii 4.`;
+Napíš outreach email presne podľa 7-sekciovej šablóny. Vyber 1-3 najrelevantnejšie slabiny ako plynulé pozorovania v sekcii 3 — NIKDY nespomínaj fotky/fotografie/vizuály ani recenzie/testimonials/hodnotenia. Ponúk LEN služby relevantné pre tieto slabiny v sekcii 4.`;
 
     const response = await client.chat.completions.create({
         model: EMAIL_MODEL,
