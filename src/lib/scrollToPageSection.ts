@@ -25,6 +25,13 @@ export function scrollToPageSection(id: string, behavior: ScrollBehavior = "smoo
 
     const navHeight = document.querySelector("nav")?.getBoundingClientRect().height ?? 80;
     const viewportH = window.innerHeight;
+    // Extra breathing room defined per-section via CSS `scroll-margin-top`.
+    // Backward-compatible: sections that don't set it compute to "0px", so this
+    // is a no-op for the desktop tree. The mobile #services section sets it so
+    // its eyebrow label (e.g. "PÄŤ SLUŽIEB") clears the navbar instead of being
+    // pushed up behind it (the heading we anchor on sits below that label).
+    const scrollMargin =
+        parseFloat(window.getComputedStyle(el).scrollMarginTop) || 0;
     const form = el.querySelector("form");
 
     if (form) {
@@ -41,8 +48,8 @@ export function scrollToPageSection(id: string, behavior: ScrollBehavior = "smoo
 
     const heading = el.querySelector("h1, h2") as HTMLElement | null;
     const top = heading
-        ? heading.getBoundingClientRect().top + window.scrollY - navHeight - 24
-        : el.getBoundingClientRect().top + window.scrollY - navHeight;
+        ? heading.getBoundingClientRect().top + window.scrollY - navHeight - 24 - scrollMargin
+        : el.getBoundingClientRect().top + window.scrollY - navHeight - scrollMargin;
 
     window.scrollTo({
         top: clampScroll(top),

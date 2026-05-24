@@ -26,7 +26,7 @@ export default function MobileServicesGrid() {
     const { t } = useTranslation();
 
     return (
-        <section id="services" className="relative py-16">
+        <section id="services" className="relative scroll-mt-16 py-16">
             <div className="mx-auto max-w-md px-5">
                 {/* Heading */}
                 <div className="mb-10 text-center">
