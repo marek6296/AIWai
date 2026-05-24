@@ -1,8 +1,9 @@
 import { getSupabaseAdmin } from '@/lib/supabase/admin'
-import AdminNav from '../components/AdminNav'
+import AdminShell from '../components/AdminShell'
+import { StatCard, SectionLabel } from '../components/AdminPanels'
 import TagPill from '../components/TagPill'
 import Link from 'next/link'
-import { Sparkles, Mail, Phone, User, Clock, MessagesSquare } from 'lucide-react'
+import { Sparkles, Mail, Phone, User, Clock, MessagesSquare, Inbox, CheckCircle2, XCircle } from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
 
@@ -31,10 +32,10 @@ interface LeadRow {
 }
 
 const STATUS_META: Record<LeadRow['status'], { label: string; cls: string }> = {
-    new: { label: 'Nové', cls: 'bg-amber-100 text-amber-700 border-amber-200' },
-    seen: { label: 'Videné', cls: 'bg-sky-50 text-sky-700 border-sky-200' },
-    contacted: { label: 'Kontaktované', cls: 'bg-emerald-50 text-emerald-700 border-emerald-200' },
-    closed: { label: 'Uzavreté', cls: 'bg-slate-100 text-slate-600 border-slate-200' },
+    new:       { label: 'Nové',         cls: 'border-gold/40 bg-gold/15 text-gold' },
+    seen:      { label: 'Videné',       cls: 'border-sky-400/30 bg-sky-400/10 text-sky-300' },
+    contacted: { label: 'Kontaktované', cls: 'border-emerald-400/30 bg-emerald-400/10 text-emerald-300' },
+    closed:    { label: 'Uzavreté',     cls: 'border-cream/15 bg-cream/[0.04] text-cream/50' },
 }
 
 export default async function LeadsPage() {
@@ -46,139 +47,102 @@ export default async function LeadsPage() {
         .limit(200)
 
     const leads = (data ?? []) as LeadRow[]
-
     const newLeads = leads.filter((l) => l.status === 'new')
     const contactedLeads = leads.filter((l) => l.status === 'contacted')
     const closedLeads = leads.filter((l) => l.status === 'closed')
 
     return (
-        <div className="min-h-screen bg-brand-offwhite flex">
-            <AdminNav />
-            <main className="flex-1 p-8 max-w-5xl">
-                <div className="mb-6 flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-amber-500 flex items-center justify-center">
-                        <Sparkles size={20} className="text-white" />
-                    </div>
-                    <div>
-                        <h1 className="text-2xl font-bold text-brand-indigo">Leady</h1>
-                        <p className="text-brand-indigo/50 text-sm">
-                            Klienti, ktorí nechali kontakt cez chatbota
-                        </p>
-                    </div>
-                </div>
-
-                {error && (
-                    <div className="bg-red-50 border border-red-100 text-red-700 rounded-xl p-4 text-sm mb-6">
-                        Chyba pri načítaní: {error.message}
-                    </div>
-                )}
-
-                {/* Stats */}
-                <div className="grid grid-cols-4 gap-3 mb-8">
-                    <Stat value={newLeads.length} label="Nové" color="text-amber-500" />
-                    <Stat value={contactedLeads.length} label="Kontaktované" color="text-emerald-500" />
-                    <Stat value={closedLeads.length} label="Uzavreté" color="text-slate-500" />
-                    <Stat value={leads.length} label="Celkom" color="text-brand-indigo" />
-                </div>
-
-                {/* New leads block */}
-                <Section title="Nové – treba sa ozvať" items={newLeads} accent />
-
-                {/* Rest */}
-                <Section
-                    title="Ostatné"
-                    items={leads.filter((l) => l.status !== 'new')}
-                />
-            </main>
-        </div>
-    )
-}
-
-function Stat({ value, label, color }: { value: number; label: string; color: string }) {
-    return (
-        <div className="bg-white rounded-2xl p-4 border border-brand-indigo/10 shadow-sm">
-            <div className={`text-2xl font-bold ${color}`}>{value}</div>
-            <div className="text-xs text-brand-indigo/50 mt-1">{label}</div>
-        </div>
-    )
-}
-
-function Section({ title, items, accent = false }: { title: string; items: LeadRow[]; accent?: boolean }) {
-    return (
-        <div className="mb-8">
-            <h2 className="text-sm font-bold text-brand-indigo mb-3 flex items-center gap-2">
-                {title}
-                <span className="text-xs font-semibold bg-brand-indigo/5 text-brand-indigo/60 px-2 py-0.5 rounded-full">
-                    {items.length}
-                </span>
-            </h2>
-
-            {items.length === 0 && (
-                <div className="bg-white rounded-2xl border border-brand-indigo/10 p-8 text-center text-sm text-brand-indigo/40">
-                    Žiadne leady v tejto kategórii.
+        <AdminShell title="Leady" subtitle="Klienti, ktorí nechali kontakt cez chatbota">
+            {error && (
+                <div className="mb-6 rounded-xl border border-red-400/30 bg-red-400/10 p-4 text-sm text-red-300">
+                    Chyba pri načítaní: {error.message}
                 </div>
             )}
 
-            <div className="space-y-3">
-                {items.map((l) => (
-                    <Link
-                        key={l.id}
-                        href={`/admin/conversations/${l.id}`}
-                        className={`block bg-white rounded-2xl p-5 border transition-shadow hover:shadow-md ${
-                            accent && l.status === 'new'
-                                ? 'border-amber-300 ring-1 ring-amber-200/50'
-                                : 'border-brand-indigo/10'
-                        }`}
-                    >
-                        <div className="flex items-start justify-between gap-4 mb-2">
-                            <div className="flex items-center gap-2 flex-wrap">
-                                <span
-                                    className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border ${STATUS_META[l.status].cls}`}
-                                >
-                                    {STATUS_META[l.status].label}
-                                </span>
-                                {l.tags.map((t) => (
-                                    <TagPill key={t} tag={t} />
-                                ))}
-                            </div>
-                            <div className="flex items-center gap-1 text-xs text-brand-indigo/40 whitespace-nowrap">
-                                <Clock size={12} />
-                                {formatSK(l.lead_captured_at || l.updated_at)}
-                            </div>
-                        </div>
-
-                        <div className="flex flex-wrap gap-3 mb-2 text-sm">
-                            {l.lead_name && (
-                                <span className="inline-flex items-center gap-1 text-brand-indigo font-semibold">
-                                    <User size={13} />
-                                    {l.lead_name}
-                                </span>
-                            )}
-                            {l.lead_email && (
-                                <span className="inline-flex items-center gap-1 text-brand-indigo/70">
-                                    <Mail size={13} />
-                                    {l.lead_email}
-                                </span>
-                            )}
-                            {l.lead_phone && (
-                                <span className="inline-flex items-center gap-1 text-brand-indigo/70">
-                                    <Phone size={13} />
-                                    {l.lead_phone}
-                                </span>
-                            )}
-                        </div>
-
-                        {l.lead_interest && (
-                            <p className="text-sm text-brand-indigo/60 line-clamp-2">{l.lead_interest}</p>
-                        )}
-
-                        <div className="mt-2 text-xs text-brand-indigo/40 flex items-center gap-2">
-                            <MessagesSquare size={12} />
-                            {l.message_count} správ
-                        </div>
-                    </Link>
-                ))}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                <StatCard label="Nové"         value={newLeads.length}       icon={Sparkles}     accent="gold" />
+                <StatCard label="Kontaktované" value={contactedLeads.length} icon={CheckCircle2} accent="emerald" />
+                <StatCard label="Uzavreté"     value={closedLeads.length}    icon={XCircle}      accent="cream" />
+                <StatCard label="Celkom"       value={leads.length}          icon={Inbox}        accent="amber" />
             </div>
+
+            <SectionLabel hint={`${newLeads.length} čaká`}>Nové — treba sa ozvať</SectionLabel>
+            <LeadList items={newLeads} accent />
+
+            <SectionLabel>Ostatné</SectionLabel>
+            <LeadList items={leads.filter((l) => l.status !== 'new')} />
+        </AdminShell>
+    )
+}
+
+function LeadList({ items, accent = false }: { items: LeadRow[]; accent?: boolean }) {
+    if (items.length === 0) {
+        return (
+            <div className="rounded-2xl border border-dashed border-cream/10 bg-char-soft/30 p-8 text-center text-sm text-cream/45">
+                Žiadne leady v tejto kategórii.
+            </div>
+        )
+    }
+    return (
+        <div className="space-y-3">
+            {items.map((l) => (
+                <Link
+                    key={l.id}
+                    href={`/admin/conversations/${l.id}`}
+                    className={`block rounded-2xl border bg-char-soft/60 p-5 transition-all hover:border-gold/25 hover:bg-char-soft/80 ${
+                        accent && l.status === 'new'
+                            ? 'border-gold/40 shadow-[0_0_30px_-12px_rgba(201,168,117,0.4)]'
+                            : 'border-cream/[0.08]'
+                    }`}
+                >
+                    <div className="mb-2 flex items-start justify-between gap-4">
+                        <div className="flex flex-wrap items-center gap-2">
+                            <span
+                                className={`inline-flex items-center rounded-md border px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-[0.18em] ${STATUS_META[l.status].cls}`}
+                            >
+                                {STATUS_META[l.status].label}
+                            </span>
+                            {l.tags.map((t) => (
+                                <TagPill key={t} tag={t} />
+                            ))}
+                        </div>
+                        <div className="flex shrink-0 items-center gap-1 font-mono text-[11px] text-cream/40">
+                            <Clock size={11} />
+                            {formatSK(l.lead_captured_at || l.updated_at)}
+                        </div>
+                    </div>
+
+                    <div className="mb-2 flex flex-wrap gap-3 text-sm">
+                        {l.lead_name && (
+                            <span className="inline-flex items-center gap-1.5 font-semibold text-cream">
+                                <User size={13} className="text-gold/70" />
+                                {l.lead_name}
+                            </span>
+                        )}
+                        {l.lead_email && (
+                            <span className="inline-flex items-center gap-1.5 text-cream/70">
+                                <Mail size={13} className="text-cream/50" />
+                                {l.lead_email}
+                            </span>
+                        )}
+                        {l.lead_phone && (
+                            <span className="inline-flex items-center gap-1.5 text-cream/70 font-mono text-xs">
+                                <Phone size={13} className="text-cream/50" />
+                                {l.lead_phone}
+                            </span>
+                        )}
+                    </div>
+
+                    {l.lead_interest && (
+                        <p className="line-clamp-2 text-sm text-cream/60">{l.lead_interest}</p>
+                    )}
+
+                    <div className="mt-2 flex items-center gap-2 font-mono text-xs text-cream/40">
+                        <MessagesSquare size={11} />
+                        {l.message_count} {l.message_count === 1 ? 'správa' : 'správ'}
+                    </div>
+                </Link>
+            ))}
         </div>
     )
 }

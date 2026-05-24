@@ -1,16 +1,17 @@
 import { getSupabaseAdmin } from '@/lib/supabase/admin'
-import AdminNav from '../components/AdminNav'
+import AdminShell from '../components/AdminShell'
+import { SectionLabel } from '../components/AdminPanels'
 import PricingRowEditor from './PricingRow'
-import { DollarSign, RefreshCw } from 'lucide-react'
+import { RefreshCw, Palette, Megaphone, Globe, Bot, Zap } from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
 
-const CATEGORY_LABELS: Record<string, string> = {
-    grafika: '🎨 Logo & Dizajn',
-    marketing: '📣 Marketing & Sociálne siete',
-    web: '🌐 Web & E-shop',
-    chatbot: '🤖 AI Chatbot',
-    automatizacia: '⚡ Automatizácia',
+const CATEGORY_META: Record<string, { label: string; icon: typeof Palette }> = {
+    grafika:        { label: 'Logo a dizajn',         icon: Palette },
+    marketing:      { label: 'Marketing a social',     icon: Megaphone },
+    web:            { label: 'Web a e-shop',           icon: Globe },
+    chatbot:        { label: 'AI Chatbot',              icon: Bot },
+    automatizacia:  { label: 'Automatizácia',           icon: Zap },
 }
 
 const CATEGORY_ORDER = ['grafika', 'marketing', 'web', 'chatbot', 'automatizacia']
@@ -43,70 +44,62 @@ export default async function PricingPage() {
     }
 
     return (
-        <div className="min-h-screen bg-brand-offwhite flex">
-            <AdminNav />
-            <main className="flex-1 p-8 max-w-4xl">
-                <div className="mb-6 flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-emerald-500 flex items-center justify-center">
-                        <DollarSign size={20} className="text-white" />
-                    </div>
-                    <div>
-                        <h1 className="text-2xl font-bold text-brand-indigo">Cenník chatbota</h1>
-                        <p className="text-brand-indigo/50 text-sm">
-                            Ceny sa načítavajú naživo — zmena sa prejaví v bote do 5 minút
-                        </p>
-                    </div>
-                    <div className="ml-auto flex items-center gap-1.5 text-xs text-brand-indigo/40">
-                        <RefreshCw size={12} />
-                        Cache: 5 min
-                    </div>
+        <AdminShell
+            title="Cenník chatbota"
+            subtitle="Ceny sa načítavajú naživo — zmena sa prejaví v bote do 5 minút"
+            actions={
+                <span className="inline-flex items-center gap-1.5 rounded-md border border-cream/10 bg-cream/[0.04] px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-cream/45">
+                    <RefreshCw size={11} />
+                    Cache 5 min
+                </span>
+            }
+        >
+            {error && (
+                <div className="mb-6 rounded-xl border border-amber-400/30 bg-amber-400/10 p-4 text-sm text-amber-300">
+                    <strong>Tabuľka neexistuje.</strong> Spusti migráciu
+                    <code className="mx-1 rounded bg-char-soft px-1.5 py-0.5 font-mono text-xs">supabase/migrations/20260421_pricing.sql</code>
+                    v Supabase SQL Editore.
                 </div>
+            )}
 
-                {error && (
-                    <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 text-sm text-amber-800 mb-6">
-                        <strong>Tabuľka neexistuje.</strong> Spusti migráciu{' '}
-                        <code className="bg-white px-1 rounded">supabase/migrations/20260421_pricing.sql</code>{' '}
-                        v Supabase SQL Editore.
-                    </div>
-                )}
+            {rows.length === 0 && !error && (
+                <div className="rounded-2xl border border-dashed border-cream/10 bg-char-soft/30 p-12 text-center text-cream/45">
+                    Žiadne položky. Spusti SQL migráciu.
+                </div>
+            )}
 
-                {rows.length === 0 && !error && (
-                    <div className="bg-white rounded-2xl border border-brand-indigo/10 p-12 text-center text-brand-indigo/40">
-                        Žiadne položky. Spusti SQL migráciu.
-                    </div>
-                )}
-
-                <div className="space-y-8">
-                    {CATEGORY_ORDER.map((cat) => {
-                        const items = byCategory.get(cat)
-                        if (!items?.length) return null
-                        return (
-                            <div key={cat}>
-                                <h2 className="text-sm font-bold text-brand-indigo mb-3 flex items-center gap-2">
-                                    {CATEGORY_LABELS[cat] ?? cat}
-                                    <span className="text-xs font-normal text-brand-indigo/40">
-                                        ({items.filter((i) => i.is_active).length}/{items.length} aktívnych)
-                                    </span>
-                                </h2>
-                                <div className="space-y-2">
-                                    {items.map((item) => (
-                                        <PricingRowEditor
-                                            key={item.id}
-                                            id={item.id}
-                                            name={item.name}
-                                            priceFrom={item.price_from}
-                                            priceTo={item.price_to}
-                                            unit={item.unit}
-                                            description={item.description}
-                                            isActive={item.is_active}
-                                        />
-                                    ))}
-                                </div>
+            <div className="space-y-2">
+                {CATEGORY_ORDER.map((cat, i) => {
+                    const items = byCategory.get(cat)
+                    if (!items?.length) return null
+                    const meta = CATEGORY_META[cat]
+                    const Icon = meta?.icon ?? Palette
+                    return (
+                        <div key={cat}>
+                            <SectionLabel hint={`${items.filter((i) => i.is_active).length}/${items.length} aktívnych`}>
+                                <span className="inline-flex items-center gap-2">
+                                    <Icon size={11} className="text-gold/60" />
+                                    {meta?.label ?? cat}
+                                </span>
+                            </SectionLabel>
+                            <div className="space-y-2">
+                                {items.map((item) => (
+                                    <PricingRowEditor
+                                        key={item.id}
+                                        id={item.id}
+                                        name={item.name}
+                                        priceFrom={item.price_from}
+                                        priceTo={item.price_to}
+                                        unit={item.unit}
+                                        description={item.description}
+                                        isActive={item.is_active}
+                                    />
+                                ))}
                             </div>
-                        )
-                    })}
-                </div>
-            </main>
-        </div>
+                        </div>
+                    )
+                })}
+            </div>
+        </AdminShell>
     )
 }

@@ -50,10 +50,10 @@ export default function StatusControls({ id, current }: { id: string; current: S
                         key={s}
                         onClick={() => setStatus(s)}
                         disabled={isPending || active}
-                        className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-colors disabled:opacity-60 ${
+                        className={`inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition-colors disabled:opacity-60 ${
                             active
-                                ? 'bg-brand-indigo text-white'
-                                : 'bg-white border border-brand-indigo/15 text-brand-indigo/70 hover:bg-brand-indigo/5'
+                                ? 'border border-gold/40 bg-gold/15 text-gold'
+                                : 'border border-cream/15 bg-cream/[0.04] text-cream/65 hover:text-cream hover:bg-cream/[0.07]'
                         }`}
                     >
                         {STATUS_ICONS[s]}
@@ -64,7 +64,7 @@ export default function StatusControls({ id, current }: { id: string; current: S
             <button
                 onClick={onDelete}
                 disabled={isPending}
-                className="ml-auto inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold text-red-600 hover:bg-red-50 transition-colors disabled:opacity-60"
+                className="ml-auto inline-flex items-center gap-1.5 rounded-md border border-red-400/30 bg-red-400/10 px-3 py-1.5 text-xs font-medium text-red-300 hover:bg-red-400/15 transition-colors disabled:opacity-60"
             >
                 <Trash2 size={13} />
                 Zmazať

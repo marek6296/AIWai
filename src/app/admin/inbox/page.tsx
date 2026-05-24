@@ -1,5 +1,8 @@
 import { createClient } from '@/lib/supabase/server'
-import { Mail, Clock, User, Phone, Tag, MessageSquare, FileText, Inbox } from 'lucide-react'
+import { Mail, Clock, User, Phone, Tag, MessageSquare, FileText, Inbox, CheckCircle2 } from 'lucide-react'
+import AdminShell from '../components/AdminShell'
+import { StatCard, Panel, SectionLabel } from '../components/AdminPanels'
+import DoneButton from './DoneButton'
 
 const TZ = 'Europe/Bratislava'
 
@@ -11,8 +14,6 @@ function formatSKTime(dateStr: string, isDone: boolean): string {
     const timePart = new Intl.DateTimeFormat('sk-SK', { timeZone: TZ, hour: '2-digit', minute: '2-digit', hour12: false }).format(date)
     return `${datePart}, ${timePart}`
 }
-import AdminNav from '../components/AdminNav'
-import DoneButton from './DoneButton'
 
 export const dynamic = 'force-dynamic'
 
@@ -27,149 +28,119 @@ export default async function InboxPage() {
     const forms = formData || []
     const emails = emailData || []
 
-    const newForms = forms.filter(s => s.status !== 'done')
-    const doneForms = forms.filter(s => s.status === 'done')
-    const newEmails = emails.filter(s => s.status !== 'done')
-    const doneEmails = emails.filter(s => s.status === 'done')
+    const newForms = forms.filter((s: { status?: string }) => s.status !== 'done')
+    const doneForms = forms.filter((s: { status?: string }) => s.status === 'done')
+    const newEmails = emails.filter((s: { status?: string }) => s.status !== 'done')
+    const doneEmails = emails.filter((s: { status?: string }) => s.status === 'done')
 
-    const todaySK = new Intl.DateTimeFormat('sk-SK', { timeZone: 'Europe/Bratislava', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date())
-    const todayCount = [...forms, ...emails].filter(s => {
+    const todaySK = new Intl.DateTimeFormat('sk-SK', { timeZone: TZ, year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date())
+    const todayCount = [...forms, ...emails].filter((s: { received_at?: string }) => {
         if (!s.received_at) return false
-        return new Intl.DateTimeFormat('sk-SK', { timeZone: 'Europe/Bratislava', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date(s.received_at)) === todaySK
+        return new Intl.DateTimeFormat('sk-SK', { timeZone: TZ, year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date(s.received_at)) === todaySK
     }).length
 
     return (
-        <div className="min-h-screen bg-brand-offwhite flex">
-            <AdminNav />
+        <AdminShell title="Inbox" subtitle="Webové formuláre a klientske emaily">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <StatCard label="Nevybavené" value={newForms.length + newEmails.length} icon={Inbox} accent="amber" />
+                <StatCard label="Dnes"        value={todayCount} icon={Clock} accent="gold" />
+                <StatCard label="Vybavené"    value={doneForms.length + doneEmails.length} icon={CheckCircle2} accent="emerald" />
+            </div>
 
-            <main className="flex-1 p-8 max-w-5xl">
-                <div className="mb-8">
-                    <h1 className="text-2xl font-bold text-brand-indigo">Inbox</h1>
-                    <p className="text-brand-indigo/50 text-sm mt-1">Formuláre a klientske emaily</p>
-                </div>
+            <SectionLabel hint={`${newForms.length} nových`}>Formuláre z webu</SectionLabel>
+            <SubmissionsSection
+                newItems={newForms}
+                doneItems={doneForms}
+                emptyIcon={<FileText size={28} className="text-cream/15" />}
+                emptyText="Žiadne formuláre"
+                table="form_submissions"
+            />
 
-                {/* Stats */}
-                <div className="grid grid-cols-3 gap-4 mb-8">
-                    <div className="bg-white rounded-2xl p-5 border border-brand-indigo/10 shadow-sm">
-                        <div className="text-3xl font-bold text-amber-500">{newForms.length + newEmails.length}</div>
-                        <div className="text-sm text-brand-indigo/50 mt-1">Nevybavené</div>
-                    </div>
-                    <div className="bg-white rounded-2xl p-5 border border-brand-indigo/10 shadow-sm">
-                        <div className="text-3xl font-bold text-brand-indigo">{todayCount}</div>
-                        <div className="text-sm text-brand-indigo/50 mt-1">Dnes</div>
-                    </div>
-                    <div className="bg-white rounded-2xl p-5 border border-brand-indigo/10 shadow-sm">
-                        <div className="text-3xl font-bold text-emerald-500">{doneForms.length + doneEmails.length}</div>
-                        <div className="text-sm text-brand-indigo/50 mt-1">Vybavených</div>
-                    </div>
-                </div>
-
-                {/* ── Formuláre z webu ── */}
-                <SubmissionsSection
-                    title="Formuláre z webu"
-                    newItems={newForms}
-                    doneItems={doneForms}
-                    emptyText="Žiadne formuláre"
-                    badge="📄 Formulár"
-                    table="form_submissions"
-                />
-
-                <SubmissionsSection
-                    title="Klientske maily"
-                    newItems={newEmails}
-                    doneItems={doneEmails}
-                    emptyText="Žiadne klientske maily"
-                    badge="📧 Email"
-                    icon="inbox"
-                    table="email_submissions"
-                />
-            </main>
-        </div>
+            <SectionLabel hint={`${newEmails.length} nových`}>Klientske maily</SectionLabel>
+            <SubmissionsSection
+                newItems={newEmails}
+                doneItems={doneEmails}
+                emptyIcon={<Mail size={28} className="text-cream/15" />}
+                emptyText="Žiadne klientske maily"
+                table="email_submissions"
+            />
+        </AdminShell>
     )
 }
 
-function SubmissionsSection({ title, newItems, doneItems, emptyText, badge, icon = 'file', table = 'form_submissions' }: {
-    title: string
+function SubmissionsSection({ newItems, doneItems, emptyText, emptyIcon, table }: {
     newItems: Record<string, string>[]
     doneItems: Record<string, string>[]
     emptyText: string
-    badge: string
-    icon?: 'file' | 'inbox'
-    table?: 'form_submissions' | 'email_submissions'
+    emptyIcon: React.ReactNode
+    table: 'form_submissions' | 'email_submissions'
 }) {
     return (
-        <div className="mb-10">
-            <div className="flex items-center gap-2 mb-4 px-1">
-                <div className="w-7 h-7 rounded-lg bg-brand-indigo/10 flex items-center justify-center">
-                    {icon === 'inbox'
-                        ? <Inbox size={14} className="text-brand-indigo" />
-                        : <FileText size={14} className="text-brand-indigo" />
-                    }
-                </div>
-                <h2 className="text-base font-bold text-brand-indigo">{title}</h2>
-                <span className="ml-1 text-xs font-semibold bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full">
-                    {newItems.length} nových
-                </span>
-            </div>
-
-            <div className="space-y-3 mb-4">
+        <>
+            <div className="space-y-3">
                 {!newItems.length && (
-                    <div className="bg-white rounded-2xl p-10 text-center border border-brand-indigo/10">
-                        <Mail size={32} className="mx-auto mb-3 text-brand-indigo/20" />
-                        <p className="text-brand-indigo/40 font-medium">{newItems.length === 0 && doneItems.length > 0 ? 'Všetky vybavené 🎉' : emptyText}</p>
+                    <div className="rounded-2xl border border-dashed border-cream/10 bg-char-soft/30 p-10 text-center">
+                        <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full border border-cream/10 bg-cream/[0.03]">
+                            {emptyIcon}
+                        </div>
+                        <p className="text-sm text-cream/45">{doneItems.length > 0 ? 'Všetky vybavené ✓' : emptyText}</p>
                     </div>
                 )}
 
                 {newItems.map((sub) => (
-                    <SubmissionCard key={sub.id} sub={sub} badge={badge} isDone={false} table={table} />
+                    <SubmissionCard key={sub.id} sub={sub} isDone={false} table={table} />
                 ))}
             </div>
 
             {doneItems.length > 0 && (
-                <div className="space-y-2">
-                    <p className="text-xs text-brand-indigo/30 font-medium px-1 mt-4 mb-2">Vybavené ({doneItems.length})</p>
-                    {doneItems.map((sub) => (
-                        <SubmissionCard key={sub.id} sub={sub} badge={badge} isDone={true} table={table} />
-                    ))}
-                </div>
+                <details className="mt-6 group">
+                    <summary className="cursor-pointer select-none text-[11px] font-mono uppercase tracking-[0.22em] text-cream/35 hover:text-cream/60">
+                        Vybavené ({doneItems.length}) ▾
+                    </summary>
+                    <div className="mt-3 space-y-2">
+                        {doneItems.map((sub) => (
+                            <SubmissionCard key={sub.id} sub={sub} isDone={true} table={table} />
+                        ))}
+                    </div>
+                </details>
             )}
-        </div>
+        </>
     )
 }
 
-function SubmissionCard({ sub, isDone, table = 'form_submissions' }: { sub: Record<string, string>; badge?: string; isDone: boolean; table?: 'form_submissions' | 'email_submissions' }) {
+function SubmissionCard({ sub, isDone, table }: { sub: Record<string, string>; isDone: boolean; table: 'form_submissions' | 'email_submissions' }) {
     return (
-        <div className={`bg-white rounded-2xl p-${isDone ? '4' : '5'} border transition-all ${
+        <div className={`rounded-2xl border transition-all ${
             isDone
-                ? 'border-brand-indigo/5 opacity-60'
-                : 'border-brand-indigo/10 shadow-sm hover:shadow-md hover:shadow-brand-indigo/10 hover:-translate-y-0.5'
+                ? 'border-cream/[0.05] bg-char-soft/30 opacity-55 p-4'
+                : 'border-cream/[0.08] bg-char-soft/60 hover:border-gold/25 hover:bg-char-soft/80 p-5'
         }`}>
             <div className="flex items-start justify-between gap-4">
                 <div className="flex items-start gap-3 flex-1 min-w-0">
-                    <div className={`rounded-xl bg-brand-indigo/5 flex items-center justify-center shrink-0 ${isDone ? 'w-8 h-8' : 'w-10 h-10'}`}>
-                        <User size={isDone ? 14 : 18} className="text-brand-indigo/40" />
+                    <div className={`rounded-xl border border-cream/[0.08] bg-cream/[0.03] flex items-center justify-center shrink-0 ${isDone ? 'w-8 h-8' : 'w-10 h-10'}`}>
+                        <User size={isDone ? 13 : 16} className="text-cream/45" />
                     </div>
                     <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 flex-wrap">
-                            <span className={`font-semibold text-brand-indigo ${isDone ? 'text-sm' : ''}`}>{sub.name || sub.email}</span>
-                            {sub.name && <span className="text-brand-indigo/40 text-sm hidden sm:block">{sub.email}</span>}
+                            <span className={`font-medium text-cream ${isDone ? 'text-sm' : ''}`}>{sub.name || sub.email}</span>
+                            {sub.name && <span className="text-cream/40 text-sm hidden sm:block">{sub.email}</span>}
                         </div>
-                        {sub.subject && <p className="text-brand-indigo/70 text-sm mt-0.5 font-medium truncate">{sub.subject}</p>}
+                        {sub.subject && <p className="text-cream/70 text-sm mt-0.5 font-medium truncate">{sub.subject}</p>}
                         {!isDone && sub.message && (
-                            <p className="text-brand-indigo/50 text-sm mt-1 line-clamp-2 flex items-start gap-1.5">
-                                <MessageSquare size={13} className="mt-0.5 shrink-0" />
+                            <p className="text-cream/55 text-sm mt-1.5 line-clamp-2 flex items-start gap-1.5">
+                                <MessageSquare size={13} className="mt-0.5 shrink-0 text-cream/35" />
                                 {sub.message}
                             </p>
                         )}
-                        <div className="flex items-center gap-3 mt-1">
-                            {sub.phone && <span className="text-brand-indigo/35 text-xs flex items-center gap-1"><Phone size={10} />{sub.phone}</span>}
-                            {sub.project_type && <span className="text-brand-indigo/35 text-xs flex items-center gap-1"><Tag size={10} />{sub.project_type}</span>}
+                        <div className="flex items-center gap-3 mt-2">
+                            {sub.phone && <span className="text-cream/40 text-xs flex items-center gap-1 font-mono"><Phone size={10} />{sub.phone}</span>}
+                            {sub.project_type && <span className="text-gold/70 text-xs flex items-center gap-1 font-mono uppercase tracking-wider"><Tag size={10} />{sub.project_type}</span>}
                         </div>
                     </div>
                 </div>
                 <div className="flex flex-col items-end gap-2 shrink-0">
-                    <div className="flex items-center gap-1 text-xs text-brand-indigo/35">
-                        <Clock size={12} />
+                    <div className="flex items-center gap-1 text-xs text-cream/40 font-mono">
+                        <Clock size={11} />
                         {formatSKTime(sub.received_at, isDone)}
                     </div>
                     <DoneButton id={sub.id} isDone={isDone} table={table} />

@@ -29,10 +29,10 @@ export default function DoneButton({
         <button
             onClick={handleClick}
             disabled={loading}
-            className={`flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full transition-all disabled:opacity-50 ${
+            className={`flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg transition-all disabled:opacity-50 ${
                 isDone
-                    ? 'bg-emerald-100 text-emerald-700 border border-emerald-200 hover:bg-emerald-50'
-                    : 'bg-white text-brand-indigo/50 border border-brand-indigo/15 hover:bg-brand-indigo/5 hover:text-brand-indigo'
+                    ? 'bg-emerald-400/10 text-emerald-300 border border-emerald-400/30 hover:bg-emerald-400/15'
+                    : 'bg-cream/[0.04] text-cream/65 border border-cream/15 hover:bg-gold/10 hover:text-gold hover:border-gold/30'
             }`}
         >
             {isDone ? (

@@ -28,7 +28,7 @@ export default function MobileHero() {
                 {/* Logo + morph cluster — tight inner gap so the words sit
                     close under the logo, then larger gap to subtitle / CTAs. */}
                 <div className="flex w-full flex-col items-center gap-2">
-                    <div className="mobile-hero-fade-in-1 flex justify-center">
+                    <div className="mobile-rise-logo flex justify-center">
                         <Image
                             src="/logo-v2.png"
                             alt="AIWai"
@@ -39,9 +39,9 @@ export default function MobileHero() {
                         />
                     </div>
 
-                    {/* Headline — CSS-only morph cycle with clip-path sweep */}
+                    {/* Headline — blur-crossfade morph cycle (PC-like gooey) */}
                     <div
-                        className="mobile-morph-stage w-full"
+                        className="mobile-morph-stage mobile-rise mobile-rise-d2 w-full"
                         style={{ height: "clamp(3.25rem, 12.5vw, 5rem)" }}
                         aria-label={MORPH_WORDS.join(", ")}
                     >
@@ -62,12 +62,12 @@ export default function MobileHero() {
                 </div>
 
                 {/* Subtitle — static, fades in once */}
-                <p className="mobile-hero-fade-in-2 mx-auto max-w-[22rem] text-[15px] font-light leading-relaxed text-cream/70">
+                <p className="mobile-rise mobile-rise-d3 mx-auto max-w-[22rem] text-[15px] font-light leading-relaxed text-cream/70">
                     {t("hero.subtitle")}
                 </p>
 
                 {/* CTAs — full-width primary, ghost secondary. Big tap areas. */}
-                <div className="mobile-hero-fade-in-3 mt-1 flex w-full flex-col items-center gap-3">
+                <div className="mobile-rise mobile-rise-d4 mt-1 flex w-full flex-col items-center gap-3">
                     <button
                         type="button"
                         onClick={() => scrollToPageSection("contact")}

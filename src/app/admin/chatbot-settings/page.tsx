@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import AdminShell from '../components/AdminShell'
 import {
     Bot, Settings, Brain, BookOpen, Zap, LogOut,
     Save, Upload, Trash2, CheckCircle, AlertCircle,
@@ -224,58 +225,27 @@ export default function ChatbotAdminPage() {
     const knowledgeTotalChars = config.knowledge?.combinedText?.length || 0
 
     return (
-        <div className="min-h-screen bg-[#080B1A] text-white flex flex-col">
-            {/* Background */}
-            <div className="fixed inset-0 bg-[linear-gradient(rgba(216,185,138,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(216,185,138,0.02)_1px,transparent_1px)] bg-[size:60px_60px] pointer-events-none" />
-            <div className="fixed top-0 right-0 w-[600px] h-[400px] bg-[#D8B98A]/4 rounded-full blur-[150px] pointer-events-none" />
-
-            {/* Header */}
-            <header className="relative z-10 border-b border-white/5 bg-white/[0.02] backdrop-blur-xl sticky top-0">
-                <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#D8B98A] to-[#C4A070] flex items-center justify-center">
-                            <Bot size={20} className="text-[#1C1F3A]" />
-                        </div>
-                        <div>
-                            <h1 className="font-bold text-base leading-tight">Chatbot Admin</h1>
-                            <p className="text-xs text-white/30">AIWai Management Console</p>
-                        </div>
+        <AdminShell
+            title="Chatbot · Nastavenia"
+            subtitle="Konfigurácia AIWai chatbota — model, prompt, knowledge base"
+            actions={
+                <div className="flex items-center gap-2">
+                    <div className={`inline-flex items-center gap-2 rounded-md border px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.18em] ${config.general.enabled ? 'border-emerald-400/40 bg-emerald-400/10 text-emerald-300' : 'border-red-400/40 bg-red-400/10 text-red-300'}`}>
+                        <span className={`h-1.5 w-1.5 rounded-full ${config.general.enabled ? 'bg-emerald-400 animate-pulse' : 'bg-red-400'}`} />
+                        {config.general.enabled ? 'Live' : 'Vypnutý'}
                     </div>
-
-                    <div className="flex items-center gap-3">
-                        {/* Live status */}
-                        <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium border ${config.general.enabled ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' : 'bg-red-500/10 border-red-500/20 text-red-400'}`}>
-                            <span className={`w-1.5 h-1.5 rounded-full ${config.general.enabled ? 'bg-emerald-400 animate-pulse' : 'bg-red-400'}`} />
-                            {config.general.enabled ? 'Live' : 'Vypnutý'}
-                        </div>
-
-                        {/* Save button */}
-                        <button
-                            onClick={handleSave}
-                            disabled={saving}
-                            className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#D8B98A] to-[#C4A070] text-[#1C1F3A] rounded-xl text-sm font-bold hover:opacity-90 disabled:opacity-50 transition-opacity"
-                        >
-                            {saving ? <Sparkles size={16} className="animate-spin" /> : saveStatus === 'success' ? <CheckCircle size={16} /> : saveStatus === 'error' ? <AlertCircle size={16} /> : <Save size={16} />}
-                            {saving ? 'Ukladám...' : saveStatus === 'success' ? 'Uložené!' : saveStatus === 'error' ? 'Chyba!' : 'Uložiť'}
-                        </button>
-
-                        <Link
-                            href="/admin/inbox"
-                            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 text-amber-400 border border-amber-500/30 transition-all text-sm font-semibold"
-                        >
-                            <Inbox size={16} />
-                            Email Inbox
-                        </Link>
-
-                        <button onClick={handleLogout} className="p-2 rounded-xl text-white/40 hover:text-white/80 hover:bg-white/5 transition-all" title="Odhlásiť">
-                            <LogOut size={18} />
-                        </button>
-                    </div>
+                    <button
+                        onClick={handleSave}
+                        disabled={saving}
+                        className="inline-flex items-center gap-2 rounded-lg border border-gold/50 bg-gold/20 px-4 py-2 text-sm font-medium text-gold hover:bg-gold/30 disabled:opacity-50 transition"
+                    >
+                        {saving ? <Sparkles size={14} className="animate-spin" /> : saveStatus === 'success' ? <CheckCircle size={14} /> : saveStatus === 'error' ? <AlertCircle size={14} /> : <Save size={14} />}
+                        {saving ? 'Ukladám…' : saveStatus === 'success' ? 'Uložené' : saveStatus === 'error' ? 'Chyba' : 'Uložiť'}
+                    </button>
                 </div>
-            </header>
-
-            {/* Body */}
-            <div className="flex-1 flex relative z-10 max-w-7xl mx-auto w-full px-6 py-8 gap-8">
+            }
+        >
+            <div className="flex gap-8">
 
                 {/* Sidebar tabs */}
                 <aside className="w-52 shrink-0">
@@ -668,7 +638,7 @@ export default function ChatbotAdminPage() {
                     </div>
                 </main>
             </div>
-        </div>
+        </AdminShell>
     )
 }
 

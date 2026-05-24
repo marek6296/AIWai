@@ -18,12 +18,12 @@ export default function NotesEditor({ id, initial }: { id: string; initial: stri
     }
 
     return (
-        <div className="bg-white rounded-2xl border border-brand-indigo/10 p-5">
-            <div className="flex items-center gap-2 mb-3">
-                <StickyNote size={16} className="text-amber-500" />
-                <h3 className="font-semibold text-brand-indigo text-sm">Interné poznámky</h3>
+        <div className="rounded-2xl border border-cream/[0.08] bg-char-soft/60 p-5">
+            <div className="mb-3 flex items-center gap-2">
+                <StickyNote size={14} className="text-gold/70" />
+                <h3 className="font-display text-sm font-semibold text-cream">Interné poznámky</h3>
                 {saved && (
-                    <span className="ml-auto inline-flex items-center gap-1 text-xs text-emerald-600">
+                    <span className="ml-auto inline-flex items-center gap-1 text-xs text-emerald-300">
                         <Check size={12} /> Uložené
                     </span>
                 )}
@@ -33,12 +33,12 @@ export default function NotesEditor({ id, initial }: { id: string; initial: stri
                 onChange={(e) => setValue(e.target.value)}
                 placeholder="Tvoje poznámky o tomto klientovi (neviditeľné pre klienta)…"
                 rows={4}
-                className="w-full bg-brand-offwhite border border-brand-indigo/10 rounded-xl p-3 text-sm text-brand-indigo placeholder:text-brand-indigo/40 focus:outline-none focus:border-brand-indigo/30 resize-y"
+                className="w-full resize-y rounded-xl border border-cream/15 bg-cream/[0.03] p-3 text-sm text-cream placeholder:text-cream/35 focus:border-gold/40 focus:outline-none"
             />
             <button
                 onClick={save}
                 disabled={isPending || value === initial}
-                className="mt-3 px-4 py-2 bg-brand-indigo text-white rounded-full text-xs font-semibold hover:bg-brand-indigo/90 disabled:opacity-50 transition-colors"
+                className="mt-3 rounded-lg border border-gold/40 bg-gold/15 px-4 py-2 text-xs font-medium text-gold transition-colors hover:bg-gold/25 disabled:opacity-50"
             >
                 {isPending ? 'Ukladám…' : 'Uložiť poznámky'}
             </button>

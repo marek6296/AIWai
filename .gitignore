@@ -31,6 +31,9 @@ yarn-error.log*
 # vercel
 .vercel
 
+# claude worktrees — nested working copies, nepatria do gitu
+.claude/worktrees/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

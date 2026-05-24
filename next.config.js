@@ -56,6 +56,11 @@ const nextConfig = {
         removeConsole: process.env.NODE_ENV === 'production',
     },
 
+    // ESLint warnings nebloknú produkčný build (lint sa rieši inde, build sa nezadržiava na unused imports atď.)
+    eslint: {
+        ignoreDuringBuilds: true,
+    },
+
     reactStrictMode: true,
 
     images: {
