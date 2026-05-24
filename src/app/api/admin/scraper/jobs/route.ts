@@ -26,8 +26,8 @@ export async function GET(req: NextRequest) {
 }
 
 const PostBody = z.object({
-    category: z.string().min(1).max(80),
-    cities: z.array(z.string().min(1).max(80)).min(1).max(10),
+    categories: z.array(z.string().min(1).max(80)).min(1).max(40),
+    cities: z.array(z.string().min(1).max(80)).min(1).max(200),
     max_per_city: z.number().int().min(1).max(100).default(20),
 });
 

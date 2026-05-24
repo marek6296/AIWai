@@ -19,6 +19,7 @@ import {
     type LucideIcon,
 } from "lucide-react";
 import { useState, type ReactNode } from "react";
+import { ScraperStatusWidget } from "./ScraperStatusWidget";
 
 // ── NAV ────────────────────────────────────────────────────────────────────
 
@@ -137,6 +138,9 @@ export default function AdminShell({
                     {children}
                 </main>
             </div>
+
+            {/* Floating scraper status widget — visible across all admin pages */}
+            <ScraperStatusWidget />
         </div>
     );
 }
