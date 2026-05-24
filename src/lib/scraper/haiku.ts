@@ -21,40 +21,61 @@ Píšeš krátky, **formálny** outreach email firme na základe auditu jej webu
 
 1. POZDRAV: "Dobrý deň prajem," alebo "Dobrý deň,". NIKDY "Ahoj" / "Čau".
 
-2. WEBSITE REVIEW INTRO (1 veta): zmieň že ste si pozreli ich web. Použi VŽDY niektorú z týchto variácií (alebo veľmi podobné, prirodzene znejúce):
+2. INTRO (1 veta) — závisí od toho či má firma web:
+
+   ── Ak firma MÁ web (VARIANT A): ──
    ✅ "pozreli sme si váš web a chceli by sme sa s vami podeliť o pár poznámok."
-   ✅ "pozreli sme si váš web a radi by sme sa s vami podelili o niekoľko poznámok."
    ✅ "pozreli sme si vašu webovú stránku a chceli by sme sa s vami podeliť o pár postrehov."
+
+   ── Ak firma NEMÁ web (VARIANT B): ──
+   ✅ "narazili sme na vašu firmu a chceli by sme sa s vami podeliť o pár myšlienok."
+   ✅ "našli sme vašu firmu cez Google Maps a chceli by sme vám napísať pár slov."
+   ❗ NESPOMÍNAJ "pozreli sme si váš web" ak firma web NEMÁ — to nedáva zmysel.
+
    ⚠ NIKDY nepíš "ponúknuť poznámky", "ponúkli niekoľko poznámok" — TO NEDÁVA ZMYSEL po slovensky. Poznámky sa **zdieľajú**, nie ponúkajú.
    ⚠ NIKDY nepíš "po krátkom audite" — znie príliš formálne/cudzie.
    ⚠ NIKDY nepíš "všimli sme si 3 veci" / "identifikovali sme 5 bodov" — žiadne čísla, len plynulý text.
 
-3. ČO JE DOBRÉ + ČO BY SA DALO VYLEPŠIŤ (2-4 vety, plynulý text bez bullet bodov):
-   - Najprv stručne vyzdvihni 1-2 pozitíva (z auditu strengths)
-   - Potom prirodzene prejdi do toho, čo by sa dalo posunúť ďalej (z weaknesses)
+3. OBSAH ZÁVISÍ OD TOHO ČI MAJÚ WEB:
+
+   ── VARIANT A — firma MÁ webovú stránku (audit obsahuje strengths/weaknesses) ──
+   Plynulý text 2-4 vety:
+   - Najprv stručne vyzdvihni 1-2 pozitíva (z audit strengths, BEZ zakázaných tém)
+   - Potom prirodzene prejdi do toho, čo by sa dalo posunúť ďalej (z weaknesses, BEZ zakázaných tém)
    - Píš ako keby si rozprával s majiteľom firmy, nie ako zoznam
    - **ZAKÁZANÉ formulácie:** "všimli sme si X vecí", "identifikovali sme N bodov", "našli sme tri problémy", "dve veci by sme zlepšili", akékoľvek POČÍTANIE. Žiadne "po prvé / po druhé".
    ✅ "Stránka má jasnú štruktúru a kontakt je rýchlo k dispozícii. Zaujalo nás, že by sa dala ešte vyladiť mobilná verzia, a vizuálne by web mohol pôsobiť o niečo modernejšie — typografia a niektoré sekcie majú rezervu."
 
+   ── VARIANT B — firma NEMÁ webovú stránku (audit má 'no_website: true' alebo weaknesses obsahuje "nemá vlastnú web stránku") ──
+   Napíš empaticky 3-4 vety v tomto duchu:
+   "všimli sme si, že vaša firma zatiaľ nemá vlastnú webovú stránku. V dnešnej dobe je práve web najsilnejším marketingovým nástrojom — zákazník vás cez Google nájde, vidí čo robíte, môže si rezervovať, objednať alebo vás priamo kontaktovať. Bez stránky vám utekajú zákazníci ku konkurencii ktorá ju má. Radi by sme vám preto ponúkli moderné riešenie šité na vašu firmu."
+   Variuj formulácie, ale **vždy zdôrazni**:
+   - Web = nepretržitá prezentácia 24/7
+   - Buduje dôveryhodnosť (firma bez webu = vyzerá menej profi)
+   - Privedie nových zákazníkov (Google, mapy, sociálne siete)
+   - Šetrí čas (informácie, ceny, formuláre online namiesto telefonátov)
+
 🚫 **ZAKÁZANÉ TÉMY — NIKDY ich nespomínaj v emaile:**
    - FOTKY / fotografie / vizuály / obrázky / foto / snímky / galérie / pictures / photos
    - RECENZIE / testimonials / hodnotenia zákazníkov / referenčné citáty / reviews
+   - TECHNICKÉ CHYBY / PHP warning / JS error / 404 / bugy / debug správy — klient nevie čo to je a znie negatívne
    Aj keď audit tieto témy spomína, **úplne ich vynechaj**.
-   Namiesto toho spomeň iné vylepšenia: dizajn, štruktúru, rýchlosť, SEO, mobil, branding, CTA, dôveryhodnosť (cez certifikáty/portfólio, nie cez recenzie), AI chatbot, online objednávky, automatizácie.
+   Namiesto toho spomeň iné vylepšenia: moderný dizajn, štruktúru, rýchlosť, SEO, mobilnú verziu, branding, prehľadné CTA, dôveryhodnosť cez profesionálny vzhľad, AI chatbot, online objednávky, automatizácie.
 
 4. SERVICE OFFER + ČO ROBÍME (formátovaný blok):
    Krátka úvodná veta (1 veta) a potom **vždy** ponúkni tieto 4 oblasti AIWai ako bullet list (každý riadok začni "- "):
 
-   "V AIWai pomáhame slovenským firmám zlepšiť ich digitálnu prezentáciu — robíme:
+   "V AIWai pomáhame slovenským firmám rásť cez kvalitnú digitálnu prezentáciu. Moderná webová stránka dnes priťahuje nových zákazníkov, buduje dôveru a šetrí čas pri komunikácii — preto je často prvý a najdôležitejší kanál. Ponúkame:
 
-   - **Webové stránky** — moderné weby a e-shopy na mieru
-   - **Grafiku a branding** — logo, vizuálna identita, sociálne siete
-   - **AI chatboty** — automatické odpovede na webe alebo Messengeri
-   - **AI automatizácie procesov** — šetria čas pri komunikácii, objednávkach a administratíve
+   - **Webové stránky** — moderné weby a e-shopy na mieru, ktoré reálne privádzajú zákazníkov
+   - **Grafiku a branding** — logo, vizuálna identita, profesionálny vzhľad značky
+   - **AI chatboty** — automatické odpovede na webe či Messengeri 24/7
+   - **AI automatizácie procesov** — šetria čas pri objednávkach, komunikácii a administratíve
 
-   Z toho čo sme videli na vašom webe by sme začali s {1-2 oblasti relevantné pre slabiny}."
+   {pre variant A: 'Z toho čo sme videli na vašom webe by sme začali s ...'}
+   {pre variant B: 'Začali by sme práve modernou webovou stránkou, ktorá vám otvorí dvere k novým zákazníkom.'}"
 
-   ➡ Použi presne tento formát (úvod, prázdny riadok, 4 bullety s "- " a **bold** prvými 2-3 slovami, prázdny riadok, jedna nasledujúca veta čo doporučujeme).
+   ➡ Použi presne tento formát (úvod-2 vety, prázdny riadok, 4 bullety s "- " a **bold** prvými 2-3 slovami, prázdny riadok, jedna nasledujúca veta s odporúčaním).
 
 5. VALUE + PRICING (1 veta):
    ✅ "Pracujeme s najlepšími cenami na trhu pre podobné riešenia."
@@ -94,8 +115,8 @@ Povolený markdown v body:
   - [text](url) hyperlinks (len v podpise pre www.aiwai.app)
 Žiadne \`\`\`json\`\`\` bloky, žiadny iný markdown (žiadne #, *, _, >).`;
 
-/** Odfiltruje zakázané témy (fotky/vizuály, recenzie/testimonials) pred odoslaním do email promptu. */
-const FORBIDDEN_RE = /\b(fotk|fotograf|vizu[aá]l|obrázk|foto|sn[ií]m|picture|photo|images?|gallery|galéri|recenz|review|testimonial|hodnoten[ií]|referenc[ií])/i;
+/** Odfiltruje zakázané témy pred odoslaním do email promptu. */
+const FORBIDDEN_RE = /\b(fotk|fotograf|vizu[aá]l|obrázk|foto|sn[ií]m|picture|photo|images?|gallery|galéri|recenz|review|testimonial|hodnoten[ií]|referenc[ií]|warning|warn\b|chyb[ay]|chyba|error|404|debug|php|bug)/i;
 
 function stripForbiddenMentions(items: string[]): string[] {
     return items.filter((s) => !FORBIDDEN_RE.test(s));
@@ -118,10 +139,20 @@ export async function generateOutreachEmail(lead: Lead): Promise<OutreachEmail> 
 
     const client = new OpenAI({ apiKey });
 
+    // Detekcia: má firma webovú stránku?
+    const noWebsite = !lead.website || lead.audit_status === "no_website" ||
+        (audit as { no_website?: boolean }).no_website === true;
+
+    const variantHint = noWebsite
+        ? `⚠ Táto firma NEMÁ vlastnú webovú stránku. Použi VARIANT B v sekcii 3 (empaticky vysvetli prečo je web v dnešnej dobe kľúčový a ponúkni naše riešenie).`
+        : `Táto firma má webovú stránku ${lead.website}. Použi VARIANT A v sekcii 3 (1-2 pozitíva + plynulý priestor na zlepšenie zo SLABÍN, BEZ zakázaných tém).`;
+
     const userPrompt = `Firma: ${lead.name}
-Web: ${lead.website || "—"}
+Web: ${lead.website || "(žiadny web)"}
 Kategória: ${lead.category || "—"}
 Mesto: ${lead.location || "—"}
+
+${variantHint}
 
 AUDIT WEBU:
 SILNÉ STRÁNKY:
@@ -133,7 +164,7 @@ ${cleanWeaknesses.map((s) => "- " + s).join("\n") || "  (žiadne)"}
 ${cleanOpportunity ? `PRÍLEŽITOSŤ:\n${cleanOpportunity}\n` : ""}
 SCORE: ${audit.score}/10
 
-Napíš outreach email presne podľa 7-sekciovej šablóny. Vyber 1-3 najrelevantnejšie slabiny ako plynulé pozorovania v sekcii 3 — NIKDY nespomínaj fotky/fotografie/vizuály ani recenzie/testimonials/hodnotenia. Ponúk LEN služby relevantné pre tieto slabiny v sekcii 4.`;
+Napíš outreach email presne podľa šablóny. Vyber 1-3 najrelevantnejšie body ako plynulé pozorovania v sekcii 3 (BEZ zakázaných tém: fotky, recenzie, technické chyby/warningy/PHP/error). Sekcia 4 vždy obsahuje bullet list všetkých 4 služieb.`;
 
     const response = await client.chat.completions.create({
         model: EMAIL_MODEL,
