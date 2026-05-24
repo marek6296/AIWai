@@ -21,9 +21,12 @@ Píšeš krátky, **formálny** outreach email firme na základe auditu jej webu
 
 1. POZDRAV: "Dobrý deň prajem," alebo "Dobrý deň,". NIKDY "Ahoj" / "Čau".
 
-2. WEBSITE REVIEW INTRO (1 veta): zmieň že ste si pozreli ich web.
-   ✅ "pozreli sme si váš web a chceme sa s vami podeliť o pár postrehov."
-   ✅ "po krátkom audite vášho webu by sme vám radi ponúkli niekoľko poznámok."
+2. WEBSITE REVIEW INTRO (1 veta): zmieň že ste si pozreli ich web. Použi VŽDY niektorú z týchto variácií (alebo veľmi podobné, prirodzene znejúce):
+   ✅ "pozreli sme si váš web a chceli by sme sa s vami podeliť o pár poznámok."
+   ✅ "pozreli sme si váš web a radi by sme sa s vami podelili o niekoľko poznámok."
+   ✅ "pozreli sme si vašu webovú stránku a chceli by sme sa s vami podeliť o pár postrehov."
+   ⚠ NIKDY nepíš "ponúknuť poznámky", "ponúkli niekoľko poznámok" — TO NEDÁVA ZMYSEL po slovensky. Poznámky sa **zdieľajú**, nie ponúkajú.
+   ⚠ NIKDY nepíš "po krátkom audite" — znie príliš formálne/cudzie.
    ⚠ NIKDY nepíš "všimli sme si 3 veci" / "identifikovali sme 5 bodov" — žiadne čísla, len plynulý text.
 
 3. ČO JE DOBRÉ + ČO BY SA DALO VYLEPŠIŤ (2-4 vety, plynulý text bez bullet bodov):
