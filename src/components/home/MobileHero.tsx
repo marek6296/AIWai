@@ -26,7 +26,7 @@ export default function MobileHero() {
         <section className="relative min-h-[100dvh] w-full overflow-hidden">
             <div className="relative z-10 mx-auto flex min-h-[100dvh] max-w-md flex-col items-center justify-center gap-5 sm:gap-6 px-6 pt-20 pb-24 text-center">
                 {/* Logo */}
-                <div className="mobile-hero-fade-in-1 flex justify-center">
+                <div className="mobile-rise-logo flex justify-center">
                     <Image
                         src="/logo-v2.png"
                         alt="AIWai"
@@ -39,7 +39,7 @@ export default function MobileHero() {
 
                 {/* Headline — CSS-only morph cycle */}
                 <div
-                    className="mobile-morph-stage w-full"
+                    className="mobile-morph-stage mobile-rise mobile-rise-d2 w-full"
                     style={{ height: "clamp(3.25rem, 12.5vw, 5rem)" }}
                     aria-label={MORPH_WORDS.join(", ")}
                 >
@@ -59,12 +59,12 @@ export default function MobileHero() {
                 </div>
 
                 {/* Subtitle — static, fades in once */}
-                <p className="mobile-hero-fade-in-2 mx-auto max-w-[22rem] text-[15px] font-light leading-relaxed text-cream/70">
+                <p className="mobile-rise mobile-rise-d3 mx-auto max-w-[22rem] text-[15px] font-light leading-relaxed text-cream/70">
                     {t("hero.subtitle")}
                 </p>
 
                 {/* CTAs — full-width primary, ghost secondary. Big tap areas. */}
-                <div className="mobile-hero-fade-in-3 mt-1 flex w-full flex-col items-center gap-3">
+                <div className="mobile-rise mobile-rise-d4 mt-1 flex w-full flex-col items-center gap-3">
                     <button
                         type="button"
                         onClick={() => scrollToPageSection("contact")}

@@ -422,24 +422,48 @@ canvas[style*="position: fixed"] {
 ::-moz-selection { background: rgba(216, 185, 138, 0.25); color: #1C1F3A; }
 
 /* ──────────────────────────────────────
-   Mobile hero — fade-ins (Safari-safe, opacity only)
+   Mobile hero — staggered entrance "flow" (rise + fade)
    ──────────────────────────────────────
-   No transforms — Safari Mobile rasterizes text inside animated transforms
-   with reduced quality (blurry). Opacity-only transitions keep text crisp. */
-@keyframes mobileFadeIn {
-  from { opacity: 0; }
-  to   { opacity: 1; }
+   Each element fades in while drifting up a touch, one after another, so the
+   hero settles in with a premium flow instead of snapping in. The transform
+   ENDS at translateY(0)/scale(1), so text is fully crisp at rest — the Safari
+   transform-rasterization blur only affects text *mid-transform*, which here
+   is a brief one-shot, never persistent. */
+@keyframes mobileRise {
+  from { opacity: 0; transform: translateY(26px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
-.mobile-hero-fade-in-1 { opacity: 0; animation: mobileFadeIn 0.7s ease-out 0.05s forwards; }
-.mobile-hero-fade-in-2 { opacity: 0; animation: mobileFadeIn 0.7s ease-out 0.6s  forwards; }
-.mobile-hero-fade-in-3 { opacity: 0; animation: mobileFadeIn 0.7s ease-out 1.0s  forwards; }
+@keyframes mobileLogoRise {
+  from { opacity: 0; transform: translateY(22px) scale(0.92); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.mobile-rise {
+  opacity: 0;
+  animation: mobileRise 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+  will-change: opacity, transform;
+}
+.mobile-rise-logo {
+  opacity: 0;
+  animation: mobileLogoRise 1.1s cubic-bezier(0.22, 1, 0.36, 1) 0.1s both;
+  will-change: opacity, transform;
+}
+/* Staggered delays — logo first, then headline, subtitle, CTAs. The headline
+   stage (d2) lands just as the first morph word blurs in (see morph delay). */
+.mobile-rise-d2 { animation-delay: 0.5s; }
+.mobile-rise-d3 { animation-delay: 0.85s; }
+.mobile-rise-d4 { animation-delay: 1.15s; }
 
 /* ──────────────────────────────────────
-   Mobile hero — CSS-only morph (Safari-safe)
+   Mobile hero — word morph (PC-like gooey, tuned for phones)
    ──────────────────────────────────────
-   Pure opacity keyframes. No transforms, no filters, no GPU compositing —
-   keeps text crisp on iOS Safari. Five words sharing one stage, each
-   visible ~1.6s of an 8s cycle. */
+   Mirrors the desktop GooeyText feel — words blur-crossfade into one another
+   — but WITHOUT the SVG threshold filter (the thing that stuttered + blurred
+   text on iOS). Each word blurs in, holds perfectly sharp (blur 0) for most of
+   its slot, then blurs out as the next blurs in. The overlap on the blur edges
+   is what reads as the gooey "merge". Blur peaks at 8px only during the short
+   ~0.5s transitions, so at rest the text is always crisp and the GPU is idle.
+   Pacing matches PC: 9s loop / 5 words = 1.8s per word. */
 .mobile-morph-stage {
   position: relative;
   display: flex;
@@ -453,33 +477,47 @@ canvas[style*="position: fixed"] {
   align-items: center;
   justify-content: center;
   opacity: 0;
-  /* Starting pose: letters spaced out, clipped from the right.
-     Safari respects the -webkit-clip-path alias so iOS still wipes. */
-  letter-spacing: 0.18em;
-  clip-path: inset(0 100% 0 0);
-  -webkit-clip-path: inset(0 100% 0 0);
-  animation: mobileMorph 12s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  transform: translateZ(0);
+  animation: mobileMorph 9s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  will-change: opacity, filter;
   text-rendering: geometricPrecision;
   -webkit-font-smoothing: antialiased;
 }
-/* 12s cycle / 5 words = 2.4s slot apiece (1s reveal + 0.8s hold + 0.6s exit). */
-.mobile-morph-word:nth-child(1) { animation-delay: 0s;   }
-.mobile-morph-word:nth-child(2) { animation-delay: 2.4s; }
-.mobile-morph-word:nth-child(3) { animation-delay: 4.8s; }
-.mobile-morph-word:nth-child(4) { animation-delay: 7.2s; }
-.mobile-morph-word:nth-child(5) { animation-delay: 9.6s; }
+/* 9s loop, 1.8s step. +0.5s base offset so the first word blurs in right as
+   the headline stage finishes rising (.mobile-rise-d2 lands at ~0.5s). */
+.mobile-morph-word:nth-child(1) { animation-delay: 0.5s; }
+.mobile-morph-word:nth-child(2) { animation-delay: 2.3s; }
+.mobile-morph-word:nth-child(3) { animation-delay: 4.1s; }
+.mobile-morph-word:nth-child(4) { animation-delay: 5.9s; }
+.mobile-morph-word:nth-child(5) { animation-delay: 7.7s; }
 @keyframes mobileMorph {
-  /* Enter: clip wipes left → right, letters tighten from 0.18em to -0.025em */
-  0%  { opacity: 0; letter-spacing:  0.18em;  clip-path: inset(0 100% 0 0);   -webkit-clip-path: inset(0 100% 0 0);   }
-  3%  { opacity: 1; }
-  9%  { opacity: 1; letter-spacing: -0.025em; clip-path: inset(0 0 0 0);      -webkit-clip-path: inset(0 0 0 0);      }
-  /* Hold fully revealed */
-  15% { opacity: 1; letter-spacing: -0.025em; clip-path: inset(0 0 0 0);      -webkit-clip-path: inset(0 0 0 0);      }
-  /* Exit: clip collapses left → right, letters tighten further */
-  20% { opacity: 0; letter-spacing: -0.08em;  clip-path: inset(0 0 0 100%);   -webkit-clip-path: inset(0 0 0 100%);   }
-  /* Reset to entry pose so the next iteration animates in cleanly. */
-  21% { opacity: 0; letter-spacing:  0.18em;  clip-path: inset(0 100% 0 0);   -webkit-clip-path: inset(0 100% 0 0);   }
-  100%{ opacity: 0; letter-spacing:  0.18em;  clip-path: inset(0 100% 0 0);   -webkit-clip-path: inset(0 100% 0 0);   }
+  /* Blur in */
+  0%   { opacity: 0; filter: blur(8px); }
+  6%   { opacity: 1; filter: blur(0px); }
+  /* Hold — perfectly sharp */
+  16%  { opacity: 1; filter: blur(0px); }
+  /* Blur out (overlaps the next word's blur-in → gooey merge) */
+  24%  { opacity: 0; filter: blur(8px); }
+  /* Stay hidden for the rest of the loop */
+  100% { opacity: 0; filter: blur(8px); }
+}
+
+/* Reduced motion: no cycling, no rise. Show the first word statically and
+   make every entrance element fully visible (the global reduced-motion rule
+   would otherwise freeze the morph words at their hidden end-state). */
+@media (prefers-reduced-motion: reduce) {
+  .mobile-rise,
+  .mobile-rise-logo {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+  }
+  .mobile-morph-word {
+    animation: none !important;
+    filter: none !important;
+  }
+  .mobile-morph-word:nth-child(1) { opacity: 1 !important; }
+  .mobile-morph-word:not(:nth-child(1)) { opacity: 0 !important; }
 }
 
 /* ──────────────────────────────────────
