@@ -123,7 +123,7 @@ export default function ContactSection() {
                     <p className="text-base md:text-lg text-cream/60 max-w-lg mb-8 md:mb-12 font-light leading-relaxed">
                         {t("contact.subheading")}
                     </p>
-                    <div className="flex flex-col gap-3">
+                    <div className="hidden lg:flex flex-col gap-3">
                         <a href="mailto:marek@aiwai.app" className="inline-flex items-center gap-3 px-5 py-3 rounded-xl border border-cream/15 bg-cream/[0.04] hover:bg-gold hover:text-ink hover:border-gold text-cream transition-all duration-200 group w-fit">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
                             <span className="text-sm font-medium">marek@aiwai.app</span>
@@ -270,6 +270,25 @@ export default function ContactSection() {
                         </div>
                     </form>
                 </FadeIn>
+
+                {/* Mobile-only contact buttons — below the form, side by side (50/50).
+                    Desktop keeps the stacked buttons in the text column above (hidden lg:flex). */}
+                <div className="lg:hidden grid grid-cols-2 gap-3">
+                    <a
+                        href="mailto:marek@aiwai.app"
+                        className="flex items-center justify-center gap-2 px-2.5 py-3 rounded-xl border border-cream/15 bg-cream/[0.04] text-cream transition-colors duration-200 active:bg-gold active:text-ink active:border-gold"
+                    >
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                        <span className="text-[12px] font-medium whitespace-nowrap">marek@aiwai.app</span>
+                    </a>
+                    <a
+                        href="tel:+421902876198"
+                        className="flex items-center justify-center gap-2 px-2.5 py-3 rounded-xl border border-cream/15 bg-cream/[0.04] text-cream transition-colors duration-200 active:bg-gold active:text-ink active:border-gold"
+                    >
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.61 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.6a16 16 0 0 0 6.29 6.29l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                        <span className="text-[12px] font-medium whitespace-nowrap">+421 902 876 198</span>
+                    </a>
+                </div>
             </div>
         </section>
     );
