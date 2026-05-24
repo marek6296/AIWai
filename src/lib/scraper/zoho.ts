@@ -32,7 +32,7 @@ function transport() {
 }
 
 export async function sendOutreach(args: SendArgs): Promise<SendResult> {
-    const fromName = process.env.ZOHO_FROM_NAME || "Marek Donoval";
+    const fromName = process.env.ZOHO_FROM_NAME || "Marek AIWai";
     const fromUser = process.env.ZOHO_SMTP_USER!;
     const html = args.html || wrapEmailHtml(args.body, args.subject);
     try {
