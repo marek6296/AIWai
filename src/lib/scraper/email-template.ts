@@ -1,5 +1,5 @@
-// HTML wrap pre outreach email — AIWai logo + profi dark styling.
-// Email klienti (Gmail/Outlook) ignorujú niektoré CSS — používame inline styles a tabuľkový layout.
+// HTML wrap pre outreach email — dark theme + AIWai logo (logo sedí na čiernu).
+// Email klienti (Gmail/Outlook) ignorujú niektoré CSS — inline styles + tabuľkový layout.
 
 export function wrapEmailHtml(body: string, subject: string): string {
     const paragraphs = body
@@ -10,24 +10,26 @@ export function wrapEmailHtml(body: string, subject: string): string {
 
     const bodyHtml = paragraphs
         .map((p) => {
-            // Posledný blok je signature ("S pozdravom,\nMeno\nAIWai\naiwai.app") — render so spacing
             const isSignature = /S pozdravom,/i.test(p) && /AIWai/i.test(p);
             if (isSignature) {
                 const lines = p.split(/\n/).map((l) => l.trim()).filter(Boolean);
-                return `<p style="margin:32px 0 0;color:#4a4a4a;font-size:15px;line-height:1.6;">${lines
+                return `<p style="margin:32px 0 0;color:#a89868;font-size:14px;line-height:1.7;">${lines
                     .map((l, i) => {
-                        if (i === 0) return `<span style="color:#777;">${escapeHtml(l)}</span><br>`;
+                        // Podporujeme aj markdown link [text](url)
+                        const mdLink = l.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
+                        if (mdLink) {
+                            return `<a href="${escapeAttr(mdLink[2])}" style="color:#C9A875;text-decoration:none;border-bottom:1px solid rgba(201,168,117,0.4);">${escapeHtml(mdLink[1])}</a>`;
+                        }
+                        if (i === 0) return `<span style="color:#8c826a;">${escapeHtml(l)}</span><br><br>`;
                         if (/^Marek Donoval$/i.test(l))
-                            return `<strong style="color:#1a1a1a;font-size:16px;">${escapeHtml(l)}</strong><br>`;
+                            return `<strong style="color:#f5edda;font-size:16px;font-weight:600;">${escapeHtml(l)}</strong><br>`;
                         if (/^AIWai$/i.test(l))
-                            return `<span style="color:#C9A875;font-weight:600;letter-spacing:0.04em;">${escapeHtml(l)}</span><br>`;
-                        if (/aiwai\.app/i.test(l))
-                            return `<a href="https://aiwai.app" style="color:#8C6F3F;text-decoration:none;border-bottom:1px solid #C9A87560;">${escapeHtml(l)}</a>`;
+                            return `<span style="color:#C9A875;font-weight:600;letter-spacing:0.06em;font-size:14px;">${escapeHtml(l)}</span><br>`;
                         return `${escapeHtml(l)}<br>`;
                     })
                     .join("")}</p>`;
             }
-            return `<p style="margin:0 0 18px;color:#1a1a1a;font-size:15.5px;line-height:1.65;">${escapeHtml(p).replace(/\n/g, "<br>")}</p>`;
+            return `<p style="margin:0 0 20px;color:#f5edda;font-size:15.5px;line-height:1.7;">${renderInline(p)}</p>`;
         })
         .join("\n");
 
@@ -36,24 +38,30 @@ export function wrapEmailHtml(body: string, subject: string): string {
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="dark light">
+<meta name="supported-color-schemes" content="dark light">
 <title>${escapeHtml(subject)}</title>
 </head>
-<body style="margin:0;padding:0;background:#f5f1ea;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;color:#1a1a1a;">
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f5f1ea;">
+<body style="margin:0;padding:0;background:#0a0a0f;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;color:#f5edda;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#0a0a0f;">
   <tr>
-    <td align="center" style="padding:32px 16px;">
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:560px;background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px -8px rgba(20,20,30,0.08);">
+    <td align="center" style="padding:40px 16px;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:580px;background:#0e0e14;border:1px solid rgba(201,168,117,0.18);border-radius:18px;overflow:hidden;box-shadow:0 8px 40px -12px rgba(0,0,0,0.7),0 0 60px -20px rgba(201,168,117,0.15);">
+
+        <!-- Subtle gold gradient strip -->
+        <tr><td style="height:2px;background:linear-gradient(90deg,transparent,#C9A875 40%,#C9A875 60%,transparent);font-size:0;line-height:0;">&nbsp;</td></tr>
+
         <!-- Header s logom -->
         <tr>
-          <td style="padding:28px 36px 20px;border-bottom:1px solid #f0ebe0;background:linear-gradient(180deg,#fbf8f1 0%,#ffffff 100%);">
+          <td style="padding:32px 40px 22px;border-bottom:1px solid rgba(245,237,218,0.06);background:#0e0e14;">
             <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
               <tr>
                 <td valign="middle" style="vertical-align:middle;">
-                  <a href="https://aiwai.app" style="text-decoration:none;display:inline-block;">
-                    <img src="https://aiwai.app/logo-v2.png" alt="AIWai" width="80" height="36" style="display:block;border:0;height:auto;max-width:100%;object-fit:contain;">
+                  <a href="https://www.aiwai.app" style="text-decoration:none;display:inline-block;">
+                    <img src="https://aiwai.app/logo-v2.png" alt="AIWai" width="96" height="42" style="display:block;border:0;height:auto;max-width:100%;object-fit:contain;">
                   </a>
                 </td>
-                <td valign="middle" align="right" style="vertical-align:middle;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:10px;letter-spacing:0.24em;text-transform:uppercase;color:#a89668;">
+                <td valign="middle" align="right" style="vertical-align:middle;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:10px;letter-spacing:0.28em;text-transform:uppercase;color:#a89868;">
                   Digitálna agentúra
                 </td>
               </tr>
@@ -63,22 +71,22 @@ export function wrapEmailHtml(body: string, subject: string): string {
 
         <!-- Body -->
         <tr>
-          <td style="padding:32px 36px 36px;">
+          <td style="padding:34px 40px 38px;background:#0e0e14;">
             ${bodyHtml}
           </td>
         </tr>
 
         <!-- Footer -->
         <tr>
-          <td style="padding:20px 36px 28px;border-top:1px solid #f0ebe0;background:#fbf8f1;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:11px;color:#88806a;">
+          <td style="padding:22px 40px 28px;border-top:1px solid rgba(245,237,218,0.06);background:#0a0a0f;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:11px;color:#7a7160;">
             <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
               <tr>
                 <td>
-                  <a href="https://aiwai.app" style="color:#8C6F3F;text-decoration:none;">aiwai.app</a>
-                  <span style="color:#d4cab0;">  ·  </span>
-                  <a href="mailto:marek@aiwai.app" style="color:#8C6F3F;text-decoration:none;">marek@aiwai.app</a>
+                  <a href="https://www.aiwai.app" style="color:#C9A875;text-decoration:none;">www.aiwai.app</a>
+                  <span style="color:#3c3a32;">  ·  </span>
+                  <a href="mailto:marek@aiwai.app" style="color:#C9A875;text-decoration:none;">marek@aiwai.app</a>
                 </td>
-                <td align="right" style="color:#a89668;letter-spacing:0.18em;text-transform:uppercase;font-size:10px;">
+                <td align="right" style="color:#7a7160;letter-spacing:0.22em;text-transform:uppercase;font-size:10px;">
                   Slovensko
                 </td>
               </tr>
@@ -86,7 +94,8 @@ export function wrapEmailHtml(body: string, subject: string): string {
           </td>
         </tr>
       </table>
-      <p style="margin:14px 0 0;color:#a89668;font-size:11px;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;">
+
+      <p style="margin:18px 0 0;color:#5c5448;font-size:11px;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;">
         Tento e-mail bol odoslaný individuálne. Ak nechcete byť kontaktovaný/-á, jednoducho neodpovedajte.
       </p>
     </td>
@@ -96,10 +105,22 @@ export function wrapEmailHtml(body: string, subject: string): string {
 </html>`;
 }
 
+function renderInline(p: string): string {
+    // Najprv escape, potom prelož markdown [text](url) na <a>
+    let out = escapeHtml(p).replace(/\n/g, "<br>");
+    out = out.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_, text, url) =>
+        `<a href="${escapeAttr(url)}" style="color:#C9A875;text-decoration:none;border-bottom:1px solid rgba(201,168,117,0.4);">${text}</a>`);
+    return out;
+}
+
 function escapeHtml(s: string): string {
     return s
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;");
+}
+
+function escapeAttr(s: string): string {
+    return s.replace(/"/g, "&quot;").replace(/'/g, "&#39;");
 }
