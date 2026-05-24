@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from 'react'
 import { updatePrice, toggleActive, updateDescription } from './actions'
-import { Check, Pencil, X } from 'lucide-react'
+import { Check, Pencil, X, EyeOff, Eye } from 'lucide-react'
 
 interface Props {
     id: string
@@ -45,82 +45,87 @@ export default function PricingRowEditor({ id, name, priceFrom, priceTo, unit, d
     const priceDisplay = unit === 'dohodou'
         ? 'dohodou'
         : priceTo
-        ? `od ${priceFrom} € do ${priceTo} €`
+        ? `od ${priceFrom} € · do ${priceTo} €`
         : `od ${priceFrom} ${unit}`
 
     return (
-        <div className={`bg-white rounded-xl border p-4 transition-opacity ${!isActive ? 'opacity-50' : 'border-brand-indigo/10'}`}>
+        <div className={`rounded-xl border bg-char-soft/60 p-4 transition-all ${!isActive ? 'opacity-50 border-cream/[0.05]' : 'border-cream/[0.08] hover:border-gold/20'}`}>
             <div className="flex items-start justify-between gap-3">
                 <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-1">
-                        <span className="font-semibold text-brand-indigo text-sm">{name}</span>
-                        {!isActive && <span className="text-[10px] bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded-full">Vypnuté</span>}
+                    <div className="mb-1 flex items-center gap-2">
+                        <span className="text-sm font-medium text-cream">{name}</span>
+                        {!isActive && (
+                            <span className="rounded-md border border-cream/15 bg-cream/[0.04] px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.18em] text-cream/40">
+                                Vypnuté
+                            </span>
+                        )}
                     </div>
 
                     {editing ? (
-                        <div className="space-y-2 mt-2">
+                        <div className="mt-3 space-y-2">
                             <div className="flex items-center gap-2">
-                                <label className="text-xs text-brand-indigo/50 w-16">Od (€)</label>
+                                <label className="w-16 font-mono text-[10px] uppercase tracking-[0.18em] text-cream/45">Od (€)</label>
                                 <input
                                     type="number"
                                     value={from}
                                     onChange={(e) => setFrom(e.target.value)}
-                                    className="w-24 border border-brand-indigo/20 rounded-lg px-2 py-1 text-sm text-brand-indigo"
+                                    className="w-24 rounded-md border border-cream/15 bg-cream/[0.04] px-2 py-1 text-sm text-cream focus:border-gold/40 focus:outline-none"
                                 />
                             </div>
                             <div className="flex items-center gap-2">
-                                <label className="text-xs text-brand-indigo/50 w-16">Do (€)</label>
+                                <label className="w-16 font-mono text-[10px] uppercase tracking-[0.18em] text-cream/45">Do (€)</label>
                                 <input
                                     type="number"
                                     value={to}
                                     onChange={(e) => setTo(e.target.value)}
-                                    placeholder="prázdne = len od"
-                                    className="w-24 border border-brand-indigo/20 rounded-lg px-2 py-1 text-sm text-brand-indigo"
+                                    placeholder="len od"
+                                    className="w-24 rounded-md border border-cream/15 bg-cream/[0.04] px-2 py-1 text-sm text-cream placeholder:text-cream/30 focus:border-gold/40 focus:outline-none"
                                 />
                             </div>
                             <div className="flex items-start gap-2">
-                                <label className="text-xs text-brand-indigo/50 w-16 mt-1">Popis</label>
+                                <label className="mt-1 w-16 font-mono text-[10px] uppercase tracking-[0.18em] text-cream/45">Popis</label>
                                 <textarea
                                     value={desc}
                                     onChange={(e) => setDesc(e.target.value)}
                                     rows={2}
-                                    className="flex-1 border border-brand-indigo/20 rounded-lg px-2 py-1 text-xs text-brand-indigo resize-none"
+                                    className="flex-1 resize-none rounded-md border border-cream/15 bg-cream/[0.04] px-2 py-1 text-xs text-cream focus:border-gold/40 focus:outline-none"
                                 />
                             </div>
                         </div>
                     ) : (
                         <>
-                            <div className="text-sm font-medium text-emerald-600">{priceDisplay}</div>
-                            {description && <div className="text-xs text-brand-indigo/50 mt-1 line-clamp-2">{description}</div>}
+                            <div className="text-sm font-medium text-gold tabular-nums">{priceDisplay}</div>
+                            {description && <div className="mt-1 line-clamp-2 text-xs text-cream/55">{description}</div>}
                         </>
                     )}
                 </div>
 
-                <div className="flex items-center gap-1 shrink-0">
+                <div className="flex shrink-0 items-center gap-1">
                     {editing ? (
                         <>
-                            <button onClick={save} disabled={isPending} className="p-1.5 rounded-lg bg-emerald-500 text-white hover:bg-emerald-600 disabled:opacity-50">
+                            <button onClick={save} disabled={isPending} className="rounded-md border border-emerald-400/40 bg-emerald-400/15 p-1.5 text-emerald-300 hover:bg-emerald-400/25 disabled:opacity-50">
                                 <Check size={13} />
                             </button>
-                            <button onClick={cancel} className="p-1.5 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200">
+                            <button onClick={cancel} className="rounded-md border border-cream/15 bg-cream/[0.04] p-1.5 text-cream/55 hover:text-cream">
                                 <X size={13} />
                             </button>
                         </>
                     ) : (
-                        <button onClick={() => setEditing(true)} className="p-1.5 rounded-lg bg-brand-indigo/5 text-brand-indigo/60 hover:bg-brand-indigo/10">
+                        <button onClick={() => setEditing(true)} className="rounded-md border border-cream/[0.08] bg-cream/[0.03] p-1.5 text-cream/55 hover:bg-cream/[0.06] hover:text-cream">
                             <Pencil size={13} />
                         </button>
                     )}
                     <button
                         onClick={toggle}
                         disabled={isPending}
-                        className={`text-xs px-2 py-1 rounded-lg font-medium transition-colors disabled:opacity-50 ${
+                        title={isActive ? 'Skryť' : 'Zobraziť'}
+                        className={`rounded-md border p-1.5 transition-colors disabled:opacity-50 ${
                             isActive
-                                ? 'bg-red-50 text-red-600 hover:bg-red-100'
-                                : 'bg-emerald-50 text-emerald-600 hover:bg-emerald-100'
+                                ? 'border-red-400/30 bg-red-400/10 text-red-300 hover:bg-red-400/15'
+                                : 'border-emerald-400/30 bg-emerald-400/10 text-emerald-300 hover:bg-emerald-400/15'
                         }`}
                     >
-                        {isActive ? 'Skryť' : 'Zobraziť'}
+                        {isActive ? <EyeOff size={13} /> : <Eye size={13} />}
                     </button>
                 </div>
             </div>

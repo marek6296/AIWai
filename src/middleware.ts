@@ -15,16 +15,13 @@ export async function middleware(request: NextRequest) {
         if (!isAuthed) {
             return NextResponse.redirect(new URL('/login', request.url))
         }
-        // /admin exact → redirect to inbox as main dashboard
-        if (pathname === '/admin') {
-            return NextResponse.redirect(new URL('/admin/inbox', request.url))
-        }
+        // /admin je teraz Dashboard hub — žiadny redirect
         return NextResponse.next()
     }
 
-    // If already authed and visiting /login → go to inbox
+    // If already authed and visiting /login → go to dashboard
     if (pathname === '/login' && isAuthed) {
-        return NextResponse.redirect(new URL('/admin/inbox', request.url))
+        return NextResponse.redirect(new URL('/admin', request.url))
     }
 
     return NextResponse.next()

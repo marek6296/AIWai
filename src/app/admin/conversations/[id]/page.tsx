@@ -1,20 +1,13 @@
 import { getSupabaseAdmin } from '@/lib/supabase/admin'
-import AdminNav from '../../components/AdminNav'
+import AdminShell from '../../components/AdminShell'
+import { Panel } from '../../components/AdminPanels'
 import TagPill from '../../components/TagPill'
 import StatusControls from '../StatusControls'
 import NotesEditor from '../NotesEditor'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import {
-    ArrowLeft,
-    Mail,
-    Phone,
-    User,
-    Sparkles,
-    Clock,
-    MessageSquare,
-    Globe,
-    Hash,
+    ArrowLeft, Mail, Phone, User, Sparkles, Clock, MessageSquare, Globe, Hash,
 } from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
@@ -23,31 +16,13 @@ const TZ = 'Europe/Bratislava'
 function formatSK(d: string | null): string {
     if (!d) return '—'
     const date = new Date(d)
-    return new Intl.DateTimeFormat('sk-SK', {
-        timeZone: TZ,
-        day: 'numeric',
-        month: 'short',
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false,
-    }).format(date)
+    return new Intl.DateTimeFormat('sk-SK', { timeZone: TZ, day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit', hour12: false }).format(date)
 }
-
 function formatTime(d: string): string {
-    return new Intl.DateTimeFormat('sk-SK', {
-        timeZone: TZ,
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false,
-    }).format(new Date(d))
+    return new Intl.DateTimeFormat('sk-SK', { timeZone: TZ, hour: '2-digit', minute: '2-digit', hour12: false }).format(new Date(d))
 }
 
-interface Message {
-    id: string
-    role: 'user' | 'assistant' | 'system'
-    content: string
-    created_at: string
-}
+interface Message { id: string; role: 'user' | 'assistant' | 'system'; content: string; created_at: string }
 
 interface Conversation {
     id: string
@@ -70,11 +45,7 @@ interface Conversation {
     last_user_msg: string | null
 }
 
-export default async function ConversationDetailPage({
-    params,
-}: {
-    params: { id: string }
-}) {
+export default async function ConversationDetailPage({ params }: { params: { id: string } }) {
     const admin = getSupabaseAdmin()
 
     const { data: conv, error: convErr } = await admin
@@ -95,173 +66,109 @@ export default async function ConversationDetailPage({
 
     const messages = (msgData ?? []) as Message[]
 
-    // Auto-mark as 'seen' if it was new (non-blocking, but await to reflect in UI)
     if (conversation.status === 'new') {
-        await admin
-            .from('chatbot_conversations')
-            .update({ status: 'seen' })
-            .eq('id', params.id)
+        await admin.from('chatbot_conversations').update({ status: 'seen' }).eq('id', params.id)
         conversation.status = 'seen'
     }
 
     return (
-        <div className="min-h-screen bg-brand-offwhite flex">
-            <AdminNav />
-            <main className="flex-1 p-8 max-w-5xl">
-                {/* Back */}
+        <AdminShell
+            title={`Konverzácia #${conversation.id.slice(0, 8)}`}
+            subtitle={`${conversation.message_count} správ · začatá ${formatSK(conversation.created_at)}`}
+            actions={
                 <Link
                     href="/admin/conversations"
-                    className="inline-flex items-center gap-1.5 text-sm text-brand-indigo/60 hover:text-brand-indigo mb-4 transition-colors"
+                    className="inline-flex items-center gap-1.5 rounded-lg border border-cream/15 bg-cream/[0.04] px-3 py-2 text-sm text-cream/70 hover:text-cream hover:bg-cream/[0.07] transition"
                 >
-                    <ArrowLeft size={14} />
-                    Späť na konverzácie
+                    <ArrowLeft size={14} /> Späť
                 </Link>
-
-                {/* Header */}
-                <div className="mb-6">
-                    <div className="flex items-center gap-2 flex-wrap mb-2">
-                        {conversation.is_lead && (
-                            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider bg-amber-500 text-white">
-                                <Sparkles size={11} />
-                                Lead
-                            </span>
-                        )}
-                        {conversation.tags.map((t) => (
-                            <TagPill key={t} tag={t} />
-                        ))}
-                    </div>
-                    <h1 className="text-2xl font-bold text-brand-indigo">
-                        Konverzácia #{conversation.id.slice(0, 8)}
-                    </h1>
-                    <div className="flex flex-wrap gap-4 text-xs text-brand-indigo/50 mt-1">
-                        <span className="inline-flex items-center gap-1">
-                            <Clock size={12} /> Začatá {formatSK(conversation.created_at)}
-                        </span>
-                        <span className="inline-flex items-center gap-1">
-                            <MessageSquare size={12} /> {conversation.message_count} správ
-                        </span>
-                        {conversation.language && (
-                            <span className="inline-flex items-center gap-1">
-                                <Globe size={12} /> {conversation.language.toUpperCase()}
-                            </span>
-                        )}
-                        <span className="inline-flex items-center gap-1 font-mono">
-                            <Hash size={12} /> {conversation.session_id.slice(0, 20)}…
-                        </span>
-                    </div>
-                </div>
-
-                {/* Status controls */}
-                <div className="bg-white rounded-2xl border border-brand-indigo/10 p-4 mb-4">
-                    <StatusControls id={conversation.id} current={conversation.status} />
-                </div>
-
-                {/* Lead info */}
+            }
+        >
+            <div className="mb-4 flex flex-wrap items-center gap-2">
                 {conversation.is_lead && (
-                    <div className="bg-gradient-to-br from-amber-50 to-white rounded-2xl border border-amber-200 p-5 mb-4">
-                        <div className="flex items-center gap-2 mb-3">
-                            <Sparkles size={16} className="text-amber-500" />
-                            <h3 className="font-semibold text-brand-indigo text-sm">Lead kontakt</h3>
-                            {conversation.lead_captured_at && (
-                                <span className="ml-auto text-xs text-brand-indigo/40">
-                                    Zachytené: {formatSK(conversation.lead_captured_at)}
-                                </span>
-                            )}
-                        </div>
-                        <div className="grid sm:grid-cols-3 gap-3 text-sm">
-                            <div className="flex items-center gap-2">
-                                <User size={14} className="text-brand-indigo/40" />
-                                <span className="text-brand-indigo font-medium">
-                                    {conversation.lead_name || <em className="text-brand-indigo/30">—</em>}
-                                </span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <Mail size={14} className="text-brand-indigo/40" />
-                                {conversation.lead_email ? (
-                                    <a
-                                        href={`mailto:${conversation.lead_email}`}
-                                        className="text-brand-indigo font-medium hover:underline"
-                                    >
-                                        {conversation.lead_email}
-                                    </a>
-                                ) : (
-                                    <em className="text-brand-indigo/30">—</em>
-                                )}
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <Phone size={14} className="text-brand-indigo/40" />
-                                {conversation.lead_phone ? (
-                                    <a
-                                        href={`tel:${conversation.lead_phone}`}
-                                        className="text-brand-indigo font-medium hover:underline"
-                                    >
-                                        {conversation.lead_phone}
-                                    </a>
-                                ) : (
-                                    <em className="text-brand-indigo/30">—</em>
-                                )}
-                            </div>
-                        </div>
-                        {conversation.lead_interest && (
-                            <div className="mt-3 pt-3 border-t border-amber-200/60 text-sm">
-                                <span className="text-xs uppercase tracking-wider text-brand-indigo/40 font-semibold">
-                                    Záujem:
-                                </span>{' '}
-                                <span className="text-brand-indigo/80">{conversation.lead_interest}</span>
-                            </div>
+                    <span className="inline-flex items-center gap-1 rounded-md border border-gold/40 bg-gold/15 px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-gold">
+                        <Sparkles size={10} /> Lead
+                    </span>
+                )}
+                {conversation.tags.map((t) => <TagPill key={t} tag={t} />)}
+                {conversation.language && (
+                    <span className="inline-flex items-center gap-1 font-mono text-[11px] text-cream/40">
+                        <Globe size={11} /> {conversation.language.toUpperCase()}
+                    </span>
+                )}
+                <span className="inline-flex items-center gap-1 font-mono text-[11px] text-cream/40">
+                    <Hash size={11} /> {conversation.session_id.slice(0, 20)}…
+                </span>
+            </div>
+
+            <div className="mb-4 rounded-2xl border border-cream/[0.08] bg-char-soft/60 p-4">
+                <StatusControls id={conversation.id} current={conversation.status} />
+            </div>
+
+            {conversation.is_lead && (
+                <div className="mb-4 rounded-2xl border border-gold/30 bg-gradient-to-br from-gold/10 via-gold/[0.04] to-transparent p-5">
+                    <div className="mb-3 flex items-center gap-2">
+                        <Sparkles size={14} className="text-gold" />
+                        <h3 className="font-display text-sm font-semibold text-cream">Lead kontakt</h3>
+                        {conversation.lead_captured_at && (
+                            <span className="ml-auto font-mono text-[10px] uppercase tracking-[0.18em] text-cream/40">
+                                Zachytené: {formatSK(conversation.lead_captured_at)}
+                            </span>
                         )}
                     </div>
-                )}
-
-                {/* Notes */}
-                <div className="mb-4">
-                    <NotesEditor id={conversation.id} initial={conversation.admin_notes ?? ''} />
-                </div>
-
-                {/* Messages */}
-                <div className="bg-white rounded-2xl border border-brand-indigo/10 p-5">
-                    <h3 className="font-semibold text-brand-indigo text-sm mb-4 flex items-center gap-2">
-                        <MessageSquare size={16} />
-                        Priebeh konverzácie
-                    </h3>
-
-                    {messages.length === 0 ? (
-                        <p className="text-sm text-brand-indigo/40 text-center py-8">
-                            Žiadne správy.
-                        </p>
-                    ) : (
-                        <div className="space-y-3">
-                            {messages.map((m) => (
-                                <div
-                                    key={m.id}
-                                    className={`flex ${
-                                        m.role === 'user' ? 'justify-end' : 'justify-start'
-                                    }`}
-                                >
-                                    <div
-                                        className={`max-w-[75%] ${
-                                            m.role === 'user'
-                                                ? 'bg-brand-indigo text-white rounded-2xl rounded-tr-sm'
-                                                : 'bg-brand-offwhite text-brand-indigo border border-brand-indigo/5 rounded-2xl rounded-tl-sm'
-                                        } px-4 py-2.5`}
-                                    >
-                                        <div className="text-sm whitespace-pre-wrap">{m.content}</div>
-                                        <div
-                                            className={`text-[10px] mt-1 ${
-                                                m.role === 'user'
-                                                    ? 'text-white/50'
-                                                    : 'text-brand-indigo/40'
-                                            }`}
-                                        >
-                                            {formatTime(m.created_at)}
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
+                    <div className="grid gap-3 text-sm sm:grid-cols-3">
+                        <Info icon={<User size={14} />} value={conversation.lead_name} />
+                        <Info icon={<Mail size={14} />} value={conversation.lead_email} link={conversation.lead_email ? `mailto:${conversation.lead_email}` : undefined} />
+                        <Info icon={<Phone size={14} />} value={conversation.lead_phone} link={conversation.lead_phone ? `tel:${conversation.lead_phone}` : undefined} />
+                    </div>
+                    {conversation.lead_interest && (
+                        <div className="mt-3 border-t border-gold/15 pt-3 text-sm">
+                            <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-cream/40">Záujem:</span>{' '}
+                            <span className="text-cream/85">{conversation.lead_interest}</span>
                         </div>
                     )}
                 </div>
-            </main>
-        </div>
+            )}
+
+            <div className="mb-4">
+                <NotesEditor id={conversation.id} initial={conversation.admin_notes ?? ''} />
+            </div>
+
+            <Panel title="Priebeh konverzácie" subtitle={`${messages.length} správ`}>
+                {messages.length === 0 ? (
+                    <p className="py-8 text-center text-sm text-cream/40">Žiadne správy.</p>
+                ) : (
+                    <div className="space-y-3">
+                        {messages.map((m) => (
+                            <div key={m.id} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                                <div
+                                    className={`max-w-[75%] rounded-2xl px-4 py-2.5 ${
+                                        m.role === 'user'
+                                            ? 'rounded-tr-sm border border-gold/30 bg-gold/15 text-cream'
+                                            : 'rounded-tl-sm border border-cream/[0.08] bg-cream/[0.03] text-cream/90'
+                                    }`}
+                                >
+                                    <div className="whitespace-pre-wrap text-sm">{m.content}</div>
+                                    <div className={`mt-1 font-mono text-[10px] ${m.role === 'user' ? 'text-gold/60' : 'text-cream/40'}`}>
+                                        {formatTime(m.created_at)}
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </Panel>
+        </AdminShell>
     )
+}
+
+function Info({ icon, value, link }: { icon: React.ReactNode; value: string | null; link?: string }) {
+    const text = value || '—'
+    const inner = (
+        <span className="inline-flex items-center gap-2 text-cream">
+            <span className="text-cream/45">{icon}</span>
+            {value ? text : <em className="text-cream/30">—</em>}
+        </span>
+    )
+    return link && value ? <a href={link} className="hover:text-gold transition-colors">{inner}</a> : inner
 }
