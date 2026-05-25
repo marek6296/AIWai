@@ -23,9 +23,17 @@ export function requireAdmin(req: Request | NextRequest): NextResponse | null {
     }
 
     // Cookie môžeme čítať z `NextRequest.cookies` aj z štandardného `Request` cez header.
-    const token = ('cookies' in req && typeof (req as NextRequest).cookies?.get === 'function')
+    const cookieToken = ('cookies' in req && typeof (req as NextRequest).cookies?.get === 'function')
         ? (req as NextRequest).cookies.get(ADMIN_COOKIE_NAME)?.value
         : extractCookieFromHeader(req.headers.get('cookie'), ADMIN_COOKIE_NAME)
+
+    // Header auth pre service-to-service volania (napr. n8n bot):
+    //   Authorization: Bearer <ADMIN_AUTH_TOKEN>   alebo   x-admin-token: <ADMIN_AUTH_TOKEN>
+    const authHeader = req.headers.get('authorization') || ''
+    const bearer = /^bearer\s+/i.test(authHeader) ? authHeader.replace(/^bearer\s+/i, '').trim() : undefined
+    const headerToken = bearer || req.headers.get('x-admin-token') || undefined
+
+    const token = cookieToken || headerToken
 
     if (!token || token !== expected) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
