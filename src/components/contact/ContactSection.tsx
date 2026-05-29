@@ -41,13 +41,6 @@ export default function ContactSection() {
         setStatus("sending");
         setErrorMessage("");
         try {
-            // Fire Make webhook in background (non-blocking)
-            fetch("https://hook.eu1.make.com/pmxc2wt7srxq6bv6qc6jezd11tb7a3qk", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ ...formData, source: "Web Form", timestamp: new Date().toISOString() }),
-            }).catch(() => {/* webhook failure is non-critical */});
-
             const res = await fetch("/api/contact", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },

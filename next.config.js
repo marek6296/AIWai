@@ -3,7 +3,6 @@
 // ─── Content-Security-Policy ───
 // Hodnoty domén ktoré stránka legitímne volá:
 //   • Supabase (hlavné + partner news project) — fetch & wss
-//   • Make.com webhook — kontaktný formulár fire-and-forget
 //   • Retell AI — voice agent (web call WebSocket)
 //   • Pexels — stock video v portfólio sekcii
 //   • Railway webhook — admin client/[email] actions (notifikácie)
@@ -18,7 +17,7 @@ const CSP_DIRECTIVES = [
     "img-src 'self' data: blob: https:",
     "font-src 'self' data:",
     "media-src 'self' https://videos.pexels.com https://*.supabase.co",
-    "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://hook.eu1.make.com https://api.retellai.com wss://api.retellai.com https://primary-production-bc31.up.railway.app",
+    "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.retellai.com wss://api.retellai.com https://primary-production-bc31.up.railway.app",
     "frame-ancestors 'none'",
     "base-uri 'self'",
     "form-action 'self'",
@@ -84,7 +83,7 @@ const nextConfig = {
         optimizeCss: process.env.NODE_ENV === 'production',
         // Only list packages actually installed — framer-motion/gsap/lenis were removed
         optimizePackageImports: ['lucide-react', '@supabase/supabase-js'],
-        serverComponentsExternalPackages: ['pdf-parse', 'nodemailer', 'resend'],
+        serverComponentsExternalPackages: ['pdf-parse', 'nodemailer'],
     },
 
     webpack: (config) => {
