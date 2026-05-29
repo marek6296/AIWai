@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/server'
+import { getSupabaseAdmin } from '@/lib/supabase/admin'
 import { Mail, Clock, User, Phone, Tag, MessageSquare, FileText, Inbox, CheckCircle2 } from 'lucide-react'
 import AdminShell from '../components/AdminShell'
 import { StatCard, Panel, SectionLabel } from '../components/AdminPanels'
@@ -18,7 +18,7 @@ function formatSKTime(dateStr: string, isDone: boolean): string {
 export const dynamic = 'force-dynamic'
 
 export default async function InboxPage() {
-    const supabase = createClient()
+    const supabase = getSupabaseAdmin()
 
     const [{ data: formData }, { data: emailData }] = await Promise.all([
         supabase.from('form_submissions').select('*').order('received_at', { ascending: false }).limit(100),

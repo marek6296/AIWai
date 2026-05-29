@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
-import { supabase } from '@/lib/supabase';
+import { getSupabaseAdmin } from '@/lib/supabase/admin';
 
 // ─── Input validation ───
 const contactSchema = z.object({
@@ -29,8 +29,7 @@ export async function POST(req: Request) {
         const { name, email, phone, projectType, message } = parsed.data;
 
         // Uloženie do Supabase — primárny zdroj pravdy pre Inbox.
-        // (Email cez Resend bol odstránený — všetky správy idú do admin Inboxu cez Supabase.)
-        const { data, error: supabaseError } = await supabase
+        const { data, error: supabaseError } = await getSupabaseAdmin()
             .from('form_submissions')
             .insert([{
                 name,

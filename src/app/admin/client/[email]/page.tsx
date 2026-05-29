@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/server'
+import { getSupabaseAdmin } from '@/lib/supabase/admin'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { ArrowLeft, User, Mail, Calendar, Phone, Tag } from 'lucide-react'
@@ -10,7 +10,7 @@ export const dynamic = 'force-dynamic'
 
 export default async function ClientDetailPage({ params }: { params: { email: string } }) {
     const email = decodeURIComponent(params.email)
-    const supabase = createClient()
+    const supabase = getSupabaseAdmin()
 
     const { data: lead, error } = await supabase
         .from('leads')

@@ -1,6 +1,6 @@
 'use server'
 
-import { createClient } from '@/lib/supabase/server'
+import { getSupabaseAdmin } from '@/lib/supabase/admin'
 import { revalidatePath } from 'next/cache'
 
 // Legacy stub — kept for backward compatibility with BotToggle/BotQuickToggle
@@ -11,7 +11,7 @@ export async function toggleBotActive(email: string, active: boolean) {
 }
 
 export async function reviewDraftMessage(formData: FormData) {
-    const supabase = createClient()
+    const supabase = getSupabaseAdmin()
 
     const messageId = formData.get('messageId') as string
     const clientEmail = formData.get('clientEmail') as string
