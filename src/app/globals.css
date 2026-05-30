@@ -434,19 +434,20 @@ canvas[style*="position: fixed"] {
   to   { opacity: 1; transform: translateY(0); }
 }
 @keyframes mobileLogoRise {
-  from { opacity: 0; transform: translateY(22px) scale(0.92); }
-  to   { opacity: 1; transform: translateY(0) scale(1); }
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 .mobile-rise {
   opacity: 0;
   animation: mobileRise 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
-  will-change: opacity, transform;
 }
+/* No will-change / no filter / no scale here: those promote the logo to its
+   own GPU layer on iOS Safari, which leaves a faint rectangular plate ("square
+   behind the logo") that only clears on a later repaint. Plain fade + rise. */
 .mobile-rise-logo {
   opacity: 0;
-  animation: mobileLogoRise 1.1s cubic-bezier(0.22, 1, 0.36, 1) 0.1s both;
-  will-change: opacity, transform;
+  animation: mobileLogoRise 1s cubic-bezier(0.22, 1, 0.36, 1) 0.1s both;
 }
 /* Staggered delays — logo first, then headline, subtitle, CTAs. The headline
    stage (d2) lands just as the first morph word blurs in (see morph delay). */
@@ -454,58 +455,12 @@ canvas[style*="position: fixed"] {
 .mobile-rise-d3 { animation-delay: 0.85s; }
 .mobile-rise-d4 { animation-delay: 1.15s; }
 
-/* ──────────────────────────────────────
-   Mobile hero — word morph (PC-like gooey, tuned for phones)
-   ──────────────────────────────────────
-   Mirrors the desktop GooeyText feel — words crossfade into one another — but
-   WITHOUT the SVG threshold filter (the thing that stuttered + blurred text on
-   iOS). The CRISP HOLD dominates each slot: the word snaps sharp fast, sits
-   perfectly crisp for ~1.3s, then melts out quickly as the next melts in. Blur
-   is gentle (4px) and ONLY present while the word is near-invisible (opacity ≈
-   0), so there is never a fuzzy smudge hanging under the logo, and nothing for
-   iOS Safari to leave rasterized after the transition. Pacing matches PC:
-   9s loop / 5 words = 1.8s per word. */
-.mobile-morph-stage {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.mobile-morph-word {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  transform: translateZ(0);
-  animation: mobileMorph 9s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-  will-change: opacity, filter;
-  text-rendering: geometricPrecision;
-  -webkit-font-smoothing: antialiased;
-}
-/* 9s loop, 1.8s step. +0.5s base offset so the first word blurs in right as
-   the headline stage finishes rising (.mobile-rise-d2 lands at ~0.5s). */
-.mobile-morph-word:nth-child(1) { animation-delay: 0.5s; }
-.mobile-morph-word:nth-child(2) { animation-delay: 2.3s; }
-.mobile-morph-word:nth-child(3) { animation-delay: 4.1s; }
-.mobile-morph-word:nth-child(4) { animation-delay: 5.9s; }
-.mobile-morph-word:nth-child(5) { animation-delay: 7.7s; }
-@keyframes mobileMorph {
-  /* Quick crisp-in — blur is gentle and only present while near-invisible */
-  0%   { opacity: 0; filter: blur(4px); }
-  4%   { opacity: 1; filter: blur(0px); }
-  /* Long crisp hold — word sits perfectly sharp (this dominates the slot) */
-  18%  { opacity: 1; filter: blur(0px); }
-  /* Quick melt-out, brief overlap with next word's fade-in = gooey merge */
-  22%  { opacity: 0; filter: blur(4px); }
-  /* Hidden (opacity 0) for the rest of the loop — no lingering blur near logo */
-  100% { opacity: 0; filter: blur(4px); }
-}
+/* NOTE: the mobile word morph is no longer a custom CSS keyframe. MobileHero
+   now renders <GooeyText variant="gooey">, i.e. the exact same SVG-threshold
+   melt the desktop hero uses, so the headline animation matches PC 1:1. */
 
-/* Reduced motion: no cycling, no rise. Show the first word statically and
-   make every entrance element fully visible (the global reduced-motion rule
-   would otherwise freeze the morph words at their hidden end-state). */
+/* Reduced motion: skip the staggered entrance (the morph itself is owned by
+   GooeyText, same as desktop). */
 @media (prefers-reduced-motion: reduce) {
   .mobile-rise,
   .mobile-rise-logo {
@@ -513,12 +468,6 @@ canvas[style*="position: fixed"] {
     transform: none !important;
     animation: none !important;
   }
-  .mobile-morph-word {
-    animation: none !important;
-    filter: none !important;
-  }
-  .mobile-morph-word:nth-child(1) { opacity: 1 !important; }
-  .mobile-morph-word:not(:nth-child(1)) { opacity: 0 !important; }
 }
 
 /* ──────────────────────────────────────

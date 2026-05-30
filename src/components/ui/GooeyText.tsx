@@ -10,6 +10,15 @@ interface GooeyTextProps {
     cooldownTime?: number;
     className?: string;
     textClassName?: string;
+    /**
+     * Which renderer to use:
+     *  - "auto" (default): gooey on desktop, plain crossfade on touch — the
+     *    original responsive behaviour. PC HeroSection relies on this.
+     *  - "gooey": force the SVG-threshold gooey morph everywhere (used by
+     *    MobileHero so phones get the exact desktop melt animation).
+     *  - "crossfade": force the plain opacity crossfade everywhere.
+     */
+    variant?: "auto" | "gooey" | "crossfade";
 }
 
 /**
@@ -177,6 +186,8 @@ function DesktopGooeyText({
 }
 
 export function GooeyText(props: GooeyTextProps) {
+    const { variant = "auto", ...rest } = props;
+
     // Picking a variant is a one-time decision per mount — no resize listener
     // needed since rotating a phone won't usefully switch effect modes.
     const [isTouch, setIsTouch] = React.useState<boolean | null>(null);
@@ -188,22 +199,27 @@ export function GooeyText(props: GooeyTextProps) {
         setIsTouch(touch);
     }, []);
 
+    // Explicit overrides skip the touch sniff entirely (and render the same on
+    // SSR + client, so no first-paint flash).
+    if (variant === "gooey") return <DesktopGooeyText {...rest} />;
+    if (variant === "crossfade") return <MobileGooeyText {...rest} />;
+
     // SSR + first paint: render the desktop variant by default (no flash on
     // PC) but with the text already visible so mobile is never blank.
     if (isTouch === null) {
         return (
-            <div className={cn("relative flex items-center justify-center", props.className)}>
+            <div className={cn("relative flex items-center justify-center", rest.className)}>
                 <span
                     className={cn(
                         "select-none whitespace-nowrap text-center",
-                        props.textClassName,
+                        rest.textClassName,
                     )}
                 >
-                    {props.texts[0]}
+                    {rest.texts[0]}
                 </span>
             </div>
         );
     }
 
-    return isTouch ? <MobileGooeyText {...props} /> : <DesktopGooeyText {...props} />;
+    return isTouch ? <MobileGooeyText {...rest} /> : <DesktopGooeyText {...rest} />;
 }

@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useTranslation } from "@/i18n/useTranslation";
 import { scrollToPageSection } from "@/lib/scrollToPageSection";
+import { GooeyText } from "@/components/ui/GooeyText";
 
 const MORPH_WORDS = ["WEB", "DESIGN", "AI", "MARKETING", "AUTOMATIZÁCIA"];
 
@@ -10,14 +11,13 @@ const MORPH_WORDS = ["WEB", "DESIGN", "AI", "MARKETING", "AUTOMATIZÁCIA"];
  * MobileHero — built for phones from scratch.
  *
  * Why this exists separately from HeroSection:
- *  - The desktop hero relies on GooeyText (SVG threshold filter + per-frame
- *    blur) and TypewriterEffect (60+ animated spans). Both stutter on iOS
- *    Safari and the blur filter makes text rasterize blurry under GPU
- *    compositing.
- *  - This variant uses CSS keyframes only — no framer-motion on the text,
- *    no SVG filters, no per-character animation. Text stays crisp.
- *  - The morph headline cycles five words via overlapping opacity
- *    keyframes; never two visible at once, no transforms, GPU stays out.
+ *  - The desktop hero also packs TypewriterEffect (60+ animated spans) and a
+ *    canvas flow-field — too heavy for phones. This variant keeps the layout
+ *    light (static backdrop, no typewriter) but shares the EXACT desktop word
+ *    morph via <GooeyText variant="gooey"> so the headline animation matches
+ *    PC 1:1 (the user asked for the same melt, not a plain crossfade).
+ *  - The logo is a clean transparent PNG with no drop-shadow / will-change, so
+ *    iOS Safari never leaves a composited square plate behind it.
  */
 export default function MobileHero() {
     const { t } = useTranslation();
@@ -35,29 +35,23 @@ export default function MobileHero() {
                             width={360}
                             height={360}
                             priority
-                            className="h-56 w-56 sm:h-64 sm:w-64 object-contain drop-shadow-[0_12px_36px_rgba(201,168,117,0.42)]"
+                            className="h-56 w-56 sm:h-64 sm:w-64 object-contain"
                         />
                     </div>
 
-                    {/* Headline — blur-crossfade morph cycle (PC-like gooey) */}
+                    {/* Headline — EXACT desktop gooey melt (same engine as PC) */}
                     <div
-                        className="mobile-morph-stage mobile-rise mobile-rise-d2 w-full"
-                        style={{ height: "clamp(3.25rem, 12.5vw, 5rem)" }}
+                        className="mobile-rise mobile-rise-d2 w-full"
                         aria-label={MORPH_WORDS.join(", ")}
                     >
-                        {MORPH_WORDS.map((word) => (
-                            <span
-                                key={word}
-                                className="mobile-morph-word font-display font-bold tracking-tight text-cream"
-                                style={{
-                                    fontSize: "clamp(2rem, 9.2vw, 3.25rem)",
-                                    lineHeight: 1,
-                                    whiteSpace: "nowrap",
-                                }}
-                            >
-                                {word}
-                            </span>
-                        ))}
+                        <GooeyText
+                            variant="gooey"
+                            texts={MORPH_WORDS}
+                            morphTime={1.1}
+                            cooldownTime={0.7}
+                            className="h-[clamp(3.25rem,12.5vw,5rem)] w-full"
+                            textClassName="font-display font-bold tracking-tight text-cream leading-none text-[clamp(2rem,9.2vw,3.25rem)]"
+                        />
                     </div>
                 </div>
 
