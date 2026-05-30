@@ -457,13 +457,14 @@ canvas[style*="position: fixed"] {
 /* ──────────────────────────────────────
    Mobile hero — word morph (PC-like gooey, tuned for phones)
    ──────────────────────────────────────
-   Mirrors the desktop GooeyText feel — words blur-crossfade into one another
-   — but WITHOUT the SVG threshold filter (the thing that stuttered + blurred
-   text on iOS). Each word blurs in, holds perfectly sharp (blur 0) for most of
-   its slot, then blurs out as the next blurs in. The overlap on the blur edges
-   is what reads as the gooey "merge". Blur peaks at 8px only during the short
-   ~0.5s transitions, so at rest the text is always crisp and the GPU is idle.
-   Pacing matches PC: 9s loop / 5 words = 1.8s per word. */
+   Mirrors the desktop GooeyText feel — words crossfade into one another — but
+   WITHOUT the SVG threshold filter (the thing that stuttered + blurred text on
+   iOS). The CRISP HOLD dominates each slot: the word snaps sharp fast, sits
+   perfectly crisp for ~1.3s, then melts out quickly as the next melts in. Blur
+   is gentle (4px) and ONLY present while the word is near-invisible (opacity ≈
+   0), so there is never a fuzzy smudge hanging under the logo, and nothing for
+   iOS Safari to leave rasterized after the transition. Pacing matches PC:
+   9s loop / 5 words = 1.8s per word. */
 .mobile-morph-stage {
   position: relative;
   display: flex;
@@ -491,15 +492,15 @@ canvas[style*="position: fixed"] {
 .mobile-morph-word:nth-child(4) { animation-delay: 5.9s; }
 .mobile-morph-word:nth-child(5) { animation-delay: 7.7s; }
 @keyframes mobileMorph {
-  /* Blur in */
-  0%   { opacity: 0; filter: blur(8px); }
-  6%   { opacity: 1; filter: blur(0px); }
-  /* Hold — perfectly sharp */
-  16%  { opacity: 1; filter: blur(0px); }
-  /* Blur out (overlaps the next word's blur-in → gooey merge) */
-  24%  { opacity: 0; filter: blur(8px); }
-  /* Stay hidden for the rest of the loop */
-  100% { opacity: 0; filter: blur(8px); }
+  /* Quick crisp-in — blur is gentle and only present while near-invisible */
+  0%   { opacity: 0; filter: blur(4px); }
+  4%   { opacity: 1; filter: blur(0px); }
+  /* Long crisp hold — word sits perfectly sharp (this dominates the slot) */
+  18%  { opacity: 1; filter: blur(0px); }
+  /* Quick melt-out, brief overlap with next word's fade-in = gooey merge */
+  22%  { opacity: 0; filter: blur(4px); }
+  /* Hidden (opacity 0) for the rest of the loop — no lingering blur near logo */
+  100% { opacity: 0; filter: blur(4px); }
 }
 
 /* Reduced motion: no cycling, no rise. Show the first word statically and
