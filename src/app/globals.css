@@ -455,12 +455,48 @@ canvas[style*="position: fixed"] {
 .mobile-rise-d3 { animation-delay: 0.85s; }
 .mobile-rise-d4 { animation-delay: 1.15s; }
 
-/* NOTE: the mobile word morph is no longer a custom CSS keyframe. MobileHero
-   now renders <GooeyText variant="gooey">, i.e. the exact same SVG-threshold
-   melt the desktop hero uses, so the headline animation matches PC 1:1. */
+/* ──────────────────────────────────────
+   Mobile hero — headline melt (MobileMorphText)
+   ──────────────────────────────────────
+   Every word is stacked in the same grid cell; only [data-active="true"] is
+   shown. The morph is a compositor-friendly opacity + scale tween with a
+   gentle, short blur accent: the outgoing word dissolves and expands outward
+   while the incoming word condenses into focus and sharpens — they cross in
+   the middle as a smooth melt (close to the desktop gooey) but at 60fps on
+   phones, with no SVG filter, no rAF and no mounting/unmounting (so no ghost
+   words or lingering smudge). */
+.mm-word {
+  grid-area: 1 / 1;
+  white-space: nowrap;
+  opacity: 0;
+  transform: scale(1.05);
+  filter: blur(6px);
+  pointer-events: none;
+  transition:
+    opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.55s cubic-bezier(0.16, 1, 0.3, 1),
+    filter 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.mm-word[data-active="true"] {
+  opacity: 1;
+  transform: scale(1);
+  filter: blur(0px);
+}
 
-/* Reduced motion: skip the staggered entrance (the morph itself is owned by
-   GooeyText, same as desktop). */
+/* Reduced motion: instant, crisp opacity swap — no blur, no scale. */
+@media (prefers-reduced-motion: reduce) {
+  .mm-word {
+    transform: none;
+    filter: none;
+    transition: opacity 0.25s linear;
+  }
+  .mm-word[data-active="true"] {
+    transform: none;
+    filter: none;
+  }
+}
+
+/* Reduced motion: skip the staggered entrance too. */
 @media (prefers-reduced-motion: reduce) {
   .mobile-rise,
   .mobile-rise-logo {

@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useTranslation } from "@/i18n/useTranslation";
 import { scrollToPageSection } from "@/lib/scrollToPageSection";
-import { GooeyText } from "@/components/ui/GooeyText";
+import MobileMorphText from "@/components/home/MobileMorphText";
 
 const MORPH_WORDS = ["WEB", "DESIGN", "AI", "MARKETING", "AUTOMATIZÁCIA"];
 
@@ -39,17 +39,13 @@ export default function MobileHero() {
                         />
                     </div>
 
-                    {/* Headline — EXACT desktop gooey melt (same engine as PC) */}
-                    <div
-                        className="mobile-rise mobile-rise-d2 w-full"
-                        aria-label={MORPH_WORDS.join(", ")}
-                    >
-                        <GooeyText
-                            variant="gooey"
-                            texts={MORPH_WORDS}
-                            morphTime={1.1}
-                            cooldownTime={0.7}
-                            className="h-[clamp(3.25rem,12.5vw,5rem)] w-full"
+                    {/* Headline — phone-native melt (transform + opacity + gentle
+                        blur, 60fps on mobile Safari). See MobileMorphText. */}
+                    <div className="mobile-rise mobile-rise-d2 w-full">
+                        <MobileMorphText
+                            words={MORPH_WORDS}
+                            interval={1900}
+                            className="h-[clamp(3.25rem,12.5vw,5rem)]"
                             textClassName="font-display font-bold tracking-tight text-cream leading-none text-[clamp(2rem,9.2vw,3.25rem)]"
                         />
                     </div>
