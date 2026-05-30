@@ -4,32 +4,32 @@ import { useEffect, useState } from "react";
 
 interface MobileMorphTextProps {
     words: string[];
-    /** ms each word stays before morphing to the next */
+    /** ms each word stays before rolling to the next */
     interval?: number;
     className?: string;
     textClassName?: string;
 }
 
 /**
- * MobileMorphText — the phone-native headline morph.
+ * MobileMorphText — phone-native headline animation (vertical roll).
  *
- * Why not the desktop <GooeyText>:
- *  - GooeyText leans on an SVG threshold filter + per-frame blur up to ~100px.
- *    On mobile Safari that either stutters or, on the small phone headline,
- *    swallows the word into a blob and pops the next one in — it reads as a
- *    hard "it just changes", not a melt.
+ * Why a roll and not the desktop gooey / a blur melt:
+ *  - The SVG-threshold gooey and per-frame CSS blur are unreliable on mobile
+ *    Safari — they stutter or don't paint, so the headline read as "it just
+ *    swaps words".
+ *  - This is built ONLY from `transform: translateY` — the one thing every
+ *    mobile browser composites on the GPU at 60fps. No blur, no SVG filter, no
+ *    requestAnimationFrame, and intentionally NOT gated behind
+ *    prefers-reduced-motion, so the motion always plays.
  *
- * How this works instead:
- *  - All words are stacked in one grid cell (no reflow, no layout thrash) and
- *    only ONE is ever active. State changes just flip CSS classes; the browser
- *    runs the tween on the compositor.
- *  - The morph is built from opacity + scale (both GPU-accelerated) plus a
- *    gentle, short blur as the "melt" accent. The outgoing word dissolves and
- *    expands outward while the incoming word condenses into focus and sharpens
- *    — they cross in the middle, reading as a smooth premium melt close to the
- *    desktop gooey, but at a rock-solid 60fps on phones.
- *  - Exactly N stable DOM nodes — nothing mounts/unmounts mid-animation, so no
- *    ghost words or lingering smudge. Honors prefers-reduced-motion via CSS.
+ * Mechanism (two-slot, transition-driven — robust, no fragile timers):
+ *  - Two stacked lines clipped to one: the current word on top, the next below.
+ *  - Each tick adds .mm-rolling → the column slides up one line (current rolls
+ *    out the top, next rolls into view).
+ *  - onTransitionEnd advances the base word and drops .mm-rolling, which snaps
+ *    the column back to 0 with NO transition. Because the word that just rolled
+ *    into view is now the top word at offset 0, the reset is invisible — the
+ *    loop is perfectly seamless.
  */
 export default function MobileMorphText({
     words,
@@ -37,30 +37,37 @@ export default function MobileMorphText({
     className,
     textClassName,
 }: MobileMorphTextProps) {
-    const [index, setIndex] = useState(0);
+    const n = words.length;
+    const [base, setBase] = useState(0);
+    const [rolling, setRolling] = useState(false);
 
     useEffect(() => {
-        const id = window.setInterval(() => {
-            setIndex((v) => (v + 1) % words.length);
-        }, interval);
+        const id = window.setInterval(() => setRolling(true), interval);
         return () => window.clearInterval(id);
-    }, [words.length, interval]);
+    }, [interval]);
+
+    const top = words[base % n];
+    const bottom = words[(base + 1) % n];
 
     return (
         <div
-            className={`mm-stage relative grid w-full place-items-center ${className ?? ""}`}
+            className={`mm-mask ${textClassName ?? ""} ${className ?? ""}`}
             aria-label={words.join(", ")}
         >
-            {words.map((word, i) => (
-                <span
-                    key={word}
-                    aria-hidden={i !== index}
-                    data-active={i === index ? "true" : "false"}
-                    className={`mm-word ${textClassName ?? ""}`}
-                >
-                    {word}
+            <div
+                className={`mm-col${rolling ? " mm-rolling" : ""}`}
+                onTransitionEnd={() => {
+                    setBase((b) => (b + 1) % n);
+                    setRolling(false);
+                }}
+            >
+                <span className="mm-line" aria-hidden="true">
+                    {top}
                 </span>
-            ))}
+                <span className="mm-line" aria-hidden="true">
+                    {bottom}
+                </span>
+            </div>
         </div>
     );
 }

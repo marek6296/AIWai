@@ -39,14 +39,13 @@ export default function MobileHero() {
                         />
                     </div>
 
-                    {/* Headline — phone-native melt (transform + opacity + gentle
-                        blur, 60fps on mobile Safari). See MobileMorphText. */}
+                    {/* Headline — phone-native vertical roll (pure transform,
+                        60fps on mobile Safari). See MobileMorphText. */}
                     <div className="mobile-rise mobile-rise-d2 w-full">
                         <MobileMorphText
                             words={MORPH_WORDS}
                             interval={1900}
-                            className="h-[clamp(3.25rem,12.5vw,5rem)]"
-                            textClassName="font-display font-bold tracking-tight text-cream leading-none text-[clamp(2rem,9.2vw,3.25rem)]"
+                            textClassName="font-display font-bold tracking-tight text-cream text-[clamp(2rem,9.2vw,3.25rem)]"
                         />
                     </div>
                 </div>

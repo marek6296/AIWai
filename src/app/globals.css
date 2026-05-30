@@ -456,47 +456,43 @@ canvas[style*="position: fixed"] {
 .mobile-rise-d4 { animation-delay: 1.15s; }
 
 /* ──────────────────────────────────────
-   Mobile hero — headline melt (MobileMorphText)
+   Mobile hero — headline vertical roll (MobileMorphText)
    ──────────────────────────────────────
-   Every word is stacked in the same grid cell; only [data-active="true"] is
-   shown. The morph is a compositor-friendly opacity + scale tween with a
-   gentle, short blur accent: the outgoing word dissolves and expands outward
-   while the incoming word condenses into focus and sharpens — they cross in
-   the middle as a smooth melt (close to the desktop gooey) but at 60fps on
-   phones, with no SVG filter, no rAF and no mounting/unmounting (so no ghost
-   words or lingering smudge). */
-.mm-word {
-  grid-area: 1 / 1;
+   Every word (plus a duplicate first) is stacked in a column clipped to one
+   line. Advancing the index slides the column up by exactly one line, so the
+   current word rolls up and out while the next rolls up into view. Built ONLY
+   from transform: translateY — the one property every mobile browser
+   composites at 60fps — so no blur, no SVG filter, no rAF, and it is NOT gated
+   behind prefers-reduced-motion (the brand hero should always animate). */
+.mm-mask {
+  --mm-line: 1.32em;     /* one line tall; roomy enough for accents (Á, Č) */
+  display: block;
+  width: 100%;
+  height: var(--mm-line);
+  overflow: hidden;
+  text-align: center;
+}
+.mm-col {
+  display: flex;
+  flex-direction: column;
+  transform: translateY(0);
+  will-change: transform;
+}
+/* Only the rolling state carries a transition; dropping the class snaps the
+   column back to 0 instantly (seamless reset). */
+.mm-col.mm-rolling {
+  transform: translateY(calc(-1 * var(--mm-line)));
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.mm-line {
+  display: block;
+  height: var(--mm-line);
+  line-height: var(--mm-line);
   white-space: nowrap;
-  opacity: 0;
-  transform: scale(1.05);
-  filter: blur(6px);
-  pointer-events: none;
-  transition:
-    opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.55s cubic-bezier(0.16, 1, 0.3, 1),
-    filter 0.55s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.mm-word[data-active="true"] {
-  opacity: 1;
-  transform: scale(1);
-  filter: blur(0px);
 }
 
-/* Reduced motion: instant, crisp opacity swap — no blur, no scale. */
-@media (prefers-reduced-motion: reduce) {
-  .mm-word {
-    transform: none;
-    filter: none;
-    transition: opacity 0.25s linear;
-  }
-  .mm-word[data-active="true"] {
-    transform: none;
-    filter: none;
-  }
-}
-
-/* Reduced motion: skip the staggered entrance too. */
+/* Skip only the staggered entrance under reduced motion (the word roll stays —
+   it is pure transform and central to the hero). */
 @media (prefers-reduced-motion: reduce) {
   .mobile-rise,
   .mobile-rise-logo {
